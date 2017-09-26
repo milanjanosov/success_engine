@@ -227,7 +227,7 @@ def getImpactDistribution(source):
         
 if __name__ == '__main__':         
 
-    source = 'Data/Film/simple-careers/'
+    source = 'Data/Film/'
 
     t1 = time.time()
     getImpactDistribution(source)
