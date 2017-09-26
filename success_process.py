@@ -49,7 +49,7 @@ def getImpactDistribution(source):
 
     title_font = 25 
     seaborn.set_style('white')   
-    f, ax = plt.subplots(2, 3, figsize=(15, 33))
+    f, ax = plt.subplots(2, 3, figsize=(33, 15))
     st = f.suptitle("IMDb impact distributions", fontsize=title_font)
 
 
@@ -139,7 +139,9 @@ def getImpactDistribution(source):
     
     
     align_plot(ax)
-    plt.show()
+    plt.savefig('impact_distributions.png')
+    plt.close()
+    #plt.show()
    
  
  
