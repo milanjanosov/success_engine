@@ -220,7 +220,7 @@ def process_simple_career_trajectories():
 
 
 
-        print NN_all_rating_count, NN_rand_rating_count    
+
 
         dir1 = 'ProcessedData/1_impact_distributions'
         if not os.path.exists(dir1):
