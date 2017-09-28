@@ -107,7 +107,7 @@ def process_simple_career_trajectories():
         
         
 
-        for filename in files[0:10]:
+        for filename in files:
         
             
             
