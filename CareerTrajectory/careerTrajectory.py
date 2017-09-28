@@ -1,5 +1,6 @@
 import os
 import gzip
+import random
 import numpy as np
 
 
@@ -75,34 +76,20 @@ class SimpleCareerTrajectory:
     
     ### if we are looking for the max value and is is degenerated, then this  function gives back _ALL_
     ### the top value time events - here we get the rank!
-    def getRankOfMaxImpactAll(self):
+    def getRankOfMaxImpact(self):
         
-        maxValue      = max([e[2] for e in self.events])
-        sorted_events = sorted(self.events, key=lambda tup: tup[1])
-       
-        return [sorted_events.index(e) for e in sorted_events if e[2] == maxValue]
-
-     
-    ### here the same just but getting the entire event
-    def getEventOfMaxImpactAll(self):
+        N = len(self.events)
         
-        maxValue      = max([e[2] for e in self.events])
-        sorted_events = sorted(self.events, key=lambda tup: tup[1])
-        
-        return [e for e in sorted_events if e[2] == maxValue] 
-        
-    
-    
-    ''' ------------------------------------------------ '''
-    ''' NOT IMPLEMENTED '''
-    ### if we are looking for the max value and is is degenerated, then this  function gives back _ONE RANDOMLY_
-    ### of the top value time events   
-    def getRankOfMaxImpactRandom(self):  
-        return 0  
-    
-    
-    def getEventOfMaxImpactRandom(self):  
-        return 0  
+        try:
+            maxValue      = max([e[2] for e in self.events])
+            sorted_events = sorted(self.events, key=lambda tup: tup[1])  
+            ranks_of_maxs = [sorted_events.index(e) for e in sorted_events if e[2] == maxValue]   
+            return (ranks_of_maxs, random.choice(ranks_of_maxs), N)
+        except ValueError:
+            return ('nan', 'nan', 'nan')
+            
+            
+            
 
 
 
@@ -132,5 +119,9 @@ def getBinnedDistribution(x, y, nbins):
 
 
 
-#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat', 1)
+#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0)
 #print pista.getRankOfMaxImpactAll()
+#print pista.getRankOfMaxImpactRand()
+
+
+

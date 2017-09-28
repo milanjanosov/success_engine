@@ -42,143 +42,243 @@ def get_dict_data(impacts):
 
 
 
-def getImpactDistribution(source):
+def process_simple_career_trajectories():
 
 
-    input_data = [(os.listdir(source + 'film-director-simple-careers'), 'k',  'director'),
-                  (os.listdir(source + 'film-producer-simple-careers'), 'b',  'producer'),   
-                  (os.listdir(source + 'film-writer-simple-careers'),   'r',  'writer'),   
-                  (os.listdir(source + 'film-composer-simple-careers'), 'g',  'composer'),   
-                  (os.listdir(source + 'film-art-director-simple-careers'), 'y',  'art-director'),   
+    
+
+
+
+    input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),        'music', 'pop'),
+                  (os.listdir('Data/Film/film-director-simple-careers'),     'film',  'director'),
+                  (os.listdir('Data/Film/film-producer-simple-careers'),     'film',  'producer'),   
+                  (os.listdir('Data/Film/film-writer-simple-careers'),       'film',  'writer'),   
+                  (os.listdir('Data/Film/film-composer-simple-careers'),     'film',  'composer'),   
+                  (os.listdir('Data/Film/film-art-director-simple-careers'), 'film',  'art-director'),   
                  ]
 
     
-    average_ratings = []
-    rating_counts   = []
-    metascores      = []
-    critic_review   = []
-    user_review     = []
-
-    max_average_ratings = []
-    max_rating_counts   = []
-    max_metascores      = []
-    max_critic_review   = []
-    max_user_review     = []
-    
-    
-    average_ratings_year = {}
-    rating_counts_year   = {}
-    metascores_year      = {}
-    critic_review_year   = {}
-    user_review_year     = {}
 
 
-    for (files, color, label) in input_data:
 
-        i = 0
-        n = len(files)
+    for (files, field, label) in input_data[0:1]:
 
-        for filename in files:
+        ijk = 0
+        nnn = len(files)
+        
+        
+        average_ratings = []
+        rating_counts   = []
+        metascores      = []
+        critic_review   = []
+        user_review     = []
+
+
+        max_average_ratings = []
+        max_rating_counts   = []
+        max_metascores      = []
+        max_critic_review   = []
+        max_user_review     = []
+        
+        
+        average_ratings_year = {}
+        rating_counts_year   = {}
+        metascores_year      = {}
+        critic_review_year   = {}
+        user_review_year     = {}
+        
+        
+        NN_all_avg_rating  = []
+        NN_rand_avg_rating = []    
+        
+        NN_all_rating_count  = []
+        NN_rand_rating_count = []    
+
+        NN_all_metascores  = []
+        NN_rand_metascores = []    
+
+        NN_all_critic_review  = []
+        NN_rand_critic_review = []    
+
+        NN_all_user_review  = []
+        NN_rand_user_review = []    
+
+        
+        
+
+        for filename in files[0:10]:
         
             
-            i += 1
-            print i, '/', n
+            
+            ijk += 1
+            print ijk, '/', nnn
             
             #avg ratings
-            pista_avg_rating = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 0)
-            average_ratings  += pista_avg_rating.getImpactValues()
-            add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
-            time_series = pista_avg_rating.getYearlyProducts()
-            add_time_series(average_ratings_year, time_series)
+            if 'literature' in field or 'film' in field:
 
-
-            # rating counts
-            pista_ratingcnt = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 1)
-            rating_counts   += pista_ratingcnt.getImpactValues()  
-            add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
-            time_series = pista_ratingcnt.getYearlyProducts()
-            add_time_series(rating_counts_year, time_series)    
+                impact_id = 1
+                if 'literature' in field:
+                    impact_id = 0
             
-                                     
+                pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
+                average_ratings  += pista_avg_rating.getImpactValues()
+                add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
+                
+                time_series = pista_avg_rating.getYearlyProducts()
+                add_time_series(average_ratings_year, time_series)
+                         
+                
+                (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact()  
+                if 'nan' not in str(NN_rand):
+                    NN_all_avg_rating  += [(n, N) for n in NN_all ]
+                    NN_rand_avg_rating.append((NN_rand, N))
+
+
+            
+            # rating counts
+            if 'music' in field or 'film' in field:
+            
+                impact_id = 1
+                if 'music' in field:
+                    impact_id = 0
+               
+
+                pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
+                rating_counts   += pista_ratingcnt.getImpactValues()  
+                
+                add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
+                time_series = pista_ratingcnt.getYearlyProducts()
+                add_time_series(rating_counts_year, time_series)    
+
+
+                (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
+                if 'nan' not in str(NN_rand):
+                    NN_all_rating_count  += [(n, N) for n in NN_all ]
+                    NN_rand_rating_count.append((NN_rand, N))
+                
+
+
+            
+                              
             # metascore
-            pista_meta  = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 2)
-            metascores  += pista_meta.getImpactValues() 
-            add_max_impact(max_metascores, pista_meta.getMaxImpact())           
-            time_series = pista_meta.getYearlyProducts()
-            add_time_series(metascores_year, time_series)      
-             
+            if  'film' in field:
+            
+                pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2)
+                metascores  += pista_meta.getImpactValues() 
+                add_max_impact(max_metascores, pista_meta.getMaxImpact())           
+                
+                time_series = pista_meta.getYearlyProducts()
+                add_time_series(metascores_year, time_series)      
+
+
+                (NN_all, NN_rand, N) = pista_meta.getRankOfMaxImpact()  
+                if 'nan' not in str(NN_rand):
+                    NN_all_metascores  += [(n, N) for n in NN_all ]
+                    NN_rand_metascores.append((NN_rand, N))
+                         
+                 
                         
             # critic reviews
-            pista_critic  = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 3)
-            critic_review += pista_critic.getImpactValues()          
-            add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
-            pista_critic = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 3)         
-            time_series  = pista_critic.getYearlyProducts()
-            add_time_series(critic_review_year, time_series)               
-               
+            if 'film' in field:
+            
+                pista_critic  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + + filename, 3)
+                critic_review += pista_critic.getImpactValues()                   
+                add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
+
+                time_series  = pista_critic.getYearlyProducts()
+                add_time_series(critic_review_year, time_series)               
+                   
+                 
+                (NN_all, NN_rand, N) = pista_critic.getRankOfMaxImpact()  
+                if 'nan' not in str(NN_rand):
+                    NN_all_critic_review  += [(n, N) for n in NN_all ]
+                    NN_rand_critic_review.append((NN_rand, N))   
+                  
                        
             # user reviews
-            pista_user   = SimpleCareerTrajectory(filename, source + '/film-' + label + '-simple-careers/' + filename, 4)
-            user_review  += pista_user.getImpactValues()
-            add_max_impact(max_user_review, pista_user.getMaxImpact())
-            time_series = pista_user.getYearlyProducts()
-            add_time_series(user_review_year, time_series)       
-           
+            if 'film' in field:
+            
+                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + filename, 4)
+                user_review  += pista_user.getImpactValues()
+                add_max_impact(max_user_review, pista_user.getMaxImpact())
+                
+                time_series = pista_user.getYearlyProducts()
+                add_time_series(user_review_year, time_series)       
+
+
+                (NN_all, NN_rand, N) = pista_user.getRankOfMaxImpact()  
+                if 'nan' not in str(NN_rand):
+                    NN_all_user_review  += [(n, N) for n in NN_all ]
+                    NN_rand_user_review.append((NN_rand, N))   
+                             
+            
 
 
 
+        print NN_all_rating_count, NN_rand_rating_count    
 
         dir1 = 'ProcessedData/1_impact_distributions'
         if not os.path.exists(dir1):
             os.makedirs(dir1)
 
-        f = open(dir1 + '/' + 'film_average_ratings_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in average_ratings]
-        f.close()
-        
-        f = open(dir1 + '/' + 'film_rating_counts_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in rating_counts]
-        f.close()
-        
-        f = open(dir1 + '/' + 'film_metascores_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in metascores]
-        f.close()
-        
-        f = open(dir1 + '/' + 'film_critic_review_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in critic_review]
-        f.close()
-        
-        f = open(dir1 + '/' + 'film_user_review_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in user_review]
-        f.close()
-        
-        
-        
-        
-        
+
+        if len(average_ratings) > 0:
+            f = open(dir1 + '/' + field + '_average_ratings_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in average_ratings]
+            f.close()
+
+        if len(rating_counts) > 0:            
+            f = open(dir1 + '/' + field + '_rating_counts_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in rating_counts]
+            f.close()
+
+        if len(metascores) > 0:            
+            f = open(dir1 + '/' + field + '_metascores_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in metascores]
+            f.close()
+ 
+        if len(critic_review) > 0:           
+            f = open(dir1 + '/' + field + '_critic_review_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in critic_review]
+            f.close()
+
+        if len(user_review) > 0:            
+            f = open(dir1 + '/' + field + '_user_review_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in user_review]
+            f.close()
+            
+            
+            
+            
+            
         dir2 = 'ProcessedData/2_max_impact_distributions'
         if not os.path.exists(dir2):
             os.makedirs(dir2)
 
-        f = open(dir2 + '/' + 'film_max_average_ratings_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in max_average_ratings]
-        f.close()
-        
-        f = open(dir2 + '/' + 'film_max_rating_counts_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in max_rating_counts]
-        f.close()
-        
-        f = open(dir2 + '/' + 'film_max_metascores_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in max_metascores]
-        f.close()
-        
-        f = open(dir2 + '/' + 'film_max_critic_review_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in max_critic_review]
-        f.close()
-        
-        f = open(dir2 + '/' + 'film_max_user_review_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in max_user_review]
-        f.close()
+        if len(max_average_ratings) > 0:
+            f = open(dir2 + '/' + field + '_max_average_ratings_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in max_average_ratings]
+            f.close()
+
+        if len(max_rating_counts) > 0:            
+            f = open(dir2 + '/' + field + '_max_rating_counts_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in max_rating_counts]
+            f.close()
+
+        if len(max_metascores) > 0:            
+            f = open(dir2 + '/' + field + '_max_metascores_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in max_metascores]
+            f.close()
+
+        if len(max_critic_review) > 0:            
+            f = open(dir2 + '/' + field + '_max_critic_review_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in max_critic_review]
+            f.close()
+
+        if len(max_user_review) > 0:            
+            f = open(dir2 + '/' + field + '_max_user_review_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in max_user_review]
+            f.close()
 
 
 
@@ -195,42 +295,91 @@ def getImpactDistribution(source):
         x_user_review_year     = get_dict_data(user_review_year)   
 
 
-        f = open(dir3 + '/' + 'film_yearly_average_ratings_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in x_average_ratings_year]
-        f.close()
-        
-        f = open(dir3 + '/' + 'film_yearly_rating_counts_dist_'   + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in x_rating_counts_year]
-        f.close()
-        
-        f = open(dir3 + '/' + 'film_yearly_metascores_dist_'      + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in x_metascores_year]
-        f.close()
-        
-        f = open(dir3 + '/' + 'film_yearly_critic_review_dist_' + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in x_critic_review_year]
-        f.close()
-        
-        f = open(dir3 + '/' + 'film_yearly_user_review_dist_'     + label + '.dat', 'w')
-        [f.write(str(a) + '\n') for a in x_user_review_year]
-        f.close()
+        if len(x_average_ratings_year) > 0:
+            f = open(dir3 + '/' + field + '_yearly_average_ratings_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in x_average_ratings_year]
+            f.close()
  
+        if len(x_rating_counts_year) > 0:            
+            f = open(dir3 + '/' + field + '_yearly_rating_counts_dist_'   + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in x_rating_counts_year]
+            f.close()
  
- 
- 
- 
- 
+        if len(x_metascores_year) > 0:           
+            f = open(dir3 + '/' + field + '_yearly_metascores_dist_'      + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in x_metascores_year]
+            f.close()
 
+        if len(x_critic_review_year) > 0:            
+            f = open(dir3 + '/' + field + '_yearly_critic_review_dist_' + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in x_critic_review_year]
+            f.close()
+
+        if len(x_user_review_year) > 0:            
+            f = open(dir3 + '/' + field + '_yearly_user_review_dist_'     + label + '.dat', 'w')
+            [f.write(str(a) + '\n') for a in x_user_review_year]
+            f.close()
+     
+     
+     
+     
+     
+        dir4 = 'ProcessedData/4_NN_rank_N'
+        if not os.path.exists(dir4):
+            os.makedirs(dir4) 
+            
+        if len(NN_rand_avg_rating) > 0:     
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_avg_rating_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_avg_rating]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_avg_rating_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_avg_rating]
+            f.close()  
+
+        if len(NN_rand_rating_count) > 0:
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_rating_count_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_rating_count]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_rating_count_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_rating_count]
+            f.close()       
+
+        if len(NN_rand_metascores) > 0:           
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_metascores_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_metascores]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_metascores_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_metascores]
+            f.close()           
+
+        if len(NN_rand_critic_review) > 0:           
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_critic_review_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_critic_review]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_critic_review_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_critic_review]
+            f.close()        
+
+        if len(NN_rand_user_review) > 0:           
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_user_review_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_user_review]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_user_review_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_user_review]
+            f.close()        
+           
        
+       
+       
+        
         
         
         
 if __name__ == '__main__':         
 
-    source = 'Data/Film/'
 
     t1 = time.time()
-    getImpactDistribution(source)
+    process_simple_career_trajectories()
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
