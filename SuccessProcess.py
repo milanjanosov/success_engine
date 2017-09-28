@@ -145,23 +145,23 @@ def process_simple_career_trajectories():
                 if 'music' in field:
                     impact_id = 0
                
+                try:
 
-                print 'HERE, ', filename, impact_id
-
-                pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
-                rating_counts   += pista_ratingcnt.getImpactValues()  
-                
-                add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
-                time_series = pista_ratingcnt.getYearlyProducts()
-                add_time_series(rating_counts_year, time_series)    
+                    pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
+                    rating_counts   += pista_ratingcnt.getImpactValues()  
+                    
+                    add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
+                    time_series = pista_ratingcnt.getYearlyProducts()
+                    add_time_series(rating_counts_year, time_series)    
 
 
-                (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
-                if 'nan' not in str(NN_rand):
-                    NN_all_rating_count  += [(n, N) for n in NN_all ]
-                    NN_rand_rating_count.append((NN_rand, N))
-                
-
+                    (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
+                    if 'nan' not in str(NN_rand):
+                        NN_all_rating_count  += [(n, N) for n in NN_all ]
+                        NN_rand_rating_count.append((NN_rand, N))
+                    
+                except:
+                    error.write(filename + '\t' + field '\t' + label + '\n')
 
             
                               
@@ -383,13 +383,15 @@ def process_simple_career_trajectories():
 if __name__ == '__main__':         
 
 
+    error = open('error_unparsed.dat', 'w')
+
     t1 = time.time()
     process_simple_career_trajectories()
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
 
-    
+    error.close()
     
     
     
