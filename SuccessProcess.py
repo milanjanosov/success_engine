@@ -107,7 +107,7 @@ def process_simple_career_trajectories():
         
         
 
-        for filename in files:
+        for filename in files[0:10]:
         
             
             
@@ -117,9 +117,7 @@ def process_simple_career_trajectories():
             #avg ratings
             if 'literature' in field or 'film' in field:
 
-                impact_id = 1
-                if 'literature' in field:
-                    impact_id = 0
+                impact_id = 0
             
                 pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
                 average_ratings  += pista_avg_rating.getImpactValues()
