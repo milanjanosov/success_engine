@@ -139,6 +139,8 @@ def process_simple_career_trajectories():
             # rating counts
             if 'music' in field or 'film' in field:
             
+                print filename
+            
                 impact_id = 1
                 if 'music' in field:
                     impact_id = 0
