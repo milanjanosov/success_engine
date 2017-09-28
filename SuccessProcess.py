@@ -50,6 +50,7 @@ def process_simple_career_trajectories():
 
 
     input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),        'music', 'pop'),
+                  (os.listdir('Data/Music/music-electro-simple-careers'),    'music', 'electro'),
                   (os.listdir('Data/Film/film-director-simple-careers'),     'film',  'director'),
                   (os.listdir('Data/Film/film-producer-simple-careers'),     'film',  'producer'),   
                   (os.listdir('Data/Film/film-writer-simple-careers'),       'film',  'writer'),   
@@ -61,7 +62,7 @@ def process_simple_career_trajectories():
 
 
 
-    for (files, field, label) in input_data[0:1]:
+    for (files, field, label) in input_data:
 
         ijk = 0
         nnn = len(files)
@@ -106,7 +107,7 @@ def process_simple_career_trajectories():
         
         
 
-        for filename in files[0:10]:
+        for filename in files:
         
             
             
@@ -181,7 +182,7 @@ def process_simple_career_trajectories():
             # critic reviews
             if 'film' in field:
             
-                pista_critic  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + + filename, 3)
+                pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3)
                 critic_review += pista_critic.getImpactValues()                   
                 add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
 
@@ -198,7 +199,7 @@ def process_simple_career_trajectories():
             # user reviews
             if 'film' in field:
             
-                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + filename, 4)
+                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4)
                 user_review  += pista_user.getImpactValues()
                 add_max_impact(max_user_review, pista_user.getMaxImpact())
                 
