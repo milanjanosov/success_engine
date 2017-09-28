@@ -139,12 +139,14 @@ def process_simple_career_trajectories():
             # rating counts
             if 'music' in field or 'film' in field:
             
-                print 'HERE, ', filename
+                
             
                 impact_id = 1
                 if 'music' in field:
                     impact_id = 0
                
+
+                print 'HERE, ', filename, impact_id
 
                 pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
                 rating_counts   += pista_ratingcnt.getImpactValues()  
