@@ -161,7 +161,7 @@ def process_simple_career_trajectories():
                         NN_rand_rating_count.append((NN_rand, N))
                     
                 except:
-                    error.write(filename + '\t' + field '\t' + label + '\n')
+                    error.write(filename + '\t' + field  + '\t' + label + '\n')
 
             
                               
