@@ -10,7 +10,7 @@ import numpy as np
 
 class MultipleImpactCareerTrajectory:
 
-    def __init__(self, name, inputfile, norm_factors):
+    def __init__(self, name, inputfile, norm_factors, randomized = False):
         self.name    = inputfile
         events       = []
 
@@ -27,6 +27,20 @@ class MultipleImpactCareerTrajectory:
                         events.append((product, year, [str(i) for i in impacts]))
                 except ValueError:
                     pass
+        
+        
+        if randomized:
+            
+            events_rand = []
+            impacts_to_rand = []
+            for impact in range(len(events[0][2])):
+                impacts_to_rand.append([event[2][impact] for event in events])             
+                random.shuffle(impacts_to_rand[impact])
+         
+            for i in range(len(events)):           
+                events_rand.append((events[i][0], events[i][1], [impacts_to_rand[impact][i] for impact in range(len(events[0][2]))] ))
+            
+            events = events_rand
                                       
         self.events = events   
 
@@ -49,7 +63,7 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, norm_factors = {}):
+    def __init__(self, name, inputfile, impactm, norm_factors, randomized = False):
         self.impactm = impactm
         self.name    = inputfile
         events       = []             
@@ -62,15 +76,26 @@ class SimpleCareerTrajectory:
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
                                     
-                    if impact > 0 and year > 1500 and year < 2018:
+                    if impact > 0 and year > 1850 and year < 2018:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
                         events.append((product, year, impact))
                 except ValueError:
                     pass
     
-                                        
-        self.events = events        
+
+        
+        if randomized:
+            impacts_to_rand = [e[2] for e in events]
+            random.shuffle(impacts_to_rand)
+            events_rand = []
+            for e in events:
+                events_rand.append((e[0], e[1], impacts_to_rand[events.index(e)]))
+
+            events = events_rand
+
+        self.events = events                                  
+                    
         
 
 
@@ -163,7 +188,7 @@ def getBinnedDistribution(x, y, nbins):
 
 
 
-#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0)
+#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, True)
 #print pista.getImpactValues()
 
 #print pista.getCareerLength()
@@ -171,7 +196,10 @@ def getBinnedDistribution(x, y, nbins):
 
 #print pista.getYearlyProducts()
 
-# gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz')
+#gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz', [], False)
+#gyurika.getImpactValues()
+#print '\n'
+
 #for imp in  gyurika.getImpactValues():
 #    print imp
 

@@ -66,7 +66,7 @@ def parse_norm_factors(filename):
     
     
 
-def process_simple_career_trajectories(normalized):
+def process_simple_career_trajectories(normalized, randomized):
 
 
     
@@ -300,79 +300,86 @@ def process_simple_career_trajectories(normalized):
         root = 'ProcessedData'
         if normalized:
             root = root + 'Normalized'
+        if randomized:
+            root = root + 'Randomized'
      
         
+        if not randomized:      
           
-        dir1 = root + '/1_impact_distributions'
-        if not os.path.exists(dir1):
-            os.makedirs(dir1)
+            dir1 = root + '/1_impact_distributions'
+            if not os.path.exists(dir1):
+                os.makedirs(dir1)
 
 
-        if len(average_ratings) > 0:
-            f = open(dir1 + '/' + field + '_average_ratings_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in average_ratings]
-            f.close()
+            if len(average_ratings) > 0:
+                f = open(dir1 + '/' + field + '_average_ratings_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in average_ratings]
+                f.close()
 
-        if len(rating_counts) > 0:            
-            f = open(dir1 + '/' + field + '_rating_counts_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in rating_counts]
-            f.close()
+            if len(rating_counts) > 0:            
+                f = open(dir1 + '/' + field + '_rating_counts_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in rating_counts]
+                f.close()
 
-        if len(metascores) > 0:            
-            f = open(dir1 + '/' + field + '_metascores_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in metascores]
-            f.close()
- 
-        if len(critic_review) > 0:           
-            f = open(dir1 + '/' + field + '_critic_review_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in critic_review]
-            f.close()
+            if len(metascores) > 0:            
+                f = open(dir1 + '/' + field + '_metascores_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in metascores]
+                f.close()
+     
+            if len(critic_review) > 0:           
+                f = open(dir1 + '/' + field + '_critic_review_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in critic_review]
+                f.close()
 
-        if len(user_review) > 0:            
-            f = open(dir1 + '/' + field + '_user_review_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in user_review]
-            f.close()
-            
+            if len(user_review) > 0:            
+                f = open(dir1 + '/' + field + '_user_review_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in user_review]
+                f.close()
+                
             
             
     
             
         ''' ------------------  max distros  ------------------ '''            
             
-        dir2 = root + '/2_max_impact_distributions'
-        if not os.path.exists(dir2):
-            os.makedirs(dir2)
+        if not randomized:    
+        
+            dir2 = root + '/2_max_impact_distributions'
+            if not os.path.exists(dir2):
+                os.makedirs(dir2)
 
-        if len(max_average_ratings) > 0:
-            f = open(dir2 + '/' + field + '_max_average_ratings_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in max_average_ratings]
-            f.close()
+            if len(max_average_ratings) > 0:
+                f = open(dir2 + '/' + field + '_max_average_ratings_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in max_average_ratings]
+                f.close()
 
-        if len(max_rating_counts) > 0:            
-            f = open(dir2 + '/' + field + '_max_rating_counts_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in max_rating_counts]
-            f.close()
+            if len(max_rating_counts) > 0:            
+                f = open(dir2 + '/' + field + '_max_rating_counts_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in max_rating_counts]
+                f.close()
 
-        if len(max_metascores) > 0:            
-            f = open(dir2 + '/' + field + '_max_metascores_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in max_metascores]
-            f.close()
+            if len(max_metascores) > 0:            
+                f = open(dir2 + '/' + field + '_max_metascores_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in max_metascores]
+                f.close()
 
-        if len(max_critic_review) > 0:            
-            f = open(dir2 + '/' + field + '_max_critic_review_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in max_critic_review]
-            f.close()
+            if len(max_critic_review) > 0:            
+                f = open(dir2 + '/' + field + '_max_critic_review_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in max_critic_review]
+                f.close()
 
-        if len(max_user_review) > 0:            
-            f = open(dir2 + '/' + field + '_max_user_review_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in max_user_review]
-            f.close()
+            if len(max_user_review) > 0:            
+                f = open(dir2 + '/' + field + '_max_user_review_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in max_user_review]
+                f.close()
 
 
 
 
 
         ''' ------------------ inflation curves ------------------ '''
+
+
 
         dir3 = root + '/3_inflation_curves'
         if not os.path.exists(dir3):
@@ -409,8 +416,8 @@ def process_simple_career_trajectories(normalized):
             f = open(dir3 + '/' + field + '_yearly_user_review_dist_'     + label + '.dat', 'w')
             [f.write(str(a) + '\n') for a in x_user_review_year]
             f.close()
-     
-     
+         
+         
      
      
      
@@ -466,7 +473,7 @@ def process_simple_career_trajectories(normalized):
    
         ''' ------------------ career length ------------------ '''    
        
-        if not normalized:
+        if not normalized and not randomized:
            
             dir5 = root + '/5_career_length'
             if not os.path.exists(dir5):
@@ -517,8 +524,9 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    process_simple_career_trajectories(normalized = False)
-    process_simple_career_trajectories(normalized = True)
+    process_simple_career_trajectories(normalized = False, randomized = False)
+    process_simple_career_trajectories(normalized = True,  randomized = False)
+    process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
