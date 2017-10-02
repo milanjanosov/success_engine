@@ -5,19 +5,55 @@ import numpy as np
 
 
 
-''' A SimpleCareerTrajectory has two fields: the id of the individual, and her career trajectory as a list of time events. '''
-''' Each time event is a triple of a time stamp a rational number, e.g. success measure, and a unique id for that time event. ''' 
+
+''' A MultipleImpactCareerTrajectory has .... fields: .................................................'''
+
+class MultipleImpactCareerTrajectory:
+
+    def __init__(self, name, inputfile, norm_factors):
+        self.name    = inputfile
+        events       = []
+
+        for line in gzip.open(inputfile):
+            if 'year' not in line:
+                fields  = line.strip().split('\t')
+                product = fields[0]
+                impacts = [imp if 'None' not in imp else '0'  for imp in fields[2:] ]
+                try:    
+                    year    = float(fields[1])
+                    if year > 1500 and year < 2018:
+                        if len(norm_factors) > 0:
+                            impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
+                        events.append((product, year, [str(i) for i in impacts]))
+                except ValueError:
+                    pass
+                                      
+        self.events = events   
 
 
+    def getImpactValues(self):
+        
+        if len(self.events) > 0:
+            num_impacts    = len(self.events[0][2]) 
+            return ['\t'.join(event[2]) for event in self.events]
+        else:
+            return []
+       
+        
+        
+
+
+
+''' A SimpleCareerTrajectory has .... fields: .................................................'''
 
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm):
+    def __init__(self, name, inputfile, impactm, norm_factors = {}):
         self.impactm = impactm
         self.name    = inputfile
-        
-        events = []       
+        events       = []             
+           
         for line in gzip.open(inputfile):
             if 'year' not in line:
                 fields  = line.strip().split('\t')
@@ -25,16 +61,18 @@ class SimpleCareerTrajectory:
                 try:    
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
+                                    
                     if impact > 0 and year > 1500 and year < 2018:
+                        if len(norm_factors) > 0:
+                            impact = impact/norm_factors[year]
                         events.append((product, year, impact))
                 except ValueError:
                     pass
-        
+    
+                                        
         self.events = events        
         
-        
-        #self.events  = [tuple([line.strip().split('\t')[0],float(line.strip().split('\t')[1]),float(line.strip().split('\t')[impactm + 2])]) for line in gzip.open(inputfile) if 'year' not in line and 'None' not in line.strip().split('\t')[impactm+ 2] and not line.strip().split('\t')[0].isspace()]  
- 
+
 
     ### this gices back the impact values of the individual as a list
     def getImpactValues(self):    
@@ -61,6 +99,10 @@ class SimpleCareerTrajectory:
                 pass
     
         return time_series
+        
+        
+    def getCareerLength(self):
+        return len(self.events)
     
     
     ### this gives back the best impact
@@ -119,9 +161,17 @@ def getBinnedDistribution(x, y, nbins):
 
 
 
+
+
 #pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0)
-#print pista.getRankOfMaxImpactAll()
-#print pista.getRankOfMaxImpactRand()
+#print pista.getImpactValues()
 
+#print pista.getCareerLength()
+#print pista.getRankOfMaxImpact()
 
+#print pista.getYearlyProducts()
+
+# gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz')
+#for imp in  gyurika.getImpactValues():
+#    print imp
 

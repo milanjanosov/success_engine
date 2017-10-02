@@ -2,8 +2,9 @@ import os
 import sys
 import gzip
 import time
+import numpy as np
 from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
-
+from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 
 
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''
@@ -41,8 +42,31 @@ def get_dict_data(impacts):
   
 
 
+def write_yearly_avgs(dict_data, filename):
 
-def process_simple_career_trajectories():
+    if len(dict_data) >  0:
+        f = open(filename, 'w')
+        
+        for year, values in  dict_data.items(): 
+            f.write(str(year) + '\t' + str(np.mean(values)) + '\t' + str(np.std(values)) + '\n' )  
+        
+        f.close()
+
+
+
+def parse_norm_factors(filename):
+                
+    norm_factors = {}
+    for line in open(filename):   
+        fields = line.strip().split('\t')
+        norm_factors[float(fields[0])] = float(fields[1])
+                        
+    return norm_factors
+    
+    
+    
+
+def process_simple_career_trajectories(normalized):
 
 
     
@@ -89,6 +113,10 @@ def process_simple_career_trajectories():
         user_review_year     = {}
         
         
+        career_length = []
+        multi_impacts = []
+        
+        
         NN_all_avg_rating  = []
         NN_rand_avg_rating = []    
         
@@ -104,8 +132,38 @@ def process_simple_career_trajectories():
         NN_all_user_review  = []
         NN_rand_user_review = []    
 
+
+        average_rat_norm   = {} 
+        rating_counts_norm = {}
+        metascore_norm     = {}     
+        critic_review_norm = {}   
+        user_review_norm   = {}   
         
+        combined_factors   = []      
+
+
+        if normalized:
+         
+            dir6 = 'ProcessedData/6_yearly_averages'
+          
+            if 'film' in field:                       
+                average_rat_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_avg_rating_'    + label + '.dat' ) 
+                rating_counts_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat' )   
+                metascore_norm     = parse_norm_factors( dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat' )      
+                critic_review_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat' )   
+                user_review_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat' )   
+                
+                combined_factors   = [average_rat_norm, rating_counts_norm, metascore_norm, critic_review_norm, user_review_norm]        
+
+
+
+            if 'music' in field:
+                rating_counts_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat' )                   
+
         
+
+
+          
 
         for filename in files:
         
@@ -114,23 +172,34 @@ def process_simple_career_trajectories():
             ijk += 1
             print ijk, '/', nnn
             
+            
+            
+            
             #avg ratings
             if 'literature' in field or 'film' in field:
 
                 impact_id = 0
             
-                pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
+                pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, average_rat_norm)
                 average_ratings  += pista_avg_rating.getImpactValues()
                 add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
                 
                 time_series = pista_avg_rating.getYearlyProducts()
                 add_time_series(average_ratings_year, time_series)
-                         
+                 
+                
+                career_length.append(pista_avg_rating.getCareerLength())         
                 
                 (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact()  
                 if 'nan' not in str(NN_rand):
                     NN_all_avg_rating  += [(n, N) for n in NN_all ]
                     NN_rand_avg_rating.append((NN_rand, N))
+
+
+
+
+                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors)
+                multi_impacts += gyurika.getImpactValues()
 
 
             
@@ -145,7 +214,7 @@ def process_simple_career_trajectories():
                
                 try:
 
-                    pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id)
+                    pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, rating_counts_norm)
                     rating_counts   += pista_ratingcnt.getImpactValues()  
                     
                     add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
@@ -157,16 +226,21 @@ def process_simple_career_trajectories():
                     if 'nan' not in str(NN_rand):
                         NN_all_rating_count  += [(n, N) for n in NN_all ]
                         NN_rand_rating_count.append((NN_rand, N))
+                 
+                 
+
                     
                 except:
                     error.write(filename + '\t' + field  + '\t' + label + '\n')
+
+
 
             
                               
             # metascore
             if  'film' in field:
             
-                pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2)
+                pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2, metascore_norm)
                 metascores  += pista_meta.getImpactValues() 
                 add_max_impact(max_metascores, pista_meta.getMaxImpact())           
                 
@@ -184,7 +258,7 @@ def process_simple_career_trajectories():
             # critic reviews
             if 'film' in field:
             
-                pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3)
+                pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3, critic_review_norm)
                 critic_review += pista_critic.getImpactValues()                   
                 add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
 
@@ -197,11 +271,12 @@ def process_simple_career_trajectories():
                     NN_all_critic_review  += [(n, N) for n in NN_all ]
                     NN_rand_critic_review.append((NN_rand, N))   
                   
+
                        
             # user reviews
             if 'film' in field:
             
-                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4)
+                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4, user_review_norm)
                 user_review  += pista_user.getImpactValues()
                 add_max_impact(max_user_review, pista_user.getMaxImpact())
                 
@@ -214,13 +289,21 @@ def process_simple_career_trajectories():
                     NN_all_user_review  += [(n, N) for n in NN_all ]
                     NN_rand_user_review.append((NN_rand, N))   
                              
-            
+             
 
 
 
 
 
-        dir1 = 'ProcessedData/1_impact_distributions'
+        ''' ------------------ impact distros ------------------ '''
+        
+        root = 'ProcessedData'
+        if normalized:
+            root = root + 'Normalized'
+     
+        
+          
+        dir1 = root + '/1_impact_distributions'
         if not os.path.exists(dir1):
             os.makedirs(dir1)
 
@@ -252,9 +335,11 @@ def process_simple_career_trajectories():
             
             
             
+    
             
+        ''' ------------------  max distros  ------------------ '''            
             
-        dir2 = 'ProcessedData/2_max_impact_distributions'
+        dir2 = root + '/2_max_impact_distributions'
         if not os.path.exists(dir2):
             os.makedirs(dir2)
 
@@ -287,7 +372,9 @@ def process_simple_career_trajectories():
 
 
 
-        dir3 = 'ProcessedData/3_inflation_curves'
+        ''' ------------------ inflation curves ------------------ '''
+
+        dir3 = root + '/3_inflation_curves'
         if not os.path.exists(dir3):
             os.makedirs(dir3)
 
@@ -327,7 +414,10 @@ def process_simple_career_trajectories():
      
      
      
-        dir4 = 'ProcessedData/4_NN_rank_N'
+     
+        ''' ------------------ N*/N distros ------------------ '''
+     
+        dir4 = root + '/4_NN_rank_N'
         if not os.path.exists(dir4):
             os.makedirs(dir4) 
             
@@ -370,11 +460,54 @@ def process_simple_career_trajectories():
             f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_user_review_' + label + '.dat', 'w')
             [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_user_review]
             f.close()        
+                
+            
+       
+   
+        ''' ------------------ career length ------------------ '''    
+       
+        if not normalized:
            
-       
-       
-       
+            dir5 = root + '/5_career_length'
+            if not os.path.exists(dir5):
+                os.makedirs(dir5)
+
+            if len(career_length) > 0:
+                f = open(dir5 + '/' + field + '_career_length_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in career_length]
+                f.close()
+
+
+
+
+        ''' ------------------ yearly avg ------------------ '''
         
+        if not normalized:
+        
+            dir6 = root + '/6_yearly_averages'
+            if not os.path.exists(dir6):
+                os.makedirs(dir6)
+          
+            write_yearly_avgs(average_ratings_year, dir6 + '/' + field + '_yearly_average_avg_rating_'    + label + '.dat') 
+            write_yearly_avgs(rating_counts_year  , dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat')   
+            write_yearly_avgs(metascores_year     , dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat')      
+            write_yearly_avgs(critic_review_year  , dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat')   
+            write_yearly_avgs(user_review_year    , dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat')   
+
+        
+        
+        
+        ''' ------------------ multiple impact measures ------------------ '''
+        
+        if len(multi_impacts) > 0:
+            
+            dir7 = root + '/7_multiple_impacts'
+            if not os.path.exists(dir7):
+                os.makedirs(dir7)
+            
+            f = open(dir7 + '/' + field + '_multiple_impacts_'  + label + '.dat', 'w')
+            [f.write(mm + '\n') for mm in multi_impacts]
+            f.close()
         
         
         
@@ -384,7 +517,7 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    process_simple_career_trajectories()
+    process_simple_career_trajectories(normalized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
