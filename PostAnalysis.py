@@ -15,6 +15,18 @@ from CareerTrajectory.careerTrajectory import getBinnedDistribution
 '''
 
 
+WEDNESDAY: 
+- check normalized inflation curve
+- plot normalized impact distibution
+- get correlation plots   -> normalized vs randomized
+- get career exponent fit -> normalized vs randomized
+- N*/N stuff....
+
+
+
+
+
+
 SuccessProcess
 
 +++ 1. save yearly avg values  -> field_measure_infl_avg
@@ -79,6 +91,7 @@ def align_plot(ax):
 
     for i in range(len(ax)):
         for j in range(len(ax[0])):
+            ax[i,j].grid()
             ax[i,j].legend(loc = 'left', fontsize = font_tick) 
             ax[i,j].spines['top'].set_visible(False)
             ax[i,j].spines['right'].set_visible(False)
@@ -127,16 +140,16 @@ def get_imapct_distr():
     st = f.suptitle("IMDb impact distributions", fontsize=title_font)
 
 
-    for (label, color) in professions[0:1]:
+    for (label, color) in professions:
        
         num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
 
         
-        file_avg  = 'ProcessedDataNormalized/1_impact_distributions/film_average_ratings_dist_' + label + '.dat'
-        file_cnt  = 'ProcessedDataNormalized/1_impact_distributions/film_rating_counts_dist_'   + label + '.dat'
-        file_mets = 'ProcessedDataNormalized/1_impact_distributions/film_metascores_dist_'      + label + '.dat'
-        file_crit = 'ProcessedDataNormalized/1_impact_distributions/film_critic_review_dist_'   + label + '.dat'
-        file_user = 'ProcessedDataNormalized/1_impact_distributions/film_user_review_dist_'     + label + '.dat'
+        file_avg  = 'ProcessedDataSample/1_impact_distributions/film_average_ratings_dist_' + label + '.dat'
+        file_cnt  = 'ProcessedDataSample/1_impact_distributions/film_rating_counts_dist_'   + label + '.dat'
+        file_mets = 'ProcessedDataSample/1_impact_distributions/film_metascores_dist_'      + label + '.dat'
+        file_crit = 'ProcessedDataSample/1_impact_distributions/film_critic_review_dist_'   + label + '.dat'
+        file_user = 'ProcessedDataSample/1_impact_distributions/film_user_review_dist_'     + label + '.dat'
 
         average_ratings = np.asarray([round(float(line.strip()),3) for line in open(file_avg)])
         rating_counts   = [round(float(line.strip()),3) for line in open(file_cnt)]
@@ -216,7 +229,7 @@ def get_imapct_distr():
 
 
     align_plot(ax)
-    plt.savefig('impact_distributions.png')
+    plt.savefig('impact_distributions_.png')
     #plt.close()
     plt.show()          
 
@@ -246,6 +259,27 @@ def get_dict_data(impacts):
     return np.asarray(x), np.asarray(y)
 
 
+def get_num_per_year(impacts):
+
+    
+    years = {} 
+    for i in impacts:
+        field = i.split('\t')
+        year  = int(float((field[0])))
+        impa  = field[1]
+        if year not in years:
+            years[year] = [impa]
+        else:
+            years[year].append(impa)
+
+    x = []
+    y = []
+    for year, impas in years.items():
+        x.append(year)
+        y.append(len(impas))
+
+    return np.asarray(x), np.asarray(y)
+
 
 
 def get_inflation_curves():
@@ -264,15 +298,15 @@ def get_inflation_curves():
                    ('composer',     'g'),
                    ('art-director', 'y')]    
     
-
+    
     for (label, color) in professions:
 
         
-        file_avg_year  = 'ProcessedDataSample/3_inflation_curves/film_yearly_average_ratings_dist_' + label + '.dat'
-        file_cnt_year  = 'ProcessedDataSample/3_inflation_curves/film_yearly_rating_counts_dist_'   + label + '.dat'
-        file_mets_year = 'ProcessedDataSample/3_inflation_curves/film_yearly_metascores_dist_'      + label + '.dat'
-        file_crit_year = 'ProcessedDataSample/3_inflation_curves/film_yearly_critic_review_dist_'   + label + '.dat'
-        file_user_year = 'ProcessedDataSample/3_inflation_curves/film_yearly_user_review_dist_'     + label + '.dat'
+        file_avg_year  = 'ProcessedData/3_inflation_curves/film_yearly_average_ratings_dist_' + label + '.dat'
+        file_cnt_year  = 'ProcessedData/3_inflation_curves/film_yearly_rating_counts_dist_'   + label + '.dat'
+        file_mets_year = 'ProcessedData/3_inflation_curves/film_yearly_metascores_dist_'      + label + '.dat'
+        file_crit_year = 'ProcessedData/3_inflation_curves/film_yearly_critic_review_dist_'   + label + '.dat'
+        file_user_year = 'ProcessedData/3_inflation_curves/film_yearly_user_review_dist_'     + label + '.dat'
 
         average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
         rating_counts_year   = np.asarray([line.strip() for line in open(file_cnt_year)])
@@ -290,7 +324,7 @@ def get_inflation_curves():
     
         ax[0,0].set_title('IMDb - average rating', fontsize = 20)
         #ax[0,0].plot(x_average_ratings_year,  y_average_ratings_year, color + 'o', alpha = 0.001, label = label + ', ' + str(len(average_ratings_year)))
-        ax[0,0].errorbar((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year, yerr=bperr_average_ratings_year, fmt=color + '-', linewidth = 3)
+        ax[0,0].errorbar((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year, yerr=bperr_average_ratings_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
         
         
         #plot rating counts
@@ -298,40 +332,30 @@ def get_inflation_curves():
         bx_rating_counts_year, bp_rating_counts_year, bperr_rating_counts_year = getBinnedDistribution(x_rating_counts_year, y_rating_counts_year, num_of_bins)
 
         ax[0,1].set_title('IMDb - rating count', fontsize = 20)
-        ax[0,1].set_ylim([0,10000])
+        ax[0,1].set_ylim([-3000,20000])
         #ax[0,1].plot(x_rating_counts_year,  y_rating_counts_year, color + 'o', alpha = 0.001, label = label + ', ' + str(len(rating_counts_year)))
-        ax[0,1].errorbar((bx_rating_counts_year[1:] + bx_rating_counts_year[:-1])/2, bp_rating_counts_year, yerr=bperr_rating_counts_year, fmt=color + '-', linewidth = 3)       
-
-
-
-        # plot number of movies
-        x_num_of_movies_year,  y_num_of_movies_year = get_dict_data(average_ratings_year)       
-        bx_num_of_movies_year, bp_num_of_movies_year, bperr_num_of_movies_year = getBinnedDistribution(x_num_of_movies_year, y_num_of_movies_year, num_of_bins)
-
-        ax[1,0].set_title('IMDb - number of movies', fontsize = 20)
-        #ax[1,0].plot(x_num_of_movies_year,  y_num_of_movies_year, color + 'o', alpha = 0.001, label = label + ', ' + str(len(average_ratings_year)))
-        ax[1,0].errorbar((bx_num_of_movies_year[1:] + bx_num_of_movies_year[:-1])/2, bp_num_of_movies_year, yerr=bperr_num_of_movies_year, fmt=color + '-', linewidth = 3)  
+        ax[0,1].errorbar((bx_rating_counts_year[1:] + bx_rating_counts_year[:-1])/2, bp_rating_counts_year, yerr=bperr_rating_counts_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
 
 
         
-        # plot number of movies
+        # plot metascorenumber of movies
         x_metascores_year,  y_metascores_year = get_dict_data(metascores_year)       
         bx_metascores_year, bp_metascores_year, bperr_metascores_year = getBinnedDistribution(x_metascores_year, y_metascores_year, num_of_bins)
 
         ax[1,1].set_title('IMDb - metascores_year', fontsize = 20)
         #ax[1,1].plot(x_metascores_year,  y_metascores_year, color + 'o', alpha = 0.2, label = label + ', ' + str(len(metascores_year)))
-        ax[1,1].errorbar((bx_metascores_year[1:] + bx_metascores_year[:-1])/2, bp_metascores_year, yerr=bperr_metascores_year, fmt=color + '-', linewidth = 3)  
-
+        ax[1,1].errorbar((bx_metascores_year[1:] + bx_metascores_year[:-1])/2, bp_metascores_year, yerr=bperr_metascores_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
 
         
         # plot critic reviews
+        ax[0,2].set_ylim([-25,150])         
         x_critic_review_year,  y_critic_review_year = get_dict_data(critic_review_year)       
         bx_critic_review_year, bp_critic_review_year, bperr_critic_review_year = getBinnedDistribution(x_critic_review_year, y_critic_review_year, num_of_bins)
 
         
         ax[0,2].set_title('IMDb - critic_review_year', fontsize = 20)
         #ax[0,2].plot(x_critic_review_year,  y_critic_review_year, color + 'o', alpha = 0.2, label = label + ', ' + str(len(critic_review_year)))
-        ax[0,2].errorbar((bx_critic_review_year[1:] + bx_critic_review_year[:-1])/2, bp_critic_review_year, yerr=bperr_critic_review_year, fmt=color + '-', linewidth = 3)  
+        ax[0,2].errorbar((bx_critic_review_year[1:] + bx_critic_review_year[:-1])/2, bp_critic_review_year, yerr=bperr_critic_review_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)  
 
 
 
@@ -339,19 +363,150 @@ def get_inflation_curves():
         x_user_review_year,  y_user_review_year = get_dict_data(user_review_year)       
         bx_user_review_year, bp_user_review_year, bperr_user_review_year = getBinnedDistribution(x_user_review_year, y_user_review_year, num_of_bins)
 
+        ax[1,2].set_ylim([-15,75])         
         ax[1,2].set_title('IMDb - user_review_year', fontsize = 20)
         #ax[1,2].plot(x_user_review_year,  y_user_review_year, color + 'o', alpha = 0.2, label = label + ', ' + str(len(user_review_year)))
-        ax[1,2].errorbar((bx_user_review_year[1:] + bx_user_review_year[:-1])/2, bp_user_review_year, yerr=bperr_user_review_year, fmt=color + '-', linewidth = 3)  
+        ax[1,2].errorbar((bx_user_review_year[1:] + bx_user_review_year[:-1])/2, bp_user_review_year, yerr=bperr_user_review_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)  
         
 
+     
+
+
+
+
+        # music
+        file_cnt_year    = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_pop.dat'
+        rating_cnt_music = np.asarray([line.strip() for line in open(file_cnt_year)])
+        x_num_of_movies_year,  y_num_of_movies_year = get_dict_data(rating_cnt_music)       
+        bx_num_of_movies_year, bp_num_of_movies_year, bperr_num_of_movies_year = getBinnedDistribution(x_num_of_movies_year, y_num_of_movies_year, num_of_bins)
+
+        ax[1,0].set_ylim([-400,10000])         
+        ax[1,0].set_title('Lastfm playcounts', fontsize = 20)
+        #ax[1,0].plot(x_num_of_movies_year,  y_num_of_movies_year, color + 'o', alpha = 0.001, label = label + ', ' + str(len(average_ratings_year)))
+        ax[1,0].errorbar((bx_num_of_movies_year[1:] + bx_num_of_movies_year[:-1])/2, bp_num_of_movies_year, yerr=bperr_num_of_movies_year, fmt='k' + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
+
+
+        file_cnt_year    = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_electro.dat'
+        rating_cnt_music = np.asarray([line.strip() for line in open(file_cnt_year)])
+        x_num_of_movies_year,  y_num_of_movies_year = get_dict_data(rating_cnt_music)       
+        bx_num_of_movies_year, bp_num_of_movies_year, bperr_num_of_movies_year = getBinnedDistribution(x_num_of_movies_year, y_num_of_movies_year, num_of_bins)
+
+        #ax[1,0].plot(x_num_of_movies_year,  y_num_of_movies_year, color + 'o', alpha = 0.001, label = label + ', ' + str(len(average_ratings_year)))
+        ax[1,0].errorbar((bx_num_of_movies_year[1:] + bx_num_of_movies_year[:-1])/2, bp_num_of_movies_year, yerr=bperr_num_of_movies_year, fmt='b' + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
+   
         
-        
-    align_plot(ax)    
+    align_plot(ax)   
+    plt.savefig('inflation_data.png') 
+    plt.close()    
     plt.show()
+    
+
+
+    
+
+
+    
+ 
+
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''
+'''                                                                '''   
+'''                       CAREER LENGTH AND SHIT                   '''
+'''                                                                '''
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''   
+
+
+
+   
+
+def get_length_plots():
 
 
 
 
+    title_font  = 25 
+    num_of_bins = 20
+    seaborn.set_style('white')  
+
+    f, ax = plt.subplots(2, 3, figsize=(22, 15))
+    #st = f.suptitle("IMDb Inflation of impact measures", fontsize=title_font)
+    file_avg_year  = 'ProcessedData/3_inflation_curves/film_yearly_average_ratings_dist_director.dat'       
+    average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
+    x_average_ratings_year, y_average_ratings_year = get_num_per_year(average_ratings_year)  
+    ax[0,0].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
+    ax[0,0].set_title('numbre of movies', fontsize = title_font)
+
+    ax[0,1].set_yscale('log')
+    ax[0,1].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
+    ax[0,1].set_title('numbre of movies', fontsize = title_font)
+
+    
+
+    file_avg_year_electro = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_electro.dat' 
+    file_avg_year_pop     = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_pop.dat'   
+    average_ratings_year_electro = np.asarray([line.strip() for line in open(file_avg_year_electro)])
+    x_average_ratings_year_electro, y_average_ratings_year_electro = get_num_per_year(average_ratings_year_electro)  
+
+    average_ratings_year_pop = np.asarray([line.strip() for line in open(file_avg_year_pop)])
+    x_average_ratings_year_pop, y_average_ratings_year_pop = get_num_per_year(average_ratings_year_pop)  
+
+    
+    ax[1,0].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
+    ax[1,0].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
+    ax[1,0].set_title('numbre of tracks', fontsize = title_font)
+
+    ax[1,1].set_yscale('log')
+    ax[1,1].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
+    ax[1,1].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
+    ax[1,1].set_title('numbre of tracks', fontsize = title_font)
+
+
+
+
+    professions = [('director',     'k'), 
+                   ('producer',     'b'),
+                   ('writer'  ,     'r'),
+                   ('composer',     'g'),
+                   ('art-director', 'y'),]    
+       
+    for (label, color) in professions:
+    
+        career_length  = [float(line.strip()) for line in open('ProcessedData/5_career_length/film_career_length_' + label + '.dat')]
+        xcareer_length, pcareer_length = getDistribution(career_length)
+        
+        ax[0,2].set_xscale('log')
+        ax[0,2].set_yscale('log')
+        ax[0,2].plot(xcareer_length, pcareer_length, color, marker = 'o', alpha = 0.3, linewidth = 0, label = label+ ', ')
+
+
+
+
+
+    ax[0,2].set_title('length of movie careers')
+    ax[1,2].set_title('length of music careers')    
+    professions = [('pop',     'k'), 
+                   ('electro', 'b')]    
+       
+    for (label, color) in professions:
+    
+        career_length  = [float(line.strip()) for line in open('ProcessedData/5_career_length/music_career_length_' + label + '.dat')]
+        xcareer_length, pcareer_length = getDistribution(career_length)
+        
+        ax[1,2].set_xscale('log')
+        ax[1,2].set_yscale('log')
+        ax[1,2].plot(xcareer_length, pcareer_length, color, marker = 'o', alpha = 0.3, linewidth = 0, label = label+ ', ')
+    
+
+
+
+
+
+
+
+    
+    
+    align_plot(ax)
+    plt.savefig('career_length_data.png')
+    plt.show()
 
 
 
@@ -397,17 +552,19 @@ def parse_N_star_N_data(filename, cutoff_N1, cutoff_N2):
                 N_star_N.append(best_id/career_N)
 
 
-        NNN = sorted(N_star_N)        
+        NNN = sorted(N_star_N)
+
         CDF = np.cumsum(NNN)
+
         x = NNN
         y = CDF
         x = np.array(x, dtype=float)
         y = np.array(y, dtype=float) 
-        y = [1-yy/max(y) for yy in y]      
-        
+        maxy = max(y)
+        y = [1-yy/maxy for yy in y]      
 
-        #x_N_star_N,  p_N_star_N = getDistribution(N_star_N, True)  
-        
+
+        #x_N_star_N,  p_N_star_N = getDistribution(N_star_N, True)         
         ###
         ###    E_i    : expected
         ###    O_i    : observed
@@ -415,7 +572,7 @@ def parse_N_star_N_data(filename, cutoff_N1, cutoff_N2):
         
         yNN = [1 - xy for xy in y]
         num = len(yNN)
-        
+
         #r_square = sum([(yNN[i] - x[
         slope, intercept, r_square, p_value, std_err = stats.linregress(x,yNN)
         #r_square = random.random()
@@ -451,10 +608,10 @@ def get_r_test():
 
     for (label, color) in professions[0:1]:
        
-        num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
+        #num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
       
         
-        file_avg_all  = 'ProcessedDataNormalizedRandomized/4_NN_rank_N/film_best_product_NN_ranks_all_avg_rating_'    + label + '.dat'
+        file_avg_all  = 'ProcessedDataNormalized/4_NN_rank_N/film_best_product_NN_ranks_all_avg_rating_'    + label + '.dat'
         #file_cnt_all  = 'ProcessedDataNormalizedRandomized/4_NN_rank_N/film_best_product_NN_ranks_rand_rating_count_' + label + '.dat'
         #file_mets_all = 'ProcessedDataNormalizedRandomized/4_NN_rank_N/film_best_product_NN_ranks_all_metascores_'    + label + '.dat'
         #file_crit_all = 'ProcessedDataNormalizedRandomized/4_NN_rank_N/film_best_product_NN_ranks_rand_critic_review_'+ label + '.dat'
@@ -487,7 +644,7 @@ def get_r_test():
 
 def plot_ccdf(file_avg_all, num_of_bins, ax, color, label):
 
-    x_Nstar_avg_all, p_Nstar_avg_all, len_career, r_square = parse_N_star_N_data(file_avg_all,  0,1000)
+    x_Nstar_avg_all, p_Nstar_avg_all, len_career, r_square = parse_N_star_N_data(file_avg_all,  10,1000)
     
     bx_average_ratings, bp_average_ratings, bperr_average_ratings = getBinnedDistribution(np.asarray(x_Nstar_avg_all), np.asarray(p_Nstar_avg_all), num_of_bins)
     ax.set_title('IMDb - average ratings', fontsize = 19)        
@@ -552,6 +709,9 @@ if __name__ == '__main__':
         
     elif sys.argv[1] == '2':
         get_inflation_curves()
+
+    elif sys.argv[1] == '3':
+        get_length_plots()
     
     elif sys.argv[1] == '4':
         get_r_test()
