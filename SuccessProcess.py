@@ -188,7 +188,7 @@ def process_simple_career_trajectories(normalized, randomized):
                 add_time_series(average_ratings_year, time_series)
                  
                 
-                career_length.append(pista_avg_rating.getCareerLength())         
+                #career_length.append(pista_avg_rating.getCareerLength())         
                 
                 (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact()  
                 if 'nan' not in str(NN_rand):
@@ -228,7 +228,7 @@ def process_simple_career_trajectories(normalized, randomized):
                         NN_rand_rating_count.append((NN_rand, N))
                  
                  
-
+                    career_length.append(pista_ratingcnt.getCareerLength())         
                     
                 except:
                     error.write(filename + '\t' + field  + '\t' + label + '\n')
@@ -524,9 +524,9 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    #process_simple_career_trajectories(normalized = False, randomized = False)
-    #process_simple_career_trajectories(normalized = True,  randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = True)
+    process_simple_career_trajectories(normalized = False, randomized = False)
+    process_simple_career_trajectories(normalized = True,  randomized = False)
+    #process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
