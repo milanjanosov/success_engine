@@ -198,7 +198,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
 
 
-                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors)
+                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
                 multi_impacts += gyurika.getImpactValues()
 
 
