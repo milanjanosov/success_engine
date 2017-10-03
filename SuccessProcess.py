@@ -86,7 +86,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
 
 
-    for (files, field, label) in input_data:
+    for (files, field, label) in input_data[1:]:
 
         ijk = 0
         nnn = len(files)
@@ -196,8 +196,8 @@ def process_simple_career_trajectories(normalized, randomized):
                     NN_rand_avg_rating.append((NN_rand, N))
 
 
-
-
+ 
+                                                                                            
                 gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
                 multi_impacts += gyurika.getImpactValues()
 

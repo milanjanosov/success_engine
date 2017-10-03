@@ -85,7 +85,7 @@ class SimpleCareerTrajectory:
     
 
         
-        if randomized:
+        if randomized and len(events) > 0:
             impacts_to_rand = [e[2] for e in events]
             random.shuffle(impacts_to_rand)
             events_rand = []
@@ -196,10 +196,10 @@ def getBinnedDistribution(x, y, nbins):
 
 #print pista.getYearlyProducts()
 
-#gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz', [], False)
+gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz', [], True)
 #gyurika.getImpactValues()
 #print '\n'
 
-#for imp in  gyurika.getImpactValues():
-#    print imp
+for imp in  gyurika.getImpactValues():
+    print imp
 
