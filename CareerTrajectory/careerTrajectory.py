@@ -28,8 +28,6 @@ class MultipleImpactCareerTrajectory:
                 except ValueError:
                     pass
         
-        print events
-        
         if randomized and len(events) > 0:
             
             events_rand = []
