@@ -176,6 +176,8 @@ def process_simple_career_trajectories(normalized, randomized):
             
             
             #avg ratings
+
+            '''
             if 'literature' in field or 'film' in field:
 
                 impact_id = 0
@@ -202,7 +204,7 @@ def process_simple_career_trajectories(normalized, randomized):
                 multi_impacts += gyurika.getImpactValues()
 
 
-            
+            '''            
             # rating counts
             if 'music' in field or 'film' in field:
             
@@ -236,7 +238,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
 
             
-                              
+            '''                 
             # metascore
             if  'film' in field:
             
@@ -290,7 +292,7 @@ def process_simple_career_trajectories(normalized, randomized):
                     NN_rand_user_review.append((NN_rand, N))   
                              
              
-
+            '''
 
 
 
