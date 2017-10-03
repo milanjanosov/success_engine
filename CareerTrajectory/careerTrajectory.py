@@ -196,10 +196,10 @@ def getBinnedDistribution(x, y, nbins):
 
 #print pista.getYearlyProducts()
 
-gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz', [], True)
+#gyurika = MultipleImpactCareerTrajectory('george_lucas', 'george_lucas.gz', [], True)
 #gyurika.getImpactValues()
 #print '\n'
 
-for imp in  gyurika.getImpactValues():
-    print imp
+#for imp in  gyurika.getImpactValues():
+#    print imp
 
