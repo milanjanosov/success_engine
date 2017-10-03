@@ -180,7 +180,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
                 impact_id = 0
             
-                pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, average_rat_norm)
+                pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, average_rat_norm, randomized)
                 average_ratings  += pista_avg_rating.getImpactValues()
                 add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
                 
@@ -198,7 +198,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
 
 
-                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors)
+                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
                 multi_impacts += gyurika.getImpactValues()
 
 
@@ -214,7 +214,7 @@ def process_simple_career_trajectories(normalized, randomized):
                
                 try:
 
-                    pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, rating_counts_norm)
+                    pista_ratingcnt = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, rating_counts_norm, randomized)
                     rating_counts   += pista_ratingcnt.getImpactValues()  
                     
                     add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
@@ -240,7 +240,7 @@ def process_simple_career_trajectories(normalized, randomized):
             # metascore
             if  'film' in field:
             
-                pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2, metascore_norm)
+                pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2, metascore_norm, randomized)
                 metascores  += pista_meta.getImpactValues() 
                 add_max_impact(max_metascores, pista_meta.getMaxImpact())           
                 
@@ -258,7 +258,7 @@ def process_simple_career_trajectories(normalized, randomized):
             # critic reviews
             if 'film' in field:
             
-                pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3, critic_review_norm)
+                pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3, critic_review_norm, randomized)
                 critic_review += pista_critic.getImpactValues()                   
                 add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
 
@@ -276,7 +276,7 @@ def process_simple_career_trajectories(normalized, randomized):
             # user reviews
             if 'film' in field:
             
-                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4, user_review_norm)
+                pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4, user_review_norm, randomized)
                 user_review  += pista_user.getImpactValues()
                 add_max_impact(max_user_review, pista_user.getMaxImpact())
                 
