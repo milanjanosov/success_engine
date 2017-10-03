@@ -165,7 +165,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
           
 
-        for filename in files[0:100]:
+        for filename in files:
         
             
             
