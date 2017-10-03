@@ -86,7 +86,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
 
 
-    for (files, field, label) in input_data[1:]:
+    for (files, field, label) in input_data:
 
         ijk = 0
         nnn = len(files)
