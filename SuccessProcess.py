@@ -524,8 +524,8 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    process_simple_career_trajectories(normalized = False, randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = False)
+    #process_simple_career_trajectories(normalized = False, randomized = False)
+    #process_simple_career_trajectories(normalized = True,  randomized = False)
     process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'

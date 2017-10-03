@@ -10,7 +10,7 @@ import numpy as np
 
 class MultipleImpactCareerTrajectory:
 
-    def __init__(self, name, inputfile, norm_factors, randomized = False):
+    def __init__(self, name, inputfile, norm_factors, randomized):
         self.name    = inputfile
         events       = []
 
@@ -63,7 +63,7 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, norm_factors, randomized = False):
+    def __init__(self, name, inputfile, impactm, norm_factors, randomized):
         self.impactm = impactm
         self.name    = inputfile
         events       = []             
