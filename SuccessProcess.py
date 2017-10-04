@@ -177,6 +177,7 @@ def process_simple_career_trajectories(normalized, randomized):
             
             #avg ratings
 
+
             if 'literature' in field or 'film' in field:
 
                 impact_id = 0
@@ -185,6 +186,7 @@ def process_simple_career_trajectories(normalized, randomized):
                 average_ratings  += pista_avg_rating.getImpactValues()
                 add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
                 
+                print average_ratings_year
                 time_series = pista_avg_rating.getYearlyProducts()
                 add_time_series(average_ratings_year, time_series)
                  
@@ -380,44 +382,44 @@ def process_simple_career_trajectories(normalized, randomized):
 
         ''' ------------------ inflation curves ------------------ '''
 
+        if not normalized:  
+
+            dir3 = root + '/3_inflation_curves'
+            if not os.path.exists(dir3):
+                os.makedirs(dir3)
+
+            x_average_ratings_year = get_dict_data(average_ratings_year) 
+            x_rating_counts_year   = get_dict_data(rating_counts_year)   
+            x_metascores_year      = get_dict_data(metascores_year)      
+            x_critic_review_year   = get_dict_data(critic_review_year)   
+            x_user_review_year     = get_dict_data(user_review_year)   
 
 
-        dir3 = root + '/3_inflation_curves'
-        if not os.path.exists(dir3):
-            os.makedirs(dir3)
+            if len(x_average_ratings_year) > 0:
+                f = open(dir3 + '/' + field + '_yearly_average_ratings_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in x_average_ratings_year]
+                f.close()
+     
+            if len(x_rating_counts_year) > 0:            
+                f = open(dir3 + '/' + field + '_yearly_rating_counts_dist_'   + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in x_rating_counts_year]
+                f.close()
+     
+            if len(x_metascores_year) > 0:           
+                f = open(dir3 + '/' + field + '_yearly_metascores_dist_'      + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in x_metascores_year]
+                f.close()
 
-        x_average_ratings_year = get_dict_data(average_ratings_year) 
-        x_rating_counts_year   = get_dict_data(rating_counts_year)   
-        x_metascores_year      = get_dict_data(metascores_year)      
-        x_critic_review_year   = get_dict_data(critic_review_year)   
-        x_user_review_year     = get_dict_data(user_review_year)   
+            if len(x_critic_review_year) > 0:            
+                f = open(dir3 + '/' + field + '_yearly_critic_review_dist_' + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in x_critic_review_year]
+                f.close()
 
-
-        if len(x_average_ratings_year) > 0:
-            f = open(dir3 + '/' + field + '_yearly_average_ratings_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in x_average_ratings_year]
-            f.close()
- 
-        if len(x_rating_counts_year) > 0:            
-            f = open(dir3 + '/' + field + '_yearly_rating_counts_dist_'   + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in x_rating_counts_year]
-            f.close()
- 
-        if len(x_metascores_year) > 0:           
-            f = open(dir3 + '/' + field + '_yearly_metascores_dist_'      + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in x_metascores_year]
-            f.close()
-
-        if len(x_critic_review_year) > 0:            
-            f = open(dir3 + '/' + field + '_yearly_critic_review_dist_' + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in x_critic_review_year]
-            f.close()
-
-        if len(x_user_review_year) > 0:            
-            f = open(dir3 + '/' + field + '_yearly_user_review_dist_'     + label + '.dat', 'w')
-            [f.write(str(a) + '\n') for a in x_user_review_year]
-            f.close()
-         
+            if len(x_user_review_year) > 0:            
+                f = open(dir3 + '/' + field + '_yearly_user_review_dist_'     + label + '.dat', 'w')
+                [f.write(str(a) + '\n') for a in x_user_review_year]
+                f.close()
+                                            
          
      
      
@@ -524,8 +526,8 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    #process_simple_career_trajectories(normalized = False, randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = False)
+    process_simple_career_trajectories(normalized = False, randomized = False)
+    #process_simple_career_trajectories(normalized = True,  randomized = False)
     #process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
