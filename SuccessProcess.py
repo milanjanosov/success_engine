@@ -186,7 +186,7 @@ def process_simple_career_trajectories(normalized, randomized):
                 average_ratings  += pista_avg_rating.getImpactValues()
                 add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
                 
-                print average_ratings_year
+
                 time_series = pista_avg_rating.getYearlyProducts()
                 add_time_series(average_ratings_year, time_series)
                  
