@@ -48,7 +48,7 @@ class MultipleImpactCareerTrajectory:
         
         if len(self.events) > 0:
             num_impacts    = len(self.events[0][2]) 
-            return ['\t'.join(event[2]) for event in self.events]
+            return [event[0] + '\t' + '\t'.join(event[2]) for event in self.events]
         else:
             return []
        
