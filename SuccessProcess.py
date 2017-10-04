@@ -63,6 +63,14 @@ def parse_norm_factors(filename):
                         
     return norm_factors
     
+ 
+def write_exponents(exponents, filename):
+
+    f = open(filename, 'w')
+    for e in exponents:
+        f.write(str(e[0]) + '\t' + str(e[1]) + '\t'  + str(e[2]) + '\t'  + str(e[3]) + '\n'  )
+    f.close()
+    
     
     
 
@@ -139,7 +147,17 @@ def process_simple_career_trajectories(normalized, randomized):
         critic_review_norm = {}   
         user_review_norm   = {}   
         
+        
+        exponents_avg_rating   = []
+        exponents_rating_count = []
+        exponents_metascore    = []
+        exponents_ciric_rev    = []
+        exponents_user_rev     = []
+        
+        
+        
         combined_factors   = []      
+
 
 
         if normalized:
@@ -170,17 +188,16 @@ def process_simple_career_trajectories(normalized, randomized):
             
             
             ijk += 1
-            print ijk, '/', nnn
+            #print ijk, '/', nnn
             
             
             
             
             #avg ratings
-
-
             if 'literature' in field or 'film' in field:
 
                 impact_id = 0
+
             
                 pista_avg_rating = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, impact_id, average_rat_norm, randomized)
                 average_ratings  += pista_avg_rating.getImpactValues()
@@ -194,22 +211,27 @@ def process_simple_career_trajectories(normalized, randomized):
                 #career_length.append(pista_avg_rating.getCareerLength())         
                 
                 (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact()  
+                print NN_all, N
                 if 'nan' not in str(NN_rand):
                     NN_all_avg_rating  += [(n, N) for n in NN_all ]
                     NN_rand_avg_rating.append((NN_rand, N))
 
-
+                
+                exponents = pista_avg_rating.get_exponents()
+                if 0 != exponents:           
+                    exponents_avg_rating.append(exponents)
+                
  
                                                                                             
                 gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
                 multi_impacts += gyurika.getImpactValues()
 
 
+
+
                       
             # rating counts
             if 'music' in field or 'film' in field:
-            
-                
             
                 impact_id = 1
                 if 'music' in field:
@@ -231,15 +253,21 @@ def process_simple_career_trajectories(normalized, randomized):
                         NN_rand_rating_count.append((NN_rand, N))
                  
                  
+                    exponents = pista_ratingcnt.get_exponents()
+                    if 0 != exponents:           
+                        exponents_rating_count.append(exponents)
+                     
+                 
                     career_length.append(pista_ratingcnt.getCareerLength())         
                     
                 except:
                     error.write(filename + '\t' + field  + '\t' + label + '\n')
 
 
+                
 
-            
-                            
+
+                                    
             # metascore
             if  'film' in field:
             
@@ -257,6 +285,13 @@ def process_simple_career_trajectories(normalized, randomized):
                     NN_rand_metascores.append((NN_rand, N))
                          
                  
+                exponents = pista_meta.get_exponents()
+                if 0 != exponents:           
+                    exponents_metascore.append(exponents) 
+                 
+                 
+                       
+                       
                         
             # critic reviews
             if 'film' in field:
@@ -275,6 +310,13 @@ def process_simple_career_trajectories(normalized, randomized):
                     NN_rand_critic_review.append((NN_rand, N))   
                   
 
+                exponents = pista_critic.get_exponents()
+                if 0 != exponents:           
+                    exponents_ciric_rev.append(exponents) 
+
+                
+                
+                       
                        
             # user reviews
             if 'film' in field:
@@ -293,7 +335,12 @@ def process_simple_career_trajectories(normalized, randomized):
                     NN_rand_user_review.append((NN_rand, N))   
                              
              
-            
+                exponents = pista_user.get_exponents()
+                if 0 != exponents:           
+                    exponents_user_rev.append(exponents) 
+
+                
+                            
 
 
 
@@ -505,6 +552,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
         
         
+          
         
         ''' ------------------ multiple impact measures ------------------ '''
         
@@ -517,6 +565,29 @@ def process_simple_career_trajectories(normalized, randomized):
             f = open(dir7 + '/' + field + '_multiple_impacts_'  + label + '.dat', 'w')
             [f.write(mm + '\n') for mm in multi_impacts]
             f.close()
+            
+            
+            
+            
+        ''' ------------------  exponents  ------------------ '''
+  
+
+            
+        dir8 = root + '/8_exponents'
+        if not os.path.exists(dir8):
+            os.makedirs(dir8)
+            
+        write_exponents( exponents_avg_rating,   dir8 + '/' + field + '_exponents_avg_rating_' + label + '.dat') 
+        write_exponents( exponents_rating_count, dir8 + '/' + field + '_exponents_rating_cnt_' + label + '.dat') 
+        write_exponents( exponents_metascore,    dir8 + '/' + field + '_exponents_metascore_'  + label + '.dat') 
+        write_exponents( exponents_ciric_rev,    dir8 + '/' + field + '_exponents_critic_rev_' + label + '.dat') 
+        write_exponents( exponents_user_rev,     dir8 + '/' + field + '_exponents_user_rev_'   + label + '.dat') 
+            
+     
+        
+        
+        
+        
         
         
         
@@ -526,8 +597,8 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     t1 = time.time()
-    #process_simple_career_trajectories(normalized = False, randomized = False)
-    #process_simple_career_trajectories(normalized = True,  randomized = False)
+    process_simple_career_trajectories(normalized = False, randomized = False)
+    process_simple_career_trajectories(normalized = True,  randomized = False)
     process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
