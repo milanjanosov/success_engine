@@ -132,37 +132,43 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
-        try:
-            maxValue       = max([e[2] for e in self.events])
-            sorted_events  = sorted(self.events, key=lambda tup: tup[1])  
-            sorted_impacts = [e[2] for e in sorted_events]
-            sorted_dates   = [e[1] for e in sorted_events]  
-            maxIndex1      = sorted_impacts.index(maxValue)
-            maxIndex2      = len(sorted_events) - sorted_impacts[::-1].index(maxValue)
-            
-            before_imp  = sorted_impacts[:maxIndex1]
-            after_imp   = sorted_impacts[maxIndex2:]
-            before_date = [d - sorted_dates[0] for d in sorted_dates[:maxIndex1]]
-            after_date  = [d - sorted_dates[0] for d in sorted_dates[maxIndex2:]]
-            
-            fit_before = powerlaw.Fit(before_date, before_imp)
-            fit_after  = powerlaw.Fit(after_date,  after_imp)
-            
-            if len(before_imp) > 5 and len(after_imp) > 5:
-            
-                (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
-                (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
+        if len(self.events) > 10:   
+    
+            try:
+                maxValue       = max([e[2] for e in self.events])
+                sorted_events  = sorted(self.events, key=lambda tup: tup[1])  
+                sorted_impacts = [e[2] for e in sorted_events]
+                sorted_dates   = [e[1] for e in sorted_events]  
+                maxIndex1      = sorted_impacts.index(maxValue)
+                maxIndex2      = len(sorted_events) - sorted_impacts[::-1].index(maxValue)
+                
+                before_imp  = sorted_impacts[:maxIndex1]
+                after_imp   = sorted_impacts[maxIndex2:]
+                before_date = [d - sorted_dates[0] for d in sorted_dates[:maxIndex1]]
+                after_date  = [d - sorted_dates[0] for d in sorted_dates[maxIndex2:]]
+                
+                fit_before = powerlaw.Fit(before_date, before_imp)
+                fit_after  = powerlaw.Fit(after_date,  after_imp)
+                
+                if len(before_imp) > 5 and len(after_imp) > 5:
+                
+                    (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
+                    (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
 
-                if not np.isnan(alpha) and not np.isnan(beta):
-                    return (alpha, sigma_a, beta, sigma_b)    
+                    if not np.isnan(alpha) and not np.isnan(beta):
+                        return (alpha, sigma_a, beta, sigma_b)    
+                    else:
+                        return 0
+                
                 else:
                     return 0
-            
-            else:
-                return 0
-            
-        except:
+                
+            except:
+                return 0                    
+
+        else:
             return 0
+    
 
     
     ### this gives back the best impact
