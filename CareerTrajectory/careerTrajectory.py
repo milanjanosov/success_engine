@@ -161,7 +161,6 @@ class SimpleCareerTrajectory:
                 
                     return (2,2,2,2)
                 
-                    '''
                     (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
                     (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
                         
@@ -169,7 +168,7 @@ class SimpleCareerTrajectory:
                         return (alpha, sigma_a, beta, sigma_b)    
                     else:
                         return 0
-                    '''
+                    
                 else:
                     return 0
                 
