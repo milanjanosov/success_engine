@@ -132,11 +132,8 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
-        print self.events
 
-        if len(self.events) > 9:   
-    
-
+        if len(self.events) > 9:       
     
             try:
                 maxValue       = max([e[2] for e in self.events])
@@ -153,14 +150,9 @@ class SimpleCareerTrajectory:
                 
                 fit_before = powerlaw.Fit(before_date, before_imp)
                 fit_after  = powerlaw.Fit(after_date,  after_imp)
-                
-                print 'FASZ\n\n\n'
-                
-                
+                                           
                 if len(before_imp) > 4 and len(after_imp) > 4:
-                
-                    return (2, 2, 2, 2)
-                
+                          
                     (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
                     (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
                         
