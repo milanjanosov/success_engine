@@ -134,7 +134,7 @@ class SimpleCareerTrajectory:
     
         print self.events
 
-        if len(self.events) > 10:   
+        if len(self.events) > 9:   
     
 
     
@@ -157,9 +157,9 @@ class SimpleCareerTrajectory:
                 print 'FASZ\n\n\n'
                 
                 
-                if len(before_imp) > 5 and len(after_imp) > 5:
+                if len(before_imp) > 4 and len(after_imp) > 4:
                 
-                    return (2,2,2,2)
+
                 
                     (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
                     (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
