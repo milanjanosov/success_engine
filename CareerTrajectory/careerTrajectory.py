@@ -132,10 +132,11 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
+        print self.events
 
         if len(self.events) > 10:   
     
-            print 'FASZ\n\n\n'
+
     
             try:
                 maxValue       = max([e[2] for e in self.events])
@@ -153,16 +154,22 @@ class SimpleCareerTrajectory:
                 fit_before = powerlaw.Fit(before_date, before_imp)
                 fit_after  = powerlaw.Fit(after_date,  after_imp)
                 
+                print 'FASZ\n\n\n'
+                
+                
                 if len(before_imp) > 5 and len(after_imp) > 5:
                 
+                    return (2,2,2,2)
+                
+                    '''
                     (alpha, sigma_a) = (fit_before.power_law.alpha, fit_before.power_law.sigma)
                     (beta,  sigma_b) = (fit_after.power_law.alpha,  fit_after.power_law.sigma)
-
+                        
                     if not np.isnan(alpha) and not np.isnan(beta):
                         return (alpha, sigma_a, beta, sigma_b)    
                     else:
                         return 0
-                
+                    '''
                 else:
                     return 0
                 
@@ -233,10 +240,10 @@ def getBinnedDistribution(x, y, nbins):
 
 
 
-#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
+pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
 #print pista.getImpactValues()
 
-#print pista.get_exponents()
+print pista.get_exponents()
 
 #print pista.getCareerLength()
 #print pista.getRankOfMaxImpact()
