@@ -132,8 +132,10 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
-        print 'FASZ\n\n\n'
+
         if len(self.events) > 10:   
+    
+            print 'FASZ\n\n\n'
     
             try:
                 maxValue       = max([e[2] for e in self.events])
