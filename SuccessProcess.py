@@ -99,6 +99,8 @@ def process_simple_career_trajectories(normalized, randomized):
         ijk = 0
         nnn = len(files)
         
+        print label
+        
         
         average_ratings = []
         rating_counts   = []
@@ -188,7 +190,7 @@ def process_simple_career_trajectories(normalized, randomized):
             
             
             ijk += 1
-            #print ijk, '/', nnn
+            print ijk, '/', nnn
             
             
             
@@ -576,6 +578,9 @@ def process_simple_career_trajectories(normalized, randomized):
         dir8 = root + '/8_exponents'
         if not os.path.exists(dir8):
             os.makedirs(dir8)
+            
+        
+        print exponents_avg_rating    
             
         write_exponents( exponents_avg_rating,   dir8 + '/' + field + '_exponents_avg_rating_' + label + '.dat') 
         write_exponents( exponents_rating_count, dir8 + '/' + field + '_exponents_rating_cnt_' + label + '.dat') 
