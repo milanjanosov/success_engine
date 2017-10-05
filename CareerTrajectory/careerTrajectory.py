@@ -132,6 +132,7 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
+        print 'FASZ\n\n\n'
         if len(self.events) > 10:   
     
             try:
