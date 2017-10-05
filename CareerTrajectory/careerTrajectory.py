@@ -242,7 +242,7 @@ def getBinnedDistribution(x, y, nbins):
 pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
 #print pista.getImpactValues()
 
-print pista.get_exponents()
+#print pista.get_exponents()
 
 #print pista.getCareerLength()
 #print pista.getRankOfMaxImpact()
