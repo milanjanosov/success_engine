@@ -1,6 +1,7 @@
 import os
 import gzip
 import random
+import math
 import numpy as np
 import powerlaw
 
@@ -132,7 +133,6 @@ class SimpleCareerTrajectory:
     ### get exponents
     def get_exponents(self):
     
-
         if len(self.events) > 9:       
     
             try:
@@ -171,6 +171,25 @@ class SimpleCareerTrajectory:
             return 0
     
 
+
+    ### get the autocorrelation
+    def getAutoCorrelCoeff(self):
+    
+        N = len(self.events)
+        
+        if N > 4:
+ 
+            values   = [e[2] for e in self.events]
+            maxValue = max([e[2] for e in self.events])
+            maxIndex = sorted(values).index(maxValue)
+            sigma2   = np.std(values)**2
+            rho      = sum([( maxValue * values[tau % N ] - maxValue**2 )/(sigma2) for tau in range(N)]) / N
+              
+            return 0 #rho 
+
+        else:   
+              return 0
+            
     
     ### this gives back the best impact
     def getMaxImpact(self):
@@ -199,6 +218,16 @@ class SimpleCareerTrajectory:
             return ('nan', 'nan', 'nan')
             
             
+    # log p_alpha = log_c_10ialpha - log Q_i
+    # assume Q_i is constant over the career and P(p) is lognormal:
+    # log Q_i = <log c_10ialpha> - mu_p
+    def getLogPwithZeroAvg(self):
+    
+        log_impacts = [math.log(e[2]) for e in self.events]          
+        log_impacts_avg = np.mean(log_impacts)
+        
+        return [i - log_impacts_avg for i in log_impacts]
+
             
 
 
@@ -234,7 +263,8 @@ def getBinnedDistribution(x, y, nbins):
 #pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
 #print pista.getImpactValues()
 
-#print pista.get_exponents()
+#print pista.getAutoCorrelCoeff()
+#print pista.getLogPwithZeroAvg()
 
 #print pista.getCareerLength()
 #print pista.getRankOfMaxImpact()

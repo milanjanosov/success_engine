@@ -1,0 +1,206 @@
+import os
+import sys
+import seaborn
+import numpy as np
+import powerlaw
+import pylab as pl
+import matplotlib.pyplot as plt
+from scipy import stats
+from CareerTrajectory.careerTrajectory import getDistribution
+from CareerTrajectory.careerTrajectory import getBinnedDistribution
+
+
+
+
+
+def align_plot(ax):
+
+    font_tick = 15   
+
+    for i in range(len(ax)):
+        for j in range(len(ax[0])):
+            ax[i,j].grid()
+            ax[i,j].legend(loc = 'left', fontsize = font_tick) 
+            ax[i,j].spines['top'].set_visible(False)
+            ax[i,j].spines['right'].set_visible(False)
+            ax[i,j].get_xaxis().tick_bottom()
+            ax[i,j].get_yaxis().tick_left()
+            ticklines  = ax[i,j].get_xticklines()  + ax[i,j].get_yticklines()
+            gridlines  = ax[i,j].get_xgridlines()  + ax[i,j].get_ygridlines()
+            ticklabels = ax[i,j].get_xticklabels() + ax[i,j].get_yticklabels()
+            for line in ticklines:
+                line.set_linewidth(1)
+
+            for line in gridlines:
+                line.set_linestyle('-.')
+
+            ax[i,j].tick_params(labelsize = font_tick) 
+
+
+
+
+
+def plot_distr_hist(rand, ax, label):
+
+
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_title(label, fontsize = 18)
+
+
+    # fit and plot the powerlaw
+    results = powerlaw.Fit(rand)
+    fit = powerlaw.Fit(rand)
+    alpha = fit.power_law.alpha
+    xmin  = fit.power_law.xmin
+    
+    results.plot_pdf(color='g', ax = ax, linestyle='', marker = 'o', linewidth = 3 )
+    results.power_law.plot_pdf(color='k', ax = ax,  linestyle='--', linewidth = 3, label = '$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)))     
+    
+    sk_results_pow = stats.kstest(results.pdf()[1], 'powerlaw', [alpha, xmin]) 
+ 
+            
+    # fit and plot the lognormal
+    param = stats.lognorm.fit(rand)
+    x_rand, p_rand = getDistribution(rand)
+    pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
+    mu =  np.log(param[2])
+    sigma = param[0]
+
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand))), log=True,alpha=0.5)
+    ax.plot(x_rand,pdf_fitted,'r-', label = '$\\mu$=' + str(round(mu,2)) + ' $\\sigma$=' + str(round(sigma, 2)))
+
+    sk_results_norm = stats.kstest(counts, 'lognorm', param)   
+      
+    return alpha, xmin, sk_results_pow[0], sk_results_pow[1], mu, sigma, sk_results_norm[0], sk_results_norm[1]
+
+
+
+   
+def get_imapct_distr():             
+            
+
+
+    ''' THIS CONFIRMS THAT THE IMPACT MEASURES OF INTEREST FOLLOW LOGNORMAL NATURE '''
+    ''' THEREFORE THE IMPACT DISTR COULD BE THE RESULT OF A MULTIPLICATIVE PROCESS '''
+     
+    dir9 = 'ProcessedDataCombined/9_impact_distributions_fit'
+    if not os.path.exists(dir9):
+        os.makedirs(dir9)
+                    
+    outf = open(dir9 + '/' + 'impact_distribution_fit_params.dat', 'w')
+    outf.write('norm\tdomain\tmeasure\talpha\txmin\tstat_pl\tp_pl\tmu\tsigma\tstat_ln\tp_ln\n')
+
+      
+      
+    for mode in ['', 'Normalized']:
+    
+
+        if mode == '':
+            mode_ = 'Original'
+        else:   
+            mode_ = mode   
+    
+    
+        FOLDER = 'ProcessedData' + mode + 'Sample' 
+       
+    
+        professions = [('director',     'k'), 
+                       ('producer',     'b'),
+                       ('writer'  ,     'r'),
+                       ('composer',     'g'),
+                       ('art-director', 'y')]
+
+
+        num_of_bins = 20
+        title_font  = 25 
+        seaborn.set_style('white')   
+        f, ax = plt.subplots(2, 3, figsize=(25, 15))
+        st = f.suptitle("IMDb " + mode + " impact distributions -  Directors", fontsize=title_font)
+
+
+        for (label, color) in professions[0:1]:
+           
+            num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
+          
+            file_avg  = FOLDER + '/1_impact_distributions/film_average_ratings_dist_' + label + '.dat'
+            file_cnt  = FOLDER + '/1_impact_distributions/film_rating_counts_dist_'   + label + '.dat'
+            file_mets = FOLDER + '/1_impact_distributions/film_metascores_dist_'      + label + '.dat'
+            file_crit = FOLDER + '/1_impact_distributions/film_critic_review_dist_'   + label + '.dat'
+            file_user = FOLDER + '/1_impact_distributions/film_user_review_dist_'     + label + '.dat'
+
+            average_ratings = np.asarray([round(float(line.strip()),2) for line in open(file_avg)])
+            rating_counts   = [float(line.strip()) for line in open(file_cnt)]
+            metascores      = [round(float(line.strip()),1) for line in open(file_mets)]
+            critic_review   = [round(float(line.strip()),2) for line in open(file_crit)]
+            user_review     = [round(float(line.strip()),2) for line in open(file_user)]
+            
+                      
+            # plot avg ratings
+            #rating_avg_fit   = plot_distr_hist(average_ratings, ax[0,0])                     
+            rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[0,1], 'rating counts')
+            #rating_mets_fit  = plot_distr_hist(metascores,      ax[0,2])          
+            rating_criit_fit = plot_distr_hist(critic_review,   ax[1,0], 'critic reviews')          
+            rating_user_fit  = plot_distr_hist(user_review,     ax[1,1], 'user reviews')
+            
+                  
+            outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+            outf.write(mode_ + '\t' + label + '\t' + 'critic_reviews' + '\t' + '\t'.join([str(t) for t in rating_criit_fit]) + '\n')
+            outf.write(mode_ + '\t' + label + '\t' + 'user_reviews'   + '\t' + '\t'.join([str(t) for t in rating_user_fit])  + '\n')
+            #outf.write(mode + '\t' + label + '\t' + 'avg_rating' + '\t' + '\t'.join([str(t) for t in rating_avg_fit]) + '\n')
+            #outf.write(mode + '\t' + label + '\t' + 'metascore' + '\t' + '\t'.join([str(t) for t in metascore]) + '\n')
+
+
+        ''' ---------------------------------------------- '''
+        '''      MOVIE YO                                  '''
+        
+        genres = [('electro', 'k'), ('pop', 'b')]
+                
+        for (genre, color) in genres[0:1]:
+
+            num_mus  = str(int(round(len(os.listdir('Data/Music/music-'+ genre +'-simple-careers'))/1000.0))) + 'k'
+            file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
+            rating_counts = np.asarray([round(float(line.strip())) for line in open(file_music)])    
+
+            rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[1,2], 'electro - rating counts')                
+            outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+
+
+
+        align_plot(ax)
+        plt.savefig('Figs/fitted_impact_distros_director'+ mode +'.png')
+        plt.close()
+        #plt.show()          
+
+
+    outf.close()
+
+
+
+
+def get_p_without_avg():
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+if __name__ == '__main__':         
+
+
+    if sys.argv[1] == '1':
+        get_imapct_distr()
+    elif sys.argv[2] == '2_pre':
+        get_p_without_avg()
+
+
+
+
+
