@@ -5,6 +5,7 @@ import numpy as np
 import powerlaw
 import pylab as pl
 import matplotlib.pyplot as plt
+import matplotlib
 matplotlib.use('Agg')
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
