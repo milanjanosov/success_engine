@@ -1,9 +1,10 @@
 import os
 import sys
-import seaborn
-import numpy as np
 import matplotlib
 matplotlib.use('Agg')
+import seaborn
+import numpy as np
+
 import powerlaw
 import pylab as pl
 import matplotlib.pyplot as plt
