@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
 from CareerTrajectory.careerTrajectory import getBinnedDistribution
-
-
+import matplotlib
+matplotlib.use('Agg')
 
 
 
@@ -100,7 +100,7 @@ def get_imapct_distr():
 
       
       
-    for mode in ['', 'Normalized']:
+    for mode in ['', 'Normalized'][0:1]:
     
 
         if mode == '':
@@ -109,7 +109,7 @@ def get_imapct_distr():
             mode_ = mode   
     
     
-        FOLDER = 'ProcessedData' + mode #+ 'Sample' 
+        FOLDER = 'ProcessedData' + mode + 'Sample' 
        
     
         professions = [('director',     'k'), 
