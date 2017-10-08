@@ -132,7 +132,7 @@ def get_imapct_distr():
     out_norm.write('norm\tdomain\tmeasure\tmu\tD\tp\n')
       
       
-    for mode in ['', 'Normalized'][0:1]:
+    for mode in ['', 'Normalized']:
     
 
         if mode == '':
@@ -141,7 +141,7 @@ def get_imapct_distr():
             mode_ = mode   
     
     
-        FOLDER = 'ProcessedData' + mode + 'Sample' 
+        FOLDER = 'ProcessedData' + mode# + 'Sample' 
        
     
         professions = [('director',     'k'), 
@@ -157,7 +157,7 @@ def get_imapct_distr():
         
 
 
-        for (label, color) in professions[0:2]:
+        for (label, color) in professions:
         
             print mode, label
         
