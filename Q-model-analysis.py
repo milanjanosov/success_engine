@@ -2,11 +2,11 @@ import os
 import sys
 import seaborn
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import powerlaw
 import pylab as pl
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('Agg')
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
 from CareerTrajectory.careerTrajectory import getBinnedDistribution
