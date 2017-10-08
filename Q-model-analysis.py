@@ -40,7 +40,7 @@ def align_plot(ax):
 
 
 
-def plot_distr_hist(rand, ax, label):
+def plot_distr_hist(rand, ax, label, power = True):
 
 
     ax.set_xscale('log')
@@ -49,16 +49,23 @@ def plot_distr_hist(rand, ax, label):
 
 
     # fit and plot the powerlaw
-    results = powerlaw.Fit(rand)
-    fit = powerlaw.Fit(rand)
-    alpha = fit.power_law.alpha
-    xmin  = fit.power_law.xmin
+    if power:
+        
+        results = powerlaw.Fit(rand)
+        fit = powerlaw.Fit(rand)
+        alpha = fit.power_law.alpha
+        xmin  = fit.power_law.xmin
+        
+        results.plot_pdf(color='g', ax = ax, linestyle='', marker = 'o', linewidth = 3 )
+        results.power_law.plot_pdf(color='k', ax = ax,  linestyle='--', linewidth = 3, label = '$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)))     
+        
+        sk_results_pow = stats.kstest(results.pdf()[1], 'powerlaw', [alpha, xmin]) 
     
-    results.plot_pdf(color='g', ax = ax, linestyle='', marker = 'o', linewidth = 3 )
-    results.power_law.plot_pdf(color='k', ax = ax,  linestyle='--', linewidth = 3, label = '$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)))     
+    else:
+        alpha = 0
+        xmin = 0
+        sk_results_pow = (0, 0)
     
-    sk_results_pow = stats.kstest(results.pdf()[1], 'powerlaw', [alpha, xmin]) 
- 
             
     # fit and plot the lognormal
     param = stats.lognorm.fit(rand)
@@ -71,7 +78,7 @@ def plot_distr_hist(rand, ax, label):
     ax.plot(x_rand,pdf_fitted,'r-', label = '$\\mu$=' + str(round(mu,2)) + ' $\\sigma$=' + str(round(sigma, 2)))
 
     sk_results_norm = stats.kstest(counts, 'lognorm', param)   
-      
+     
     return alpha, xmin, sk_results_pow[0], sk_results_pow[1], mu, sigma, sk_results_norm[0], sk_results_norm[1]
 
 
@@ -102,7 +109,7 @@ def get_imapct_distr():
             mode_ = mode   
     
     
-        FOLDER = 'ProcessedData' + mode + 'Sample' 
+        FOLDER = 'ProcessedData' + mode #+ 'Sample' 
        
     
         professions = [('director',     'k'), 
@@ -129,32 +136,33 @@ def get_imapct_distr():
             file_crit = FOLDER + '/1_impact_distributions/film_critic_review_dist_'   + label + '.dat'
             file_user = FOLDER + '/1_impact_distributions/film_user_review_dist_'     + label + '.dat'
 
-            average_ratings = np.asarray([round(float(line.strip()),2) for line in open(file_avg)])
-            rating_counts   = [float(line.strip()) for line in open(file_cnt)]
-            metascores      = [round(float(line.strip()),1) for line in open(file_mets)]
-            critic_review   = [round(float(line.strip()),2) for line in open(file_crit)]
-            user_review     = [round(float(line.strip()),2) for line in open(file_user)]
+            average_ratings = np.asarray([float(line.strip()) for line in open(file_avg)])
+            rating_counts   = np.asarray([float(line.strip()) for line in open(file_cnt)])
+            metascores      = np.asarray([float(line.strip()) for line in open(file_mets)])
+            critic_review   = np.asarray([float(line.strip()) for line in open(file_crit)])
+            user_review     = np.asarray([float(line.strip()) for line in open(file_user)])
             
                       
             # plot avg ratings
-            #rating_avg_fit   = plot_distr_hist(average_ratings, ax[0,0])                     
+            rating_avg_fit   = plot_distr_hist(average_ratings, ax[0,0], 'avg rating', power = False)                     
             rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[0,1], 'rating counts')
-            #rating_mets_fit  = plot_distr_hist(metascores,      ax[0,2])          
+            rating_mets_fit  = plot_distr_hist(metascores,      ax[0,2], 'metascore',  power = False)          
             rating_criit_fit = plot_distr_hist(critic_review,   ax[1,0], 'critic reviews')          
             rating_user_fit  = plot_distr_hist(user_review,     ax[1,1], 'user reviews')
             
-                  
+            '''      
             outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
             outf.write(mode_ + '\t' + label + '\t' + 'critic_reviews' + '\t' + '\t'.join([str(t) for t in rating_criit_fit]) + '\n')
             outf.write(mode_ + '\t' + label + '\t' + 'user_reviews'   + '\t' + '\t'.join([str(t) for t in rating_user_fit])  + '\n')
             #outf.write(mode + '\t' + label + '\t' + 'avg_rating' + '\t' + '\t'.join([str(t) for t in rating_avg_fit]) + '\n')
             #outf.write(mode + '\t' + label + '\t' + 'metascore' + '\t' + '\t'.join([str(t) for t in metascore]) + '\n')
-
+            '''
 
         ''' ---------------------------------------------- '''
         '''      MOVIE YO                                  '''
         
-        genres = [('electro', 'k'), ('pop', 'b')]
+        genres = [('electro', 'k'),
+                  ('pop', 'b')]
                 
         for (genre, color) in genres[0:1]:
 
@@ -163,14 +171,14 @@ def get_imapct_distr():
             rating_counts = np.asarray([round(float(line.strip())) for line in open(file_music)])    
 
             rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[1,2], 'electro - rating counts')                
-            outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+            #outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
 
 
 
         align_plot(ax)
-        plt.savefig('Figs/fitted_impact_distros_director'+ mode +'.png')
-        plt.close()
-        #plt.show()          
+        #plt.savefig('Figs/fitted_impact_distros_director'+ mode +'.png')
+        #plt.close()
+        plt.show()          
 
 
     outf.close()
@@ -181,13 +189,61 @@ def get_imapct_distr():
 def get_p_without_avg():
 
     
+    for mode in ['', 'Normalized']:
+    
+
+        if mode == '':
+            mode_ = 'Original'
+        else:   
+            mode_ = mode   
+    
+    
+        FOLDER = 'ProcessedData' + mode #+ 'Sample' 
+        dir9   = '/9_p_without_avg'
+    
+        professions = [('director',     'k'), 
+                       ('producer',     'b'),
+                       ('writer'  ,     'r'),
+                       ('composer',     'g'),
+                       ('art-director', 'y')]
 
 
+        num_of_bins = 20
+        title_font  = 25 
+        seaborn.set_style('white')   
+        f, ax = plt.subplots(2, 3, figsize=(25, 15))
+        st = f.suptitle("IMDb " + mode + " p (without mean distributions) -  Directors", fontsize=title_font)
 
+        field = 'film'
+        
+        for (label, color) in professions[0:1]:
+        
+        
+           
+            num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
+          
+            file_avg  = FOLDER + dir9 + '/' + field + '_p_without_mean_avg_rating_' + label + '.dat'
+            file_cnt  = FOLDER + dir9 + '/' + field + '_p_without_mean_rating_cnt_' + label + '.dat'        
+            file_mets = FOLDER + dir9 + '/' + field + '_p_without_mean_metascore_'  + label + '.dat'   
+            file_crit = FOLDER + dir9 + '/' + field + '_p_without_mean_critic_rev_' + label + '.dat'   
+            file_user = FOLDER + dir9 + '/' + field + '_p_without_mean_user_rev_'   + label + '.dat' 
 
+            average_ratings = np.asarray([float(line.strip()) for line in open(file_avg)  if float(line.strip()) != 0  ])
+            rating_counts   = np.asarray([float(line.strip()) for line in open(file_cnt)])
+            metascores      = np.asarray([float(line.strip()) for line in open(file_mets)])
+            critic_review   = np.asarray([float(line.strip()) for line in open(file_crit)])
+            user_review     = np.asarray([float(line.strip()) for line in open(file_user)])
 
+            #ax[0,0].set_yscale('log')
+            print ax[0,0].hist(average_ratings, bins = 50)
+  
+   
 
-
+                 
+        align_plot(ax)        
+        plt.show() 
+        
+        
 
 
 
@@ -197,7 +253,7 @@ if __name__ == '__main__':
 
     if sys.argv[1] == '1':
         get_imapct_distr()
-    elif sys.argv[2] == '2_pre':
+    elif sys.argv[1] == '2':
         get_p_without_avg()
 
 
