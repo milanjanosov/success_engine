@@ -1,6 +1,6 @@
 import os
 import sys
-#import seaborn
+import seaborn
 import numpy as np
 import powerlaw
 import pylab as pl
@@ -19,8 +19,8 @@ def align_plot(ax):
 
     for i in range(len(ax)):
         for j in range(len(ax[0])):
-            ax[i,j].grid()
-            ax[i,j].legend(loc = 'left', fontsize = font_tick) 
+            #ax[i,j].grid()
+            ax[i,j].legend(loc = 'left', fontsize = font_tick)
             ax[i,j].spines['top'].set_visible(False)
             ax[i,j].spines['right'].set_visible(False)
             ax[i,j].get_xaxis().tick_bottom()
@@ -40,46 +40,73 @@ def align_plot(ax):
 
 
 
-def plot_distr_hist(rand, ax, label, power = True):
+def fitPowerLaw(rand, ax, label):
 
 
-    ax.set_xscale('log')
-    ax.set_yscale('log')
+   
     ax.set_title(label, fontsize = 18)
 
-
-    # fit and plot the powerlaw
-    if power:
-        
-        results = powerlaw.Fit(rand)
-        fit = powerlaw.Fit(rand)
-        alpha = fit.power_law.alpha
-        xmin  = fit.power_law.xmin
-        
-        results.plot_pdf(color='g', ax = ax, linestyle='', marker = 'o', linewidth = 3 )
-        results.power_law.plot_pdf(color='k', ax = ax,  linestyle='--', linewidth = 3, label = '$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)))     
-        
-        sk_results_pow = stats.kstest(results.pdf()[1], 'powerlaw', [alpha, xmin]) 
+    # get the scatterplot
+    x_rand, p_rand = getDistribution(rand)
     
-    else:
-        alpha = 0
-        xmin = 0
-        sk_results_pow = (0, 0)
+    
+    # fit and plot the powerlaw   
+    results = powerlaw.Fit(rand, xmin = min(x_rand))
+    fit = powerlaw.Fit(rand)
+    alpha = fit.power_law.alpha
+    xmin  = fit.power_law.xmin
+    sk_results_pow = stats.kstest(results.pdf()[1], 'powerlaw', [alpha, xmin]) 
+       
+    results.power_law.plot_pdf(color='r', ax = ax,  linestyle='-', linewidth = 3, label = '$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)) + '\n$D$='+str(round(sk_results_pow[0], 2))+ ', $p$='+str(round(sk_results_pow[1],2)) )     
+
     
             
     # fit and plot the lognormal
-    param = stats.lognorm.fit(rand)
-    x_rand, p_rand = getDistribution(rand)
-    pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
-    mu =  np.log(param[2])
-    sigma = param[0]
+    print 'Fitting lognormal...'
+    #param = stats.lognorm.fit(rand)
 
-    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand))), log=True,alpha=0.5)
-    ax.plot(x_rand,pdf_fitted,'r-', label = '$\\mu$=' + str(round(mu,2)) + ' $\\sigma$=' + str(round(sigma, 2)))
+    #pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
+    #mu =  np.log(param[2])
+    #sigma = param[0]
 
-    sk_results_norm = stats.kstest(counts, 'lognorm', param)   
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 15), log=True,alpha=0.0)#,   histtype='step', linewidth = 0)
+    #sk_results_norm = stats.kstest(counts, 'lognorm', param)   
+    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue',alpha = 0.5, markersize = 12, linewidth = 2)
+    #ax.plot(x_rand,pdf_fitted,'r-', label = '$\\mu$=' + str(round(mu,2)) + ' $\\sigma$=' + str(round(sigma, 2)) + '\n$D$='+str(round(sk_results_norm[0], 2))+ ', $p$='+str(round(sk_results_norm[1],2)) )
+
+    ax.set_ylim([ min(counts), 1.1])
+    ax.set_xlim([ min(x_rand),  max(bins)])
+
      
-    return alpha, xmin, sk_results_pow[0], sk_results_pow[1], mu, sigma, sk_results_norm[0], sk_results_norm[1]
+     
+     
+     
+     
+     
+    return alpha, xmin, sk_results_pow[0], sk_results_pow[1]#, mu, sigma, sk_results_norm[0], sk_results_norm[1]
+
+
+
+
+
+def fitSkewedNormal(rand, ax, label):
+
+
+    
+    ax.set_title(label, fontsize = 18)
+    
+    param = stats.skewnorm.fit(rand)
+    x_rand, p_rand = getDistribution(rand)
+    pdf_fitted = stats.skewnorm.pdf(x_rand,  param[0], loc=param[1], scale=param[2])
+     
+    mean = stats.skewnorm.mean( param[0], loc=param[1], scale=param[2])
+    
+    counts, bins, bars = ax.hist(rand, normed = True, bins = np.linspace(min(x_rand), max(x_rand), 25), alpha=0.4)
+    sk_results_norm = stats.kstest(counts, 'skewnorm', param)       
+    ax.plot(x_rand,pdf_fitted,'r-', linewidth = 3, label = '$\\mu$=' + str(round(mean, 2)) + '\n$D$='+str(round(sk_results_norm[0], 2))+ ', $p$='+str(round(sk_results_norm[1],2)))
+
+    return mean, sk_results_norm[0], sk_results_norm[1]
+
 
 
 
@@ -95,9 +122,11 @@ def get_imapct_distr():
     if not os.path.exists(dir9):
         os.makedirs(dir9)
                     
-    outf = open(dir9 + '/' + 'impact_distribution_fit_params.dat', 'w')
-    outf.write('norm\tdomain\tmeasure\talpha\txmin\tstat_pl\tp_pl\tmu\tsigma\tstat_ln\tp_ln\n')
-
+    out_pow = open(dir9 + '/' + 'impact_distribution_power_fits.dat', 'w')
+    out_pow.write('norm\tdomain\tmeasure\talpha\txmin\tD\tp\n')
+    
+    out_norm = open(dir9 + '/' + 'impact_distribution_normal_fits.dat', 'w')
+    out_norm.write('norm\tdomain\tmeasure\tmu\tD\tp\n')
       
       
     for mode in ['', 'Normalized'][0:1]:
@@ -122,11 +151,15 @@ def get_imapct_distr():
         num_of_bins = 20
         title_font  = 25 
         seaborn.set_style('white')   
-        f, ax = plt.subplots(2, 3, figsize=(25, 15))
-        st = f.suptitle("IMDb " + mode + " impact distributions -  Directors", fontsize=title_font)
+        
 
 
-        for (label, color) in professions[0:1]:
+        for (label, color) in professions[0:2]:
+        
+            print mode, label
+        
+            f, ax = plt.subplots(2, 3, figsize=(25, 15))
+            st = f.suptitle( mode + " impact distributions", fontsize=title_font)
            
             num_car  = str(int(round(len(os.listdir('Data/Film/film-'+ label +'-simple-careers'))/1000.0))) + 'k'
           
@@ -144,45 +177,48 @@ def get_imapct_distr():
             
                       
             # plot avg ratings
-            rating_avg_fit   = plot_distr_hist(average_ratings, ax[0,0], 'avg rating', power = False)                     
-            rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[0,1], 'rating counts')
-            rating_mets_fit  = plot_distr_hist(metascores,      ax[0,2], 'metascore',  power = False)          
-            rating_criit_fit = plot_distr_hist(critic_review,   ax[1,0], 'critic reviews')          
-            rating_user_fit  = plot_distr_hist(user_review,     ax[1,1], 'user reviews')
+            rating_avg_fit   = fitSkewedNormal(average_ratings, ax[0,0], 'imdb ' + label + ' (avg rating)')                     
+            rating_cnt_fit   = fitPowerLaw(rating_counts,       ax[0,1], 'imdb ' + label + ' (rating counts)')
+            rating_mets_fit  = fitSkewedNormal(metascores,      ax[0,2], 'imdb ' + label + ' (metascore)')          
+            rating_criit_fit = fitPowerLaw(critic_review,       ax[1,0], 'imdb ' + label + ' (critic reviews)')          
+            rating_user_fit  = fitPowerLaw(user_review,         ax[1,1], 'imdb ' + label + ' (user reviews)')
             
-            '''      
-            outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
-            outf.write(mode_ + '\t' + label + '\t' + 'critic_reviews' + '\t' + '\t'.join([str(t) for t in rating_criit_fit]) + '\n')
-            outf.write(mode_ + '\t' + label + '\t' + 'user_reviews'   + '\t' + '\t'.join([str(t) for t in rating_user_fit])  + '\n')
-            #outf.write(mode + '\t' + label + '\t' + 'avg_rating' + '\t' + '\t'.join([str(t) for t in rating_avg_fit]) + '\n')
-            #outf.write(mode + '\t' + label + '\t' + 'metascore' + '\t' + '\t'.join([str(t) for t in metascore]) + '\n')
-            '''
+             
+            out_pow.write(mode_  + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+            out_pow.write(mode_  + '\t' + label + '\t' + 'critic_reviews' + '\t' + '\t'.join([str(t) for t in rating_criit_fit]) + '\n')
+            out_pow.write(mode_  + '\t' + label + '\t' + 'user_reviews'   + '\t' + '\t'.join([str(t) for t in rating_user_fit])  + '\n')
+            out_norm.write(mode_ + '\t' + label + '\t' + 'avg_rating'     + '\t' + '\t'.join([str(t) for t in rating_avg_fit])   + '\n')
+            out_norm.write(mode_ + '\t' + label + '\t' + 'metascore'      + '\t' + '\t'.join([str(t) for t in rating_mets_fit])  + '\n')
+            
 
-        ''' ---------------------------------------------- '''
-        '''      MOVIE YO                                  '''
+            ''' ---------------------------------------------- '''
+            '''      MUSIC YO                                  '''
         
-        genres = [('electro', 'k'),
-                  ('pop', 'b')]
-                
-        for (genre, color) in genres[0:1]:
+            genres = [('electro', 'k'),
+                      ('pop', 'b')]
+             
+             
+                  
+            for (genre, color) in genres[0:1]:
 
-            num_mus  = str(int(round(len(os.listdir('Data/Music/music-'+ genre +'-simple-careers'))/1000.0))) + 'k'
-            file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
-            rating_counts = np.asarray([round(float(line.strip())) for line in open(file_music)])    
+                num_mus  = str(int(round(len(os.listdir('Data/Music/music-'+ genre +'-simple-careers'))/1000.0))) + 'k'
+                file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
+                rating_counts = np.asarray([round(float(line.strip())) for line in open(file_music)])    
 
-            rating_cnt_fit   = plot_distr_hist(rating_counts,   ax[1,2], 'electro - rating counts')                
-            #outf.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+                rating_cnt_fit   = fitPowerLaw(rating_counts,   ax[1,2], 'electronic music (rating counts)')                
+                out_pow.write(mode_ + '\t' + label + '\t' + 'rating_cnt'     + '\t' + '\t'.join([str(t) for t in rating_cnt_fit])   + '\n')
+            
+            
+           
+            align_plot(ax)
+            plt.savefig('Figs/fitted_impact_distros_' + label+ mode + '_full.png')
+            plt.close()
+            #plt.show()  
+                    
 
 
-
-        align_plot(ax)
-        #plt.savefig('Figs/fitted_impact_distros_director'+ mode +'.png')
-        #plt.close()
-        plt.show()          
-
-
-    outf.close()
-
+    out_pow.close()
+    out_norm.close()
 
 
 
