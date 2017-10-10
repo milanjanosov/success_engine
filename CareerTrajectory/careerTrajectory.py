@@ -257,7 +257,14 @@ def getBinnedDistribution(x, y, nbins):
     return _, mean, std
 
 
+def getLogBinnedDistribution(x, y, nbins):
 
+    bins = 10 ** np.linspace(np.log10(min(x)), np.log10(max(x)), nbins)
+    values = [ np.mean([y[x.tolist().index(value)]  for value in x if value >= bins[i] and value < bins[i+1]])  for i in range(nbins-1)]
+    error =  [ np.std([y[x.tolist().index(value)] for value in x if value >= bins[i] and value < bins[i+1]])  for i in range(nbins-1)]
+    bins = (bins[1:] + bins[:-1])/2
+
+    return bins, values, error
 
 
 #pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)

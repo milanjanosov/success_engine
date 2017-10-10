@@ -7,9 +7,9 @@ import random
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
 from CareerTrajectory.careerTrajectory import getBinnedDistribution
+from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 
-
-
+getLogBinnedDistribution
 
 ''' TODO '''
 '''
@@ -42,7 +42,7 @@ def align_plot(ax):
 
     for i in range(len(ax)):
         for j in range(len(ax[0])):
-            ax[i,j].grid()
+            #ax[i,j].grid()
             ax[i,j].legend(loc = 'left', fontsize = font_tick) 
             ax[i,j].spines['top'].set_visible(False)
             ax[i,j].spines['right'].set_visible(False)
@@ -203,16 +203,37 @@ def get_imapct_distr():
 
 
 
-def get_dict_data(impacts):
+def get_yearly_avg_data(impacts):
 
+    
+    years_impacts = {}
+    for i in impacts:
+        field  = i.split('\t')      
+        year   = round(float(field[0]))
+        impact = float(field[1])
+        if year not in years_impacts:
+            years_impacts[year] = [impact]
+        else:
+            years_impacts[year].append(impact)
+            
     x = []
     y = []
-    for i in impacts:
-        field = i.split('\t')
-        x.append(float(field[0]))
-        y.append(float(field[1]))
+    z = []
+    maxx = 100
+    maxi = 0
+    N =0
+    for year, impacts in years_impacts.items():
+        x.append(year)
+        y.append(np.mean(impacts))
+        z.append(np.std(impacts))
+    
+        if np.mean(impacts) > maxx:
+            maxx = np.mean(impacts)
+            maxi = year
+            N=len(impacts)
+    
 
-    return np.asarray(x), np.asarray(y)
+    return np.asarray(x), np.asarray(y), np.asarray(z)
 
 
 def get_num_per_year(impacts):
@@ -221,7 +242,7 @@ def get_num_per_year(impacts):
     years = {} 
     for i in impacts:
         field = i.split('\t')
-        year  = int(float((field[0])))
+        year  = float((field[0]))
         impa  = field[1]
         if year not in years:
             years[year] = [impa]
@@ -238,15 +259,35 @@ def get_num_per_year(impacts):
 
 
 
+def plot_measure(average_ratings_year, title, num_of_bins, ax, color, label, music = False):
+    
+  
+    x_average_ratings_year, y_average_ratings_year, yerr_average_ratings_year = get_yearly_avg_data(average_ratings_year)    
+    bx_average_ratings_year, bp_average_ratings_year, bperr_average_ratings_year = getBinnedDistribution(x_average_ratings_year, y_average_ratings_year, num_of_bins)
+
+    ax.set_title(title, fontsize = 20)
+    
+    if music:
+        ax.errorbar(x_average_ratings_year, y_average_ratings_year, yerr=yerr_average_ratings_year, fmt=color + '-', alpha = 0.5, capsize = 3, elinewidth=1, linewidth = 2)
+        ax.errorbar((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year, yerr=bperr_average_ratings_year, fmt=color + 'o-', alpha = 0.6, capsize = 3, elinewidth=1, linewidth = 3, label = label)
+    else:
+        ax.errorbar((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year, yerr=bperr_average_ratings_year, fmt=color + 'o-', alpha = 0.6, capsize = 3, elinewidth=1, linewidth = 3, label = label)
+    
+    ax.set_xlim([1880, 2020])
+
+
+
 def get_inflation_curves():
 
 
-    num_of_bins = 20
+    num_of_bins = 8
     title_font = 25 
     seaborn.set_style('white')   
     f, ax = plt.subplots(2, 3, figsize=(25, 15))
-    st = f.suptitle("IMDb Inflation of impact measures", fontsize=title_font)
+    st = f.suptitle("Inflation of impact measures", fontsize=title_font)
 
+
+    FOLDER = 'ProcessedData'
 
     professions = [('director',     'k'), 
                    ('producer',     'b'),
@@ -258,11 +299,11 @@ def get_inflation_curves():
     for (label, color) in professions:
 
         
-        file_avg_year  = 'ProcessedDataNormalizedRandomized/3_inflation_curves/film_yearly_average_ratings_dist_' + label + '.dat'
-        file_cnt_year  = 'ProcessedDataNormalizedRandomized/3_inflation_curves/film_yearly_rating_counts_dist_'   + label + '.dat'
-        file_mets_year = 'ProcessedDataNormalizedRandomized/3_inflation_curves/film_yearly_metascores_dist_'      + label + '.dat'
-        file_crit_year = 'ProcessedDataNormalizedRandomized/3_inflation_curves/film_yearly_critic_review_dist_'   + label + '.dat'
-        file_user_year = 'ProcessedDataNormalizedRandomized/3_inflation_curves/film_yearly_user_review_dist_'     + label + '.dat'
+        file_avg_year  = FOLDER + '/3_inflation_curves/film_yearly_average_ratings_dist_' + label + '.dat'
+        file_cnt_year  = FOLDER + '/3_inflation_curves/film_yearly_rating_counts_dist_'   + label + '.dat'
+        file_mets_year = FOLDER + '/3_inflation_curves/film_yearly_metascores_dist_'      + label + '.dat'
+        file_crit_year = FOLDER + '/3_inflation_curves/film_yearly_critic_review_dist_'   + label + '.dat'
+        file_user_year = FOLDER + '/3_inflation_curves/film_yearly_user_review_dist_'     + label + '.dat'
 
         average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
         rating_counts_year   = np.asarray([line.strip() for line in open(file_cnt_year)])
@@ -271,83 +312,39 @@ def get_inflation_curves():
         user_review_year     = np.asarray([line.strip() for line in open(file_user_year)])
         
 
+
+
+
         
         # plot average ratings
-        x_average_ratings_year, y_average_ratings_year = get_dict_data(average_ratings_year)       
-        bx_average_ratings_year, bp_average_ratings_year, bperr_average_ratings_year = getBinnedDistribution(x_average_ratings_year, y_average_ratings_year, num_of_bins)
+        plot_measure(average_ratings_year, 'IMDb - average rating', num_of_bins, ax[0,0], color, label)
+        plot_measure(rating_counts_year,   'IMDb - rating counts',  num_of_bins, ax[0,1], color, label)
+        plot_measure(metascores_year,      'IMDb - metascore',      num_of_bins, ax[0,2], color, label)  
+        plot_measure(critic_review_year,   'IMDb - critic reviews', num_of_bins, ax[1,0], color, label)
+        plot_measure(user_review_year,     'IMDb - user reviews',   num_of_bins, ax[1,1], color, label)        
+       
 
+   
+    
+    professions = [('pop',     'k'), 
+                   ('electro', 'b')]    
+    
+    for (label, color) in professions:
+
+        file_cnt_year    = FOLDER + '/3_inflation_curves/music_yearly_rating_counts_dist_' + label +'.dat'
+        rating_cnt_music = np.asarray([line.strip() for line in open(file_cnt_year)])
+        
+       
+        
+        plot_measure(rating_cnt_music, 'Music - playcount', num_of_bins, ax[1,2], color, label, music = True)          
         
     
-        ax[0,0].set_title('IMDb - average rating', fontsize = 20)
-        ax[0,0].errorbar((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year, yerr=bperr_average_ratings_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
-        
-        
-        #plot rating counts
-        x_rating_counts_year, y_rating_counts_year = get_dict_data(rating_counts_year)          
-        bx_rating_counts_year, bp_rating_counts_year, bperr_rating_counts_year = getBinnedDistribution(x_rating_counts_year, y_rating_counts_year, num_of_bins)
-
-        ax[0,1].set_title('IMDb - rating count', fontsize = 20)
-        ax[0,1].set_ylim([-3000,20000])
-        ax[0,1].errorbar((bx_rating_counts_year[1:] + bx_rating_counts_year[:-1])/2, bp_rating_counts_year, yerr=bperr_rating_counts_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
-
-
-        
-        # plot metascorenumber of movies
-        x_metascores_year,  y_metascores_year = get_dict_data(metascores_year)       
-        bx_metascores_year, bp_metascores_year, bperr_metascores_year = getBinnedDistribution(x_metascores_year, y_metascores_year, num_of_bins)
-
-        ax[1,1].set_title('IMDb - metascores_year', fontsize = 20)
-        ax[1,1].errorbar((bx_metascores_year[1:] + bx_metascores_year[:-1])/2, bp_metascores_year, yerr=bperr_metascores_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
-
-        
-        # plot critic reviews
-        ax[0,2].set_ylim([-25,150])         
-        x_critic_review_year,  y_critic_review_year = get_dict_data(critic_review_year)       
-        bx_critic_review_year, bp_critic_review_year, bperr_critic_review_year = getBinnedDistribution(x_critic_review_year, y_critic_review_year, num_of_bins)
-
-        
-        ax[0,2].set_title('IMDb - critic_review_year', fontsize = 20)
-        ax[0,2].errorbar((bx_critic_review_year[1:] + bx_critic_review_year[:-1])/2, bp_critic_review_year, yerr=bperr_critic_review_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)  
-
-
-
-        # plot user reviews
-        x_user_review_year,  y_user_review_year = get_dict_data(user_review_year)       
-        bx_user_review_year, bp_user_review_year, bperr_user_review_year = getBinnedDistribution(x_user_review_year, y_user_review_year, num_of_bins)
-
-        ax[1,2].set_ylim([-15,75])         
-        ax[1,2].set_title('IMDb - user_review_year', fontsize = 20)
-        ax[1,2].errorbar((bx_user_review_year[1:] + bx_user_review_year[:-1])/2, bp_user_review_year, yerr=bperr_user_review_year, fmt=color + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)  
-        
-
-     
-
-
-
-
-        # music
-        file_cnt_year    = 'ProcessedDataNormalizedRandomized/3_inflation_curves/music_yearly_rating_counts_dist_pop.dat'
-        rating_cnt_music = np.asarray([line.strip() for line in open(file_cnt_year)])
-        x_num_of_movies_year,  y_num_of_movies_year = get_dict_data(rating_cnt_music)       
-        bx_num_of_movies_year, bp_num_of_movies_year, bperr_num_of_movies_year = getBinnedDistribution(x_num_of_movies_year, y_num_of_movies_year, num_of_bins)
-
-        ax[1,0].set_ylim([-400,10000])         
-        ax[1,0].set_title('Lastfm playcounts', fontsize = 20)
-        ax[1,0].errorbar((bx_num_of_movies_year[1:] + bx_num_of_movies_year[:-1])/2, bp_num_of_movies_year, yerr=bperr_num_of_movies_year, fmt='k' + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
-
-
-        file_cnt_year    = 'ProcessedDataNormalizedRandomized/3_inflation_curves/music_yearly_rating_counts_dist_electro.dat'
-        rating_cnt_music = np.asarray([line.strip() for line in open(file_cnt_year)])
-        x_num_of_movies_year,  y_num_of_movies_year = get_dict_data(rating_cnt_music)       
-        bx_num_of_movies_year, bp_num_of_movies_year, bperr_num_of_movies_year = getBinnedDistribution(x_num_of_movies_year, y_num_of_movies_year, num_of_bins)
-
-        ax[1,0].errorbar((bx_num_of_movies_year[1:] + bx_num_of_movies_year[:-1])/2, bp_num_of_movies_year, yerr=bperr_num_of_movies_year, fmt='b' + 'o-', alpha = 0.8, capsize = 3, elinewidth=1, linewidth = 3)
-    
+    ax[1,2].set_ylim([-1000,40000])
         
     align_plot(ax)   
-    #plt.savefig('inflation_data.png') 
-    #plt.close()    
-    plt.show()
+    plt.savefig('inflation_data.png') 
+    plt.close()    
+    #plt.show()
     
 
 
@@ -385,11 +382,11 @@ def get_length_plots():
     average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
     x_average_ratings_year, y_average_ratings_year = get_num_per_year(average_ratings_year)  
     ax[0,0].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
-    ax[0,0].set_title('numbre of movies', fontsize = title_font)
+    ax[0,0].set_title('#movies', fontsize = title_font)
 
     ax[0,1].set_yscale('log')
     ax[0,1].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
-    ax[0,1].set_title('numbre of movies', fontsize = title_font)
+    ax[0,1].set_title('#movies', fontsize = title_font)
 
     
 
@@ -404,12 +401,12 @@ def get_length_plots():
     
     ax[1,0].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
     ax[1,0].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
-    ax[1,0].set_title('numbre of tracks', fontsize = title_font)
+    ax[1,0].set_title('#tracks', fontsize = title_font)
 
     ax[1,1].set_yscale('log')
     ax[1,1].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
     ax[1,1].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
-    ax[1,1].set_title('numbre of tracks', fontsize = title_font)
+    ax[1,1].set_title('#tracks', fontsize = title_font)
 
 
 
@@ -473,78 +470,110 @@ def get_length_plots():
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''   
 
 
+def get_rid_of_zeros(imp1, imp2):
+        
+    imp10 = []
+    imp21 = []
+    for i in range(len(imp1)):
+        if imp1[i] != 0 and imp2[i] != 0:
+            imp10.append(imp1[i])
+            imp21.append(imp2[i])
+            
+    return imp10, imp21
+    
+    
+
+
 def get_impact_correlations():
 
 
 
-    num_of_bins = 20
+    num_of_bins = 15
     title_font = 25 
     seaborn.set_style('white')   
-    f, ax = plt.subplots(2, 3, figsize=(25, 15))
-    st = f.suptitle("IMDb impact correlations", fontsize=title_font)
+    
 
 
 
-    professions = [('director',     'k'), 
+    professions = [('director',     'royalblue'), 
                    ('producer',     'b'),
                    ('writer'  ,     'r'),
                    ('composer',     'g'),
                    ('art-director', 'y')]    
     
     
-    for (label, color) in professions:
-        
-        impacts = zip(*[ line.strip().split('\t')   for line in open('ProcessedDataNormalized/7_multiple_impacts/film_multiple_impacts_' + label + '.dat')])
-        
-
-        #ax[0,0].set_title('IMDb - average rating', fontsize = 20)
-        ax[0,0].set_ylabel('avg rating', fontsize = 20)
-        ax[0,0].set_xlabel('rating cnt', fontsize = 20)
-        ax[0,0].xaxis.get_major_formatter().set_powerlimits((0, 1))
-        ax[0,0].plot(impacts[2],  impacts[1], color + 'o', alpha = 0.3, label = label)
- 
- 
-        ax[0,1].set_ylabel('avg rating', fontsize = 20)
-        ax[0,1].set_xlabel('metascore', fontsize = 20)
-        #ax[0,1].set_xlim([0.01,2])
-        ax[0,1].plot(impacts[3],  impacts[1], color + 'o', alpha = 0.3, label = label)
- 
- 
-        #ax[0,2].set_xscale('log')
-        #ax[0,2].set_yscale('log')
-        ax[0,2].set_ylabel('#critic review', fontsize = 20)
-        ax[0,2].set_xlabel('#user review', fontsize = 20)
-        ax[0,2].plot(impacts[4],  impacts[5], color + 'o', alpha = 0.3, label = label)
- 
- 
-        ax[1,0].xaxis.get_major_formatter().set_powerlimits((0, 1))
-        ax[1,0].set_xlabel('rating cnt', fontsize = 20)
-        ax[1,0].set_ylabel('metascore', fontsize = 20)
-        #ax[1,0].set_ylim([0.01,2])
-        ax[1,0].plot(impacts[2],  impacts[3], color + 'o', alpha = 0.3, label = label)
-
-
-        #ax[1,1].xaxis.get_major_formatter().set_powerlimits((0, 1))
-        ax[1,1].set_xlabel('rating cnt', fontsize = 20)
-        #ax[1,1].set_xlim([0,150])
-        ax[1,1].set_ylabel('#critic review', fontsize = 20)
-        #ax[1,1].set_ylim([0.01,40])
-        ax[1,1].loglog(impacts[2],  impacts[4], color + 'o', alpha = 0.3, label = label)
-        
-        #ax[1,2].xaxis.get_major_formatter().set_powerlimits((0, 1))     
-        ax[1,2].set_xlabel('rating cnt', fontsize = 20)
-        #ax[1,2].set_xlim([0,150])
-        ax[1,2].set_ylabel('#user review', fontsize = 20)
-        #ax[1,2].set_ylim([0.01,40])
-        ax[1,2].loglog(impacts[2],  impacts[5], color + 'o', alpha = 0.3, label = label)
-
-
-  
+    for mode in ['', 'Normalized']:
     
-    align_plot(ax)
-    plt.savefig('correlations_normalized.png')
-    plt.close()
-    #plt.show()
+    
+        f, ax = plt.subplots(2, 3, figsize=(25, 15))
+        st = f.suptitle("IMDb impact correlations - " + mode, fontsize=title_font)
+        
+    
+        for (label, color) in professions[0:1]:
+            
+            impacts = zip(*[ [float(aaa)  if 'tt' not in aaa else aaa for aaa in line.strip().split('\t')]   for line in open('ProcessedData'+mode+'/7_multiple_impacts/film_multiple_impacts_' + label + '.dat')])
+            
+            Alpha = 0.05
+            
+            ax[0,0].set_ylabel('avg rating', fontsize = 20)
+            ax[0,0].set_xlabel('rating cnt', fontsize = 20)
+            ax[0,0].set_xscale('log')            
+            avg, cnt = get_rid_of_zeros(impacts[2], impacts[1])
+            xb_avg, pb_avg, pberr_avg = getLogBinnedDistribution(np.asarray(avg), np.asarray(cnt), num_of_bins)    
+            ax[0,0].plot(impacts[2],  impacts[1], 'o', color = color, alpha = Alpha, label = label)
+            ax[0,0].errorbar(xb_avg, pb_avg, yerr = pberr_avg, fmt = '^-', color = 'r')             
+     
+
+            x_cnt_meta, p_cnt_meta, perr_cnt_meta = getBinnedDistribution(np.asarray(impacts[3]),  np.asarray(impacts[1]), num_of_bins)        
+            meta, avg = get_rid_of_zeros(impacts[3], impacts[1])
+            ax[0,1].set_xlabel('metascore', fontsize = 20)
+            ax[0,1].plot(meta, avg,  'o', color = color,  alpha = Alpha, label = label)
+            ax[0,1].errorbar((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta, yerr = perr_cnt_meta, fmt = '^-', color = 'r')#, alpha = Alpha, label = label)
+          
+            
+            
+            
+            ax[0,2].set_ylabel('#critic review', fontsize = 20)       
+            ax[0,2].set_xlabel('#user review', fontsize = 20)
+            ax[0,2].set_xscale('log')
+            ax[0,2].set_yscale('log')
+            crit, user = get_rid_of_zeros(impacts[4], impacts[5]) 
+            xb_crit, pb_crit, pberr_crit = getLogBinnedDistribution(np.asarray(crit), np.asarray(user), num_of_bins)    
+            ax[0,2].plot(crit, user,  'o', color = color,  alpha = Alpha, label = label)
+            ax[0,2].errorbar(xb_crit, pb_crit, yerr = pberr_crit, fmt = '^-', color = 'r')             
+           
+           
+            
+            ax[1,0].xaxis.get_major_formatter().set_powerlimits((0, 1))
+            cnt, meta = get_rid_of_zeros(impacts[2], impacts[3])
+            x_cnt_meta, p_cnt_meta, perr_cnt_meta = getBinnedDistribution(np.asarray(cnt), np.asarray(meta), num_of_bins)        
+            ax[1,0].set_xlabel('rating cnt', fontsize = 20)
+            ax[1,0].set_ylabel('metascore', fontsize = 20)
+            ax[1,0].plot(cnt, meta,  'o', color = color,  alpha = Alpha, label = label)
+            ax[1,0].errorbar((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta, yerr = perr_cnt_meta, fmt = '^-', color = 'r')#, alpha = Alpha, label = label)
+
+            
+            ax[1,1].set_xlabel('rating cnt', fontsize = 20)
+            ax[1,1].set_ylabel('#critic review', fontsize = 20)
+            cnt, crit = get_rid_of_zeros(impacts[2], impacts[4])
+            xb_cnt_crit, pb_cnt_crit, pberr_cnt_crit = getLogBinnedDistribution(np.asarray(cnt), np.asarray(crit), num_of_bins)    
+            ax[1,1].loglog(impacts[2],  impacts[4], 'o', color = color,  alpha = Alpha, label = label)
+            ax[1,1].errorbar(xb_cnt_crit, pb_cnt_crit, yerr = pberr_cnt_crit, fmt = '^-', color = 'r')             
+            
+            
+            ax[1,2].set_xlabel('rating cnt', fontsize = 20)
+            ax[1,2].set_ylabel('#user review', fontsize = 20)
+            cnt, user = get_rid_of_zeros(impacts[2], impacts[5])
+            xb_cnt_crit, pb_cnt_user, pberr_cnt_user = getLogBinnedDistribution(np.asarray(cnt), np.asarray(user), num_of_bins)    
+            ax[1,2].loglog(impacts[2],  impacts[5], 'o', color = color,  alpha = Alpha, label = label)
+            ax[1,2].errorbar(xb_cnt_crit, pb_cnt_user, yerr = pberr_cnt_user, fmt = '^-', color = 'r')             
+
+      
+        
+        align_plot(ax)
+        plt.savefig('correlations_'+ mode +'.png')
+        plt.close()
+        #plt.show()
 
 
 
