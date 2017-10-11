@@ -173,6 +173,13 @@ def process_simple_career_trajectories(normalized, randomized):
         p_without_mean_user_rev   = []
         
         
+        max_avg_rat_N   = []
+        max_rat_cnt_N   = []        
+        max_metascore_N = []        
+        max_crit_rev_N  = []
+        max_user_rev_N  = []
+        
+        
         combined_factors   = []      
 
 
@@ -236,6 +243,12 @@ def process_simple_career_trajectories(normalized, randomized):
                 #    exponents_avg_rating.append(exponents)
                 
                 
+                
+                max_avg_rat_N.append((pista_avg_rating.getMaxImpact(), pista_avg_rating.getCareerLength()))
+                
+                
+                
+                
                 p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
                 
                                                                           
@@ -279,6 +292,9 @@ def process_simple_career_trajectories(normalized, randomized):
                     career_length.append(pista_ratingcnt.getCareerLength())  
                     
                     
+                    max_rat_cnt_N.append((pista_ratingcnt.getMaxImpact(), pista_ratingcnt.getCareerLength()))
+                    
+                    
                     p_without_mean_rating_cnt += pista_ratingcnt.getLogPwithZeroAvg()   
                     
                     
@@ -312,6 +328,9 @@ def process_simple_career_trajectories(normalized, randomized):
                 #exponents = pista_meta.get_exponents()
                 #if 0 != exponents:           
                 #    exponents_metascore.append(exponents) 
+              
+              
+                max_metascore_N.append((pista_meta.getMaxImpact(), pista_meta.getCareerLength()))
                  
                  
                 p_without_mean_metascore += pista_meta.getLogPwithZeroAvg()    
@@ -340,6 +359,9 @@ def process_simple_career_trajectories(normalized, randomized):
                 #if 0 != exponents:           
                 #    exponents_ciric_rev.append(exponents) 
 
+
+                max_crit_rev_N.append((pista_critic.getMaxImpact(), pista_critic.getCareerLength()))
+
      
                 p_without_mean_critic_rev += pista_critic.getLogPwithZeroAvg()    
                 
@@ -365,6 +387,8 @@ def process_simple_career_trajectories(normalized, randomized):
                 #exponents = pista_user.get_exponents()
                 #if 0 != exponents:           
                 #    exponents_user_rev.append(exponents) 
+
+                max_user_rev_N.append((pista_user.getMaxImpact(), pista_user.getCareerLength()))
 
 
                 p_without_mean_user_rev += pista_user.getLogPwithZeroAvg()                    
@@ -629,10 +653,34 @@ def process_simple_career_trajectories(normalized, randomized):
         write_distr_data(p_without_mean_metascore,  dir9 + '/' + field + '_p_without_mean_metascore_' + label + '.dat')      
         write_distr_data(p_without_mean_critic_rev, dir9 + '/' + field + '_p_without_mean_critic_rev_' + label + '.dat')        
         write_distr_data(p_without_mean_user_rev,   dir9 + '/' + field + '_p_without_mean_user_rev_' + label + '.dat')        
-        
 
-        
-        
+
+
+        ''' ------------------  career length vs max impact  ------------------ '''
+            
+        dir10 = root + '/10_career_length_max_impact'
+        if not os.path.exists(dir10):
+            os.makedirs(dir10)
+
+        write_pairs(max_avg_rat_N,   dir10 + '/career_length_max_avg_rat'   + field + '_' + label + '.dat')
+        write_pairs(max_rat_cnt_N,   dir10 + '/career_length_max_rat_cnt'   + field + '_' + label + '.dat')
+        write_pairs(max_metascore_N, dir10 + '/career_length_max_metascore' + field + '_' + label + '.dat')
+        write_pairs(max_crit_rev_N,  dir10 + '/career_length_max_crit_rev'  + field + '_' + label + '.dat')      
+        write_pairs(max_user_rev_N,  dir10 + '/career_length_max_user_rev'  + field + '_' + label + '.dat')        
+
+
+
+
+
+def write_pairs(data, filename):
+
+    if len(data) > 0:
+
+        f = open(filename, 'w')
+        for d in data:
+            f.write(str(d[0]) + '\t' + str(d[1]) + '\n')
+        f.close()
+    
         
         
         
@@ -644,7 +692,7 @@ if __name__ == '__main__':
     t1 = time.time()
     process_simple_career_trajectories(normalized = False, randomized = False)
     process_simple_career_trajectories(normalized = True,  randomized = False)
-    #process_simple_career_trajectories(normalized = True,  randomized = True)
+    process_simple_career_trajectories(normalized = True,  randomized = True)
     t2 = time.time()
     print 'This took ', round(t2-t1, 2), ' seconds.'
 
