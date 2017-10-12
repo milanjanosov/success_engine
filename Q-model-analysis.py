@@ -258,7 +258,7 @@ def get_p_without_avg():
             mode_ = mode   
     
     
-        FOLDER = 'ProcessedData' + mode #+ 'Sample' 
+        FOLDER = 'ProcessedData' + mode + 'Sample' 
         dir9   = '/9_p_without_avg'
     
         professions = [('director',     'k'), 
@@ -272,7 +272,7 @@ def get_p_without_avg():
         title_font  = 25 
         seaborn.set_style('white')   
         f, ax = plt.subplots(2, 3, figsize=(25, 15))
-        st = f.suptitle( mode + "  $\log(p_{\\alpha} + \mu_p)$ distributions ", fontsize=title_font)
+        st = f.suptitle( mode + "  $\log(p_{\\alpha}) + \mu_p$ distributions ", fontsize=title_font)
 
         field = 'film'
         
