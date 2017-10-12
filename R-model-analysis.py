@@ -1,17 +1,18 @@
 import sys
 import os
-import matplotlib
-matplotlib.use('Agg')
+#import matplotlib
+#matplotlib.use('Agg')
 import numpy as np
 import seaborn
 import matplotlib.pyplot as plt
 import random
+import powerlaw
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
 from CareerTrajectory.careerTrajectory import getBinnedDistribution
 from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 
-getLogBinnedDistribution
+
 
 ''' TODO '''
 '''
@@ -62,6 +63,31 @@ def align_plot(ax):
             ax[i,j].tick_params(labelsize = font_tick) 
             
             
+def align_plot1D(ax):
+
+    font_tick = 15   
+
+    for i in range(len(ax)):
+        #ax[i,j].grid()
+        ax[i].legend(loc = 'left', fontsize = font_tick) 
+        ax[i].spines['top'].set_visible(False)
+        ax[i].spines['right'].set_visible(False)
+        ax[i].get_xaxis().tick_bottom()
+        ax[i].get_yaxis().tick_left()
+        ticklines  = ax[i].get_xticklines()  + ax[i].get_yticklines()
+        gridlines  = ax[i].get_xgridlines()  + ax[i].get_ygridlines()
+        ticklabels = ax[i].get_xticklabels() + ax[i].get_yticklabels()
+        for line in ticklines:
+            line.set_linewidth(1)
+
+        for line in gridlines:
+            line.set_linestyle('-.')
+
+        ax[i].tick_params(labelsize = font_tick) 
+            
+            
+ 
+
  
 
 
@@ -244,7 +270,7 @@ def get_num_per_year(impacts):
     years = {} 
     for i in impacts:
         field = i.split('\t')
-        year  = float((field[0]))
+        year  = round(float((field[0])))
         impa  = field[1]
         if year not in years:
             years[year] = [impa]
@@ -383,34 +409,110 @@ def get_length_plots():
     file_avg_year  = 'ProcessedData/3_inflation_curves/film_yearly_average_ratings_dist_director.dat'       
     average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
     x_average_ratings_year, y_average_ratings_year = get_num_per_year(average_ratings_year)  
-    ax[0,0].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
-    ax[0,0].set_title('#movies', fontsize = title_font)
+    #ax[0,0].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
+    #ax[0,0].set_title('#movies', fontsize = title_font)
 
-    ax[0,1].set_yscale('log')
-    ax[0,1].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.8)
-    ax[0,1].set_title('#movies', fontsize = title_font)
+    ax[0,0].set_yscale('log')
+    ax[0,0].plot(x_average_ratings_year, y_average_ratings_year, 'ko', label = 'movies', alpha  = 0.6)
+    ax[0,0].set_title('#movies', fontsize = title_font)
 
     
 
     file_avg_year_electro = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_electro.dat' 
     file_avg_year_pop     = 'ProcessedData/3_inflation_curves/music_yearly_rating_counts_dist_pop.dat'   
+    
     average_ratings_year_electro = np.asarray([line.strip() for line in open(file_avg_year_electro)])
+    average_ratings_year_pop = np.asarray([line.strip() for line in open(file_avg_year_pop)])    
+    
     x_average_ratings_year_electro, y_average_ratings_year_electro = get_num_per_year(average_ratings_year_electro)  
-
-    average_ratings_year_pop = np.asarray([line.strip() for line in open(file_avg_year_pop)])
     x_average_ratings_year_pop, y_average_ratings_year_pop = get_num_per_year(average_ratings_year_pop)  
 
+  
+    xb_average_ratings_year_electro, pb_average_ratings_year_electro, pberr_average_ratings_year_electro= getBinnedDistribution(x_average_ratings_year_electro, y_average_ratings_year_electro, num_of_bins)
+     
+     
+  
+    ax[0,1].set_yscale('log') 
+    ax[0,1].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.6)   
+    ax[0,1].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.6)
+    ax[0,1].set_title('#tracks', fontsize = title_font)
+
+
+    ax[0,2].set_title('#books', fontsize = title_font)
+
+
+
     
-    ax[1,0].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
-    ax[1,0].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
-    ax[1,0].set_title('#tracks', fontsize = title_font)
-
-    ax[1,1].set_yscale('log')
-    ax[1,1].plot(x_average_ratings_year_electro, y_average_ratings_year_electro, 'ko', label = 'electro', alpha = 0.8)
-    ax[1,1].plot(x_average_ratings_year_pop,     y_average_ratings_year_pop,     'bo', label = 'pop',     alpha = 0.8)
-    ax[1,1].set_title('#tracks', fontsize = title_font)
+    
+    align_plot(ax)
+    plt.savefig('num_of_products_length_data.png')
+    #plt.show()
 
 
+
+
+
+
+
+
+def fitPowerLaw(rand, ax, label):
+
+
+   
+    ax.set_title(label, fontsize = 18)
+
+    
+    
+    # histogram 
+    print 'Fitting lognormal...'
+    x_rand, p_rand = getDistribution(rand)    
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 15), log=True,alpha=0.0)#,   histtype='step', linewidth = 0)
+    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.5, markersize = 12, linewidth = 2)
+
+
+    # get the lognormal
+    param = stats.lognorm.fit(rand)
+    pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
+    mu =  np.log(param[2])
+    sigma = param[0]
+    sk_results_norm = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
+    ax.plot(x_rand,pdf_fitted,'k-', linewidth = 4, label = '$\\mu$=' + str(round(mu,2)) + ' $\\sigma$=' + str(round(sigma, 2)) + ', $D$='+str(round(sk_results_norm[0], 2)))
+
+
+    
+    # fit and plot the powerlaw   
+    results = powerlaw.Fit(rand, xmin = min(x_rand), fit_method = 'KS')
+    alpha  = results.power_law.alpha
+    xmin   = results.power_law.xmin 
+    D = results.power_law.KS()
+ 
+    results.power_law.plot_pdf( color='r', ax = ax,  linestyle='-', linewidth=4, label ='$\\alpha$= ' + str(round(alpha,2)) + ', $x_{min}$=' + str(round(xmin,2)) + '\n$D$='+str(round(D, 2)
+    ))     
+
+                
+    ax.set_ylim([ min(counts), 1.1])
+    ax.set_xlim([ min(x_rand),  max(bins)])
+  
+  
+    return alpha, xmin, D
+
+
+
+
+
+
+
+def get_career_length():
+
+
+
+
+    title_font  = 25 
+    num_of_bins = 20
+    seaborn.set_style('white')  
+
+    f, ax = plt.subplots(1, 2, figsize=(22, 9))
+    st = f.suptitle("Career length distributions", fontsize=title_font)    
 
 
     professions = [('director',     'k'), 
@@ -419,45 +521,63 @@ def get_length_plots():
                    ('composer',     'g'),
                    ('art-director', 'y'),]    
        
-    for (label, color) in professions:
+
+    for (label, color) in professions[0:1]:
     
         career_length  = [float(line.strip()) for line in open('ProcessedData/5_career_length/film_career_length_' + label + '.dat')]
         xcareer_length, pcareer_length = getDistribution(career_length)
         
-        ax[0,2].set_xscale('log')
-        ax[0,2].set_yscale('log')
-        ax[0,2].plot(xcareer_length, pcareer_length, color, marker = 'o', alpha = 0.3, linewidth = 0, label = label+ ', ')
+
+        #ax[0].plot(xcareer_length, pcareer_length, color, marker = 'o', alpha = 0.3, linewidth = 0, label = label+ ', ')
+        
+        fitPowerLaw([ c for c in career_length if c > 10], ax[0], label)
+        
+        
+        
+        #results = powerlaw.Fit(career_length, xmin = min(xcareer_length), fit_method = 'KS')
+       # alpha  = results.power_law.alpha
+        #D = results.power_law.KS()
+     
+        #results.plot_pdf(color=color, ax = ax[0],  linestyle='-', linewidth=0, marker = 'o', alpha = 0.5) 
+       # results.power_law.plot_pdf(color=color, ax = ax[0],  linestyle='-', linewidth=3, alpha = 0.9,  label ='$\\alpha$= ' + str(round(alpha,2)) + ', $D$='+str(round(D, 2)  ))     
 
 
 
 
 
-    ax[0,2].set_title('length of movie careers')
-    ax[1,2].set_title('length of music careers')    
+
+
+
+    ax[0].set_title('Length of director careers', fontsize = 18)
+    ax[1].set_title('Length of DJ careers', fontsize = 18)    
     professions = [('pop',     'k'), 
                    ('electro', 'b')]    
        
-    for (label, color) in professions:
+    for (label, color) in professions[1:2]:
     
         career_length  = [float(line.strip()) for line in open('ProcessedData/5_career_length/music_career_length_' + label + '.dat')]
         xcareer_length, pcareer_length = getDistribution(career_length)
         
-        ax[1,2].set_xscale('log')
-        ax[1,2].set_yscale('log')
-        ax[1,2].plot(xcareer_length, pcareer_length, color, marker = 'o', alpha = 0.3, linewidth = 0, label = label)
-    
+
+        fitPowerLaw([ c for c in career_length if c > 10], ax[1], label)
+        
+        '''
+        results = powerlaw.Fit(career_length, xmin = min(xcareer_length), fit_method = 'KS')
+        alpha  = results.power_law.alpha
+        D = results.power_law.KS()
+        results.plot_pdf(color=color, ax = ax[1],  linestyle = '-', linewidth = 0, marker = 'o', alpha = 0.5) 
+        
+        results.power_law.plot_pdf(color=color, ax = ax[1],  linestyle='-', linewidth=3, alpha = 0.9,  label ='$\\alpha$= ' + str(round(alpha,2)) + ', $D$='+str(round(D, 2)  ))     
+        '''
+
+
+    align_plot1D(ax)
+    plt.savefig('career_length.png')
+    plt.close()
+    #plt.show()
 
 
 
-
-
-
-
-    
-    
-    align_plot(ax)
-    plt.savefig('career_length_data.png')
-    plt.show()
 
 
 
@@ -490,7 +610,7 @@ def get_impact_correlations():
 
 
 
-    num_of_bins = 15
+    num_of_bins = 12
     title_font = 25 
     seaborn.set_style('white')   
     
@@ -508,7 +628,7 @@ def get_impact_correlations():
     
     
         f, ax = plt.subplots(2, 3, figsize=(25, 15))
-        st = f.suptitle("IMDb impact correlations - " + mode, fontsize=title_font)
+        st = f.suptitle("IMDb impact correlations - " + mode , fontsize=title_font)
         
     
         for (label, color) in professions[0:1]:
@@ -521,8 +641,8 @@ def get_impact_correlations():
             ax[0,0].set_xlabel('rating cnt', fontsize = 20)
             ax[0,0].set_xscale('log')            
             avg, cnt = get_rid_of_zeros(impacts[2], impacts[1])
-            xb_avg, pb_avg, pberr_avg = getLogBinnedDistribution(np.asarray(avg), np.asarray(cnt), num_of_bins)    
             ax[0,0].plot(impacts[2],  impacts[1], 'o', color = color, alpha = Alpha, label = label)
+            xb_avg, pb_avg, pberr_avg = getLogBinnedDistribution(np.asarray(avg), np.asarray(cnt), num_of_bins)    
             ax[0,0].errorbar(xb_avg, pb_avg, yerr = pberr_avg, fmt = '^-', color = 'r')             
      
 
@@ -530,7 +650,7 @@ def get_impact_correlations():
             meta, avg = get_rid_of_zeros(impacts[3], impacts[1])
             ax[0,1].set_xlabel('metascore', fontsize = 20)
             ax[0,1].plot(meta, avg,  'o', color = color,  alpha = Alpha, label = label)
-            ax[0,1].errorbar((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta, yerr = perr_cnt_meta, fmt = '^-', color = 'r')#, alpha = Alpha, label = label)
+            ax[0,1].errorbar((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta, yerr = perr_cnt_meta, fmt = '^-', color = 'r', label = '$corr=$' + str(round(stats.pearsonr((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta)[0] ,4)))#, alpha = Alpha, label = label)
           
             
             
@@ -546,13 +666,14 @@ def get_impact_correlations():
            
            
             
-            ax[1,0].xaxis.get_major_formatter().set_powerlimits((0, 1))
-            cnt, meta = get_rid_of_zeros(impacts[2], impacts[3])
-            x_cnt_meta, p_cnt_meta, perr_cnt_meta = getBinnedDistribution(np.asarray(cnt), np.asarray(meta), num_of_bins)        
+            #ax[1,0].xaxis.get_major_formatter().set_powerlimits((0, 1))
+            ax[1,0].set_xscale('log')
+            cnttt, metatt = get_rid_of_zeros(impacts[2], impacts[3])
+            x_cnt_metat, p_cnt_metat, perr_cnt_metat = getLogBinnedDistribution(np.asarray(cnttt), np.asarray(metatt), num_of_bins)        
             ax[1,0].set_xlabel('rating cnt', fontsize = 20)
             ax[1,0].set_ylabel('metascore', fontsize = 20)
-            ax[1,0].plot(cnt, meta,  'o', color = color,  alpha = Alpha, label = label)
-            ax[1,0].errorbar((x_cnt_meta[1:] + x_cnt_meta[:-1])/2, p_cnt_meta, yerr = perr_cnt_meta, fmt = '^-', color = 'r')#, alpha = Alpha, label = label)
+            ax[1,0].plot(cnttt, metatt,  'o', color = color,  alpha = Alpha, label = label)
+            ax[1,0].errorbar(x_cnt_metat, p_cnt_metat, yerr = perr_cnt_metat, fmt = '^-', color = 'r')#, alpha = Alpha, label = label)
 
             
             ax[1,1].set_xlabel('rating cnt', fontsize = 20)
@@ -592,32 +713,34 @@ def get_impact_correlations():
 
 def plot_red_lines(ax, x):
 
-    plt.grid()  
+    #plt.grid()  
     for i in range(len(ax)):
         for j in range(len(ax[0])):     
             ax[i,j].set_xlim(-0.05, 1.05)
             ax[i,j].set_ylim(-0.05, 1.05)
-            ax[i,j].grid()
+            #ax[i,j].grid()
             yyy = [1 - y0 for y0 in x]
-            ax[i,j].plot(x, yyy, 'r--', linewidth=2) 
+            ax[i,j].plot(x, yyy, 'v-', linewidth=12, alpha = 0.1) 
             ax[i,j].set_xlabel('$N^{*}/N$', fontsize=17)
             ax[i,j].set_ylabel( r'$P( \geq  N^{*}/N)$' , fontsize=17)
 
 
 
-def plot_ccdf(file_avg_all, num_of_bins, ax, color, label, Nmin, title):
+def plot_ccdf(file_avg_all, num_of_bins, ax, color, label, Nmin, title, marker):
 
 
-    x_Nstar_avg_all, p_Nstar_avg_all, len_career, r_square = parse_N_star_N_data(file_avg_all, Nmin)
+    x_Nstar_avg_all, p_Nstar_avg_all, len_career, r_square, numInd = parse_N_star_N_data(file_avg_all, Nmin)
     
-    
-    
+
+    if 'orig' in label:
+        ax.set_title(str(numInd) + ' ' + title, fontsize = 19)   
+        
     bx_average_ratings, bp_average_ratings, bperr_average_ratings = getBinnedDistribution(np.asarray(x_Nstar_avg_all), np.asarray(p_Nstar_avg_all), num_of_bins)
-    ax.set_title(title, fontsize = 19)        
-    ax.plot(x_Nstar_avg_all, p_Nstar_avg_all, color = color,  marker = 'o', linewidth = 0, markersize = 5, alpha= 0.5, label = label + ', ' + str(len_career) + ' $R^2=$' + str(round(r_square, 4)),)  
-    ax.errorbar((bx_average_ratings[1:] + bx_average_ratings[:-1])/2, bp_average_ratings, yerr=bperr_average_ratings, fmt=color + '-', linewidth = 2)
+         
+    #ax.plot(x_Nstar_avg_all, p_Nstar_avg_all, color = color,  marker = 'o', linewidth = 0, markersize = 5, alpha= 0.5, label = label + ', ' + str(len_career) + ' $R^2=$' + str(round(r_square, 4)),)  
+    ax.errorbar((bx_average_ratings[1:] + bx_average_ratings[:-1])/2, bp_average_ratings, yerr=bperr_average_ratings, fmt=color + '-', linewidth = 1,  markersize = 9, label = label + ' $R^2 = $' + str(round(r_square, 5)), marker = marker, alpha = 0.7)
             
-            
+    return r_square            
 
 
 
@@ -641,7 +764,9 @@ def parse_N_star_N_data(filename, cutoff_N1, cutoff_N2 = 10000000000):
     
         slope, intercept, r_square, p_value, std_err = stats.linregress(x_stat,[1 - aaa for aaa in y_stat])
   
-        return x_stat, y_stat, len(N_star_N), r_square
+        numInd = len(N_star_N)
+  
+        return x_stat, y_stat, len(N_star_N), r_square, numInd
 
     except ValueError:
     
@@ -657,60 +782,183 @@ def get_r_test():
     '''      MOVIE YO                                  '''
     
     
-    professions = [('director',     'k'), 
-                   ('producer',     'b'),
-                   ('writer'  ,     'r'),
-                   ('composer',     'g'),
-                   ('art-director', 'y')]
-
+    
     num_of_bins = 20
     title_font  = 25 
     Nmin = 20
     seaborn.set_style('white')   
     f, ax = plt.subplots(2, 3, figsize=(25, 15))
-    st = f.suptitle("IMDb impact distributions, $N_{min}$" + str(Nmin), fontsize=title_font)
+    st = f.suptitle("IMDb impact distributions, $N_{min}$ = " + str(Nmin), fontsize=title_font)
 
-    folder = 'ProcessedDataNormalized'
-
-
-    for (label, color) in professions:
-       
-        file_avg_all  = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_avg_rating_'    + label + '.dat'
-        file_cnt_all  = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_rating_count_' + label + '.dat'
-        file_mets_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_metascores_'    + label + '.dat'
-        file_crit_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_critic_review_'+ label + '.dat'
-        file_user_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_user_review_'  + label + '.dat'
-        plot_ccdf(file_avg_all,  num_of_bins, ax[0,0], color, label, Nmin, 'average ratings')
-        plot_ccdf(file_cnt_all,  num_of_bins, ax[0,1], color, label, Nmin, 'rating counts')
-        plot_ccdf(file_mets_all, num_of_bins, ax[0,2], color, label, Nmin, 'metascores')
-        plot_ccdf(file_crit_all, num_of_bins, ax[1,0], color, label, Nmin, '#critic reviews')
-        plot_ccdf(file_user_all, num_of_bins, ax[1,1], color, label, Nmin, '#user reviews')
-
-        
-
-
-
-
-
-    professions = [('pop',     'k'), 
-                   ('electro', 'b')]    
-       
-    for (label, color) in professions:
     
-        file_music = folder + '/4_NN_rank_N/music_best_product_NN_ranks_all_rating_count_' + label + '.dat'
-        plot_ccdf(file_music,  num_of_bins, ax[1,2], color, label, Nmin, 'ratings counts')
+    outfile = open('ProcessedDataCombined/R^2_values.dat', 'w')
+    outfile.write('domain\tmode\tprofession\tmeasure\tR^2\n')
+
+
+
+
+    for (mode, colorm, markerm) in [('', 'k', 'o'), ('Normalized', 'b', '^'), ('NormalizedRandomized', 'r', 's')]:
+    
         
-       
+        if '' == mode:
+            mode_ = 'original'
+        elif 'Rand' in mode:
+            mode_ = 'randomized'
+        else:
+            mode_= 'normalized'
+        
+        
+        folder = 'ProcessedData' + mode #+ 'Sample'
+
+        professions = [('director',     'k',  'o'), 
+                       ('producer',     'b',  's'),
+                       ('writer'  ,     'r',  '^'),
+                       ('composer',     'g',  '8'),
+                       ('art-director', 'y',  'x')]
+
+
+        for (label, color, marker) in professions: #[0:1]:
+        
+            file_avg_all  = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_avg_rating_'    + label + '.dat'
+            file_cnt_all  = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_rating_count_'  + label + '.dat'
+            file_mets_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_metascores_'    + label + '.dat'
+            file_crit_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_critic_review_' + label + '.dat'
+            file_user_all = folder + '/4_NN_rank_N/film_best_product_NN_ranks_all_user_review_'   + label + '.dat'
+            
+            r_square_avg  = plot_ccdf(file_avg_all,  num_of_bins, ax[0,0], colorm, mode_, Nmin, 'directors, average ratings' , markerm)
+            r_square_cnt  = plot_ccdf(file_cnt_all,  num_of_bins, ax[0,1], colorm, mode_, Nmin, 'directors, rating counts'   , markerm)
+            r_square_meta = plot_ccdf(file_mets_all, num_of_bins, ax[0,2], colorm, mode_, Nmin, 'directors, metascores'      , markerm)
+            r_square_crit = plot_ccdf(file_crit_all, num_of_bins, ax[1,0], colorm, mode_, Nmin, 'directors, #critic reviews' , markerm)
+            r_square_user = plot_ccdf(file_user_all, num_of_bins, ax[1,1], colorm, mode_, Nmin, 'directors, #user reviews'   , markerm)
+
+            
+            outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'average ratings\t' + str(r_square_avg)  + '\n')
+            outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'rating counts\t'   + str(r_square_cnt)  + '\n')
+            outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'metascores\t'      + str(r_square_meta) + '\n')
+            outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + '#critic reviews\t' + str(r_square_crit) + '\n')
+            outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + '#user reviews\t'   + str(r_square_user) + '\n')           
+
+
+
+
+        professions = [('pop',     'k', 'o'), 
+                       ('electro', 'b', '^')]    
+           
+        for (label, color, marker) in professions:#[1:2]:
+        
+            file_music   = folder + '/4_NN_rank_N/music_best_product_NN_ranks_all_rating_count_' + label + '.dat'
+            r_square_cnt = plot_ccdf(file_music,  num_of_bins, ax[1,2], colorm, label, Nmin, 'ratings counts', markerm)
+    
+            outfile.write(  'music\t' + mode_ + '\t' + label + '\t' + 'rating counts\t' + str(r_square_cnt) + '\n')           
 
 
 
     xxx = np.arange(0,1, 1.0/20)
     plot_red_lines(ax, xxx)
     align_plot(ax)
-    plt.savefig('N_Nstar_'+str(Nmin)+'_normalized.png')
-    plt.close()
+    #plt.savefig('N_Nstar_'+str(Nmin)+'_first.png')
+    #plt.close()
     #plt.show()          
            
+
+
+
+def get_ticks(original, colors, color):
+
+    tick_l = []
+    tick_x = []
+
+    i = 0
+    for (l, x) in original:
+        i += 1
+        if x < 0.98:
+            tick_l.append(l)
+            tick_x.append(i)
+            colors.append(color)
+    
+    return tick_x, tick_l
+
+
+def get_N_star_N_stat():
+
+
+    original   = []
+    normalized = []
+    randomized =  []
+
+
+    for line in open('ProcessedDataCombined/R^2_values.dat'):
+    
+        if 'mode' not in line:
+
+            fields = line.strip().split('\t')
+    
+            if 'original' in fields[1]:
+                original.append((fields[2] + ',' + fields[3], float(fields[4])))             
+            if 'norm' in fields[1]:
+                normalized.append((fields[2] + ',' + fields[3], float(fields[4])))             
+            if 'rand' in fields[1]:
+                randomized.append((fields[2] + ',' + fields[3], float(fields[4])))             
+                  
+
+
+    seaborn.set_style('white')      
+    title_font  = 25 
+    f, ax = plt.subplots(1, 1, figsize=(12, 12))
+
+
+   
+
+
+
+
+    font_tick = 15   
+    ax.plot([i*1 for i in range(len(original))],   [original[i][1]   for i in range(len(original))],   'ko', label = 'original')
+    ax.plot([i*1 for i in range(len(randomized))], [randomized[i][1] for i in range(len(randomized))], 'ro', label = 'randomized')
+    ax.plot([i*1 for i in range(len(normalized))], [normalized[i][1] for i in range(len(normalized))], 'bo', label = 'normalized')
+    
+ 
+    colors = []
+    tick_xo, tick_lo = get_ticks(original,   colors, 'k')
+    tick_xn, tick_ln = get_ticks(normalized, colors, 'b')    
+    tick_xr, tick_lr = get_ticks(randomized, colors, 'k')   
+ 
+    ax.set_ylim([0.9, 1.01])
+       
+    ax.legend(loc = 'left', fontsize = font_tick)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.get_xaxis().tick_bottom()   
+    ax.get_yaxis().tick_left()
+    ticklines  = ax.get_xticklines()  + ax.get_yticklines()
+    gridlines  = ax.get_xgridlines()  + ax.get_ygridlines()
+
+    for line in ticklines:
+        line.set_linewidth(1)
+
+    for line in gridlines:
+        line.set_linestyle('-.')
+
+    ax.tick_params(labelsize = font_tick) 
+    ax.set_xticks(tick_xo + tick_xn + tick_xr) 
+    ax.set_xticklabels(tick_lo + tick_ln + tick_lr, rotation = '30')
+
+    for xtick in ax.get_xticks():
+        tick_labels = ax.get_xticklabels()
+        tick_index  = ax.get_xticks().tolist().index(xtick)
+        tick_labels[tick_index].set_color(colors[tick_index])
+    
+
+    
+    plt.tight_layout()    
+    plt.savefig('R^2goodnesses.png')
+    plt.close()
+    #plt.show()    
+
+
+
+    for i in range(len(original)):
+        print original[i][0] ,'\t', round(abs(100*(original[i][1] -  randomized[i][1])/ randomized[i][1]),3) ,'\t',round(abs(100*(normalized[i][1] -  randomized[i][1])/ randomized[i][1]),3)
 
 
 
@@ -718,11 +966,12 @@ def get_r_test():
 
 def get_R_square_map():
 
-    professions = [('director',     'k'), 
-                   ('producer',     'b'),
-                   ('writer'  ,     'r'),
-                   ('composer',     'g'),
-                   ('art-director', 'y')]
+   
+    professions = [('director',     'k',  'o'), 
+                   ('producer',     'b',  's'),
+                   ('writer'  ,     'r',  '^'),
+                   ('composer',     'g',  '8'),
+                   ('art-director', 'y',  'x')]
 
     num_of_bins = 20
     title_font  = 25 
@@ -733,9 +982,9 @@ def get_R_square_map():
     Nmax = 20
     FOLDER = 'ProcessedDataNormalized'
 
-    for (label, color) in professions:
+    for (label, color, marker) in professions:
      
-        i = professions.index((label, color))
+        i = professions.index((label, color, marker))
        
               
         file_avg_all  = FOLDER + '/4_NN_rank_N/film_best_product_NN_ranks_all_avg_rating_'    + label + '.dat'
@@ -917,6 +1166,9 @@ if __name__ == '__main__':
     elif sys.argv[1] == '4':
         get_r_test()
         
+    elif sys.argv[1] == '44':
+        get_N_star_N_stat()
+        
     elif sys.argv[1] == '5':
         get_R_square_map()
         
@@ -925,4 +1177,11 @@ if __name__ == '__main__':
 
     elif sys.argv[1] == '7':
         get_exponents()
-            
+        
+    elif sys.argv[1] == '8':
+        get_career_length()
+        
+  
+        
+        
+        
