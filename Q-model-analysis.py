@@ -1,10 +1,10 @@
 import os
 import sys
-import matplotlib
-matplotlib.use('Agg')
+#import matplotlib
+#matplotlib.use('Agg')
 import seaborn
 import numpy as np
-
+import random
 import powerlaw
 import pylab as pl
 import matplotlib.pyplot as plt
@@ -218,7 +218,6 @@ def get_imapct_distr():
 
 
 
-
 def fitNormal(rand, ax, label, alpha_hist  = 0.4, color_line = 'r'):
    
     ax.set_title(label, fontsize = 18)
@@ -418,14 +417,38 @@ def randn_skew_fast(N, alpha, loc, scale):
 def rand_powerlaw(N, xmin, alpha):
 
     u = np.random.rand(N)
+
     return [xmin * (1-r) ** (-1/(alpha-1)) for r in u]
+
+
+
+
+def rand_powerlaw2(xmin):
+
+
+
+    FOLDER = 'ProcessedDataSample' 
+    genre = 'electro'
+    file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
+    rating_counts = np.asarray([float(line.strip()) for line in open(file_music)])    
+    results = powerlaw.Fit(rating_counts, xmin = xmin, fit_method = 'KS')
+
+    return results 
+    #return results.power_law.generate_random(int(N))
+
+    #return results.power_law.generate_random(N)
+
 
 
 
 def plot_max_impact_N(filename, ax, num_of_bins, distribution, params, logx = False):
 
 
+
+
     (data_max, career_len) = zip(*[[float(num) for num in line.strip().split('\t')] for line in open(filename) if 'nan' not in line])
+
+   
 
     ax.set_xlim([10, max(career_len)])
     ax.set_xscale('log') 
@@ -436,39 +459,63 @@ def plot_max_impact_N(filename, ax, num_of_bins, distribution, params, logx = Fa
 
     gen_max  = []
     expected = []
-    career_len_ = career_len
+    career_len_ = career_len # list(set(career_len))
+
+
+    powerlawrand = rand_powerlaw2(params[0])
+    print sorted(powerlawrand.power_law.generate_random(3))
     
- 
+    print sorted(powerlawrand.power_law.generate_random(3))
+
     
-    
+
+
+    '''
     if 'norm' in distribution:
         for user in career_len_: 
-            
+
+    
+            #print user            
             maxx = np.mean([max(randn_skew_fast(user, alpha=params[0],  loc=params[1], scale=params[2]))  for i in range(1)   ])
             gen_max.append(maxx)            
             #gen_max.append( max(randn_skew_fast(user, alpha=params[0],  loc=params[1], scale=params[2])))
+    
+    
     else:
-        print params
+        
+        powerlawrand = rand_powerlaw2(params[0])
+   
         for user in career_len_: 
-            maxx = np.mean([max(rand_powerlaw(user, params[0], params[1]))  for i in range(1)   ])
-            gen_max.append(maxx )       
+            
+            if user > 0:
+
+                maxx = np.mean([max( powerlawrand.power_law.generate_random(int(user)) )  for i in range(100)   ])
+                gen_max.append(maxx)       
+    
+    '''
+
+    ''' 
+    
+    take all the impacts, reshuffle it, and split it into a set of careers which have the same P(L)
+
+
+    '''
     
 
     
     
-  
     if logx:
         xb_data, pb_data, pberr_data = getLogBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen = getLogBinnedDistribution(np.asarray(career_len_),  np.asarray(gen_max), num_of_bins)
-        ax.errorbar(xb_gen, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
+        #xb_gen, pb_gen, pberr_gen = getLogBinnedDistribution(np.asarray(career_len_),  np.asarray(gen_max), num_of_bins)
+        #ax.errorbar(xb_gen, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
         ax.errorbar(xb_data, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
         
     else:
         xb_data, pb_data, pberr_data = getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen = getBinnedDistribution(np.asarray(career_len_),  np.asarray(gen_max), num_of_bins)
-        ax.errorbar((xb_gen[1:] + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
+        #xb_gen, pb_gen, pberr_gen = getBinnedDistribution(np.asarray(career_len_),  np.asarray(gen_max), num_of_bins)
+        #ax.errorbar((xb_gen[1:] + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
         ax.errorbar((xb_data[1:] + xb_data[:-1])/2, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
-
+       
 
 
 def do_the_r_model():
@@ -495,9 +542,9 @@ def do_the_r_model():
 
 
 
-    FOLDER = 'ProcessedData'#Sample' # mode# + 'Sample' 
+    FOLDER = 'ProcessedDataSample' # mode# + 'Sample' 
     field  = 'film'
-   
+    '''
     for (label, color) in professions[0:1]:
        
         params = [-2.57217962779,  8.24521955224, 2.11103429009]
@@ -505,7 +552,7 @@ def do_the_r_model():
         
         
         
-        '''
+        
         
         params = [-2.06264859212,  75.1841274815, 25.2467135261]
         plot_max_impact_N(FOLDER + '/10_career_length_max_impact/career_length_max_metascore' + field + '_' + label + '.dat', ax[0,2], num_of_bins, 'norm', params, True)
@@ -531,28 +578,76 @@ def do_the_r_model():
         ax[1,0].set_yscale('log')         
         ax[1,1].set_yscale('log')         
 
-        '''
-    
-    
     '''
+    
+    
+        
     genres = [('electro', 'k'), 
               ('pop',     'b')]
 
     for (genre, color) in genres[0:1]:
 
         params = [1.0, 1.24455816812]
-        plot_max_impact_N(FOLDER + '/10_career_length_max_impact/career_length_max_rat_cntmusic_' + genre + '.dat', ax[1,2], num_of_bins, 'power', params, True)  
+        #plot_max_impact_N(FOLDER + '/10_career_length_max_impact/career_length_max_rat_cntmusic_' + genre + '.dat', ax[1,2], num_of_bins, 'power', params, True)  
         ax[1,2].set_yscale('log')
-        #ax[1,2].set_ylim([1, 1000000000000000000000])
+    
 
 
-    '''
+    file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
+    rating_counts = [float(line.strip()) for line in open(file_music)]  
+
+    (data_max, career_len) = zip(*[[float(num) for num in line.strip().split('\t')] for line in open(FOLDER + '/10_career_length_max_impact/career_length_max_rat_cntmusic_' + genre + '.dat') if 'nan' not in line])
+
+
+
+
+
+    career_max = []
+
+    #ax[1,2].set_yscale('log')
+    ax[1,2].set_xscale('log')
+
+
+    print rating_counts[0:10]
+
+    for leng in career_len:
+        #print int(leng), rating_counts[0:int(leng)]
+        career_max.append(max( rating_counts[0:int(leng)]))
+        del rating_counts[0:int(leng)]
+
+   
+    xb_gen, pb_gen, pberr_gen = getLogBinnedDistribution(np.asarray(career_len),  np.asarray(career_max), num_of_bins)
+    ax[1,2].errorbar(xb_gen, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
+
+
+
+
+
+    career_max = []
+
+    rating_counts = [float(line.strip()) for line in open(file_music)]  
+    random.shuffle(rating_counts)
+    print rating_counts[0:10]
+
+    for leng in career_len:
+        #print int(leng), rating_counts[0:int(leng)]
+        career_max.append(max( rating_counts[0:int(leng)]))
+        del rating_counts[0:int(leng)]
+
+   
+
+
+
+    xb_gen, pb_gen, pberr_gen = getLogBinnedDistribution(np.asarray(career_len),  np.asarray(career_max), num_of_bins)
+    ax[1,2].errorbar(xb_gen, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
+
+
 
 
 
 
     align_plot(ax) 
-    plt.savefig('R-model.png')       
+    #plt.savefig('R-model.png')       
     plt.show() 
         
 
