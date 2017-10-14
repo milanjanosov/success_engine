@@ -451,14 +451,14 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
         xb_data, pb_data, pberr_data = getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
         xb_gen, pb_gen, pberr_gen    = getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
         ax.errorbar((xb_data[1:] + xb_data[:-1])/2, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
-        ax.errorbar((xb_gen[1:]  + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)
+        ax.errorbar((xb_gen[1:]  + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)
     else:
         ax.set_xscale('log')
         ax.set_yscale('log')
         xb_data, pb_data, pberr_data = getLogBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
         xb_gen, pb_gen, pberr_gen    = getLogBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
         ax.errorbar(xb_data, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
-        ax.errorbar(xb_gen,  pb_gen,  yerr = pberr_gen, fmt = 'o-', color = 'r', label = 'R-model', alpha = 0.9)        
+        ax.errorbar(xb_gen,  pb_gen,  yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)        
     
 
 
