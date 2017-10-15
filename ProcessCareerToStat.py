@@ -105,9 +105,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
         ijk = 0
         nnn = len(files)
-        
-       
-        
+
         
         average_ratings = []
         rating_counts   = []
@@ -210,7 +208,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
           
 
-        for filename in files:
+        for filename in files[0:1000]:
         
                       
             ijk += 1
@@ -241,11 +239,11 @@ def process_simple_career_trajectories(normalized, randomized):
    
                 p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
                 
-                #gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
-                #multi_impacts += gyurika.getImpactValues()
+                gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
+                multi_impacts += gyurika.getImpactValues()
                 
 
-            '''          
+                    
             # rating counts
             if 'book' in field or 'music' in field or 'film' in field:
             
@@ -378,7 +376,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
                 p_without_mean_gross += pista_gross.getLogPwithZeroAvg()                    
                             
-            '''
+           
 
 
 
