@@ -15,12 +15,16 @@ class MultipleImpactCareerTrajectory:
         self.name    = inputfile
         events       = []
 
+
         for line in gzip.open(inputfile):
+             
             if 'year' not in line:
+          
+                 
                 fields  = line.strip().split('\t')
                 product = fields[0]
                 impacts = [imp if 'None' not in imp else '0'  for imp in fields[2:] ]
-                try:    
+                try:       
                     year    = float(fields[1])
                     if year > 1500 and year < 2018:
                         if len(norm_factors) > 0:
@@ -69,10 +73,19 @@ class SimpleCareerTrajectory:
         events       = []             
            
         for line in gzip.open(inputfile):
+        
+
             if 'year' not in line:
+                
+                
+                
                 fields  = line.strip().split('\t')
                 product = fields[0]
-                try:    
+                 
+                
+                 
+                try: 
+                        
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
                                     
@@ -80,14 +93,15 @@ class SimpleCareerTrajectory:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
                         events.append((product, year, impact))
-                except ValueError:
+                except:# ValueError:  
+                    print name, line
                     pass
-    
 
+                    ''' THIS SHOULD BE VALUE ERROR EXCEPTION - AFTER FIXING GOODREADS PARSING '''
         
         if randomized and len(events) > 0:
             impacts_to_rand = [e[2] for e in events]
-            random.shuffle(impacts_to_rand)
+            random.shuffle(impacts_to_rand)   
             events_rand = []
             for e in events:
                 events_rand.append((e[0], e[1], impacts_to_rand[events.index(e)]))
@@ -227,9 +241,6 @@ class SimpleCareerTrajectory:
         log_impacts_avg = np.mean(log_impacts)
         
         return [i - log_impacts_avg for i in log_impacts]
-
-            
-
 
 
 
