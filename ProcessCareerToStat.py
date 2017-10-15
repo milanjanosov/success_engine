@@ -212,7 +212,7 @@ def process_simple_career_trajectories(normalized, randomized):
         
                       
             ijk += 1
-            #print ijk, '/', nnn
+            print ijk, '/', nnn
             
                                  
             #avg ratings
