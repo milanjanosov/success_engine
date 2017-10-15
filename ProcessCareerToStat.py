@@ -106,7 +106,7 @@ def process_simple_career_trajectories(normalized, randomized):
         ijk = 0
         nnn = len(files)
         
-        print label
+       
         
         
         average_ratings = []
@@ -210,7 +210,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
           
 
-        for filename in files[0:1000]:
+        for filename in files:
         
                       
             ijk += 1
