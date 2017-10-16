@@ -129,7 +129,7 @@ def get_imapct_distr():
             mode_ = mode   
     
     
-        FOLDER = 'ProcessedData' + mode# + 'Sample' 
+        FOLDER = 'ProcessedData' + mode + 'Sample' 
        
     
         professions = [('director',     'k'), 
