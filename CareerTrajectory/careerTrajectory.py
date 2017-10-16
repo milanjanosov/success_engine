@@ -22,8 +22,9 @@ class MultipleImpactCareerTrajectory:
                  
                 fields  = line.strip().split('\t')
                 product = fields[0]
-                impacts = [imp if 'None' not in imp else '0'  for imp in fields[2:] ]
-                try:       
+
+                try:
+                    impacts = [imp if 'None' not in imp else '0'  for imp in fields[2:] ]                      
                     year    = float(fields[1])
                     if year > 1500 and year < 2018:
                         if len(norm_factors) > 0:
@@ -78,10 +79,11 @@ class SimpleCareerTrajectory:
                                                
                 fields  = line.strip().split('\t')
                 product = fields[0]
-                         
-                year    = float(fields[1])
-                impact  = float(fields[impactm + 2])
-                try:                     
+                
+                try:         
+                    year    = float(fields[1])
+                    impact  = float(fields[impactm + 2])
+                                         
                     if impact > 0 and year > 1850 and year < 2018:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
