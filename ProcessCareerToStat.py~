@@ -90,7 +90,7 @@ def process_simple_career_trajectories(normalized, randomized):
     
 
     input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),         'music', 'pop'),
-                  (os.listdir('Data/Mu.6sic/music-electro-simple-careers'),     'music', 'electro'),
+                  (os.listdir('Data/Music/music-electro-simple-careers'),     'music', 'electro'),
                   (os.listdir('Data/Film/film-director-simple-careers'),      'film',  'director'),
                   (os.listdir('Data/Film/film-producer-simple-careers'),      'film',  'producer'),   
                   (os.listdir('Data/Film/film-writer-simple-careers'),        'film',  'writer'),   
@@ -101,7 +101,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
     
 
-    for (files, field, label) in input_data:
+    for (files, field, label) in input_data[7:8]:
 
         ijk = 0
         nnn = len(files)
@@ -208,7 +208,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
           
 
-        for filename in files:
+        for filename in files[0:1000]:
         
                       
             ijk += 1
@@ -577,8 +577,8 @@ if __name__ == '__main__':
     error = open('error_unparsed.dat', 'w')
 
     process_simple_career_trajectories(normalized = False, randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = True)
+    #process_simple_career_trajectories(normalized = True,  randomized = False)
+    #process_simple_career_trajectories(normalized = True,  randomized = True)
 
     
 
