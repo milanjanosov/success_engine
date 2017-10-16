@@ -90,7 +90,7 @@ def process_simple_career_trajectories(normalized, randomized):
     
 
     input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),         'music', 'pop'),
-                  (os.listdir('Data/Mu.6sic/music-electro-simple-careers'),     'music', 'electro'),
+                  (os.listdir('Data/Music/music-electro-simple-careers'),     'music', 'electro'),
                   (os.listdir('Data/Film/film-director-simple-careers'),      'film',  'director'),
                   (os.listdir('Data/Film/film-producer-simple-careers'),      'film',  'producer'),   
                   (os.listdir('Data/Film/film-writer-simple-careers'),        'film',  'writer'),   
