@@ -86,8 +86,12 @@ class SimpleCareerTrajectory:
                                          
                     if impact > 0 and year > 1850 and year < 2018:
                         if len(norm_factors) > 0:
-                            impact = impact/norm_factors[year]
-                        events.append((product, year, impact))
+                            try:
+                                impact = impact/norm_factors[year]
+                            except:
+                                impact = 0
+                        if impact > 0:
+                            events.append((product, year, impact))
                 except ValueError:  
                     pass
 
