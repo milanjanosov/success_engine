@@ -3,6 +3,8 @@ import sys
 import gzip
 import time
 import numpy as np
+import shutil
+from multiprocessing import Process
 from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
 from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 
@@ -83,25 +85,31 @@ def write_pairs(data, filename):
         
 
 
+def chunkIt(seq, num):
 
-def process_simple_career_trajectories(normalized, randomized):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
 
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
+
+def process_simple_career_trajectories(args):
+
+
+    input_data = args[0]
+    normalized = args[1]
+    randomized = args[2]
+    
 
     
 
-    input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),         'music', 'pop'),
-                  (os.listdir('Data/Music/music-electro-simple-careers'),     'music', 'electro'),
-                  (os.listdir('Data/Film/film-director-simple-careers'),      'film',  'director'),
-                  (os.listdir('Data/Film/film-producer-simple-careers'),      'film',  'producer'),   
-                  (os.listdir('Data/Film/film-writer-simple-careers'),        'film',  'writer'),   
-                  (os.listdir('Data/Film/film-composer-simple-careers'),      'film',  'composer'),   
-                  (os.listdir('Data/Film/film-art-director-simple-careers'),  'film',  'art-director'),   
-                  (os.listdir('Data/Book/book-authors-simple-careers'),       'book',  'authors')   
-                  ]
-
-    
-
-    for (files, field, label) in input_data:
+    for (files, field, label) in [input_data]:
 
         ijk = 0
         nnn = len(files)
@@ -208,7 +216,7 @@ def process_simple_career_trajectories(normalized, randomized):
 
           
 
-        for filename in files:
+        for filename in files[0:100]:
         
                       
             ijk += 1
@@ -388,6 +396,12 @@ def process_simple_career_trajectories(normalized, randomized):
         if randomized:
             root = root + 'Randomized'
      
+ 
+
+        #shutil.rmtree('/folder_name')
+
+
+        
         
         if not randomized:      
           
@@ -490,6 +504,15 @@ def process_simple_career_trajectories(normalized, randomized):
             f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_user_review_' + label + '.dat', 'w')
             [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_user_review]
             f.close()        
+         
+        if len(NN_rand_gross) > 0:           
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_gross_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_gross]
+            f.close() 
+            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_gross_' + label + '.dat', 'w')
+            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_gross]
+            f.close()        
+                 
                 
             
         
@@ -519,7 +542,7 @@ def process_simple_career_trajectories(normalized, randomized):
         write_yearly_avgs(metascores_year     , dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat')      
         write_yearly_avgs(critic_review_year  , dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat')   
         write_yearly_avgs(user_review_year    , dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat')   
-               
+        write_yearly_avgs(gross_year          , dir6 + '/' + field + '_yearly_average_gross_'         + label + '.dat')                  
           
         
         ''' ------------------ multiple impact measures ------------------ '''
@@ -545,10 +568,10 @@ def process_simple_career_trajectories(normalized, randomized):
    
         write_distr_data(p_without_mean_avg_rating, dir9 + '/' + field + '_p_without_mean_avg_rating_' + label + '.dat')
         write_distr_data(p_without_mean_rating_cnt, dir9 + '/' + field + '_p_without_mean_rating_cnt_' + label + '.dat')        
-        write_distr_data(p_without_mean_metascore,  dir9 + '/' + field + '_p_without_mean_metascore_' + label + '.dat')      
+        write_distr_data(p_without_mean_metascore,  dir9 + '/' + field + '_p_without_mean_metascore_'  + label + '.dat')      
         write_distr_data(p_without_mean_critic_rev, dir9 + '/' + field + '_p_without_mean_critic_rev_' + label + '.dat')        
-        write_distr_data(p_without_mean_user_rev,   dir9 + '/' + field + '_p_without_mean_user_rev_' + label + '.dat')        
-
+        write_distr_data(p_without_mean_user_rev,   dir9 + '/' + field + '_p_without_mean_user_rev_'   + label + '.dat')        
+        write_distr_data(p_without_mean_gross,      dir9 + '/' + field + '_p_without_mean_gross_'      + label + '.dat')        
 
 
         ''' ------------------  career length vs max impact  ------------------ '''
@@ -562,13 +585,41 @@ def process_simple_career_trajectories(normalized, randomized):
         write_pairs(max_metascore_N, dir10 + '/career_length_max_metascore' + field + '_' + label + '.dat')
         write_pairs(max_crit_rev_N,  dir10 + '/career_length_max_crit_rev'  + field + '_' + label + '.dat')      
         write_pairs(max_user_rev_N,  dir10 + '/career_length_max_user_rev'  + field + '_' + label + '.dat')        
+        write_pairs(max_gross_N,     dir10 + '/career_length_max_gross'     + field + '_' + label + '.dat')        
 
 
 
+def run_paralel(normalized = False, randomized = False):
 
 
+    input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),         'music', 'pop'),
+                  (os.listdir('Data/Music/music-electro-simple-careers'),     'music', 'electro'),
+                  (os.listdir('Data/Film/film-director-simple-careers'),      'film',  'director'),
+                  (os.listdir('Data/Film/film-producer-simple-careers'),      'film',  'producer'),   
+                  (os.listdir('Data/Film/film-writer-simple-careers'),        'film',  'writer'),   
+                  (os.listdir('Data/Film/film-composer-simple-careers'),      'film',  'composer'),   
+                  (os.listdir('Data/Film/film-art-director-simple-careers'),  'film',  'art-director'),   
+                  (os.listdir('Data/Book/book-authors-simple-careers'),       'book',  'authors')   
+                  ]
+
+
+
+    Pros = []
     
-        
+
+    for inp in input_data:  
+        p = Process(target = process_simple_career_trajectories, args=([inp, False, False], ))
+        Pros.append(p)
+        p.start()
+       
+    for t in Pros:
+        t.join()
+
+
+
+
+  
+    #process_simple_career_trajectories(normalized = False, randomized = False)        
         
         
 if __name__ == '__main__':         
@@ -576,11 +627,13 @@ if __name__ == '__main__':
 
     error = open('error_unparsed.dat', 'w')
 
-    process_simple_career_trajectories(normalized = False, randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = False)
-    process_simple_career_trajectories(normalized = True,  randomized = True)
+    #process_simple_career_trajectories(normalized = False, randomized = False)
+    ##process_simple_career_trajectories(normalized = True,  randomized = False)
+    #process_simple_career_trajectories(normalized = True,  randomized = True)
 
-    
+    run_paralel(normalized = False, randomized = False)
+    run_paralel(normalized = True,  randomized = False)
+    run_paralel(normalized = True,  randomized = True)
 
     error.close()
     
