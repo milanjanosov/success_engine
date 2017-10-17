@@ -208,11 +208,11 @@ def process_simple_career_trajectories(args):
 
           
 
-        for filename in files:
+        for filename in files[0:100]:
         
                       
             ijk += 1
-            print ijk, '/', nnn
+            #print ijk, '/', nnn
             
                                  
             #avg ratings
@@ -623,8 +623,8 @@ if __name__ == '__main__':
     ##process_simple_career_trajectories(normalized = True,  randomized = False)
     #process_simple_career_trajectories(normalized = True,  randomized = True)
 
-    #run_paralel(normalized = False, randomized = False)
-    run_paralel(normalized = True,  randomized = False)
+    run_paralel(normalized = False, randomized = False)
+    #run_paralel(normalized = True,  randomized = False)
     #run_paralel(normalized = True,  randomized = True)
 
     error.close()

@@ -14,12 +14,15 @@ class MultipleImpactCareerTrajectory:
         self.name    = inputfile
         events       = []
 
+        
+
 
         for line in gzip.open(inputfile):           
             
             if 'year' not in line:
                 fields  = line.strip().split('\t')
                 #print fields
+                
                 product = fields[0]
                 impacts = [0 if imp is None else imp  for imp in fields[2:] ]    
                 impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]                                        
@@ -79,12 +82,30 @@ class SimpleCareerTrajectory:
                 fields  = line.strip().split('\t')
                 product = fields[0]
                 
+                cango = False
                 
+                if 'film' in self.name or 'book' in self.name:
+                    try:
+                        if float(fields[3]) > 100:
+                            cango = True
+                    except:
+                        pass
+                
+                if 'music' in self.name:
+                    try:
+                        if float(fields[2]) > 100:
+                            cango = True
+                    except:
+                        pass
+                
+                
+                
+                        
                 try:         
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
                                          
-                    if impact > 0 and year > 1850 and year < 2018:
+                    if impact > 0 and year > 1850 and year < 2018 and cango:
                         if len(norm_factors) > 0:
                             #try:
                             impact = impact/norm_factors[year]
@@ -182,7 +203,7 @@ class SimpleCareerTrajectory:
         try:
             maxValue      = max([e[2] for e in self.events])
             sorted_events = sorted(self.events, key=lambda tup: tup[1])  
-            ranks_of_maxs = [sorted_events.index(e) for e in sorted_events if e[2] == maxValue] 
+            ranks_of_maxs = [sorted_events.index(e)+1 for e in sorted_events if e[2] == maxValue] 
             #print ranks_of_maxs  
             return (ranks_of_maxs, random.choice(ranks_of_maxs), N)
         except ValueError:
@@ -210,7 +231,7 @@ def getDistribution(keys, normalized = True):
 
     if normalized == 1: distr = distr/float(np.sum(distr)) 
 
-    return np.asarray(uniq_keys.tolist()), np.asarray(distr.tolist())
+    return np.asarray(uniq_kes.tolist()), np.asarray(distr.tolist())
 
 
 
