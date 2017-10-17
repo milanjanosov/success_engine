@@ -86,14 +86,14 @@ class SimpleCareerTrajectory:
                 
                 if 'film' in self.name or 'book' in self.name:
                     try:
-                        if float(fields[3]) > 100:
+                        if float(fields[3]) > 1000:
                             cango = True
                     except:
                         pass
                 
                 if 'music' in self.name:
                     try:
-                        if float(fields[2]) > 100:
+                        if float(fields[2]) > 1000:
                             cango = True
                     except:
                         pass
