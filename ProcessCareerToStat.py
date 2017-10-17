@@ -56,14 +56,6 @@ def parse_norm_factors(filename):
                         
     return norm_factors
     
- 
-def write_exponents(exponents, filename):
-
-    f = open(filename, 'w')
-    for e in exponents:
-        f.write(str(e[0]) + '\t' + str(e[1]) + '\t'  + str(e[2]) + '\t'  + str(e[3]) + '\n'  )
-    f.close()
-    
         
 def write_distr_data(data, filename):
         
@@ -197,7 +189,7 @@ def process_simple_career_trajectories(args):
                 metascore_norm     = parse_norm_factors( dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat' )      
                 critic_review_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat' )   
                 user_review_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat' )   
-                user_review_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_gross_'         + label + '.dat' )   
+                gross_norm         = parse_norm_factors( dir6 + '/' + field + '_yearly_average_gross_'         + label + '.dat' )   
                 
                 combined_factors  = [average_rat_norm, rating_counts_norm, metascore_norm, critic_review_norm, user_review_norm, gross_norm]        
 
@@ -631,9 +623,9 @@ if __name__ == '__main__':
     ##process_simple_career_trajectories(normalized = True,  randomized = False)
     #process_simple_career_trajectories(normalized = True,  randomized = True)
 
-    run_paralel(normalized = False, randomized = False)
+    #run_paralel(normalized = False, randomized = False)
     run_paralel(normalized = True,  randomized = False)
-    run_paralel(normalized = True,  randomized = True)
+    #run_paralel(normalized = True,  randomized = True)
 
     error.close()
     

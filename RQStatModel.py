@@ -6,6 +6,7 @@ import seaborn
 import numpy as np
 import random
 import powerlaw
+import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
@@ -23,30 +24,39 @@ from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''  
 
 
+def align_ax(ax, font_tick):
+
+
+    ax.legend(loc = 'left', fontsize = font_tick)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+    ticklines  = ax.get_xticklines()  + ax.get_yticklines()
+    gridlines  = ax.get_xgridlines()  + ax.get_ygridlines()
+    ticklabels = ax.get_xticklabels() + ax.get_yticklabels()
+    for line in ticklines:
+        line.set_linewidth(1)
+
+    for line in gridlines:
+        line.set_linestyle('-.')
+
+    ax.tick_params(labelsize = font_tick)    
+
+
 def align_plot(ax):
 
     font_tick = 15   
 
-    for i in range(len(ax)):
-        for j in range(len(ax[0])):
-            #ax[i,j].grid()
-            ax[i,j].legend(loc = 'left', fontsize = font_tick)
-            ax[i,j].spines['top'].set_visible(False)
-            ax[i,j].spines['right'].set_visible(False)
-            ax[i,j].get_xaxis().tick_bottom()
-            ax[i,j].get_yaxis().tick_left()
-            ticklines  = ax[i,j].get_xticklines()  + ax[i,j].get_yticklines()
-            gridlines  = ax[i,j].get_xgridlines()  + ax[i,j].get_ygridlines()
-            ticklabels = ax[i,j].get_xticklabels() + ax[i,j].get_yticklabels()
-            for line in ticklines:
-                line.set_linewidth(1)
-
-            for line in gridlines:
-                line.set_linestyle('-.')
-
-            ax[i,j].tick_params(labelsize = font_tick) 
-
-
+    if len(ax.shape)> 1:
+        for i in range(len(ax)):
+            for j in range(len(ax[0])):
+                align_ax(ax[i,j], font_tick)  
+ 
+    else:
+        for i in range(len(ax)):
+            align_ax(ax[i], font_tick)
+       
 
 
 
@@ -319,10 +329,12 @@ def get_impact_correlations():
                    ('art-director', 'y')]    
     
     
-    for mode in ['', 'Normalized'][0:2]:
+
+    
+    for mode in ['', 'Normalized'][1:2]:
     
     
-       
+        FOLDER = 'ProcessedData'+mode       
         
     
         for (label, color) in professions[0:1]:
@@ -332,7 +344,7 @@ def get_impact_correlations():
             st = f.suptitle("IMDb impact correlations - " + mode + ' - ' + label , fontsize=title_font)
 
 
-            impacts = zip(*[ [float(aaa)  if 'tt' not in aaa else aaa for aaa in line.strip().split('\t')]   for line in open('ProcessedData'+mode+'Sample/7_multiple_impacts/film_multiple_impacts_' + label + '.dat')])
+            impacts = zip(*[ [float(aaa)  if 'tt' not in aaa else aaa for aaa in line.strip().split('\t')]   for line in open(FOLDER+'/7_multiple_impacts/film_multiple_impacts_' + label + '.dat')])
             
             Alpha = 0.05
             
@@ -409,7 +421,7 @@ def get_impact_correlations():
         
             
             
-            impacts = zip(*[ [abs(float(aaa.replace(',',''))) for aaa in line.strip().split('\t')[1:]]   for line in open('ProcessedData'+mode+'Sample/7_multiple_impacts/book_multiple_impacts_authors.dat')])
+            impacts = zip(*[ [abs(float(aaa.replace(',',''))) for aaa in line.strip().split('\t')[1:]]   for line in open(FOLDER + '/7_multiple_impacts/book_multiple_impacts_authors.dat')])
 
 
             
@@ -449,9 +461,209 @@ def get_impact_correlations():
 
 
             align_plot(ax)
-            plt.savefig('Figs/correlations_'+ mode + '_' + label +'.png')
-            plt.close()
-            #plt.show()
+            #plt.savefig('Figs/correlations_'+ mode + '_' + label +'.png')
+            #plt.close()
+            plt.show()
+
+
+
+
+
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''
+'''                                                                '''   
+'''                       GET NUMBER OF PRODUCTS                   '''
+'''                                                                '''
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''   
+
+
+
+def get_num_per_year(impacts):
+
+    
+    years = {} 
+    for i in impacts:
+        field = i.split('\t')
+        year  = int(round(float((field[0])), -1))
+        impa  = field[1]
+        if year not in years:
+            years[year] = [impa]
+        else:
+            years[year].append(impa)
+
+    x = []
+    y = []
+    for year, impas in years.items():
+        x.append(year)
+        y.append(len(impas))
+
+    return np.asarray(x), np.asarray(y)
+
+
+  
+
+def get_length_plots():
+
+
+    FOLDER = 'ProcessedData'
+
+
+    title_font  = 22 
+    num_of_bins = 20
+    seaborn.set_style('white')  
+    f, ax = plt.subplots(1, 3, figsize=(25, 8))
+    st = f.suptitle("Number of products over time", fontsize=title_font)
+    
+
+
+    
+    ''' movie '''
+    file_avg_year  =  FOLDER + '/3_inflation_curves/film_yearly_average_ratings_dist_director.dat'       
+    average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
+    x_average_ratings_year, y_average_ratings_year = get_num_per_year(average_ratings_year)  
+    
+    movies = pd.DataFrame({'year': x_average_ratings_year, 'count': y_average_ratings_year })
+    seaborn.barplot(x = movies['year'], y = movies['count'], ax = ax[0],  palette="Blues_d", linewidth = 0.0)
+
+    ax[0].set_title('IMDb, #movies', fontsize = title_font)
+    ax[0].set_xlabel('')
+    ax[0].set_ylabel('')
+    
+
+    
+
+    ''' book '''
+    file_avg_year_electro = FOLDER + '/3_inflation_curves/music_yearly_rating_counts_dist_electro.dat' 
+    file_avg_year_pop     = FOLDER + '/3_inflation_curves/music_yearly_rating_counts_dist_pop.dat'   
+   
+    average_ratings_year_electro = [line.strip() for line in open(file_avg_year_electro)]
+    average_ratings_year_pop     = [line.strip() for line in open(file_avg_year_pop)]   
+    
+    x_average_ratings_year_electro, y_average_ratings_year_electro = get_num_per_year(np.asarray(average_ratings_year_electro + average_ratings_year_pop))  
+    
+    books = pd.DataFrame({'year': x_average_ratings_year_electro, 'count': y_average_ratings_year_electro })
+    seaborn.barplot(x = books['year'], y = books['count'], ax = ax[1],  palette="Reds_d", linewidth = 0.0)
+
+    ax[1].set_title('Discogs & LastFM, #tracks', fontsize = title_font)
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('')
+
+
+
+
+    ''' book '''
+    file_avg_year  =  FOLDER + '/3_inflation_curves/book_yearly_average_ratings_dist_authors.dat'       
+    average_ratings_year = np.asarray([line.strip() for line in open(file_avg_year)])
+    x_average_ratings_year, y_average_ratings_year = get_num_per_year(average_ratings_year)  
+    
+    books = pd.DataFrame({'year': x_average_ratings_year, 'count': y_average_ratings_year })
+    seaborn.barplot(x = books['year'], y = books['count'], ax = ax[2],  palette="Greens_d", linewidth = 0.0)
+
+    ax[2].set_title('Goodreads, #books', fontsize = title_font)
+    ax[2].set_xlabel('')
+    ax[2].set_ylabel('')
+    
+    
+  
+    for axax in ax:
+        axax.set_yscale('log') 
+        for tick in axax.get_xticklabels():
+            tick.set_rotation(45)   
+
+    align_plot(ax)
+    plt.tight_layout(pad=5, w_pad=8, h_pad=20)
+    plt.savefig('1Fig_num_of_products.png')
+    plt.show()
+
+
+
+
+
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''
+'''                                                                '''   
+'''                       GET NUMBER OF PRODUCTS                   '''
+'''                                                                '''
+''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''  
+
+
+
+def fitPowerLaw(rand, ax, label):
+
+
+    # histogram 
+    print 'Fitting lognormal...'
+    x_rand, p_rand = getDistribution(rand)    
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 15), log=True,alpha=0.0)
+    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.6, markersize = 12, linewidth = 2, label = 'Data')
+
+
+    # get the lognormal
+    param = stats.lognorm.fit(rand)
+    pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
+    mu =  np.log(param[2])
+    sigma = param[0]
+    sk_results_norm = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
+    ax.plot(x_rand,pdf_fitted,'k-', linewidth = 4, label = 'Lognormal fit, $\\mu$=' + str(round(mu,2)) + '\n$\\sigma$=' + str(round(sigma, 2)) + ', $D$='+str(round(sk_results_norm[0], 2)))
+
+         
+    ax.set_ylim([ min(counts), 1.1])
+    ax.set_xlim([ min(x_rand),  max(bins)])
+    ax.set_title(label, fontsize = 18) 
+
+
+
+def get_career_length():
+
+
+    title_font  = 25 
+    num_of_bins = 20
+    seaborn.set_style('white')  
+
+    f, ax = plt.subplots(1, 3, figsize=(25, 8))
+    st = f.suptitle("Career length distributions", fontsize=title_font)    
+
+
+    ''' movie '''
+    professions = [('director',     'k'), 
+                   ('producer',     'b'),
+                   ('writer'  ,     'r'),
+                   ('composer',     'g'),
+                   ('art-director', 'y'),]    
+       
+
+    for (label, color) in professions[0:1]:
+        career_length  = [float(line.strip()) for line in open('ProcessedData/5_career_length/film_career_length_' + label + '.dat')]
+        fitPowerLaw([ c for c in career_length if c > 1], ax[0], label)
+        
+
+
+    ''' music '''
+    professions = [('pop',     'k'), 
+                   ('electro', 'b')]    
+       
+    for (label, color) in professions[1:2]:
+        career_length = [float(line.strip()) for line in open('ProcessedData/5_career_length/music_career_length_' + label + '.dat')]   
+        fitPowerLaw([ c for c in career_length if c > 1], ax[1], label)
+        
+        
+    ''' books '''
+    career_length_book = [float(line.strip()) for line in open('ProcessedData/5_career_length/book_career_length_authors.dat')]   
+    fitPowerLaw([ c for c in career_length_book if c > 0], ax[2], label)
+        
+
+    
+
+    ax[0].set_title('Movie director careers', fontsize = 18)
+    ax[1].set_title('DJ careers', fontsize = 18) 
+    ax[2].set_title('Author careers', fontsize = 18)  
+
+    align_plot(ax)
+    plt.tight_layout(pad=5, w_pad=8, h_pad=20)
+    #plt.savefig('2Fig_career_length.png')
+    #plt.close()
+    plt.show()
+
+
+
 
 
 
@@ -474,8 +686,17 @@ if __name__ == '__main__':
 
     if sys.argv[1] == '1':
         get_imapct_distr()
+        
     elif sys.argv[1] == '2':
         get_impact_correlations()
+        
+    elif sys.argv[1] == '3': 
+        get_length_plots()
+        
+    elif sys.argv[1] == '4':
+        get_career_length()
+    
+   
     
     '''
     elif sys.argv[1] == '4':
