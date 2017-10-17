@@ -15,17 +15,16 @@ class MultipleImpactCareerTrajectory:
         events       = []
 
 
-        for line in gzip.open(inputfile):
-             
+        for line in gzip.open(inputfile):           
+            
             if 'year' not in line:
-          
-                 
                 fields  = line.strip().split('\t')
+                #print fields
                 product = fields[0]
-
-                try:
-                    impacts = [imp if 'None' not in imp else '0'  for imp in fields[2:] ]                      
-                    year    = float(fields[1])
+                impacts = [0 if imp is None else imp  for imp in fields[2:] ]    
+                impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]                                        
+                try:              
+                    year    = float(fields[1]) 
                     if year > 1500 and year < 2018:
                         if len(norm_factors) > 0:
                             impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
@@ -80,16 +79,17 @@ class SimpleCareerTrajectory:
                 fields  = line.strip().split('\t')
                 product = fields[0]
                 
+                
                 try:         
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
                                          
                     if impact > 0 and year > 1850 and year < 2018:
                         if len(norm_factors) > 0:
-                            try:
-                                impact = impact/norm_factors[year]
-                            except:
-                                impact = 0
+                            #try:
+                            impact = impact/norm_factors[year]
+                            #except:
+                            #    impact = 0
                         if impact > 0:
                             events.append((product, year, impact))
                 except ValueError:  

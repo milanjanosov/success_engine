@@ -331,7 +331,7 @@ def get_impact_correlations():
     
 
     
-    for mode in ['', 'Normalized'][1:2]:
+    for mode in ['', 'Normalized'][0:2]:
     
     
         FOLDER = 'ProcessedData'+mode       
