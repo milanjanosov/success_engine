@@ -216,7 +216,7 @@ def process_simple_career_trajectories(args):
 
           
 
-        for filename in files[0:1000]:
+        for filename in files:
         
                       
             ijk += 1
@@ -685,8 +685,8 @@ if __name__ == '__main__':
     #process_simple_career_trajectories(normalized = True,  randomized = True)
 
     run_paralel(normalized = False, randomized = False)
-    #run_paralel(normalized = True,  randomized = False)
-    #run_paralel(normalized = True,  randomized = True)
+    run_paralel(normalized = True,  randomized = False)
+    run_paralel(normalized = True,  randomized = True)
 
     error.close()
     
