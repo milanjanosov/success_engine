@@ -86,14 +86,14 @@ class SimpleCareerTrajectory:
                 
                 if 'film' in self.name or 'book' in self.name:
                     try:
-                        if float(fields[3]) > 1000:
+                        if float(fields[3]) > 100:
                             cango = True
                     except:
                         pass
                 
                 if 'music' in self.name:
                     try:
-                        if float(fields[2]) > 1000:
+                        if float(fields[2]) > 100:
                             cango = True
                     except:
                         pass
@@ -192,7 +192,20 @@ class SimpleCareerTrajectory:
             return 'nan'
          
         
-         
+    def getTimeOfTheBest(self):
+    
+        if len(self.events) > 0:
+    
+            firstTime     = min([e[1] for e in self.events])
+            maxValue      = max([e[2] for e in self.events])
+            sorted_events = sorted(self.events, key=lambda tup: tup[1])          
+            time_of_max   = min([e[1] for e in sorted_events if e[2] == maxValue] )
+
+            return (time_of_max - firstTime)
+        
+        else:
+            return -1
+             
     
     ### if we are looking for the max value and is is degenerated, then this  function gives back _ALL_
     ### the top value time events - here we get the rank!
@@ -267,8 +280,10 @@ def getLogBinnedDistribution(x, y, nbins):
 
 
 #pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
-#print pista.getImpactValues()
 
+#print pista.events
+#print pista.getTimeOfTheBest()
+#
 #print pista.getAutoCorrelCoeff()
 #print pista.getLogPwithZeroAvg()
 

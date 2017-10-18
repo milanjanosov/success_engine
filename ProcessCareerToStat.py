@@ -61,7 +61,7 @@ def write_distr_data(data, filename):
         
     if len(data) > 0:
         f = open(filename, 'w')
-        [f.write(str(a) + '\n') for a in data]
+        [f.write(str(a) + '\n') for a in data if a > -1]
         f.close()
     
   
@@ -171,7 +171,15 @@ def process_simple_career_trajectories(args):
         max_crit_rev_N  = []
         max_user_rev_N  = []
         max_gross_N     = []
-       
+
+        
+        max_avg_rat_time   = []
+        max_rat_cnt_time   = []        
+        max_metascore_time = []        
+        max_crit_rev_time  = []
+        max_user_rev_time  = []
+        max_gross_time     = []
+                
         
         combined_factors = []   
         career_length = []
@@ -208,11 +216,11 @@ def process_simple_career_trajectories(args):
 
           
 
-        for filename in files:
+        for filename in files[0:1000]:
         
                       
             ijk += 1
-            print ijk, '/', nnn
+            #print ijk, '/', nnn
             
                                  
             #avg ratings
@@ -239,8 +247,18 @@ def process_simple_career_trajectories(args):
    
                 p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
                 
+               
+                max_avg_rat_time.append(pista_avg_rating.getTimeOfTheBest())
+               
+       
                 gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
                 multi_impacts += gyurika.getImpactValues()
+                
+                
+                
+                
+                        
+                
                 
 
                     
@@ -275,6 +293,10 @@ def process_simple_career_trajectories(args):
                     
                     
                     p_without_mean_rating_cnt += pista_ratingcnt.getLogPwithZeroAvg()   
+                    
+                    
+                    max_rat_cnt_time.append(pista_ratingcnt.getTimeOfTheBest())
+               
                           
                 except:
                     error.write(filename + '\t' + field  + '\t' + label + '\n')
@@ -304,7 +326,9 @@ def process_simple_career_trajectories(args):
                  
                 p_without_mean_metascore += pista_meta.getLogPwithZeroAvg()    
                        
-                                          
+                    
+                max_metascore_time.append(pista_meta.getTimeOfTheBest())
+                                                    
                         
             # critic reviews
             if 'film' in field:
@@ -327,9 +351,11 @@ def process_simple_career_trajectories(args):
 
      
                 p_without_mean_critic_rev += pista_critic.getLogPwithZeroAvg()    
-                
-                                                         
-                       
+             
+             
+                max_crit_rev_time.append(pista_critic.getTimeOfTheBest())
+     
+                                                                               
             # user reviews
             if 'film' in field:
             
@@ -353,6 +379,8 @@ def process_simple_career_trajectories(args):
                 p_without_mean_user_rev += pista_user.getLogPwithZeroAvg()                    
                             
 
+                max_user_rev_time.append(pista_user.getTimeOfTheBest())
+               
 
             # gross revenue
             if 'film' in field:
@@ -376,8 +404,9 @@ def process_simple_career_trajectories(args):
 
                 p_without_mean_gross += pista_gross.getLogPwithZeroAvg()                    
                             
-           
 
+                max_gross_time.append(pista_gross.getTimeOfTheBest())
+               
 
 
         ''' ------------------ impact distros ------------------ '''
@@ -581,6 +610,38 @@ def process_simple_career_trajectories(args):
 
 
 
+        ''' ------------------  time of max  ------------------ '''
+            
+        dir11 = root + '/11_time_of_the_best'
+        if not os.path.exists(dir11):
+            os.makedirs(dir11)
+            
+   
+        write_distr_data(max_avg_rat_time,   dir11 + '/' + field + '_time_of_the_best_avg_rating_' + label + '.dat')
+        write_distr_data(max_rat_cnt_time,   dir11 + '/' + field + '_time_of_the_best_rating_cnt_' + label + '.dat')        
+        write_distr_data(max_metascore_time, dir11 + '/' + field + '_time_of_the_best_metascore_'  + label + '.dat')      
+        write_distr_data(max_crit_rev_time,  dir11 + '/' + field + '_time_of_the_best_critic_rev_' + label + '.dat')        
+        write_distr_data(max_user_rev_time,  dir11 + '/' + field + '_time_of_the_best_user_rev_'   + label + '.dat')        
+        write_distr_data(max_gross_time,     dir11 + '/' + field + '_time_of_the_best_gross_'      + label + '.dat')        
+
+
+
+
+ 
+      
+                
+
+
+
+
+
+
+
+
+
+
+
+
 def run_paralel(normalized, randomized):
 
 
@@ -624,8 +685,8 @@ if __name__ == '__main__':
     #process_simple_career_trajectories(normalized = True,  randomized = True)
 
     run_paralel(normalized = False, randomized = False)
-    run_paralel(normalized = True,  randomized = False)
-    run_paralel(normalized = True,  randomized = True)
+    #run_paralel(normalized = True,  randomized = False)
+    #run_paralel(normalized = True,  randomized = True)
 
     error.close()
     
