@@ -216,7 +216,7 @@ def process_simple_career_trajectories(args):
 
           
 
-        for filename in files:
+        for filename in files[0:100]:
         
                       
             ijk += 1
@@ -660,7 +660,7 @@ def run_paralel(normalized, randomized):
     Pros = []
     
 
-    for inp in input_data:  
+    for inp in input_data[7:8]:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized], ))
         Pros.append(p)
         p.start()
