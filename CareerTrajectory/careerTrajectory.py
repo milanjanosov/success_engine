@@ -76,6 +76,7 @@ class SimpleCareerTrajectory:
            
         for line in gzip.open(inputfile):
         
+            line = line.replace(',','')
 
             if 'year' not in line:
                                                
