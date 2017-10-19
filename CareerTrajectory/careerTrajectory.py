@@ -105,7 +105,7 @@ class SimpleCareerTrajectory:
                 try:         
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
-                                         
+                    print impact                     
                     if impact > 0 and year > 1850 and year < 2018 and cango:
                         if len(norm_factors) > 0:
                             #try:
