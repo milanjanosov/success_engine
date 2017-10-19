@@ -216,7 +216,7 @@ def process_simple_career_trajectories(args):
 
           
 
-        for filename in files[0:100]:
+        for filename in files:
         
                       
             ijk += 1
