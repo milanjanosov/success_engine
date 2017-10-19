@@ -86,14 +86,14 @@ class SimpleCareerTrajectory:
                 
                 if 'film' in self.name or 'book' in self.name:
                     try:
-                        if float(fields[3]) > 100:
+                        if float(fields[3]) > 0:
                             cango = True
                     except:
                         pass
                 
                 if 'music' in self.name:
                     try:
-                        if float(fields[2]) > 100:
+                        if float(fields[2]) > 0:
                             cango = True
                     except:
                         pass
@@ -244,7 +244,7 @@ def getDistribution(keys, normalized = True):
 
     if normalized == 1: distr = distr/float(np.sum(distr)) 
 
-    return np.asarray(uniq_kes.tolist()), np.asarray(distr.tolist())
+    return np.asarray(uniq_keys.tolist()), np.asarray(distr.tolist())
 
 
 

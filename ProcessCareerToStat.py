@@ -220,7 +220,7 @@ def process_simple_career_trajectories(args):
         
                       
             ijk += 1
-            #print ijk, '/', nnn
+            print ijk, '/', nnn
             
                                  
             #avg ratings
@@ -685,8 +685,8 @@ if __name__ == '__main__':
     #process_simple_career_trajectories(normalized = True,  randomized = True)
 
     run_paralel(normalized = False, randomized = False)
-    run_paralel(normalized = True,  randomized = False)
-    run_paralel(normalized = True,  randomized = True)
+    #run_paralel(normalized = True,  randomized = False)
+    #run_paralel(normalized = True,  randomized = True)
 
     error.close()
     
