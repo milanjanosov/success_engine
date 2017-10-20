@@ -75,7 +75,7 @@ def align_plot(ax):
 
 def fitPowerLawOld(rand, ax, label):
 
- 
+    print label, len(rand) 
     # get the scatterplot
     x_rand, p_rand = getDistribution(rand)
 
@@ -128,6 +128,9 @@ def fitPowerLawOld(rand, ax, label):
 
 
 def fitSkewedNormal(rand, ax, label, alpha_hist  = 0.2, color_line = 'r'):
+   
+   
+    print label, len(rand)
    
     ax.set_title(label, fontsize = 18)
     
@@ -232,6 +235,7 @@ def get_imapct_distr():
             user_review     = np.asarray([float(line.strip()) for line in open(file_user)])
             gross           = np.asarray([float(line.strip()) for line in open(file_gros)])  
             
+
 
             # plot avg ratings
             
@@ -558,8 +562,8 @@ def get_impact_correlations():
             #corr1, corr2 = get_corr_segments(avg, cnt, limit = 100000)
 
 
-            avg_r, cnt_r = avg, cnt
-            #avg_r, cnt_r = zip(*get_random_sample([(impacts[0][i],  impacts[1][i]) for i in range(len(impacts[2]))], 250000))
+            #avg_r, cnt_r = avg, cnt
+            avg_r, cnt_r = zip(*get_random_sample([(impacts[0][i],  impacts[1][i]) for i in range(len(impacts[2]))], 250000))
 
             bax[1,1].plot(cnt_r, avg_r, 'o', color = 'salmon', alpha = Alpha)#, label =  ' $c_{<10^5}$ = ' + corr1 + ', $c_{>10^5}$ = ' + corr2 )       
             xb_avg, pb_avg, pberr_avg = getLogBinnedDistribution(np.asarray(cnt), np.asarray(avg), num_of_bins)    
@@ -1214,7 +1218,7 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
     
     
     
-    print sum(career_len), len(data)
+    print max(career_len), len(data)
     
     career_max = []
     career_max_dict = {}
@@ -1254,6 +1258,8 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
         xb_gen, pb_gen, pberr_gen    = getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
         ax.errorbar((xb_data[1:] + xb_data[:-1])/2, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
         ax.errorbar((xb_gen[1:]  + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)
+        
+        
         
         fdata = open('Viz/rmodel_bin_data_' + label + '.dat', 'w')
         xb_data = (xb_data[1:] + xb_data[:-1])/2
@@ -1313,7 +1319,7 @@ def do_the_r_model():
 
     FOLDER = 'ProcessedData'#Normalized' # mode# + 'Sample' 
     field  = 'film'
-   
+    ''' 
     for (label, color) in professions[0:1]:
 
 
@@ -1331,15 +1337,15 @@ def do_the_r_model():
         max_user_rev = FOLDER + '/10_career_length_max_impact/career_length_max_user_rev'   + field + '_' + label + '.dat'
 
 
-        #get_r_model_curves(file_avg,  max_avg_rat,  ax[0,0], label, num_of_bins, 'Average rating vs career length' , 'Career length', 'Average rating' )
+        get_r_model_curves(file_avg,  max_avg_rat,  ax[0,0], label, num_of_bins, 'Average rating vs career length' , 'Career length', 'Average rating' )
         get_r_model_curves(file_meta, max_meta,     ax[0,2], label, num_of_bins, 'Metascore vs career length'      , 'Career length', 'Metascore'           )
-        #get_r_model_curves(file_cnt,  max_rat_cnt,  ax[0,1], label, num_of_bins, 'Rating count vs career length'   , 'Career length', 'Rating count'  , True)            
-        #get_r_model_curves(file_crit, max_crit_rev, ax[1,0], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
-        #get_r_model_curves(file_user, max_user_rev, ax[1,1], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
+        get_r_model_curves(file_cnt,  max_rat_cnt,  ax[0,1], label, num_of_bins, 'Rating count vs career length'   , 'Career length', 'Rating count'  , True)            
+        get_r_model_curves(file_crit, max_crit_rev, ax[1,0], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
+        get_r_model_curves(file_user, max_user_rev, ax[1,1], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
         
    
        
-    
+       
     field  =   'music'
     genres = [('electro', 'k'),
               ('pop'    , 'b')]
@@ -1351,12 +1357,12 @@ def do_the_r_model():
         get_r_model_curves(file_music, max_music, ax[1,2], genre, num_of_bins, 'Rating count vs career length', 'Career length', 'Rating count', True)   
 
     
-
+    '''
     file_music = FOLDER + '/1_impact_distributions/book_average_ratings_dist_authors.dat'
     max_music  = FOLDER + '/10_career_length_max_impact/career_length_max_avg_ratbook_authors.dat'
    
     get_r_model_curves(file_music, max_music, ax[1,2], 'book', num_of_bins, 'Average rating vs career length', 'Career length', 'Average rating', True)   
-
+    
     
 
           
