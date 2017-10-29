@@ -678,7 +678,7 @@ def run_paralel(normalized, randomized):
     Pros = []
     
 
-    for inp in input_data[7:8]:  
+    for inp in input_data:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized], ))
         Pros.append(p)
         p.start()
