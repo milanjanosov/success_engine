@@ -216,8 +216,10 @@ def get_imapct_distr():
                        ('art-director', 'y')]
 
        
-        for (label, color) in professions[0:1]:
+        for (label, color) in professions:
         
+        
+            print 'PROCESSING -- ' + label
             f, ax = plt.subplots(3, 2, figsize=(23, 23))
             st = f.suptitle( mode + "IMDb impact distributions for " + label, fontsize=title_font)
 
@@ -266,7 +268,8 @@ def get_imapct_distr():
             for j in range(3):
                 genre_ind = i*3 + j
                 if genre_ind < len(genres):                   
-                    genre = genres[genre_ind]
+                    genre = genres[genre_ind]          
+                    print 'PROCESSING -- ' + genre
                     num_mus  = str(int(round(len(os.listdir('Data/Music/music-'+ genre +'-simple-careers'))/1000.0))) + 'k'
                     file_music = FOLDER + '/1_impact_distributions/music_rating_counts_dist_' + genre + '.dat'
                     rating_counts = np.asarray([float(line.strip()) for line in open(file_music)])    
@@ -288,6 +291,8 @@ def get_imapct_distr():
                 
         f, ax = plt.subplots(1, 3, figsize=(25, 12))
         st = f.suptitle( mode + "Books impact distributions", fontsize=title_font)
+
+        print 'PROCESSING --  books' 
         
         num_mus  = str(int(round(len(os.listdir('Data/Book/book-authors-simple-careers'))/1000.0))) + 'k'
         book_avg = FOLDER + '/1_impact_distributions/book_average_ratings_dist_authors.dat'
