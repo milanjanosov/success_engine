@@ -60,6 +60,9 @@ separating roles iwithin imdb not just the whole fo rrule
 - processer - plot all the stuff, and the plotter plots only the interesting examples in a fancy way
 
 
+-- ELETKORT AHOL LEHET BELEVENNI A 100+ eves dolgok mittt 
+
+
 
 '''
 
@@ -96,7 +99,7 @@ def align_ax(ax, font_tick):
     ax.xaxis.labelpad = 15
     ax.yaxis.labelpad = 15   
     ax.tick_params(labelsize = font_tick)    
-
+    ax.title.set_position([0.5, 1.05])
 
 def align_plot(ax):
 
@@ -524,7 +527,7 @@ def plot_measure(average_ratings_year, title, num_of_bins, ax, color, label, mus
     x_average_ratings_year, y_average_ratings_year, yerr_average_ratings_year = get_yearly_avg_data(average_ratings_year)    
     bx_average_ratings_year, bp_average_ratings_year, bperr_average_ratings_year = getBinnedDistribution(x_average_ratings_year, y_average_ratings_year, num_of_bins)
 
-    ax.set_title(title, fontsize = 25)
+    ax.set_title(title, fontsize = 30)
     
 
     ax.fill_between((bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2, bp_average_ratings_year-bperr_average_ratings_year, bp_average_ratings_year+bperr_average_ratings_year, alpha = 0.2, color = color)
@@ -563,11 +566,11 @@ def get_inflation_curves():
     
     
 
-    YEAR_MIN = 1990
+    YEAR_MIN = 1900
 
     file_meta_year  = FOLDER + '/3_inflation_curves/film_yearly_metascores_dist_director.dat'
     metascores_year = np.asarray([line.strip() for line in open(file_meta_year)  if float(line.strip().split('\t')[0]) > YEAR_MIN ] )
-    plot_measure(metascores_year, 'Movie director, metascores', num_of_bins, ax[0], 'royalblue', '')    
+    plot_measure(metascores_year, 'Movie directors, metascores', num_of_bins, ax[0], 'royalblue', '')    
     #ax[0].set_xlim([1950, 2017])
 
 
@@ -966,10 +969,6 @@ def get_r_test():
     f, ax = plt.subplots(4, 3, figsize=(25, 33))
     st = f.suptitle("IMDb impact distributions, $N_{min}$ = " + str(Nmin), fontsize=title_font)
 
-    
-    outfile = open('ProcessedDataCombined/R^2_values.dat', 'w')
-    outfile.write('domain\tmode\tprofession\tmeasure\tR^2\n')
-
 
 
 
@@ -1012,13 +1011,7 @@ def get_r_test():
             r_square_user = plot_ccdf(file_user_all, num_of_bins, ax[1,1], colorm, mode_, Nmin, 'Individual, IMDb #user reviews'   , markerm)
             r_square_gross = plot_ccdf(file_gross, num_of_bins, ax[3,0], colorm, mode_, Nmin,   'Individual, IMDb gross revenue '   , markerm)   
             
-            #outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'average ratings\t' + str(r_square_avg)  + '\n')
-            #outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'rating counts\t'   + str(r_square_cnt)  + '\n')
-            #outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + 'metascores\t'      + str(r_square_meta) + '\n')
-            #outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + '#critic reviews\t' + str(r_square_crit) + '\n')
-            #outfile.write( 'film\t' + mode_ + '\t' + label + '\t' + '#user reviews\t'   + str(r_square_user) + '\n')           
-
-
+          
 
            
         professions = [('pop',     'k', 'o'), 
@@ -1029,7 +1022,7 @@ def get_r_test():
         file_music   = folder + '/4_NN_rank_N/music_best_product_NN_ranks_all_rating_count_electro.dat'
         r_square_cnt = plot_ccdf(file_music,  num_of_bins, ax[1,2], colorm, label, Nmin, 'Individual, LastfFM play counts', markerm)
     
-            #outfile.write(  'music\t' + mode_ + '\t' + label + '\t' + 'rating counts\t' + str(r_square_cnt) + '\n')           
+
 
 
 
@@ -1385,7 +1378,7 @@ if __name__ == '__main__':
         get_r_test()   
 
     elif sys.argv[1] == '9':
-        do_the_r_model()
+            ()
         
     elif sys.argv[1] == '11':
         get_best_times()
