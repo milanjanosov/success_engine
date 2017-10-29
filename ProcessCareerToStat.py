@@ -234,26 +234,31 @@ def process_simple_career_trajectories(args):
                     add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
                     
                     #print pista_avg_rating.events
+                    gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
+                    multi_impacts += gyurika.getImpactValues()
+                    
+                   
                     
                     time_series = pista_avg_rating.getYearlyProducts()
                     add_time_series(average_ratings_year, time_series)
-                     
-                                           
-                    (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact() 
-                    if 'nan' not in str(NN_rand):
-                        NN_all_avg_rating  += [(n, N) for n in NN_all ]
-                        NN_rand_avg_rating.append((NN_rand, N))
-           
-                    max_avg_rat_N.append((pista_avg_rating.getMaxImpact(), pista_avg_rating.getCareerLength()))
-       
-                    p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
                     
-                   
-                    max_avg_rat_time.append(pista_avg_rating.getTimeOfTheBest())
-                   
+                    
+                    
+                    if pista_avg_rating.getCareerLength() > 14: 
+                                               
+                        (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact() 
+                        if 'nan' not in str(NN_rand):
+                            NN_all_avg_rating  += [(n, N) for n in NN_all ]
+                            NN_rand_avg_rating.append((NN_rand, N))
+               
+                        max_avg_rat_N.append((pista_avg_rating.getMaxImpact(), pista_avg_rating.getCareerLength()))
            
-                    gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
-                    multi_impacts += gyurika.getImpactValues()
+                        p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
+                        
+                       
+                        max_avg_rat_time.append(pista_avg_rating.getTimeOfTheBest())
+                       
+           
                     
                     
                     
@@ -281,22 +286,24 @@ def process_simple_career_trajectories(args):
                         add_time_series(rating_counts_year, time_series)    
 
 
-                        (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
-                        if 'nan' not in str(NN_rand):
-                            NN_all_rating_count  += [(n, N) for n in NN_all ]
-                            NN_rand_rating_count.append((NN_rand, N))
-                     
-              
-                        career_length.append(pista_ratingcnt.getCareerLength())  
-                        
-                        
-                        max_rat_cnt_N.append((pista_ratingcnt.getMaxImpact(), pista_ratingcnt.getCareerLength()))
-                        
-                        
-                        p_without_mean_rating_cnt += pista_ratingcnt.getLogPwithZeroAvg()   
-                        
-                        
-                        max_rat_cnt_time.append(pista_ratingcnt.getTimeOfTheBest())
+                        if pista_ratingcnt.getCareerLength() > 14: 
+
+                            (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
+                            if 'nan' not in str(NN_rand):
+                                NN_all_rating_count  += [(n, N) for n in NN_all ]
+                                NN_rand_rating_count.append((NN_rand, N))
+                         
+                  
+                            career_length.append(pista_ratingcnt.getCareerLength())  
+                            
+                            
+                            max_rat_cnt_N.append((pista_ratingcnt.getMaxImpact(), pista_ratingcnt.getCareerLength()))
+                            
+                            
+                            p_without_mean_rating_cnt += pista_ratingcnt.getLogPwithZeroAvg()   
+                            
+                            
+                            max_rat_cnt_time.append(pista_ratingcnt.getTimeOfTheBest())
                    
                               
                     except:
@@ -316,20 +323,22 @@ def process_simple_career_trajectories(args):
                     add_time_series(metascores_year, time_series)      
 
 
-                    (NN_all, NN_rand, N) = pista_meta.getRankOfMaxImpact()  
-                    if 'nan' not in str(NN_rand):
-                        NN_all_metascores  += [(n, N) for n in NN_all ]
-                        NN_rand_metascores.append((NN_rand, N))
-                             
-          
-                    max_metascore_N.append((pista_meta.getMaxImpact(), pista_meta.getCareerLength()))
-                     
-                     
-                    p_without_mean_metascore += pista_meta.getLogPwithZeroAvg()    
-                           
-                        
-                    max_metascore_time.append(pista_meta.getTimeOfTheBest())
-                                                        
+                    if pista_meta.getCareerLength() > 14: 
+
+                        (NN_all, NN_rand, N) = pista_meta.getRankOfMaxImpact()  
+                        if 'nan' not in str(NN_rand):
+                            NN_all_metascores  += [(n, N) for n in NN_all ]
+                            NN_rand_metascores.append((NN_rand, N))
+                                 
+              
+                        max_metascore_N.append((pista_meta.getMaxImpact(), pista_meta.getCareerLength()))
+                         
+                         
+                        p_without_mean_metascore += pista_meta.getLogPwithZeroAvg()    
+                               
+                            
+                        max_metascore_time.append(pista_meta.getTimeOfTheBest())
+                                                            
                             
                 # critic reviews
                 if 'film' in field:
@@ -341,21 +350,22 @@ def process_simple_career_trajectories(args):
                     time_series  = pista_critic.getYearlyProducts()
                     add_time_series(critic_review_year, time_series)               
                        
+                    if pista_critic.getCareerLength() > 14: 
                      
-                    (NN_all, NN_rand, N) = pista_critic.getRankOfMaxImpact()  
-                    if 'nan' not in str(NN_rand):
-                        NN_all_critic_review  += [(n, N) for n in NN_all ]
-                        NN_rand_critic_review.append((NN_rand, N))   
-                      
+                        (NN_all, NN_rand, N) = pista_critic.getRankOfMaxImpact()  
+                        if 'nan' not in str(NN_rand):
+                            NN_all_critic_review  += [(n, N) for n in NN_all ]
+                            NN_rand_critic_review.append((NN_rand, N))   
+                          
 
-                    max_crit_rev_N.append((pista_critic.getMaxImpact(), pista_critic.getCareerLength()))
+                        max_crit_rev_N.append((pista_critic.getMaxImpact(), pista_critic.getCareerLength()))
 
-         
-                    p_without_mean_critic_rev += pista_critic.getLogPwithZeroAvg()    
-                 
-                 
-                    max_crit_rev_time.append(pista_critic.getTimeOfTheBest())
-         
+             
+                        p_without_mean_critic_rev += pista_critic.getLogPwithZeroAvg()    
+                     
+                     
+                        max_crit_rev_time.append(pista_critic.getTimeOfTheBest())
+             
                                                                                    
                 # user reviews
                 if 'film' in field:
@@ -368,20 +378,22 @@ def process_simple_career_trajectories(args):
                     add_time_series(user_review_year, time_series)       
 
 
-                    (NN_all, NN_rand, N) = pista_user.getRankOfMaxImpact()  
-                    if 'nan' not in str(NN_rand):
-                        NN_all_user_review  += [(n, N) for n in NN_all ]
-                        NN_rand_user_review.append((NN_rand, N))   
-                                 
-                 
-                    max_user_rev_N.append((pista_user.getMaxImpact(), pista_user.getCareerLength()))
+                    if pista_user.getCareerLength() > 14: 
+
+                        (NN_all, NN_rand, N) = pista_user.getRankOfMaxImpact()  
+                        if 'nan' not in str(NN_rand):
+                            NN_all_user_review  += [(n, N) for n in NN_all ]
+                            NN_rand_user_review.append((NN_rand, N))   
+                                     
+                     
+                        max_user_rev_N.append((pista_user.getMaxImpact(), pista_user.getCareerLength()))
 
 
-                    p_without_mean_user_rev += pista_user.getLogPwithZeroAvg()                    
-                                
+                        p_without_mean_user_rev += pista_user.getLogPwithZeroAvg()                    
+                                    
 
-                    max_user_rev_time.append(pista_user.getTimeOfTheBest())
-                   
+                        max_user_rev_time.append(pista_user.getTimeOfTheBest())
+                       
 
                 # gross revenue
                 if 'film' in field:
@@ -394,20 +406,23 @@ def process_simple_career_trajectories(args):
                     add_time_series(gross_year, time_series)       
 
 
-                    (NN_all, NN_rand, N) = pista_gross.getRankOfMaxImpact()  
-                    if 'nan' not in str(NN_rand):
-                        NN_all_gross  += [(n, N) for n in NN_all ]
-                        NN_rand_gross.append((NN_rand, N))   
-                                 
-          
-                    max_gross_N.append((pista_gross.getMaxImpact(), pista_gross.getCareerLength()))
+
+                    if pista_gross.getCareerLength() > 14: 
+
+                        (NN_all, NN_rand, N) = pista_gross.getRankOfMaxImpact()  
+                        if 'nan' not in str(NN_rand):
+                            NN_all_gross  += [(n, N) for n in NN_all ]
+                            NN_rand_gross.append((NN_rand, N))   
+                                     
+              
+                        max_gross_N.append((pista_gross.getMaxImpact(), pista_gross.getCareerLength()))
 
 
-                    p_without_mean_gross += pista_gross.getLogPwithZeroAvg()                    
-                                
+                        p_without_mean_gross += pista_gross.getLogPwithZeroAvg()                    
+                                    
 
-                    max_gross_time.append(pista_gross.getTimeOfTheBest())
-                   
+                        max_gross_time.append(pista_gross.getTimeOfTheBest())
+                       
             except: 
                 pass
 
