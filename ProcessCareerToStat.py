@@ -10,12 +10,20 @@ from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 
 
 
- 
 def add_max_impact(lista, maxvalue):
 
-    if 'nan' != maxvalue:
-        lista.append(maxvalue)
+    if 'nan' != maxvalue: lista.append(maxvalue)
  
+ 
+def get_dict_data(impacts):
+
+    return [str(year) + '\t' + str(i) for year, impact in impacts.items() for i in impact ]
+   
+
+def create_folder(folder):
+
+    if not os.path.exists(folder): os.makedirs(folder)    
+    
 
 def add_time_series(impacts, time_series):
 
@@ -26,24 +34,11 @@ def add_time_series(impacts, time_series):
             impacts[year] += events  
 
 
-def get_dict_data(impacts):
-
-    x = []
-    for year, impact in impacts.items():
-        for i in impact:
-            x.append(str(year) + '\t' + str(i))
-
-    return x
-  
-
 def write_yearly_avgs(dict_data, filename):
 
     if len(dict_data) >  0:
-        f = open(filename, 'w')
-        
-        for year, values in  dict_data.items(): 
-            f.write(str(year) + '\t' + str(np.mean(values)) + '\t' + str(np.std(values)) + '\n' )  
-        
+        f = open(filename, 'w')      
+        [f.write(str(year) + '\t' + str(np.mean(values)) + '\t' + str(np.std(values)) + '\n' )  for year, values in  dict_data.items()] 
         f.close()
 
 
@@ -63,8 +58,8 @@ def write_distr_data(data, filename):
         f = open(filename, 'w')
         [f.write(str(a) + '\n') for a in data if a > -1]
         f.close()
-    
-  
+   
+
 def write_pairs(data, filename):
 
     if len(data) > 0:
@@ -75,6 +70,17 @@ def write_pairs(data, filename):
                 f.write(str(d[0]) + '\t' + str(d[1]) + '\n')
         f.close()  
         
+
+def write_NN_rank(NNdata_all, NNdata_rand, filename1, filename2):
+                
+    if len(NNdata_all) > 0:     
+    
+        f = open(filename1, 'w')
+        [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NNdata_all]
+        f.close() 
+        f = open(filename2, 'w')
+        [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NNdata_rand]
+        f.close()      
 
 
 def chunkIt(seq, num):
@@ -90,596 +96,193 @@ def chunkIt(seq, num):
     return out
 
 
-
 def process_simple_career_trajectories(args):
 
 
-    input_data = args[0]
-    normalized = args[1]
-    randomized = args[2]
+    input_data  = args[0]
+    normalized  = args[1]
+    randomized  = args[2]
+    data_folder = args[3]
+    impact_measures  = args[4]
+    min_rating_count = args[5]
+ 
     
-
-    
-
     for (files, field, label) in [input_data]:
 
         ijk = 0
         nnn = len(files)
 
-        
-        average_ratings = []
-        rating_counts   = []
-        metascores      = []
-        critic_review   = []
-        user_review     = []
-        gross           = []
-
-
-        max_average_ratings = []
-        max_rating_counts   = []
-        max_metascores      = []
-        max_critic_review   = []
-        max_user_review     = []
-        max_gross           = []
-        
-        
-        average_ratings_year = {}
-        rating_counts_year   = {}
-        metascores_year      = {}
-        critic_review_year   = {}
-        user_review_year     = {}
-        gross_year           = {}
-        
-          
-        NN_all_avg_rating  = []
-        NN_rand_avg_rating = []    
-        
-        NN_all_rating_count  = []
-        NN_rand_rating_count = []    
-
-        NN_all_metascores  = []
-        NN_rand_metascores = []    
-
-        NN_all_critic_review  = []
-        NN_rand_critic_review = []    
-
-        NN_all_user_review  = []
-        NN_rand_user_review = []    
-
-        NN_all_gross        = []
-        NN_rand_gross       = []
-
-
-        average_rat_norm   = {} 
-        rating_counts_norm = {}
-        metascore_norm     = {}     
-        critic_review_norm = {}   
-        user_review_norm   = {}   
-        gross_norm         = {}    
-        
-        
-        p_without_mean_avg_rating = []
-        p_without_mean_rating_cnt = []
-        p_without_mean_metascore  = []
-        p_without_mean_critic_rev = []
-        p_without_mean_user_rev   = []
-        p_without_mean_gross      = []        
-        
-        max_avg_rat_N   = []
-        max_rat_cnt_N   = []        
-        max_metascore_N = []        
-        max_crit_rev_N  = []
-        max_user_rev_N  = []
-        max_gross_N     = []
-
-        
-        max_avg_rat_time   = []
-        max_rat_cnt_time   = []        
-        max_metascore_time = []        
-        max_crit_rev_time  = []
-        max_user_rev_time  = []
-        max_gross_time     = []
-                
-        
-        combined_factors = []   
-        career_length = []
-        multi_impacts = []
+        ''' init variables and stuff '''           
+        # initialize a dict to store all the impact measures' values
+        # the values of the maxes of each individual, the yearly impacts for the inflation curves... etc
+        impact_values  = {}
+        max_impacts    = {}
+        yearly_impacts = {}
+        career_lengths = {}
+        best_products_rank_rand = {}
+        best_products_rank_all  = {}
+        best_products_time      = {}
+        best_value_careerlength = {}
+        p_without_mean = {}     
+        multi_impacts  = []
+        norm_factors   = {}
            
-
-
-        if normalized:
-         
-            dir6 = 'ProcessedData/6_yearly_averages'
-          
-            if 'film' in field:                       
-                average_rat_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_avg_rating_'    + label + '.dat' ) 
-                rating_counts_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat' )   
-                metascore_norm     = parse_norm_factors( dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat' )      
-                critic_review_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat' )   
-                user_review_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat' )   
-                gross_norm         = parse_norm_factors( dir6 + '/' + field + '_yearly_average_gross_'         + label + '.dat' )   
-                
-                combined_factors  = [average_rat_norm, rating_counts_norm, metascore_norm, critic_review_norm, user_review_norm, gross_norm]        
-
-
-            if 'music' in field:
-                rating_counts_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat' )                   
-
+        for impact_measure in impact_measures[field]:
             
-            if 'book' in field:
-                average_rat_norm   = parse_norm_factors( dir6 + '/' + field + '_yearly_average_avg_rating_'    + label + '.dat' ) 
-                rating_counts_norm = parse_norm_factors( dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat' )   
-                metascore_norm     = parse_norm_factors( dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat' )      
-                
-                combined_factors  = [average_rat_norm, rating_counts_norm, metascore_norm]        
+            # measures for everyone
+            impact_values [impact_measure] = []
+            max_impacts   [impact_measure] = []    
+            yearly_impacts[impact_measure] = {}   
+            norm_factors  [impact_measure] = {}   
+   
+            # measures for the random ipact rule
+            best_products_rank_rand[impact_measure] = []  
+            best_products_rank_all[impact_measure]  = []  
+            best_products_time[impact_measure]      = [] 
+            best_value_careerlength[impact_measure] = [] 
+                    
+            # Q model stuff
+            career_lengths[impact_measure] = []  
+            p_without_mean[impact_measure] = []  
 
 
-          
+        # read the normalization vectors if we want to work with normalized impact measures     
+        if normalized: 
+            for impact_measure in impact_measures[field]:
+                norm_factors[impact_measure] = parse_norm_factors('ProcessedData_0/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
+   
 
+        ''' iterate over all the careers and do the job '''
         for filename in files:
-        
-                      
+                 
             ijk += 1
             print ijk, '/', nnn
             
-            try:                     
-                #avg ratings
-                if 'book' in field or 'film' in field:
+            
+            # calc the stats of theserparated measures
+            for impact_measure in impact_measures[field]:
+                    
+                # construct the career of the individual
+                impact_id = impact_measures[field].index(impact_measure)            
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count) 
+                           
+                # save the value of all impact measures
+                impact_values[impact_measure] += individuals_career.getImpactValues()  
+                max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
+
+                # get the yearly values for the inflation curves
+                career_time_series = individuals_career.getYearlyProducts()
+                career_length = len(career_time_series)
+                add_time_series(yearly_impacts[impact_measure], career_time_series)
+
+
+                # do further stats if he is a good one with at least ... products
+                if career_length > data_folder.split('_')[1]:
+                    
+                    # get the rank and time of the best product for the random impact rule
+                    (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                    if 'nan' not in str(NN_rand):
+                        best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                        best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                 
-                
-                    impact_id = 0
+                    best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+
+                    # get stuff for the R-model
+                    best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                    
+                    # getting things for the Qmodel
+                    career_lengths[impact_measure] .append(career_length)
+                    p_without_mean[impact_measure] += individuals_career.getLogPwithZeroAvg()        
+
+
+            # more than one impact measure is used - for the correlation plots
+            multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized)
+            multi_impacts += multiimpact_career.getImpactValues()
+            
       
-                    pista_avg_rating = SimpleCareerTrajectory(filename,'Data/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, impact_id, average_rat_norm, randomized)         
-                    average_ratings  += pista_avg_rating.getImpactValues()   
-                    add_max_impact(max_average_ratings, pista_avg_rating.getMaxImpact())
-                    
-                    #print pista_avg_rating.events
-                    gyurika = MultipleImpactCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, combined_factors, randomized)
-                    multi_impacts += gyurika.getImpactValues()
-                    
-                   
-                    
-                    time_series = pista_avg_rating.getYearlyProducts()
-                    add_time_series(average_ratings_year, time_series)
-                    
-                    
-                    
-                    if pista_avg_rating.getCareerLength() > 14: 
-                                               
-                        (NN_all, NN_rand, N) = pista_avg_rating.getRankOfMaxImpact() 
-                        if 'nan' not in str(NN_rand):
-                            NN_all_avg_rating  += [(n, N) for n in NN_all ]
-                            NN_rand_avg_rating.append((NN_rand, N))
-               
-                        max_avg_rat_N.append((pista_avg_rating.getMaxImpact(), pista_avg_rating.getCareerLength()))
-           
-                        p_without_mean_avg_rating += pista_avg_rating.getLogPwithZeroAvg()
-                        
-                       
-                        max_avg_rat_time.append(pista_avg_rating.getTimeOfTheBest())
-                       
-           
-                    
-                    
-                    
-                    
-                            
-                    
-                    
-
-                        
-                # rating counts
-                if 'book' in field or 'music' in field or 'film' in field:
-                
-                    impact_id = 1
-                    if 'music' in field:
-                        impact_id = 0
-                   
-                    try:
-      
-                        pista_ratingcnt = SimpleCareerTrajectory(filename,'Data/'+field.title()+'/'+field + '-' + label + '-simple-careers/' + filename, impact_id, rating_counts_norm, randomized)
-                        rating_counts   += pista_ratingcnt.getImpactValues()                   
-                        add_max_impact(max_rating_counts, pista_ratingcnt.getMaxImpact())   
-                        
-                        
-                        time_series = pista_ratingcnt.getYearlyProducts()
-                        add_time_series(rating_counts_year, time_series)    
-
-
-                        if pista_ratingcnt.getCareerLength() > 14: 
-
-                            (NN_all, NN_rand, N) = pista_ratingcnt.getRankOfMaxImpact()  
-                            if 'nan' not in str(NN_rand):
-                                NN_all_rating_count  += [(n, N) for n in NN_all ]
-                                NN_rand_rating_count.append((NN_rand, N))
-                         
+        ''' write out the results '''                      
+        out_root = 'ProcessedData_' + str(min_rating_count) 
+        if normalized: out_root = out_root + '_Normalized'
+        if randomized: out_root = out_root + 'Randomized'            
+            
+    
+        create_folder(out_root + '/1_impact_distributions')    
+        create_folder(out_root + '/2_max_impact_distributions')    
+        create_folder(out_root + '/3_inflation_curves')    
+        create_folder(out_root + '/4_NN_rank_N')    
+        create_folder(out_root + '/5_time_of_the_best')    
+        create_folder(out_root + '/6_yearly_averages')    
+        create_folder(out_root + '/7_career_length_max_impact')                
+        create_folder(out_root + '/8_career_length')                            
+        create_folder(out_root + '/9_p_without_avg')                                        
+        create_folder(out_root + '/10_multiple_impacts')                                                    
+        
+        
+        for impact_measure in impact_measures[field]:
+            
+            # write impact measures
+            filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + '.dat'
+            write_distr_data(impact_values[impact_measure], filename)
+        
+            # write max values
+            filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
+            write_distr_data(max_impacts[impact_measure], filename)
+        
+            # inflation curves
+            filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
+            write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
                   
-                            career_length.append(pista_ratingcnt.getCareerLength())  
-                            
-                            
-                            max_rat_cnt_N.append((pista_ratingcnt.getMaxImpact(), pista_ratingcnt.getCareerLength()))
-                            
-                            
-                            p_without_mean_rating_cnt += pista_ratingcnt.getLogPwithZeroAvg()   
-                            
-                            
-                            max_rat_cnt_time.append(pista_ratingcnt.getTimeOfTheBest())
-                   
-                              
-                    except:
-                        error.write(filename + '\t' + field  + '\t' + label + '\n')
+            # rank of the best products
+            filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
+            filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
+            write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
 
-                   
-                                     
-                # metascore
-                if 'book' in field or 'film' in field:
-                        
-                    pista_meta  = SimpleCareerTrajectory(filename, 'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 2, metascore_norm, randomized)
-                    metascores  += pista_meta.getImpactValues() 
-                    add_max_impact(max_metascores, pista_meta.getMaxImpact())           
-                    
-                    
-                    time_series = pista_meta.getYearlyProducts()
-                    add_time_series(metascores_year, time_series)      
-
-
-                    if pista_meta.getCareerLength() > 14: 
-
-                        (NN_all, NN_rand, N) = pista_meta.getRankOfMaxImpact()  
-                        if 'nan' not in str(NN_rand):
-                            NN_all_metascores  += [(n, N) for n in NN_all ]
-                            NN_rand_metascores.append((NN_rand, N))
-                                 
-              
-                        max_metascore_N.append((pista_meta.getMaxImpact(), pista_meta.getCareerLength()))
-                         
-                         
-                        p_without_mean_metascore += pista_meta.getLogPwithZeroAvg()    
-                               
-                            
-                        max_metascore_time.append(pista_meta.getTimeOfTheBest())
-                                                            
-                            
-                # critic reviews
-                if 'film' in field:
-                
-                    pista_critic  = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 3, critic_review_norm, randomized)
-                    critic_review += pista_critic.getImpactValues()                   
-                    add_max_impact(max_critic_review, pista_critic.getMaxImpact())         
-
-                    time_series  = pista_critic.getYearlyProducts()
-                    add_time_series(critic_review_year, time_series)               
-                       
-                    if pista_critic.getCareerLength() > 14: 
-                     
-                        (NN_all, NN_rand, N) = pista_critic.getRankOfMaxImpact()  
-                        if 'nan' not in str(NN_rand):
-                            NN_all_critic_review  += [(n, N) for n in NN_all ]
-                            NN_rand_critic_review.append((NN_rand, N))   
-                          
-
-                        max_crit_rev_N.append((pista_critic.getMaxImpact(), pista_critic.getCareerLength()))
-
-             
-                        p_without_mean_critic_rev += pista_critic.getLogPwithZeroAvg()    
-                     
-                     
-                        max_crit_rev_time.append(pista_critic.getTimeOfTheBest())
-             
-                                                                                   
-                # user reviews
-                if 'film' in field:
-                
-                    pista_user   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 4, user_review_norm, randomized)
-                    user_review  += pista_user.getImpactValues()
-                    add_max_impact(max_user_review, pista_user.getMaxImpact())
-                    
-                    time_series = pista_user.getYearlyProducts()
-                    add_time_series(user_review_year, time_series)       
-
-
-                    if pista_user.getCareerLength() > 14: 
-
-                        (NN_all, NN_rand, N) = pista_user.getRankOfMaxImpact()  
-                        if 'nan' not in str(NN_rand):
-                            NN_all_user_review  += [(n, N) for n in NN_all ]
-                            NN_rand_user_review.append((NN_rand, N))   
-                                     
-                     
-                        max_user_rev_N.append((pista_user.getMaxImpact(), pista_user.getCareerLength()))
-
-
-                        p_without_mean_user_rev += pista_user.getLogPwithZeroAvg()                    
-                                    
-
-                        max_user_rev_time.append(pista_user.getTimeOfTheBest())
-                       
-
-                # gross revenue
-                if 'film' in field:
-                
-                    pista_gross   = SimpleCareerTrajectory(filename,  'Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + filename, 5, gross_norm, randomized)
-                    gross  += pista_gross.getImpactValues()
-                    add_max_impact(max_gross, pista_gross.getMaxImpact())
-                    
-                    time_series = pista_gross.getYearlyProducts()
-                    add_time_series(gross_year, time_series)       
-
-
-
-                    if pista_gross.getCareerLength() > 14: 
-
-                        (NN_all, NN_rand, N) = pista_gross.getRankOfMaxImpact()  
-                        if 'nan' not in str(NN_rand):
-                            NN_all_gross  += [(n, N) for n in NN_all ]
-                            NN_rand_gross.append((NN_rand, N))   
-                                     
-              
-                        max_gross_N.append((pista_gross.getMaxImpact(), pista_gross.getCareerLength()))
-
-
-                        p_without_mean_gross += pista_gross.getLogPwithZeroAvg()                    
-                                    
-
-                        max_gross_time.append(pista_gross.getTimeOfTheBest())
-                       
-            except: 
-                pass
-
-
-        ''' ------------------ impact distros ------------------ '''
+            # time of the best product
+            filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
+            write_distr_data(best_products_time[impact_measure], filename)
+            
+            # normalizing factors
+            filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' 
+            write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
-        root = 'ProcessedData'
-        if normalized:
-            root = root + 'Normalized'
-        if randomized:
-            root = root + 'Randomized'
+            # career length and max impact for testing the r-model
+            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + '.dat'
+            write_pairs(best_value_careerlength[impact_measure], filename)
+
+            # career length distribution
+            filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
+            write_distr_data(career_lengths[impact_measure], filename)
+
+            # the distribution of p - mu_p in the impact = pQ formula
+            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_avg_rating_' + label + '.dat'
+            write_distr_data(p_without_mean[impact_measure], filename)
+
+            # write out multiple impact data
+            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
+            write_distr_data(multi_impacts, filename)
+            
      
- 
+def process_fields(min_rating_count, normalized, randomized):
 
-        #shutil.rmtree('/folder_name')
-
-
-        
-        
-        if not randomized:      
-          
-            dir1 = root + '/1_impact_distributions'
-            if not os.path.exists(dir1):
-                os.makedirs(dir1)
-
-            write_distr_data(average_ratings, dir1 + '/' + field + '_average_ratings_dist_' + label + '.dat')
-            write_distr_data(rating_counts,   dir1 + '/' + field + '_rating_counts_dist_'   + label + '.dat')
-            write_distr_data(metascores,      dir1 + '/' + field + '_metascores_dist_'      + label + '.dat')
-            write_distr_data(critic_review,   dir1 + '/' + field + '_critic_review_dist_'   + label + '.dat')
-            write_distr_data(user_review,     dir1 + '/' + field + '_user_review_dist_'     + label + '.dat')
-            write_distr_data(gross,           dir1 + '/' + field + '_gross_dist_'           + label + '.dat')                                                            
-            
-                 
-            
-        ''' ------------------  max distros  ------------------ '''            
-            
-        if not randomized:   
-        
-            dir2 = root + '/2_max_impact_distributions'
-            if not os.path.exists(dir2):
-                os.makedirs(dir2) 
-        
-            write_distr_data(max_average_ratings, dir2 + '/' + field + '_max_average_ratings_dist_' + label + '.dat')
-            write_distr_data(max_rating_counts,   dir2 + '/' + field + '_max_rating_counts_dist_'   + label + '.dat' )  
-            write_distr_data(max_metascores,      dir2 + '/' + field + '_max_metascores_dist_'      + label + '.dat')   
-            write_distr_data(max_critic_review,   dir2 + '/' + field + '_max_metascores_dist_'      + label + '.dat')
-            write_distr_data(max_user_review,     dir2 + '/' + field + '_max_user_review_dist_'     + label + '.dat')             
-            write_distr_data(max_gross,           dir2 + '/' + field + '_max_gross_dist_'           + label + '.dat'  )             
-              
-              
-                                  
-        ''' ------------------ inflation curves ------------------ '''
-
-        if not normalized:  
-
-            dir3 = root + '/3_inflation_curves'
-            if not os.path.exists(dir3):
-                os.makedirs(dir3)
-
-            x_average_ratings_year = get_dict_data(average_ratings_year) 
-            x_rating_counts_year   = get_dict_data(rating_counts_year)   
-            x_metascores_year      = get_dict_data(metascores_year)      
-            x_critic_review_year   = get_dict_data(critic_review_year)   
-            x_user_review_year     = get_dict_data(user_review_year)   
-            x_gross_year           = get_dict_data(gross_year)   
-
-            write_distr_data(x_average_ratings_year, dir3 + '/' + field + '_yearly_average_ratings_dist_' + label + '.dat')
-            write_distr_data(x_rating_counts_year,   dir3 + '/' + field + '_yearly_rating_counts_dist_'   + label + '.dat')            
-            write_distr_data(x_metascores_year,      dir3 + '/' + field + '_yearly_metascores_dist_'      + label + '.dat')
-            write_distr_data(x_critic_review_year,   dir3 + '/' + field + '_yearly_critic_review_dist_'   + label + '.dat')
-            write_distr_data(x_user_review_year,     dir3 + '/' + field + '_yearly_user_review_dist_'     + label + '.dat')            
-            write_distr_data(x_gross_year,           dir3 + '/' + field + '_yearly_gross_dist_'           + label + '.dat')
-
-         
-                          
-        ''' ------------------ N*/N distros ------------------ '''
+    data_folder = 'Data_15'     
      
-        dir4 = root + '/4_NN_rank_N'
-        if not os.path.exists(dir4):
-            os.makedirs(dir4) 
-            
-        if len(NN_rand_avg_rating) > 0:     
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_avg_rating_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_avg_rating]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_avg_rating_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_avg_rating]
-            f.close()  
+    impact_measures = {'film' : ['average_rating', 'rating_count', 'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
+                       'music': ['play_count'],
+                       'book' : ['average_rating', 'rating_count', 'edition_count']}
 
-        if len(NN_rand_rating_count) > 0:
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_rating_count_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_rating_count]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_rating_count_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_rating_count]
-            f.close()       
-
-        if len(NN_rand_metascores) > 0:           
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_metascores_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_metascores]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_metascores_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_metascores]
-            f.close()           
-
-        if len(NN_rand_critic_review) > 0:           
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_critic_review_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_critic_review]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_critic_review_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_critic_review]
-            f.close()        
-
-        if len(NN_rand_user_review) > 0:           
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_user_review_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_user_review]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_user_review_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_user_review]
-            f.close()        
-         
-        if len(NN_rand_gross) > 0:           
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_rand_gross_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_rand_gross]
-            f.close() 
-            f = open(dir4 + '/' + field + '_best_product_NN_ranks_all_gross_' + label + '.dat', 'w')
-            [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NN_all_gross]
-            f.close()        
-                 
-                
-            
-        
-        ''' ------------------ career length ------------------ '''    
-       
-        if not normalized and not randomized:
-           
-            dir5 = root + '/5_career_length'
-            if not os.path.exists(dir5):
-                os.makedirs(dir5)
-
-            if len(career_length) > 0:
-                f = open(dir5 + '/' + field + '_career_length_' + label + '.dat', 'w')
-                [f.write(str(a) + '\n') for a in career_length]
-                f.close()
-
-
-
-        ''' ------------------ yearly avg ------------------ '''
-             
-        dir6 = root + '/6_yearly_averages'
-        if not os.path.exists(dir6):
-            os.makedirs(dir6)
-      
-        write_yearly_avgs(average_ratings_year, dir6 + '/' + field + '_yearly_average_avg_rating_'    + label + '.dat') 
-        write_yearly_avgs(rating_counts_year  , dir6 + '/' + field + '_yearly_average_rating_count_'  + label + '.dat')   
-        write_yearly_avgs(metascores_year     , dir6 + '/' + field + '_yearly_average_metascore_'     + label + '.dat')      
-        write_yearly_avgs(critic_review_year  , dir6 + '/' + field + '_yearly_average_critic_review_' + label + '.dat')   
-        write_yearly_avgs(user_review_year    , dir6 + '/' + field + '_yearly_average_user_review_'   + label + '.dat')   
-        write_yearly_avgs(gross_year          , dir6 + '/' + field + '_yearly_average_gross_'         + label + '.dat')                  
-          
-        
-        ''' ------------------ multiple impact measures ------------------ '''
-        
-        if len(multi_impacts) > 0:
-            
-            dir7 = root + '/7_multiple_impacts'
-            if not os.path.exists(dir7):
-                os.makedirs(dir7)
-            
-            f = open(dir7 + '/' + field + '_multiple_impacts_'  + label + '.dat', 'w')
-            [f.write(mm + '\n') for mm in multi_impacts]
-            f.close()
-                        
-            
-        
-        ''' ------------------  log p  ------------------ '''
-            
-        dir9 = root + '/9_p_without_avg'
-        if not os.path.exists(dir9):
-            os.makedirs(dir9)
-            
-   
-        write_distr_data(p_without_mean_avg_rating, dir9 + '/' + field + '_p_without_mean_avg_rating_' + label + '.dat')
-        write_distr_data(p_without_mean_rating_cnt, dir9 + '/' + field + '_p_without_mean_rating_cnt_' + label + '.dat')        
-        write_distr_data(p_without_mean_metascore,  dir9 + '/' + field + '_p_without_mean_metascore_'  + label + '.dat')      
-        write_distr_data(p_without_mean_critic_rev, dir9 + '/' + field + '_p_without_mean_critic_rev_' + label + '.dat')        
-        write_distr_data(p_without_mean_user_rev,   dir9 + '/' + field + '_p_without_mean_user_rev_'   + label + '.dat')        
-        write_distr_data(p_without_mean_gross,      dir9 + '/' + field + '_p_without_mean_gross_'      + label + '.dat')        
-
-
-        ''' ------------------  career length vs max impact  ------------------ '''
-            
-        dir10 = root + '/10_career_length_max_impact'
-        if not os.path.exists(dir10):
-            os.makedirs(dir10)
-
-        write_pairs(max_avg_rat_N,   dir10 + '/career_length_max_avg_rat'   + field + '_' + label + '.dat')
-        write_pairs(max_rat_cnt_N,   dir10 + '/career_length_max_rat_cnt'   + field + '_' + label + '.dat')
-        write_pairs(max_metascore_N, dir10 + '/career_length_max_metascore' + field + '_' + label + '.dat')
-        write_pairs(max_crit_rev_N,  dir10 + '/career_length_max_crit_rev'  + field + '_' + label + '.dat')      
-        write_pairs(max_user_rev_N,  dir10 + '/career_length_max_user_rev'  + field + '_' + label + '.dat')        
-        write_pairs(max_gross_N,     dir10 + '/career_length_max_gross'     + field + '_' + label + '.dat')        
-
-
-
-        ''' ------------------  time of max  ------------------ '''
-            
-        dir11 = root + '/11_time_of_the_best'
-        if not os.path.exists(dir11):
-            os.makedirs(dir11)
-            
-   
-        write_distr_data(max_avg_rat_time,   dir11 + '/' + field + '_time_of_the_best_avg_rating_' + label + '.dat')
-        write_distr_data(max_rat_cnt_time,   dir11 + '/' + field + '_time_of_the_best_rating_cnt_' + label + '.dat')        
-        write_distr_data(max_metascore_time, dir11 + '/' + field + '_time_of_the_best_metascore_'  + label + '.dat')      
-        write_distr_data(max_crit_rev_time,  dir11 + '/' + field + '_time_of_the_best_critic_rev_' + label + '.dat')        
-        write_distr_data(max_user_rev_time,  dir11 + '/' + field + '_time_of_the_best_user_rev_'   + label + '.dat')        
-        write_distr_data(max_gross_time,     dir11 + '/' + field + '_time_of_the_best_gross_'      + label + '.dat')        
-
-
-
-
- 
-      
-                
-
-
-
-
-
-
-
-
-
-
-
-
-def run_paralel(normalized, randomized):
-
-
-    input_data = [(os.listdir('Data/Music/music-pop-simple-careers'),         'music', 'pop'),
-                  (os.listdir('Data/Music/music-electro-simple-careers'),     'music', 'electro'),
-                  (os.listdir('Data/Film/film-director-simple-careers'),      'film',  'director'),
-                  (os.listdir('Data/Film/film-producer-simple-careers'),      'film',  'producer'),   
-                  (os.listdir('Data/Film/film-writer-simple-careers'),        'film',  'writer'),   
-                  (os.listdir('Data/Film/film-composer-simple-careers'),      'film',  'composer'),   
-                  (os.listdir('Data/Film/film-art-director-simple-careers'),  'film',  'art-director'),   
-                  (os.listdir('Data/Book/book-authors-simple-careers'),       'book',  'authors')   
-                  ]
-
-
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),         'music', 'pop'),
+                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),     'music', 'electro'),
+                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),      'film',  'director'),
+                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),      'film',  'producer'),   
+                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),        'film',  'writer'),   
+                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),      'film',  'composer'),   
+                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),  'film',  'art-director'),   
+                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),       'book',  'authors') ]
 
     Pros = []
     
-
-    for inp in input_data:  
-        p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized], ))
+    for inp in input_fields:  
+        p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
        
@@ -687,28 +290,18 @@ def run_paralel(normalized, randomized):
         t.join()
 
 
-
-
-  
-    #process_simple_career_trajectories(normalized = False, randomized = False)        
         
-        
-if __name__ == '__main__':         
+if __name__ == '__main__':   
 
+    min_rating_count = 0      
+    process_fields(min_rating_count, normalized = False, randomized = False)
+    process_fields(min_rating_count, normalized = True,  randomized = False)
+    process_fields(min_rating_count, normalized = True,  randomized = True )
 
-    error = open('error_unparsed.dat', 'w')
-
-    #process_simple_career_trajectories(normalized = False, randomized = False)
-    ##process_simple_career_trajectories(normalized = True,  randomized = False)
-    #process_simple_career_trajectories(normalized = True,  randomized = True)
-
-    run_paralel(normalized = False, randomized = False)
-    run_paralel(normalized = True,  randomized = False)
-    #run_paralel(normalized = True,  randomized = True)
-
-    error.close()
-    
-    
+    min_rating_count = 100      
+    process_fields(min_rating_count, normalized = False, randomized = False)
+    process_fields(min_rating_count, normalized = True,  randomized = False)
+    process_fields(min_rating_count, normalized = True,  randomized = True )
     
     
     
