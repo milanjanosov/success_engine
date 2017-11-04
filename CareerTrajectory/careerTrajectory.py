@@ -13,10 +13,7 @@ class MultipleImpactCareerTrajectory:
     def __init__(self, name, inputfile, norm_factors, randomized):
         self.name    = inputfile
         events       = []
-
-        
-
-
+      
         for line in gzip.open(inputfile):           
             
             if 'year' not in line:
@@ -69,7 +66,7 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, norm_factors, randomized):
+    def __init__(self, name, inputfile, impactm, norm_factors, randomized, min_rating_count):
         self.impactm = impactm
         self.name    = inputfile
         events       = []             
@@ -87,21 +84,19 @@ class SimpleCareerTrajectory:
                 
                 if 'film' in self.name or 'book' in self.name:
                     try:
-                        if float(fields[3]) > 100:
+                        if float(fields[3]) > min_rating_count:
                             cango = True
                     except:
                         pass
                 
                 if 'music' in self.name:
                     try:
-                        if float(fields[2]) > 100:
+                        if float(fields[2]) > min_rating_count:
                             cango = True
                     except:
                         pass
                 
-                
-                
-                        
+         
                 try:         
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
