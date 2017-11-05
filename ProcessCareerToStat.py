@@ -1,9 +1,5 @@
 import os 
-import sys
-import gzip
-import time
 import numpy as np
-import shutil
 from multiprocessing import Process
 from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
 from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
@@ -149,11 +145,11 @@ def process_simple_career_trajectories(args):
         # read the normalization vectors if we want to work with normalized impact measures     
         if normalized: 
             for impact_measure in impact_measures[field]:
-                norm_factors[impact_measure] = parse_norm_factors('ProcessedData_0/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
+                norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedData_0/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
    
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:100]:
                  
             ijk += 1
             print ijk, '/', nnn
@@ -201,7 +197,7 @@ def process_simple_career_trajectories(args):
             
       
         ''' write out the results '''                      
-        out_root = 'ProcessedData_' + str(min_rating_count) 
+        out_root = 'ProcessedData/ProcessedData_' + str(min_rating_count) 
         if normalized: out_root = out_root + '_Normalized'
         if randomized: out_root = out_root + 'Randomized'            
             
