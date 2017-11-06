@@ -160,36 +160,40 @@ def process_simple_career_trajectories(args):
                     
                 # construct the career of the individual
                 impact_id = impact_measures[field].index(impact_measure)            
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count) 
-                           
-                # save the value of all impact measures
-                impact_values[impact_measure] += individuals_career.getImpactValues()  
-                max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
-
-                # get the yearly values for the inflation curves
-                career_time_series = individuals_career.getYearlyProducts()
-                career_length = len(career_time_series)
-                add_time_series(yearly_impacts[impact_measure], career_time_series)
-
-
-                # do further stats if he is a good one with at least ... products
-                if career_length > 14:
-                    
-                    # get the rank and time of the best product for the random impact rule
-                    (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
-                    if 'nan' not in str(NN_rand):
-                        best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
-                        best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                 
-                    best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+                try:
+                    individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count) 
+                               
+                    # save the value of all impact measures
+                    impact_values[impact_measure] += individuals_career.getImpactValues()  
+                    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
 
-                    # get stuff for the R-model
-                    best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                    # get the yearly values for the inflation curves
+                    career_time_series = individuals_career.getYearlyProducts()
+                    career_length = len(career_time_series)
+                    add_time_series(yearly_impacts[impact_measure], career_time_series)
+
+
+                    # do further stats if he is a good one with at least ... products
+                    if career_length > 14:
+                        
+                        # get the rank and time of the best product for the random impact rule
+                        (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                        if 'nan' not in str(NN_rand):
+                            best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                            best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                     
-                    # getting things for the Qmodel
-                    career_lengths[impact_measure] .append(career_length)
-                    p_without_mean[impact_measure] += individuals_career.getLogPwithZeroAvg()        
+                        best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
 
+                        # get stuff for the R-model
+                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        
+                        # getting things for the Qmodel
+                        career_lengths[impact_measure] .append(career_length)
+                        p_without_mean[impact_measure] += individuals_career.getLogPwithZeroAvg()        
+
+                except IOError or IndexError:
+                    pass
 
             # more than one impact measure is used - for the correlation plots
             multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized)
