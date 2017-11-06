@@ -29,7 +29,7 @@ class MultipleImpactCareerTrajectory:
                         if len(norm_factors) > 0:
                             impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
                         events.append((product, year, [str(i) for i in impacts]))
-                except ValueError:
+                except:
                     pass
         
         if randomized and len(events) > 0:
