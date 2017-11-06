@@ -90,25 +90,20 @@ class SimpleCareerTrajectory:
                     except:
                         pass
                 
-                if 'music' in self.name:
-                    try:
+                try:
+                    if 'music' in self.name:
                         if float(fields[2]) > min_rating_count:
                             cango = True
-                    except:
-                        pass
-                
-         
-                try:         
+
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
-                    #print impact                     
                     if impact > 0 and year > 1850 and year < 2018 and cango:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
 
                         if impact > 0:
                             events.append((product, year, impact))
-                except ValueError:  
+                except:  
                     pass
 
         
