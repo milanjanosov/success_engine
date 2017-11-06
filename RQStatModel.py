@@ -23,41 +23,38 @@ from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 '''
 
 
-1. inflation curve curve megirni a plotter reszt
-2. 
 
 
 
-- lefuttatni RQ statot szerveren teljes adatra
+1. impact distr for
+    -  min rating 0
+    -  original
+    -  normalized
+
+2. inflation curve for everyone and all product 
+    -  min rating 0
+    -  original
+
+3. N*/N
+    -  normalized
+    -  N > 15
+    -  min rating 0
+    -  min rating 15
+
+4. r-model predictions
+    -  amire az N*/N jo
+
+5. p distribution 
+    -  amire az N*/N jo
+
+6. career len distribution
+    -  amire az N*/N jo
 
 
+- lack of correlation between papers
+- 
 
 
-
-
-- lemasolni a data fileokat N15re
-- RQ model -> full
-    - impact distr, drop bax, plot all distros
-    - normalization
-    - correlation plots
-    - original and normalized
-
-- RQ model -> top
-    - normalized and randomized
-    - time distr
-    - N*/N plot
-    - R-rule plot
-
-
-INFLATION CURVE MAS RANGE-t IS! ! !! ! !
-
-
-
-
-separating roles iwithin imdb not just the whole fo rrule
-
-
-- processer - plot all the stuff, and the plotter plots only the interesting examples in a fancy way
 
 
 -- ELETKORT AHOL LEHET BELEVENNI A 100+ eves dolgok mittt 
