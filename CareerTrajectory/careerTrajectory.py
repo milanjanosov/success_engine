@@ -70,62 +70,62 @@ class SimpleCareerTrajectory:
         self.impactm = impactm
         self.name    = inputfile
         events       = []   
-        
-        if 'gz' in inputfile:          
+                  
            
-            for line in gzip.open(inputfile):
-            
-                line = line.replace(',','')
+        for line in gzip.open(inputfile):
+        
+            line = line.replace(',','')
 
-                if 'year' not in line:
-                                                   
-                    fields  = line.strip().split('\t')
-                    product = fields[0]
-                    
-                    cango = False
-                    
-                    if 'film' in self.name or 'book' in self.name:
-                        try:
-                            if float(fields[3]) > min_rating_count:
-                                cango = True
-                        except:
-                            pass
-                    
-                    if 'music' in self.name:
-                        try:
-                            if float(fields[2]) > min_rating_count:
-                                cango = True
-                        except:
-                            pass
-                    
-             
-                    try:         
-                        year    = float(fields[1])
-                        impact  = float(fields[impactm + 2])
-                        #print impact                     
-                        if impact > 0 and year > 1850 and year < 2018 and cango:
-                            if len(norm_factors) > 0:
-                                impact = impact/norm_factors[year]
-
-                            if impact > 0:
-                                events.append((product, year, impact))
-                    except ValueError:  
+            if 'year' not in line:
+                                               
+                fields  = line.strip().split('\t')
+                product = fields[0]
+                
+                cango = False
+                
+                if 'film' in self.name or 'book' in self.name:
+                    try:
+                        if float(fields[3]) > min_rating_count:
+                            cango = True
+                    except:
                         pass
+                
+                if 'music' in self.name:
+                    try:
+                        if float(fields[2]) > min_rating_count:
+                            cango = True
+                    except:
+                        pass
+                
+         
+                try:         
+                    year    = float(fields[1])
+                    impact  = float(fields[impactm + 2])
+                    #print impact                     
+                    if impact > 0 and year > 1850 and year < 2018 and cango:
+                        if len(norm_factors) > 0:
+                            impact = impact/norm_factors[year]
 
-            
-            if randomized and len(events) > 0:
-                impacts_to_rand = [e[2] for e in events]
-                random.shuffle(impacts_to_rand)   
-                events_rand = []
-                for e in events:
-                    events_rand.append((e[0], e[1], impacts_to_rand[events.index(e)]))
+                        if impact > 0:
+                            events.append((product, year, impact))
+                except ValueError:  
+                    pass
 
-                events = events_rand
+        
+        if randomized and len(events) > 0:
+            impacts_to_rand = [e[2] for e in events]
+            random.shuffle(impacts_to_rand)   
+            events_rand = []
+            for e in events:
+                events_rand.append((e[0], e[1], impacts_to_rand[events.index(e)]))
 
-            self.events = events                                  
+            events = events_rand
+
+        self.events = events                                  
                     
         
-        
+
+
     ### this gices back the impact values of the individual as a list
     def getImpactValues(self):    
         return [e[2] for e in self.events]
