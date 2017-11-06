@@ -149,7 +149,7 @@ def process_simple_career_trajectories(args):
    
 
         ''' iterate over all the careers and do the job '''
-        for filename in files[0:100]:
+        for filename in files[0:10000]:
                  
             ijk += 1
             print ijk, '/', nnn
@@ -173,7 +173,7 @@ def process_simple_career_trajectories(args):
 
 
                 # do further stats if he is a good one with at least ... products
-                if career_length > data_folder.split('_')[1]:
+                if career_length > 14:
                     
                     # get the rank and time of the best product for the random impact rule
                     (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
@@ -260,7 +260,7 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalized, randomized):
 
-    data_folder = 'Data_15'     
+    data_folder = 'Data'     
      
     impact_measures = {'film' : ['average_rating', 'rating_count', 'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music': ['play_count'],
@@ -277,7 +277,7 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields:  
+    for inp in input_fields[7:8]:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
@@ -291,6 +291,7 @@ if __name__ == '__main__':
 
     min_rating_count = 0      
     process_fields(min_rating_count, normalized = False, randomized = False)
+    '''
     process_fields(min_rating_count, normalized = True,  randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = True )
 
@@ -298,7 +299,7 @@ if __name__ == '__main__':
     process_fields(min_rating_count, normalized = False, randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = True )
-    
+    '''
     
     
 
