@@ -251,7 +251,7 @@ def process_simple_career_trajectories(args):
             write_distr_data(career_lengths[impact_measure], filename)
 
             # the distribution of p - mu_p in the impact = pQ formula
-            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_avg_rating_' + label + '.dat'
+            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + ' + label + '.dat'
             write_distr_data(p_without_mean[impact_measure], filename)
 
             # write out multiple impact data
