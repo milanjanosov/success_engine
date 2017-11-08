@@ -1,7 +1,7 @@
 import os
 import sys
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import seaborn
 import numpy as np
 import random
@@ -198,24 +198,25 @@ def get_imapct_distr():
     seaborn.set_style('white')   
         
     
-    for mode in ['', 'Normalized'][0:1]:
+    for mode in ['', 'Normalized']:
     
 
-        mode_  = 'Original' if mode == '' else 'Normalized'
-        FOLDER = 'ProcessedDataSample/ProcessedData_0_Sample' + mode# + 'Sample' 
-       
+        mode_    = 'Original' if mode == '' else 'Normalized'
+        FOLDER_S = 'ProcessedDataSample/ProcessedData_0_' + mode + 'Sample' 
+        FOLDER   = 'ProcessedData/ProcessedData_0_' + mode# + 'Sample'        
   
         ''' ---------------------------------------------- '''
         ''' MOVIES   '''
         
-        professions = ['director', 'producer', 'writer', 'composer', 'art-director']
+        professions = ['_MERGED', 'director', 'producer', 'writer', 'composer', 'art-director']
    
-        for label in professions[1:2]:
+        for label in professions:
             
             print 'PROCESSING -- ' + label
             f, ax = plt.subplots(3, 2, figsize=(23, 23))
             st = f.suptitle( mode + "IMDb impact distributions for " + label, fontsize=title_font)
 
+   
             file_avg  = FOLDER + '/1_impact_distributions/film_average_rating_dist_' + label + '.dat'           
             file_cnt  = FOLDER + '/1_impact_distributions/film_rating_count_dist_'   + label + '.dat'
             file_meta = FOLDER + '/1_impact_distributions/film_metascore_dist_'      + label + '.dat'
@@ -230,8 +231,8 @@ def get_imapct_distr():
             fitPowerLaw    (file_user,  ax[2,1], 'IMDb, user reviews'    + label)
             fitPowerLaw    (file_gros,  ax[2,0], 'IMDb, gross revenue'   + label)
 
-            savefig_nice(plt, ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_full.png')
-
+            savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_full.png')
+            
             #plt.tight_layout(pad=5, w_pad=5, h_pad=5)          
             #align_plot(ax)
             #plt.savefig(
@@ -255,7 +256,7 @@ def get_imapct_distr():
                     file_music = FOLDER + '/1_impact_distributions/music_play_count_dist_' + genre + '.dat'
                     rating_cnt_fit   = fitPowerLaw(file_music, muax[i,j], genre + ' music, play counts')
 
-        savefig_nice(plt, ax, 'Figs/1_impact_distributions/'+ mode_ +'_Music_fitted_impact_distros_full.png')
+        savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_Music_fitted_impact_distros_full.png')
         #plt.tight_layout(pad=5, w_pad=5, h_pad=5)          
         #align_plot(ax)
         #plt.savefig('Figs/1_impact_distributions/'+ mode_ +'_Music_fitted_impact_distros_full.png')
@@ -278,7 +279,7 @@ def get_imapct_distr():
         fitPowerLaw    (book_cnt, bax[1], 'Goodreads, rating count'      )  
         fitPowerLaw    (book_ed,  bax[2], 'Goodreads, number of editions')  
 
-        savefig_nice(plt, bax, 'Figs/1_impact_distributions/'+ mode_ +'_Books_fitted_impact_distros_full.png')        
+        savefig_nice(bax, 'Figs/1_impact_distributions/'+ mode_ +'_Books_fitted_impact_distros_full.png')        
         #plt.tight_layout(pad=5, w_pad=5, h_pad=5)          
         #align_plot(ax)
         #plt.savefig('Figs/1_impact_distributions/'+ mode_ +'_Books_fitted_impact_distros_full.png')
@@ -523,7 +524,7 @@ def get_inflation_curves():
     seaborn.set_style('white')   
 
 
-    FOLDER = 'ProcessedData/ProcessedData_0'
+    FOLDER = 'ProcessedData/ProcessedData_0_'
     YEAR_MIN = 1900
 
     professions = [('director',     'k'), 
@@ -537,9 +538,9 @@ def get_inflation_curves():
     ''' ---------------------------------------------- '''
     ''' MOVIES   '''
     
-    professions = ['director', 'producer', 'writer', 'composer', 'art-director']
+    professions = ['_MERGED', 'director', 'producer', 'writer', 'composer', 'art-director']
 
-    for label in professions[1:2]:
+    for label in professions:
         
         print 'PROCESSING -- ' + label
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
@@ -1416,6 +1417,28 @@ def get_best_times():
 '''                                                                                  '''
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''    
 
+def fitNormal(rand, ax, label, alpha_hist  = 0.4, color_line = 'r'):
+   
+    ax.set_title(label, fontsize = 18)
+    
+    param = stats.skewnorm.fit(rand)
+    x_rand, p_rand = getDistribution(rand)
+    pdf_fitted = stats.skewnorm.pdf(x_rand,  param[0], loc=param[1], scale=param[2])
+     
+    
+     
+    mean = stats.skewnorm.mean( param[0], loc=param[1], scale=param[2])
+    maxx = x_rand[pdf_fitted.tolist().index(max(pdf_fitted))]
+    
+    counts, bins, bars = ax.hist(rand, normed = True, bins = np.linspace(min(x_rand), max(x_rand), 50), alpha = alpha_hist)
+    sk_results_norm = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.skewnorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
+    ax.plot(x_rand,pdf_fitted,'-', color = color_line, linewidth = 3, label = '$\\mu$=' + str(round(mean, 2)) + ', $\\mu^{*}$=' + str(maxx) + '\n$D$='+str(round(sk_results_norm[0], 2))+ ', $p$='+str(round(sk_results_norm[1],2)))
+
+    return mean, sk_results_norm[0], sk_results_norm[1], param[0], param[1], param[2]
+
+
+
+
 def get_p_without_avg():
 
     
@@ -1442,15 +1465,15 @@ def get_p_without_avg():
                    'composer',     
                    'art-director']
      
-    for label in professions[2:3]:
+    for label in professions[1:]:
 
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
         st = f.suptitle( mode + "  $\log(p_{\\alpha}) + \mu_p$ distributions ", fontsize=title_font)
     
   
         file_avg   = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_average_rating_'     + label + '.dat'
-        file_cnt   = folder + mode + '/9_p_without_avg//' + field + '_p_without_mean_rating_count_'       + label + '.dat'        
-        file_mets  = folder + mode + '/9_p_without_avg' + field + '_p_without_mean_metascore_'          + label + '.dat'   
+        file_cnt   = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_rating_count_'       + label + '.dat'        
+        file_mets  = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_metascore_'          + label + '.dat'   
         file_crit  = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_critic_reviews_'     + label + '.dat'   
         file_user  = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_user_reviews_'       + label + '.dat' 
         file_gross = folder + mode + '/9_p_without_avg/' + field + '_p_without_mean_user_gross_revenue_' + label + '.dat' 
@@ -1464,81 +1487,21 @@ def get_p_without_avg():
 
         fitNormal(average_ratings, ax[0,0], label + ', avg rating')
         fitNormal(rating_counts,   ax[0,1], label + ', rating count')
-        fitNormal(metascores,      ax[0,2], label + ', metascore')
-        fitNormal(critic_review,   ax[1,0], label + ', critic reviews')
-        fitNormal(user_review,     ax[1,1], label + ', user reviews')
-        fitNormal(gross_revenue,   ax[1,1], label + ', gross revenue')            
+  #      fitNormal(metascores,      ax[1,0], label + ', metascore')
+   #     fitNormal(critic_review,   ax[1,1], label + ', critic reviews')
+    #    fitNormal(user_review,     ax[2,0], label + ', user reviews')
+     #   fitNormal(gross_revenue,   ax[2,1], label + ', gross revenue')            
  
 
-        plt.show()
-        #savefig_nice(ax, 'Figs/4_r_model/Film_R_model_test_' + str(min_rating) + '_' + label + '.png')        
+        #plt.show()
+        savefig_nice(ax, 'Figs/5_p_nomean_distr/Film_p_no_mean_distr_' + str(min_rating) + '_' + label + '.png')        
  
       
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-        '''
 
-        genres = [('electro', 'k'),
-                  ('pop', 'b')]
-             
-        field = 'music'                     
-        for (genre, color) in genres[0:1]:
-            file_cnt  = FOLDER + dir9 + '/' + field + '_p_without_mean_rating_cnt_' + genre + '.dat'        
-            rating_counts   = np.asarray([float(line.strip()) for line in open(file_cnt)  if float(line.strip()) != 0  ])   
-
-            #ax[1,2].hist(rating_counts, bins = 50)   
-            fitNormal(rating_counts, ax[1,2], 'DJs, playcount')
-        
-        
-        
-        align_plot(ax)        
-        plt.savefig('p+mu_p_distributions' + mode + '.png')
-        plt.show() 
-        '''    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   
-     
-     
     ''' ---------------------------------------------- '''
     ''' MUSIC   '''
      
-    '''       
+           
     genres  = ['electro', 'pop']#['_MERGED', 'electro', 'pop']
     markerm = 'o'
      
@@ -1551,41 +1514,40 @@ def get_p_without_avg():
             if genre_ind < len(genres):                   
                 genre = genres[genre_ind]          
                 print 'PROCESSING -- ' + genre
-                file_music = folder + mode + '/1_impact_distributions/music_play_count_dist_' + genre + '.dat'
-                max_music  = folder + mode + '/7_career_length_max_impact/music_career_length_max_play_count_' + genre + '.dat'           
-                get_r_model_curves(file_music, max_music, muax[i,j], genre, num_of_bins, 'Rating count vs career length', 'Career length', 'Rating count', True)
+                file_cnt = folder + mode + '/9_p_without_avg/music_p_without_mean_play_count_'   + genre + '.dat'        
+                rating_counts = np.asarray([float(line.strip()) for line in open(file_cnt)  if float(line.strip()) != 0  ])
+      #          fitNormal(rating_counts, muax[i,j], genre + ', play count')
 
-    plt.show()
-    savefig_nice(muax, 'Figs/4_r_model/Music_R_model_test_' + str(min_rating) + '_' + genre + '.png')       
-    ''' 
+    #plt.show()
+    savefig_nice(muax, 'Figs/5_p_nomean_distr/Music_p_no_mean_distr_' + str(min_rating) + '_' + genre + '.png')       
      
      
-
+    
+ 
     ''' ---------------------------------------------- '''
     ''' BOOKS   '''  
-    '''   
+       
     f, bax = plt.subplots(1, 3, figsize=(25, 12))
     st = f.suptitle( "Books, R - model vs data", fontsize=title_font) 
-        
-    file_book = folder +  mode + '/1_impact_distributions/book_average_rating_dist_authors.dat'
-    max_book  = folder +  mode + '/7_career_length_max_impact/book_career_length_max_average_rating_authors.dat' 
-    get_r_model_curves(file_book, max_book, bax[0], 'book', num_of_bins, 'Average rating vs career length', 'Career length', 'Average rating', True)  
-    
-    
-    file_book = folder +  mode + '/1_impact_distributions/book_rating_count_dist_authors.dat'
-    max_book  = folder +  mode + '/7_career_length_max_impact/book_career_length_max_rating_count_authors.dat' 
-    get_r_model_curves(file_book, max_book, bax[1], 'book', num_of_bins, 'Rating_count vs career length', 'Career length', 'Rating_count', True)
-    
-    
-    file_book = folder +  mode + '/1_impact_distributions/book_edition_count_dist_authors.dat'
-    max_book  = folder +  mode + '/7_career_length_max_impact/book_career_length_max_edition_count_authors.dat' 
-    get_r_model_curves(file_book, max_book, bax[2], 'book', num_of_bins, 'Average rating vs career length', 'Career length', 'Edition count', True)         
+ 
+    file_avg = folder + mode + '/9_p_without_avg/' + 'book_p_without_mean_average_rating_authors.dat'
+    file_cnt = folder + mode + '/9_p_without_avg/' + 'book_p_without_mean_rating_count_authors.dat'        
+    file_ed  = folder + mode + '/9_p_without_avg/' + 'book_p_without_mean_edition_count_authors.dat'   
+
+#    average_ratings = np.asarray([float(line.strip()) for line in open(file_avg)  if float(line.strip()) != 0  ])
+#    rating_counts   = np.asarray([float(line.strip()) for line in open(file_cnt)  if float(line.strip()) != 0  ])
+#    edition_counts  = np.asarray([float(line.strip()) for line in open(file_ed)   if float(line.strip()) != 0  ])
+
+    fitNormal(average_ratings, bax[0], label + ', avg rating')
+    fitNormal(rating_counts,   bax[1], label + ', rating count')
+    fitNormal(edition_counts,  bax[2], label + ', edition count')
+
+
+      
   
-  
-  
-    plt.show()
-    savefig_nice(bax, 'Figs/4_r_model/Book_R_model_test_' + str(min_rating) + 'png')   
-    '''
+    #plt.show()
+    savefig_nice(bax, 'Figs/5_p_nomean_distr/Book_p_no_mean_distr_' + str(min_rating) + 'png')   
+    
     
     
     

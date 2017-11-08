@@ -29,22 +29,33 @@ def merge(target_file, target_folder):
                 
 
                     files_to_merge = set()
-                    filename = field + target_file + impact_measure + '_' #+ label + '.dat'
+                    if '_' == target_file or '_yearly_' in target_file:
+                        filename = field + target_file + impact_measure + '_dist_' #+ label + '.dat'
+                    else:
+                        filename = field + target_file + impact_measure + '_' #+ label + '.dat'
                     
+
+                    print filename
                     for fn in files:
                         if filename in fn:
                             files_to_merge.add(fn)
-                        
+                       
                     f = open(folder + '/' + filename + '_MERGED.dat', 'w')
                     
                     for fileinput in list(files_to_merge):
                         for line in open(folder + '/' + fileinput):
+                            a  =2                            
                             f.write(line)
                     f.close()        
-        
+                    
             
-#merge('_best_product_NN_ranks_all_', 'NN'):
+#merge('_best_product_NN_ranks_all_', 'NN')
 #merge('_career_length_max_', '7_career_length_max_impact')
-merge('_', '1_impact_distributions')
+#merge('_', '1_impact_distributions')
+#merge('_yearly_', '3_inflation_curves')
+merge('_p_without_mean_average_rating_', '9_p_without_avg')
+
+
+
 
 
