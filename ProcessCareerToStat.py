@@ -52,7 +52,7 @@ def write_distr_data(data, filename):
         
     if len(data) > 0:
         f = open(filename, 'w')
-        [f.write(str(a) + '\n') for a in data if a > -1]
+        [f.write(str(a) + '\n') for a in data if a > -100]
         f.close()
    
 
@@ -149,7 +149,7 @@ def process_simple_career_trajectories(args):
    
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:10000]:
                  
             ijk += 1
             print ijk, '/', nnn
@@ -278,7 +278,7 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields[0:2]:  
+    for inp in input_fields[6:]:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
@@ -291,16 +291,16 @@ def process_fields(min_rating_count, normalized, randomized):
 if __name__ == '__main__':   
 
     min_rating_count = 0      
-    process_fields(min_rating_count, normalized = False, randomized = False)
-   
+    #process_fields(min_rating_count, normalized = False, randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = False)
-    process_fields(min_rating_count, normalized = True,  randomized = True )
+    #process_fields(min_rating_count, normalized = True,  randomized = True )
 
+    '''
     min_rating_count = 100      
     process_fields(min_rating_count, normalized = False, randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = True )
-   
+    ''' 
     
     
 

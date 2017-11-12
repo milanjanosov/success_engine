@@ -196,7 +196,7 @@ class SimpleCareerTrajectory:
             return -1
              
     
-    ### if we are looking for the max value and is is degenerated, then this  function gives back _ALL_
+    ### if we are looking for the max validtue and is is degenerated, then this  function gives back _ALL_
     ### the top value time events - here we get the rank!
     def getRankOfMaxImpact(self):
         
@@ -217,9 +217,9 @@ class SimpleCareerTrajectory:
     # log Q_i = <log c_10ialpha> - mu_p
     def getLogPwithZeroAvg(self):
     
-        log_impacts = [math.log(e[2]) for e in self.events]          
-        log_impacts_avg = np.mean(log_impacts)
-        
+        log_impacts = [math.log(e[2]) for e in self.events]    
+        log_impacts_avg = np.log(np.mean([e[2] for e in self.events]))
+          
         return [i - log_impacts_avg for i in log_impacts]
 
 
