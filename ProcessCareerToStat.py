@@ -52,7 +52,7 @@ def write_distr_data(data, filename):
         
     if len(data) > 0:
         f = open(filename, 'w')
-        [f.write(str(a) + '\n') for a in data if a > -100]
+        [f.write(str(a) + '\n') for a in data if a > -100000]
         f.close()
    
 
@@ -149,7 +149,7 @@ def process_simple_career_trajectories(args):
    
 
         ''' iterate over all the careers and do the job '''
-        for filename in files[0:10000]:
+        for filename in files[0:1]:
                  
             ijk += 1
             print ijk, '/', nnn
@@ -159,9 +159,19 @@ def process_simple_career_trajectories(args):
             for impact_measure in impact_measures[field]:
                     
                 # construct the career of the individual
-                impact_id = impact_measures[field].index(impact_measure)            
+                impact_id = impact_measures[field].index(impact_measure)     
+
+                if 'book' in field:
+                    print filename, filename.split('_')[0] + '_author_bio.dat'
+                    ''' WHEN THERE IS A FUCKING WORKING MACHINE
+                        REPARSE GOODREADS PROFILES, GET YOB AND YOD PROPERLY (WTF HAPPENED)
+                        AND THAN READ THOSE FILES HERE...
+                    '''
+       
+                date_of_birth = 0
+                date_of_death = 9999
                 
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count) 
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                            
                 # save the value of all impact measures
                 impact_values[impact_measure] += individuals_career.getImpactValues()  
@@ -193,7 +203,7 @@ def process_simple_career_trajectories(args):
 
 
             # more than one impact measure is used - for the correlation plots
-            multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized)
+            multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized, date_of_birth, date_of_death) 
             multi_impacts += multiimpact_career.getImpactValues()
             
       
@@ -267,6 +277,7 @@ def process_fields(min_rating_count, normalized, randomized):
                        'music': ['play_count'],
                        'book' : ['average_rating', 'rating_count', 'edition_count']}
 
+ 
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),         'music', 'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),     'music', 'electro'),
                     (os.listdir(data_folder + '/Film/film-director-simple-careers'),      'film',  'director'),
@@ -276,9 +287,12 @@ def process_fields(min_rating_count, normalized, randomized):
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),  'film',  'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),       'book',  'authors') ]
 
+
+    print 'AAA'
+
     Pros = []
     
-    for inp in input_fields[6:]:  
+    for inp in input_fields[0:2]:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
@@ -288,11 +302,13 @@ def process_fields(min_rating_count, normalized, randomized):
 
 
         
-if __name__ == '__main__':   
+if __name__ == '__main__':  
+
+   
 
     min_rating_count = 0      
-    #process_fields(min_rating_count, normalized = False, randomized = False)
-    process_fields(min_rating_count, normalized = True,  randomized = False)
+    process_fields(min_rating_count, normalized = False, randomized = False)
+    #process_fields(min_rating_count, normalized = True,  randomized = False)
     #process_fields(min_rating_count, normalized = True,  randomized = True )
 
     '''

@@ -5,12 +5,25 @@ import math
 import numpy as np
 
 
+def yearIsOK(year, date_of_birth, date_of_death):
+
+    yearIsOK = False    
+
+    lower_limit = max(1800, date_of_birth)
+    upper_limit = min(2018, date_of_death)
+
+    if year >= lower_limit and year <= upper_limit:
+        yearIsOK =  True
+   
+    return yearIsOK
+    
+
 
 ''' A MultipleImpactCareerTrajectory has .... fields: .................................................'''
 
 class MultipleImpactCareerTrajectory:
 
-    def __init__(self, name, inputfile, norm_factors, randomized):
+    def __init__(self, name, inputfile, norm_factors, randomized, date_of_birth, date_of_death):
         self.name    = inputfile
         events       = []
       
@@ -25,7 +38,7 @@ class MultipleImpactCareerTrajectory:
                 impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]                                        
                 try:              
                     year    = float(fields[1]) 
-                    if year > 1500 and year < 2018:
+                    if yearIsOK(year, date_of_birth, date_of_death):
                         if len(norm_factors) > 0:
                             impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
                         events.append((product, year, [str(i) for i in impacts]))
@@ -66,7 +79,7 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, norm_factors, randomized, min_rating_count):
+    def __init__(self, name, inputfile, impactm, norm_factors, randomized, min_rating_count, date_of_birth, date_of_death):
         self.impactm = impactm
         self.name    = inputfile
         events       = []   
@@ -82,6 +95,8 @@ class SimpleCareerTrajectory:
                 product = fields[0]
                 
                 cango = False
+
+
                 
                 if 'film' in self.name or 'book' in self.name:
                     try:
@@ -90,23 +105,29 @@ class SimpleCareerTrajectory:
                     except:
                         pass
                 
-                try:
-                    if 'music' in self.name:
+               
+                if 'music' in self.name:
+                    try:
                         if float(fields[2]) > min_rating_count:
                             cango = True
-
+                    except:
+                        pass
+                
+               
+                try:
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
-                    if impact > 0 and year > 1850 and year < 2018 and cango:
+
+                    if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
-
                         if impact > 0:
                             events.append((product, year, impact))
                 except:  
                     pass
 
-        
+       
+ 
         if randomized and len(events) > 0:
             impacts_to_rand = [e[2] for e in events]
             random.shuffle(impacts_to_rand)   
@@ -267,10 +288,14 @@ def getLogBinnedDistribution(x, y, nbins):
 
 
 
+'''
+pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, {}, False, min_rating_count = 0, date_of_birth = 2000, date_of_death = 9999)
 
-#pista = SimpleCareerTrajectory('kiss_pista', 'kiss_pista.dat.gz', 0, {}, False)
 
-#print pista.events
+events = pista.events
+for e in events:
+    print e
+'''
 #print pista.getTimeOfTheBest()
 #
 #print pista.getAutoCorrelCoeff()
