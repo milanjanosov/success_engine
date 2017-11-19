@@ -176,12 +176,13 @@ def process_simple_career_trajectories(args):
                 # save the value of all impact measures
                 impact_values[impact_measure] += individuals_career.getImpactValues()  
                 max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
-
+                
                 # get the yearly values for the inflation curves
                 career_time_series = individuals_career.getYearlyProducts()
+                '''                
                 career_length = len(career_time_series)
                 add_time_series(yearly_impacts[impact_measure], career_time_series)
-                '''
+                
 
                 # do further stats if he is a good one with at least ... products
                 if career_length > 14:
