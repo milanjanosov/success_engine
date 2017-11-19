@@ -172,11 +172,11 @@ def process_simple_career_trajectories(args):
                 date_of_death = 9999
                 
                 individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
-                '''           
+                           
                 # save the value of all impact measures
                 impact_values[impact_measure] += individuals_career.getImpactValues()  
                 max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
-                '''
+                
                 # get the yearly values for the inflation curves
                 career_time_series = individuals_career.getYearlyProducts()
                                 
@@ -186,7 +186,7 @@ def process_simple_career_trajectories(args):
 
                 # do further stats if he is a good one with at least ... products
                 if career_length > 14:
-                    '''
+
                     # get the rank and time of the best product for the random impact rule
                     (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
                     if 'nan' not in str(NN_rand):
@@ -200,7 +200,7 @@ def process_simple_career_trajectories(args):
                     
                     # getting things for the Qmodel
                     career_lengths[impact_measure] .append(career_length)
-                    '''
+                    
                     p_without_mean[impact_measure] += individuals_career.getLogPwithZeroAvg()        
 
 
@@ -228,7 +228,7 @@ def process_simple_career_trajectories(args):
         
         
         for impact_measure in impact_measures[field]:
-            '''
+            
             # write impact measures
             filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + '.dat'
             write_distr_data(impact_values[impact_measure], filename)
@@ -261,15 +261,15 @@ def process_simple_career_trajectories(args):
             # career length distribution
             filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
             write_distr_data(career_lengths[impact_measure], filename)
-            '''
+            
             # the distribution of p - mu_p in the impact = pQ formula
             filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
             write_distr_data(p_without_mean[impact_measure], filename)
-            '''
+            
             # write out multiple impact data
             filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
             write_distr_data(multi_impacts, filename)
-            '''
+            
      
 def process_fields(min_rating_count, normalized, randomized):
 
@@ -290,11 +290,11 @@ def process_fields(min_rating_count, normalized, randomized):
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),       'book',  'authors') ]
 
 
-    print 'AAA'
+  
 
     Pros = []
     
-    for inp in input_fields[0:2]:  
+    for inp in input_fields:  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
