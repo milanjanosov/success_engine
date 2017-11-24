@@ -3,6 +3,7 @@ import gzip
 import random
 import math
 import numpy as np
+from scipy.stats import binned_statistic
 
 
 def yearIsOK(year, date_of_birth, date_of_death):
@@ -243,7 +244,13 @@ class SimpleCareerTrajectory:
           
         return [i - log_impacts_avg for i in log_impacts]
 
+        
+    '''def getQValues(self):
 
+        mu_p = 0.2
+        return np.mean([ np.log([e[2]) for e in self.events] ) - mu_p
+
+    '''
 
 
 def getDistribution(keys, normalized = True):
@@ -264,9 +271,10 @@ def getBinnedDistribution(x, y, nbins):
     n, bins   = np.histogram(x, bins=nbins)
     sy, _  = np.histogram(x, bins=nbins, weights=y)
     sy2, _ = np.histogram(x, bins=nbins, weights=y*y)
-    mean = sy / n
-    std = np.sqrt(sy2/n - mean*mean)
-
+    mean = sy/n
+    
+   
+    std = np.sqrt(sy2/n - mean*mean) 
 
     #print 'NA', len((_[1:] + _[:-1])/2), len(_)
 
@@ -274,6 +282,7 @@ def getBinnedDistribution(x, y, nbins):
 
 
 def getLogBinnedDistribution(x, y, nbins):
+
 
     bins   = 10 ** np.linspace(np.log10(min(x)), np.log10(max(x)), nbins)  
     values = [ np.mean([y[j]  for j in range(len(x)) if x[j] >= bins[i] and x[j] < bins[i+1]])  for i in range(nbins-1)]    
@@ -283,6 +292,18 @@ def getLogBinnedDistribution(x, y, nbins):
     return bins, values, error
 
 
+
+def getPercentileBinnedDistribution(x, y, nbins):
+
+ 
+    x, y = zip(*sorted(zip(x, y), key=lambda tup: tup[0]))
+    elements_per_bin = len(x)
+
+    xx  = [np.mean(x[i*elements_per_bin:(i+1)*elements_per_bin]) for i in range(nbins)]
+    yy  = [np.mean(y[i*elements_per_bin:(i+1)*elements_per_bin]) for i in range(nbins)]
+    std = [np.std(y[i*elements_per_bin:(i+1)*elements_per_bin])  for i in range(nbins)]
+     
+    return xx, yy, std
 
 
 
