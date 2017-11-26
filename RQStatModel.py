@@ -5,16 +5,12 @@ import matplotlib
 import seaborn
 import numpy as np
 import random
-import powerlaw
-import matplotlib.cm as cm
-from matplotlib.colors import LogNorm
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+import CareerAnalysisHelpers.binningFunctions as binning
+import CareerAnalysisHelpers.fittingImpactDistributions as fit
 from scipy import stats
-from CareerTrajectory.careerTrajectory import getDistribution
-from CareerTrajectory.careerTrajectory import getBinnedDistribution
-from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
+from matplotlib.colors import LogNorm
+from CareerAnalysisHelpers.alignPlots import align_plot
 
 
 
@@ -24,17 +20,17 @@ from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 
 
 1. LOGNORMAL XMIN ISSUES
-- make sure KS says what we see
-- fit better, with cutoff, the impact distr
-- fit properly (anomalies with xmin) the career length distr
-- fix the cdf 
++ make sure KS says what we see
++ fit better, with cutoff, the impact distr
++ fit properly (anomalies with xmin) the career length distr
++ fix the cdf 
 
 
 
 2. R-MODEL TEST
-- back to log scale
-- quantilte bins (~ 20 bins)
-- make sure complete data, max values..!
++ back to log scale
++ quantilte bins (~ 20 bins)
++ make sure complete data, max values..! -> IT IS, JUST NORMALIZED IMPACTS!! 
 
 
 
@@ -42,55 +38,18 @@ from CareerTrajectory.careerTrajectory import getLogBinnedDistribution
 - even from a larger range they should converge
 - first optimize a few, fix the rest!
 
+
+4. CREATE A FILE FOR BINNING AND FITTING FUNCTIONS
+
+
+5. START LASTFM
+- easy to merge, restart
+- multichannel
+
+
 '''
 
 
-
-
-
-
-
-''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''
-'''                                                                '''   
-'''                           GENERAL HELPERS                      '''
-'''                                                                '''
-''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''  
-
-
-def align_ax(ax, font_tick):
-
-
-    ax.legend(loc = 'left', fontsize = font_tick)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
-    ticklines  = ax.get_xticklines()  + ax.get_yticklines()
-    gridlines  = ax.get_xgridlines()  + ax.get_ygridlines()
-    ticklabels = ax.get_xticklabels() + ax.get_yticklabels()
-    for line in ticklines:
-        line.set_linewidth(1)
-
-    for line in gridlines:
-        line.set_linestyle('-.')
-
-    ax.xaxis.labelpad = 15
-    ax.yaxis.labelpad = 15   
-    ax.tick_params(labelsize = font_tick)    
-
-
-def align_plot(ax):
-
-    font_tick = 21   
-
-    if len(ax.shape)> 1:
-        for i in range(len(ax)):
-            for j in range(len(ax[0])):
-                align_ax(ax[i,j], font_tick)  
- 
-    else:
-        for i in range(len(ax)):
-            align_ax(ax[i], font_tick)
        
 
 def write_row(filename, data):
@@ -107,119 +66,10 @@ def write_row(filename, data):
 '''                                                                '''
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''  
 
-def fitPowerLaw(filename, ax, label, cutoff = -1, numbins = 15):
+
+def optimize_xmin():
 
 
-#    rand = np.asarray([float(line.strip()) for line in open(filename) if float(line.strip()) > cutoff]) 
-
-    rand = np.asarray([float(line.strip())+random.random()/100.0 for line in open(filename) if float(line.strip()) > cutoff]) 
-    x_rand, p_rand = getDistribution(rand)                  
-    ax.set_title(label, fontsize = 18)               
-    
-    #dmin = min([i+j for i in x_rand for j in x_rand])
-    
-    # histogram
-    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 1000), log=True,alpha=0.0, cumulative=1)
-    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.7, markersize = 0, linewidth = 5)
-    ax.set_ylim([ min(counts), 1.05*max(counts)])
-    ax.set_xlim([ min(x_rand),  max(bins)])
-
-    
-    # fit and plot the powerlaw   
-    print 'Fit and plot the powerlaw...'
-    results  = powerlaw.Fit(rand, xmin = min(x_rand), fit_method = 'KS')
-    alpha    = results.power_law.alpha
-    xmin     = results.power_law.xmin 
-    D        = results.power_law.KS()  
-    parassms = results.power_law.plot_cdf(color='r',ax=ax,linestyle='-',linewidth=3,label='$\\alpha$= '+str(round(alpha,2))+', $x_{min}$='+str(round(xmin,2))+'\n$D$='+str(round(D, 2)))     
-  
-    
-    print 'Powerlaw: ', D
-    
-
-     
-    # fit and plot the powerlaw   
-    print 'Fit and plot the lognormal...' + label
-    p0 = stats.lognorm._fitstart(rand)
-    p1 = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
-    param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
-
-    pdf_fitted = stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])
-    mu =  np.log(param[2])
-    sigma = param[0]
-    #sk_results_norm = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
-
-   # plt.plot(np.cumsum(p_rand))
-   # plt.plot(pdf_fitted)
-   # plt.show()
-
-    sk_results_norm = stats.ks_2samp(pdf_fitted, np.cumsum(p_rand))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu 
-    ax.plot(x_rand,pdf_fitted,'k-', linewidth = 4, label = 'Lognormal fit, $\\mu$=' + str(round(mu,2)) + '\n$\\sigma$=' + str(round(sigma, 2)) + ', $D$='+str(round(sk_results_norm[0], 2)))
-   
-
-    print 'Lognormal: ', sk_results_norm[0], 2
-
-    ax.set_xlabel(label, fontsize = 20)
-    ax.set_ylabel('CDF of ' + label, fontsize = 20)
-
-    #ax.set_xscale('log')
-    ax.set_yscale('linear')
-    return sk_results_norm[0], D
-
-    '''
-    yticks = 10 ** np.linspace(np.log10(min(counts)), np.log10(max(counts)), 5)
-    ax.set_yticks(yticks)
-    ax.set_yticklabels([str(int(100*y))+'%' for y in yticks])
-    
-    xfit = parassms.lines[1].get_xdata()
-    yfit = parassms.lines[1].get_ydata()     
-    write_row('Viz/1_impact_fit/powerlaw_hist' + label + '.dat', rand)
-    write_row('Viz/1_impact_fit/powerlaw_fit'  + label + '.dat', [str(xfit[i]) + '\t' + str(yfit[i]) for i in range(len(xfit))] )   
-    ''' 
-
-import math
-def fitSkewedNormal(filename, ax, label, alpha_hist  = 0.2, color_line = 'r'):
-   
-
-    rand = np.asarray([float(line.strip()) for line in open(filename)])
-
-    print 'Fitting normal...'
-    param = stats.skewnorm.fit(rand)
-    x_rand, p_rand = getDistribution(rand)
-    pdf_fitted = stats.skewnorm.pdf(x_rand,  param[0], loc=param[1], scale=param[2])
-            
-    mean = stats.skewnorm.mean( param[0], loc=param[1], scale=param[2])
-    maxx = str(x_rand[pdf_fitted.tolist().index(max(pdf_fitted))])
-    
-
-    print  np.linspace(min(x_rand), max(x_rand), 25)
-    
-    counts, bins, bars = ax.hist(rand, bins = np.linspace(min(x_rand), max(x_rand), 25), normed = True, alpha = alpha_hist)
-
-    sk_results = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.skewnorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
-    ax.plot(x_rand,pdf_fitted,'-', color = color_line, linewidth = 3, label = '$\\mu$=' + str(round(mean, 2)) + ', $\\mu^{*}$=' +maxx+'\n$D$='+str(round(sk_results[0], 2))+ ', $p$='+str(round(sk_results[1],2)))
-    ax.set_title(label, fontsize = 18)  
-
-
-
-    ax.set_yticks(np.linspace(0, max(counts), 5))
-    ax.set_yticklabels([str(int(100*y)) + '%' for y in np.linspace(0, 1.05*max(counts)/(sum(counts)), 5)])
-    
-    write_row('Viz/1_impact_fit/normal_hist' + label + '.dat', rand)   
-    write_row('Viz/1_impact_fit/normal_fit'  + label + '.dat',  [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))])      
-
-   
-   
-def get_imapct_distr():             
-            
-              
-    num_of_bins = 20
-    title_font  = 25 
-    seaborn.set_style('white')  
-
-    cut = 'nocutoff' 
-
-    '''
     cutoff = 0.001
     cutoffs = []
     Dlogs = []
@@ -245,7 +95,7 @@ def get_imapct_distr():
         Dlogs.append(Dlog)
         Dpows.append(Dpow)
 
-        savefig_nice(ax, 'Figs/1_impact_distributions/D_test_IMDB_fitted_impact_distros_director_' + str(cutoff) + '.png')
+        #savefig_nice(ax, 'Figs/1_impact_distributions/D_test_IMDB_fitted_impact_distros_director_' + str(cutoff) + '.png')
         plt.close()
         #pltplot(ax)
 
@@ -258,20 +108,32 @@ def get_imapct_distr():
     plt.xscale('log')
 
     plt.show()
-    '''
-    
+   
 
+
+
+   
+def get_imapct_distr():             
+            
+              
+    num_of_bins = 20
+    title_font  = 25 
+    seaborn.set_style('white')  
+
+    cut = 'nocutoff' 
+
+ 
 
     for mode in ['', 'Normalized'][1:]:
     
     
         mode_    = 'Original' if mode == '' else 'Normalized'
         FOLDER_S = 'ProcessedDataSample/ProcessedData_0_' + mode + '_Sample' 
-        FOLDER   =  'ProcessedData/ProcessedData_0_' + mode# + '_Sample'        
+        FOLDER   = FOLDER_S# 'ProcessedData/ProcessedData_0_' + mode# + '_Sample'        
   
         ''' ---------------------------------------------- '''
         ''' MOVIES   '''
-        '''  
+          
         professions = ['_MERGED', 'director', 'producer', 'writer', 'composer', 'art-director']
    
         for label in professions[1:2]:
@@ -289,17 +151,16 @@ def get_imapct_distr():
             file_user = FOLDER + '/1_impact_distributions/film_user_reviews_dist_'   + label + '.dat'
             file_gros = FOLDER + '/1_impact_distributions/film_gross_revenue_dist_'  + label + '.dat'
             
-            #fitSkewedNormal(file_avg,   ax[0,0], 'IMDb, average ratings' + label)                       
-            fitPowerLaw(file_cnt,   ax[1,0], 'IMDb, rating counts'   + label)
-     
-            #fitSkewedNormal(file_meta,  ax[0,1], 'IMDb, metascores'      + label)             
-            #fitPowerLaw    (file_crit,  ax[1,1], 'IMDb, critic reviews'  + label, 0.05)                    
-            #fitPowerLaw    (file_user,  ax[2,1], 'IMDb, user reviews'    + label, 0.05)
-            #fitPowerLaw    (file_gros,  ax[2,0], 'IMDb, gross revenue'   + label, 0.01)
+            #fit.fitSkewedNormal(file_avg,   ax[0,0], 'IMDb, average ratings' + label)                       
+            fit.fitPowerLaw(file_cnt,   ax[1,0], 'IMDb, rating counts'   + label, 0.01)
+            #fit.fitSkewedNormal(file_meta,  ax[0,1], 'IMDb, metascores'      + label)             
+            #fit.fitPowerLaw    (file_crit,  ax[1,1], 'IMDb, critic reviews'  + label, 0.05)                    
+            #fit.fitPowerLaw    (file_user,  ax[2,1], 'IMDb, user reviews'    + label, 0.05)
+            #fit.fitPowerLaw    (file_gros,  ax[2,0], 'IMDb, gross revenue'   + label, 0.01)
             
-
-            savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_' + cut + '_log.png')
-        '''            
+            pltplot(ax)
+            #savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_' + cut + '_log.png')
+                  
         
 
 
@@ -320,7 +181,7 @@ def get_imapct_distr():
                     genre = genres[genre_ind]          
                     print 'PROCESSING -- ' + genre
                     file_music = FOLDER + '/1_impact_distributions/music_play_count_dist_' + genre + '.dat'
-                    rating_cnt_fit   = fitPowerLaw(file_music, muax[i,j], genre + ' music, play counts', 0.01)
+                    rating_cnt_fit   = fit.fitPowerLaw(file_music, muax[i,j], genre + ' music, play counts', 0.01)
 
 
         savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_Music_fitted_impact_distros_' + cut + '.png')
@@ -336,9 +197,9 @@ def get_imapct_distr():
         book_cnt = FOLDER + '/1_impact_distributions/book_rating_count_dist_authors.dat'
         book_ed  = FOLDER + '/1_impact_distributions/book_edition_count_dist_authors.dat'            
               
-        fitSkewedNormal(book_avg, bax[0], 'Goodreads, average rating'    )
-        fitPowerLaw    (book_cnt, bax[1], 'Goodreads, rating count'      , 0.01)  
-        fitPowerLaw    (book_ed,  bax[2], 'Goodreads, number of editions', 0.2)  
+        fit.fitSkewedNormal(book_avg, bax[0], 'Goodreads, average rating'    )
+        fit.fitPowerLaw    (book_cnt, bax[1], 'Goodreads, rating count'      , 0.01)  
+        fit.fitPowerLaw    (book_ed,  bax[2], 'Goodreads, number of editions', 0.2)  
 
         savefig_nice(bax, 'Figs/1_impact_distributions/'+ mode_ +'_Books_fitted_impact_distros_' + cut + '.png')        
         '''  
@@ -401,7 +262,7 @@ def plot_correlation_and_trend(xdata, ydata, ax, xlabel, ylabel, labelsize, Alph
     corr1, corr2 = get_corr_segments(avg, cnt)
 
     ax.plot(avg_r, cnt_r, 'o', color = 'skyblue', alpha = Alpha, label =  ' $c_{<10^5}$ = ' + corr1 + ', $c_{>10^5}$ = ' + corr2 )
-    xb_avg, pb_avg, pberr_avg = getLogBinnedDistribution(np.asarray(avg), np.asarray(cnt), num_of_bins)    
+    xb_avg, pb_avg, pberr_avg = binning.getLogBinnedDistribution(np.asarray(avg), np.asarray(cnt), num_of_bins)    
     
     corr1, corr2 = get_corr_segments(xb_avg, pb_avg)
     ax.errorbar(xb_avg, pb_avg, yerr = pberr_avg, fmt = 'o-',  color = 'midnightblue',  capsize = 3, elinewidth=3, linewidth = 4)#, label =  ' $c_{<10^5}$ = ' + corr1 + ', $c_{>10^5}$ = ' + corr2 )               
@@ -547,7 +408,7 @@ def plot_measure(average_ratings_year, title, num_of_bins, ax, color, label, mus
     
   
     x_average_ratings_year, y_average_ratings_year, yerr_average_ratings_year = get_yearly_avg_data(average_ratings_year)    
-    bx_average_ratings_year, bp_average_ratings_year, bperr_average_ratings_year = getBinnedDistribution(x_average_ratings_year, y_average_ratings_year, num_of_bins)
+    bx_average_ratings_year, bp_average_ratings_year, bperr_average_ratings_year = binning.getBinnedDistribution(x_average_ratings_year, y_average_ratings_year, num_of_bins)
 
     ax.set_title(title, fontsize = 25)
     
@@ -806,33 +667,6 @@ def get_length_plots():
 ''' -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  '''  
 
 
-
-def fitPowerLawLogNormal(rand, ax, label):
-
-
-    # histogram 
-    ax.set_xscale('log')
-    print 'Fitting lognormal...'
-    x_rand, p_rand = getDistribution(rand)    
-    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 15), log=True,alpha=0.0)
-    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.6, markersize = 12, linewidth = 2, label = 'Data')
-
-
-    # get the lognormal
-    param = stats.lognorm.fit(rand)
-    pdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])#
-    mu =  np.log(param[2])
-    sigma = param[0]
-    sk_results_norm = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2]))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu
-    ax.plot(x_rand,pdf_fitted,'k-', linewidth = 4, label = 'Lognormal fit, $\\mu$=' + str(round(mu,2)) + '\n$\\sigma$=' + str(round(sigma, 2)) + ', $D$='+str(round(sk_results_norm[0], 2)))
-
-         
-    ax.set_ylim([ min(counts), 1.1])
-    ax.set_xlim([ min(x_rand),  max(bins)])
-    ax.set_title(label, fontsize = 18) 
-
-
-
 def get_career_length():
 
 
@@ -863,8 +697,8 @@ def get_career_length():
         cutoff = i            
         cutoffs.append(cutoff)
         
-        print cutoff
-        Dlog, Dpow =        fitPowerLaw(file_cnt, ax[0], 'Movie directors career length - rating count', cutoff)  
+
+        Dlog, Dpow = fit.fitPowerLaw(file_cnt, ax[0], 'Movie directors career length - rating count', cutoff, num_of_bins, random.random()/100.0)  
         Dlogs.append(Dlog)
         Dpows.append(Dpow)
 
@@ -909,26 +743,26 @@ def get_career_length():
     
 
         file_avg = FOLDER +'/film_career_length_average_rating_'+label+'.dat'
-        fitPowerLaw(file_avg, ax[0,0], 'Movie directors career length - average rating', 19)  
+        fit.fitPowerLaw(file_avg, ax[0,0], 'Movie directors career length - average rating', 19)  
 
 
 
 
 
         file_cnt = FOLDER +'/film_career_length_rating_count_'+label+'.dat'
-        fitPowerLaw(file_cnt, ax[0,1], 'Movie directors career length - rating count', 30)  
+        fit.fitPowerLaw(file_cnt, ax[0,1], 'Movie directors career length - rating count', 30)  
 
         file_meta = FOLDER +'/film_career_length_metascore_'+label+'.dat'
-        fitPowerLaw(file_meta, ax[1,0], 'Movie directors career length - metascore', 10)  
+        fit.fitPowerLaw(file_meta, ax[1,0], 'Movie directors career length - metascore', 10)  
 
         file_crit = FOLDER +'/film_career_length_critic_reviews_'+label+'.dat'
-        fitPowerLaw(file_crit, ax[1,1], 'Movie directors career length - critic reviews', 25)  
+        fit.fitPowerLaw(file_crit, ax[1,1], 'Movie directors career length - critic reviews', 25)  
 
         file_user = FOLDER +'/film_career_length_user_reviews_'+label+'.dat'
-        fitPowerLaw(file_user, ax[2,0], 'Movie directors career length - user reviews', 19)  
+        fit.fitPowerLaw(file_user, ax[2,0], 'Movie directors career length - user reviews', 19)  
         
         file_gross = FOLDER +'/film_career_length_gross_revenue_'+label+'.dat'
-        fitPowerLaw(file_gross, ax[2,1], 'Movie directors career length - gross revenue', 10)  
+        fit.fitPowerLaw(file_gross, ax[2,1], 'Movie directors career length - gross revenue', 10)  
 
         #plt.show()
         savefig_nice(ax, 'Figs/5_career_length/IMDB_career_lengths_distros_' + label + '.png')
@@ -952,7 +786,7 @@ def get_career_length():
                 genre = genres[genre_ind]          
                 print 'PROCESSING -- ' + genre
                 file_cnt = FOLDER +'/music_career_length_play_count_' + genre + '.dat'
-                fitPowerLaw(file_cnt, muax[i,j], 'Music career length, ' + genre, 14)
+                fit.fitPowerLaw(file_cnt, muax[i,j], 'Music career length, ' + genre, 14)
     
     savefig_nice(muax, 'Figs/5_career_length/Music_career_lengths_distros.png')
     '''    
@@ -968,13 +802,13 @@ def get_career_length():
     print 'PROCESSING --  books' 
     
     file_avg = FOLDER +'/book_career_length_average_rating_authors.dat'
-    fitPowerLaw(file_avg, bax[0], 'Movie directors career length - average rating', 14)  
+    fit.fitPowerLaw(file_avg, bax[0], 'Movie directors career length - average rating', 14)  
 
     file_cnt = FOLDER +'/book_career_length_rating_count_authors.dat'
-    fitPowerLaw(file_cnt, bax[1], 'Movie directors career length - rating count', 14)  
+    fit.fitPowerLaw(file_cnt, bax[1], 'Movie directors career length - rating count', 14)  
     
     file_edit = FOLDER +'/book_career_length_edition_count_authors.dat'
-    fitPowerLaw(file_edit, bax[2], 'Movie directors career length - edition count', 14)  
+    fit.fitPowerLaw(file_edit, bax[2], 'Movie directors career length - edition count', 14)  
     plt.show()
     #savefig_nice(bax, 'Figs/5_career_length/Books_career_lengths_distros.png')
     '''  
@@ -1025,7 +859,7 @@ def plot_ccdf(file_avg_all, num_of_bins, ax, color, label, Nmin, title, marker):
     #if 'orig' in label:
     ax.set_title(str(numInd) + ' ' + title, fontsize = 19)   
         
-    bx_average_ratings, bp_average_ratings, bperr_average_ratings = getBinnedDistribution(np.asarray(x_Nstar_avg_all), np.asarray(p_Nstar_avg_all), num_of_bins)
+    bx_average_ratings, bp_average_ratings, bperr_average_ratings = binning.getBinnedDistribution(np.asarray(x_Nstar_avg_all), np.asarray(p_Nstar_avg_all), num_of_bins)
  
  
     binss = (bx_average_ratings[1:] + bx_average_ratings[:-1])/2
@@ -1120,7 +954,7 @@ def get_r_test():
     
     for (label, color, marker) in professions:
 
-        '''
+
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
         st = f.suptitle( "Relative rank of the best, " + label, fontsize=title_font)
    
@@ -1150,8 +984,8 @@ def get_r_test():
 
         plot_red_lines(ax, xxx)        
         #plt.show()
-        savefig_nice(ax, 'Figs/3_best_rank_distr/Film_NN_stat_' + str(min_rating) + '_' + label + '.png')          
-        '''
+        #savefig_nice(ax, 'Figs/3_best_rank_distr/Film_NN_stat_' + str(min_rating) + '_' + label + '.png')          
+        
       
     
             
@@ -1159,8 +993,8 @@ def get_r_test():
     ''' ---------------------------------------------- '''
     ''' MUSIC   '''
     
-    '''
- #   genres  = ['_MERGED', 'electro', 'pop']
+
+    #genres  = ['_MERGED', 'electro', 'pop']
     genres  = ['electro'] 
     markerm = 'o'
      
@@ -1178,13 +1012,13 @@ def get_r_test():
 
     plot_red_lines(muax, xxx)
     savefig_nice(muax, 'Figs/3_best_rank_distr/Music_NN_stat_' + str(min_rating) + '_' + genre + '.png') 
-    '''
     
+
 
     ''' ---------------------------------------------- '''
     ''' BOOKS   '''      
     
-   
+    '''
     f, bax = plt.subplots(1, 3, figsize=(25, 12))
     st = f.suptitle( "Books inflation curves", fontsize=title_font)
     markerm = 'o'
@@ -1203,7 +1037,7 @@ def get_r_test():
     plot_red_lines(bax, xxx)
     savefig_nice(bax, 'Figs/3_best_rank_distr/Book_NN_stat_' + str(min_rating) + 'png') 
    
-    
+    '''
 
 
 
@@ -1259,7 +1093,7 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
     career_max_dict = {}
     
     
-    for i in range(50):
+    for i in range(10):
 
         data_new = data[:]
         random.shuffle(data_new)
@@ -1283,19 +1117,20 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
     career_max = []
     for s in sorted_len:
         career_max.append(np.mean(career_max_dict[s]))
+
     
     print len(sorted_len), len(career_max)
       
       
       
     if not log:
-        xb_data, pb_data, pberr_data = getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen    = getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
+        xb_data, pb_data, pberr_data = binning.getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
+        xb_gen, pb_gen, pberr_gen    = binning.getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
         ax.errorbar((xb_data[1:] + xb_data[:-1])/2, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
         ax.errorbar((xb_gen[1:]  + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)
         
-        
-        
+
+        '''
         fdata = open('Viz/rmodel_bin_data_' + label + '.dat', 'w')
         xb_data = (xb_data[1:] + xb_data[:-1])/2
         xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
@@ -1309,22 +1144,22 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
         for i in range(len(xb_gen)):
             fdata.write(str(xb_gen[i]) + '\t' + str(pb_gen[i]) + '\t' + str(pberr_gen[i]) + '\n')
         fdata.close
-        
+        '''
     else:
-        #ax.set_xscale('log')
-        #ax.set_yscale('log')
+        ax.set_xscale('log')
+        ax.set_yscale('log')
 
-        xb_data, pb_data, pberr_data = getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen    = getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
+        xb_data, pb_data, pberr_data = binning.getPercentileBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
+        xb_gen, pb_gen, pberr_gen    = binning.getLogBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
 
-        xb_data = (xb_data[1:] + xb_data[:-1])/2
-        xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
+       # xb_data = (xb_data[1:] + xb_data[:-1])/2
+       # xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
 
 
         ax.errorbar(xb_data, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
         ax.errorbar(xb_gen,  pb_gen,  yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)        
-    
-        ax.set_ylim([0,max(max(pb_data) + max(pberr_data), max(pb_gen) + max(pberr_gen))])
+        
+        ax.set_ylim([0,max(max(pb_data) + max(pberr_data), max(xb_gen) + max(pberr_gen))])
         '''
         fdata = open('Viz/rmodel_bin_data_' + label + '.dat', 'w')
         for i in range(len(xb_data)):
@@ -1345,7 +1180,7 @@ def do_the_r_model():
 
 
     title_font  = 25 
-    num_of_bins = 8
+    num_of_bins = 20
     seaborn.set_style('white')  
 
     
@@ -1365,7 +1200,7 @@ def do_the_r_model():
                    'composer',     
                    'art-director']
      
-    for label in professions:
+    for label in professions[1:2]:
         
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
         st = f.suptitle( "Film - R - model vs data (movie directors and DJs), " + label, fontsize=title_font)
@@ -1387,16 +1222,16 @@ def do_the_r_model():
 
 
         
-        get_r_model_curves(file_avg,  max_avg_rat,    ax[0,0], label, num_of_bins, 'Average rating vs career length' , 'Career length', 'Average rating' )
-        get_r_model_curves(file_meta, max_meta,       ax[0,1], label, num_of_bins, 'Metascore vs career length'      , 'Career length', 'Metascore'           )
+        #get_r_model_curves(file_avg,  max_avg_rat,    ax[0,0], label, num_of_bins, 'Average rating vs career length' , 'Career length', 'Average rating' )
+        #get_r_model_curves(file_meta, max_meta,       ax[0,1], label, num_of_bins, 'Metascore vs career length'      , 'Career length', 'Metascore'           )
                 
         get_r_model_curves(file_cnt,  max_rat_cnt,    ax[1,0], label, num_of_bins, 'Rating count vs career length'   , 'Career length', 'Rating count'  , True)            
-        get_r_model_curves(file_crit, max_crit_rev,   ax[1,1], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
-        get_r_model_curves(file_user, max_user_rev,   ax[2,0], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
-        get_r_model_curves(file_gross, max_gross_rev, ax[2,1], label, num_of_bins, 'Gross revenue vs career length'  , 'Career length', 'Gross revenue' , True)            
+        #get_r_model_curves(file_crit, max_crit_rev,   ax[1,1], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
+        #get_r_model_curves(file_user, max_user_rev,   ax[2,0], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
+        #get_r_model_curves(file_gross, max_gross_rev, ax[2,1], label, num_of_bins, 'Gross revenue vs career length'  , 'Career length', 'Gross revenue' , True)            
         
-        #plt.show()
-        savefig_nice(ax, 'Figs/4_r_model/Film_R_model_test_' + str(min_rating) + '_' + label + '_linlin.png')        
+        plt.show()
+        #savefig_nice(ax, 'Figs/4_r_model/Film_R_model_test_' + str(min_rating) + '_' + label + '_linlin.png')        
         
      
      
@@ -1404,7 +1239,7 @@ def do_the_r_model():
     ''' ---------------------------------------------- '''
     ''' MUSIC   '''
      
-    
+    '''
     genres  = ['electro', 'pop']#['_MERGED', 'electro', 'pop']
     markerm = 'o'
      
@@ -1424,11 +1259,11 @@ def do_the_r_model():
     #plt.show()
     savefig_nice(muax, 'Figs/4_r_model/Music_R_model_test_' + str(min_rating) + '_' + genre + '_linlin.png')       
     
-     
+    '''  
 
     ''' ---------------------------------------------- '''
     ''' BOOKS   '''  
-    
+    '''
     f, bax = plt.subplots(1, 3, figsize=(25, 12))
     st = f.suptitle( "Books, R - model vs data", fontsize=title_font) 
         
@@ -1450,8 +1285,8 @@ def do_the_r_model():
   
     #plt.show()
     savefig_nice(bax, 'Figs/4_r_model/Book_R_model_test_' + str(min_rating) + '_linlin.png')   
-           
-    
+                   
+    '''  
     
       
        
@@ -1468,8 +1303,8 @@ def get_time_distr(filename, ax, num_of_bins, label):
 
     Alpha = 0.5
     data = np.asarray([round(float(line.strip())) for line in open(filename) if float(line.strip()) > 0]) 
-    x_data, p_data = getDistribution(data)
-    xb_data, pb_data, pberr_data = getBinnedDistribution(np.asarray(x_data), np.asarray(p_data), num_of_bins)         
+    x_data, p_data = binning.getDistribution(data)
+    xb_data, pb_data, pberr_data = binning.getBinnedDistribution(np.asarray(x_data), np.asarray(p_data), num_of_bins)         
 
 
 
@@ -1590,10 +1425,10 @@ def fitNormal(rand, ax, label, alpha_hist  = 0.4, color_line = 'r'):
    
     ax.set_title(label, fontsize = 18)
 
-    x_rand, p_rand = getDistribution(rand)
+    x_rand, p_rand = binning.getDistribution(rand)
     
     param = stats.skewnorm.fit(rand)
-    x_rand, p_rand = getDistribution(rand)
+    x_rand, p_rand = binning,getDistribution(rand)
     print 'Fitting norm...'
     pdf_fitted = stats.skewnorm.pdf(x_rand,  param[0], loc=param[1], scale=param[2])
      
@@ -1669,7 +1504,7 @@ def get_p_without_avg():
 
 
 
-        fitPowerLaw(file_avg, ax[0,0], label + ', avg rating', -2000)  
+        fit.fitPowerLaw(file_avg, ax[0,0], label + ', avg rating', -2000)  
 
 
         fitNormal(rating_counts,   ax[0,1], label + ', rating count')
@@ -1764,6 +1599,9 @@ if __name__ == '__main__':
 
     if sys.argv[1] == '1':
         get_imapct_distr()
+
+    elif sys.argv[1] == '1a':
+        optimize_xmin()
         
     elif sys.argv[1] == '2':
         get_impact_correlations()
