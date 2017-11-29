@@ -39,12 +39,16 @@ from CareerAnalysisHelpers.alignPlots import align_plot
 - first optimize a few, fix the rest!
 
 
-4. CREATE A FILE FOR BINNING AND FITTING FUNCTIONS
+
+5. MUSIC DATA
+- process releases running
+- lastfm_get_songs, save genre tags for songs, and year, and release id!
+- launch lastfm for all genres
 
 
-5. START LASTFM
-- easy to merge, restart
-- multichannel
+6. GOODREADS, INCLUDE AGE
+
+7. boardgames
 
 
 '''
@@ -1080,107 +1084,67 @@ def get_r_model_curves(data_file, max_data_file, ax, label, num_of_bins, title, 
     ax.plot(career_len, data_max, marker = 'o', color = 'lightgrey', alpha = 0.15,linewidth = 0)
     
     
-    fdata = open('Viz/rmodel_data_' + label + '.dat', 'w')
-    for i in range(len(career_len)):
-        fdata.write(str(career_len[i]) + '\t' + str(data_max[i]) + '\n')
-    fdata.close
-    
-    
-    
-    print max(career_len), len(data)
-    
-    career_max = []
-    career_max_dict = {}
-    
-    
-    for i in range(10):
+    career_max_len_gen = []
+
+    for i in range(100):
 
         data_new = data[:]
         random.shuffle(data_new)
-        i= 1
+
         for leng in career_len:
-            #career_max.append(max( data_new[0:int(leng)]))
-        
-            i += 1
-
-            if leng not in career_max_dict:
-
-                career_max_dict[leng] = [max( data_new[0:int(leng)])]
-            else:
-                career_max_dict[leng].append( max( data_new[0:int(leng)]))          
-            
+            career_max_len_gen.append((leng, max(data_new[0:int(leng)])))
             del data_new[0:int(leng)]
 
+      
+    career_len_gen = [a[0] for a in career_max_len_gen]
+    career_max_gen = [a[1] for a in career_max_len_gen]       
 
+    xb_data, pb_data, pberr_data = binning.getPercentileBinnedDistribution(np.asarray(career_len),      np.asarray(data_max), num_of_bins)         
+    xb_gen, pb_gen, pberr_gen    = binning.getPercentileBinnedDistribution(np.asarray(career_len_gen),  np.asarray(career_max_gen), num_of_bins)
 
-    sorted_len = sorted(list(set(career_len)))
-    career_max = []
-    for s in sorted_len:
-        career_max.append(np.mean(career_max_dict[s]))
+    ax.errorbar(xb_data, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
+    ax.plot(xb_gen,  pb_gen, color = 'r', label = 'R-model', alpha = 0.9)                
+
+    ax.set_ylim([min([min(pb_gen),  min(pb_data)]),  max(max(pb_data) + max(pberr_data), max(xb_gen) + max(pberr_gen))])
+    ax.set_xlim([min([min(xb_gen),  min(xb_data)])-1,max(xb_data)+1])    
+
+    if log:
+        ax.set_xscale('log')
+        ax.set_yscale('log')
 
     
-    print len(sorted_len), len(career_max)
-      
-      
-      
+    '''    
+
+    
+     
     if not log:
         xb_data, pb_data, pberr_data = binning.getBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen    = binning.getBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
+        xb_gen, pb_gen, pberr_gen    = binning.getBinnedDistribution(np.asarray(career_len_gen),  np.asarray(career_max_gen), num_of_bins)
         ax.errorbar((xb_data[1:] + xb_data[:-1])/2, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
         ax.errorbar((xb_gen[1:]  + xb_gen[:-1])/2, pb_gen, yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)
         
 
-        '''
-        fdata = open('Viz/rmodel_bin_data_' + label + '.dat', 'w')
-        xb_data = (xb_data[1:] + xb_data[:-1])/2
-        xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
-        for i in range(len(xb_data)):
-            fdata.write(str(xb_data[i]) + '\t' + str(pb_data[i]) + '\t' + str(pberr_data[i]) + '\n')
-        fdata.close
-        
-        fdata = open('Viz/rmodel_bin_gen_' + label + '.dat', 'w')
-        xb_data = (xb_data[1:] + xb_data[:-1])/2
-        xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
-        for i in range(len(xb_gen)):
-            fdata.write(str(xb_gen[i]) + '\t' + str(pb_gen[i]) + '\t' + str(pberr_gen[i]) + '\n')
-        fdata.close
-        '''
     else:
         ax.set_xscale('log')
         ax.set_yscale('log')
 
         xb_data, pb_data, pberr_data = binning.getPercentileBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins)         
-        xb_gen, pb_gen, pberr_gen    = binning.getLogBinnedDistribution(np.asarray(sorted_len),  np.asarray(career_max), num_of_bins)
-
-       # xb_data = (xb_data[1:] + xb_data[:-1])/2
-       # xb_gen  = (xb_gen[1:]  + xb_gen[:-1])/2
-
+        xb_gen, pb_gen, pberr_gen    = binning.getPercentileBinnedDistribution(np.asarray(career_len_gen),  np.asarray(career_max_gen), num_of_bins)
 
         ax.errorbar(xb_data, pb_data, yerr = pberr_data, fmt = 'o-', color = 'grey', label = 'data', alpha = 0.9)
-        ax.errorbar(xb_gen,  pb_gen,  yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)        
-        
-        ax.set_ylim([0,max(max(pb_data) + max(pberr_data), max(xb_gen) + max(pberr_gen))])
-        '''
-        fdata = open('Viz/rmodel_bin_data_' + label + '.dat', 'w')
-        for i in range(len(xb_data)):
-            fdata.write(str(xb_data[i]) + '\t' + str(pb_data[i]) + '\t' + str(pberr_data[i]) + '\n')
-        fdata.close
-        
-        fdata = open('Viz/rmodel_bin_gen_' + label + '.dat', 'w')
-        for i in range(len(xb_gen)):
-            fdata.write(str(xb_gen[i]) + '\t' + str(pb_gen[i]) + '\t' + str(pberr_gen[i]) + '\n')
-        fdata.close
-        '''
+        #ax.errorbar(xb_gen,  pb_gen,  yerr = pberr_gen, fmt = '-', color = 'r', label = 'R-model', alpha = 0.9)        
+        ax.plot(xb_gen,  pb_gen, color = 'r', label = 'R-model', alpha = 0.9)                
 
-
-
+        ax.set_ylim([min(pb_data),max(max(pb_data) + max(pberr_data), max(xb_gen) + max(pberr_gen))])
+        ax.set_xlim([min(xb_data)-1,max(xb_data)+1])    
+    '''   
 
 
 def do_the_r_model():
 
 
     title_font  = 25 
-    num_of_bins = 20
+    num_of_bins = 12
     seaborn.set_style('white')  
 
     
@@ -1198,9 +1162,9 @@ def do_the_r_model():
                    'producer',     
                    'writer'  ,     
                    'composer',     
-                   'art-director']
-     
-    for label in professions[1:2]:
+                  'art-director']
+    
+    for label in professions:
         
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
         st = f.suptitle( "Film - R - model vs data (movie directors and DJs), " + label, fontsize=title_font)
@@ -1224,21 +1188,19 @@ def do_the_r_model():
         
         #get_r_model_curves(file_avg,  max_avg_rat,    ax[0,0], label, num_of_bins, 'Average rating vs career length' , 'Career length', 'Average rating' )
         #get_r_model_curves(file_meta, max_meta,       ax[0,1], label, num_of_bins, 'Metascore vs career length'      , 'Career length', 'Metascore'           )
-                
         get_r_model_curves(file_cnt,  max_rat_cnt,    ax[1,0], label, num_of_bins, 'Rating count vs career length'   , 'Career length', 'Rating count'  , True)            
-        #get_r_model_curves(file_crit, max_crit_rev,   ax[1,1], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
-        #get_r_model_curves(file_user, max_user_rev,   ax[2,0], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
+        get_r_model_curves(file_crit, max_crit_rev,   ax[1,1], label, num_of_bins, 'Critic reviews vs career length' , 'Career length', 'Critic reviews', True)    
+        get_r_model_curves(file_user, max_user_rev,   ax[2,0], label, num_of_bins, 'User reviews vs career length'   , 'Career length', 'User reviews'  , True)            
         #get_r_model_curves(file_gross, max_gross_rev, ax[2,1], label, num_of_bins, 'Gross revenue vs career length'  , 'Career length', 'Gross revenue' , True)            
         
-        plt.show()
-        #savefig_nice(ax, 'Figs/4_r_model/Film_R_model_test_' + str(min_rating) + '_' + label + '_linlin.png')        
-        
+        #plt.show()
+        savefig_nice(ax, 'Figs/4_r_model/Film_R_model_test_' + str(min_rating) + '_' + label + '.png')        
+              
      
      
      
     ''' ---------------------------------------------- '''
     ''' MUSIC   '''
-     
     '''
     genres  = ['electro', 'pop']#['_MERGED', 'electro', 'pop']
     markerm = 'o'
@@ -1257,9 +1219,9 @@ def do_the_r_model():
                 get_r_model_curves(file_music, max_music, muax[i,j], genre, num_of_bins, 'Rating count vs career length', 'Career length', 'Rating count', True)
 
     #plt.show()
-    savefig_nice(muax, 'Figs/4_r_model/Music_R_model_test_' + str(min_rating) + '_' + genre + '_linlin.png')       
+    savefig_nice(muax, 'Figs/4_r_model/Music_R_model_test.png')       
+    '''
     
-    '''  
 
     ''' ---------------------------------------------- '''
     ''' BOOKS   '''  
@@ -1284,9 +1246,9 @@ def do_the_r_model():
     
   
     #plt.show()
-    savefig_nice(bax, 'Figs/4_r_model/Book_R_model_test_' + str(min_rating) + '_linlin.png')   
-                   
-    '''  
+    savefig_nice(bax, 'Figs/4_r_model/Book_R_model_test.png')   
+                
+    '''
     
       
        
