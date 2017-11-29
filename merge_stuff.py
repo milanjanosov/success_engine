@@ -53,9 +53,9 @@ def merge(target_file, target_folder):
 #merge('_career_length_max_', '7_career_length_max_impact')
 #merge('_', '1_impact_distributions')
 #merge('_yearly_', '3_inflation_curves')
-merge('_p_without_mean_average_rating_', '9_p_without_avg')
-
-
+merge('_p_without_mean_', '9_p_without_avg')
+#merge('_career_length_', '8_career_length')
+#merge('_max_', '2_max_impact_distributions')
 
 
 
