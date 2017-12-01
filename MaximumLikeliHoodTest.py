@@ -162,15 +162,15 @@ def random_init(q):
 
 if __name__ == '__main__':         
 
-    repeat_num = 100
+    repeat_num = 1000
 
     params = ['mu_p', 'mu_p_err', 'mu_Q',  'mu_Q_err', 'mu_N', 'mu_N_err', 'sigma_p', 'sigma_p_err', 'sigma_Q', 'sigma_Q_err', 'sigma_N', 'sigma_N_err', 'sigma_pQ', 'sigma_pQ_err','sigma_pN', 'sigma_pN_err', 'sigma_QN', 'sigma_QN_err']
 
     career = sys.argv[1] 
 
-    f = open('MLE/MLE_params_' + career + '.dat', 'w') # ' + str(time.time()) + '
+    f = open('MLE/MLE_params_' + career +'_' + str(repeat_num) + '.dat', 'w') # ' + str(time.time()) + '
 
-    for initmax in [1.0,2.5, 5.0,10.0,15.0,20.0,25.0,30.0,40.0,50.0,75.0,100.0,150.0,200.0,250.0,300.0,500.0,1000.0,2000.0,3000.0,5000.0,10000.0,25000.0]:
+    for initmax in [1.0,2.0,3.0, 5.0,7.0,10.0,15.0,20.0,25.0,30.0,40.0,50.0,75.0,100.0,150.0,200.0,250.0,300.0,500.0,1000.0,2000.0,3000.0,5000.0,10000.0,25000.0]:
 
         param_results = opt(repeat_num, initmax, career)
 
