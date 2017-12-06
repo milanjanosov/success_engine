@@ -67,19 +67,21 @@ def get_D(expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigm
 ''' -----------------------------------------------'''
 
 # the constraint A_i > 0 for all i
-def get_cons_a(args):
+'''def get_cons_a(expN, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_QN, sigma_pN ):
 
 
     expN    = args[0]
+    
+    print args
     sigma_p  = args[1]
     sigma_Q  = args[2]
     sigma_N  = args[3]
     sigma_pQ = args[4]
     sigma_QN = args[5]
     sigma_pN = args[6]
+    
 
 
-    min_A = 1
 
     sigma_Q2 = sigma_Q**2
     sigma_N2 = sigma_N**2
@@ -95,7 +97,7 @@ def get_cons_a(args):
     inv_expN = 1.0 - expN
 
     return ((inv_expN / nev * sigma_N2 + expN/K * ( nev - 2*(sigma_pN*sigma_QN - sigma_pQ * sigma_N2) + sigma_p2 * sigma_N2 - sigma_pN2 ))/2.0)
-
+'''
 
 '''
 # the constraint for D_i > 0 for all i
@@ -127,7 +129,6 @@ def get_cons_d(args):
     inv_expN = 1.0 - expN
 
     return (2.0*math.pi)**(1.0 + 0.5 * expN) * (nev) ** (inv_expN/2.0) * abs(K)**(expN/2.0)
-
 '''
 
 
@@ -136,7 +137,7 @@ def get_cons_d(args):
 
 
 
-def get_cons(*args):
+def get_cons_aa(*args):
 
 
 
@@ -147,8 +148,6 @@ def get_cons(*args):
     sigma_pQ = args[1][4]
     sigma_QN = args[1][5]
     sigma_pN = args[1][6]
-
-
 
     min_A = 1
 
@@ -229,12 +228,12 @@ def LogL_i(parameters, args):
         A_i = get_A(expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigma_pN2, sigma_QN2, sigma_pQ2)
         B_i = get_B(sum_ci, mu_p, mu_Q, mu_N, N_i, expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigma_pN2, sigma_QN2, sigma_pQ2)
         C_i = get_C(sum_ci2, sum_ci, mu_p, mu_Q, mu_N, N_i, expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigma_pN2, sigma_QN2, sigma_pQ2)
-        D_i = 1 #get_D(expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigma_pN2, sigma_QN2, sigma_pQ2)
+        D_i = get_D(expN, sigma_p2, sigma_Q2, sigma_N2, sigma_pQ, sigma_QN, sigma_pN, sigma_pN2, sigma_QN2, sigma_pQ2)
 
-        print A_i
+        #print A_i, D_i
 
 
-        logL_i += logL(A_i, B_i, C_i, D_i)
+        logL_i -= logL(A_i, B_i, C_i, D_i)
                   
 
 
@@ -260,17 +259,17 @@ initmax = 100
 for i in range(N):
 
     # variables to minimize
-    mu_p = random.uniform(0.0, initmax)
-    mu_Q = random.uniform(0.0, initmax )
-    mu_N = random.uniform(0.0, initmax )
+    mu_p = 1#random.uniform(0.0, initmax)
+    mu_Q = 2#random.uniform(0.0, initmax )
+    mu_N = 3#random.uniform(0.0, initmax )
 
-    sigma_p = random.uniform(0.0, initmax)
-    sigma_Q = random.uniform(0.0, initmax)
-    sigma_N = random.uniform(0.0, initmax)
+    sigma_p = 0.1#random.uniform(0.0, initmax)
+    sigma_Q = 0.2#random.uniform(0.0, initmax)
+    sigma_N = 0.3#random.uniform(0.0, initmax)
 
-    sigma_pQ = random.uniform(-initmax, initmax)
-    sigma_pN = random.uniform(-initmax, initmax)
-    sigma_QN = random.uniform(-initmax, initmax)
+    sigma_pQ = 0.01#random.uniform(-initmax, initmax)
+    sigma_pN = 0.02#random.uniform(-initmax, initmax)
+    sigma_QN = 0.03#random.uniform(-initmax, initmax)
 
 
     # dummmy careers
@@ -285,8 +284,9 @@ for i in range(N):
     sums_ci  = [sum([math.log(cc) for cc in c_i])       for c_i in c ]
     sums_ci2 = [sum([(math.log(cc))**2 for cc in c_i])  for c_i in c ]  
     N_is     = [math.log(len(c_i))                      for c_i in c ] 
-    expNs    = [math.exp(N_i)                           for N_i in N_is]
+    expNs    = [len(c_i)                           for c_i in c]
   
+    print expNs
 
     # init guess
     initial_guess = [mu_p, mu_Q, mu_N, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_pN, sigma_QN]
@@ -305,8 +305,8 @@ for i in range(N):
 
 
     # constraints
-    cns = ({'type' : 'ineq',  'fun' : get_cons_a})  #, 'args': ([expN, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_pN, sigma_QN],)})   
-    #cns = ({'type' : 'ineq',  'fun' : get_cons_a, 'args': ([expNs, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_pN, sigma_QN],)})
+    #cns = ({'type' : 'ineq',  'fun' : get_cons_aa})  #, 'args': ([expN, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_pN, sigma_QN],)})   
+    cns = ({'type' : 'ineq',  'fun' : get_cons_aa, 'args': ([expNs, sigma_p, sigma_Q, sigma_N, sigma_pQ, sigma_pN, sigma_QN],)})
            #{'type' : 'ineq',  'fun' : get_cons_d})
    
 
@@ -316,7 +316,7 @@ for i in range(N):
                 method  = 'SLSQP', 
                 bounds  = bnds ,
                 constraints = cns,
-                options = {'maxiter' : 1, 'eps' : 0.010})
+                options = {'maxiter' : 100, 'eps' : 0.010})
 
 
     # the results
