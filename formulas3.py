@@ -184,8 +184,11 @@ max_x = (0,0,0)
 n   = len(r)  
 ijk = 0
 
+folder = 'bruteforce_output'
+if not os.path.exists(folder): 
+    os.makedirs(folder)  
 
-f = open('formula_data2.dat', 'w')
+f = open('bruteforce_output/formula_data_' + str(maxr) + '_' + str(step)  + '.dat', 'w')
 
 for mu_p in r:
     #print ijk, '/', n
