@@ -3,7 +3,7 @@ import numpy as np
 from multiprocessing import Process
 from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
 from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
-
+import time
 
 
 def add_max_impact(lista, maxvalue):
@@ -230,7 +230,9 @@ def process_simple_career_trajectories(args):
         for impact_measure in impact_measures[field]:
             
             # write impact measures
-            filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + '.dat'
+            extra = ''
+            #if randomized: extra = '_' + str(round(time.time(), 5))
+            filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
             write_distr_data(impact_values[impact_measure], filename)
         
             # write max values
@@ -255,7 +257,9 @@ def process_simple_career_trajectories(args):
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
             # career length and max impact for testing the r-model
-            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + '.dat'
+            extra = ''
+            #if randomized: extra = '_' + str(round(time.time(), 5))
+            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
             write_pairs(best_value_careerlength[impact_measure], filename)
 
             # career length distribution
@@ -294,7 +298,8 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields:  
+    for inp in input_fields[2:3]:
+        print inp  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
@@ -311,7 +316,7 @@ if __name__ == '__main__':
     min_rating_count = 0      
     process_fields(min_rating_count, normalized = False, randomized = False)
     process_fields(min_rating_count, normalized = True,  randomized = False)
-    #process_fields(min_rating_count, normalized = True,  randomized = True )
+    process_fields(min_rating_count, normalized = True,  randomized = True )
 
     
     
