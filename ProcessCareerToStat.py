@@ -111,10 +111,11 @@ def process_simple_career_trajectories(args):
         ''' init variables and stuff '''           
         # initialize a dict to store all the impact measures' values
         # the values of the maxes of each individual, the yearly impacts for the inflation curves... etc
-        impact_values  = {}
-        max_impacts    = {}
-        yearly_impacts = {}
-        career_lengths = {}
+        impact_values   = {}
+        impact_values_R = {}
+        max_impacts     = {}
+        yearly_impacts  = {}
+        career_lengths  = {}
         best_products_rank_rand = {}
         best_products_rank_all  = {}
         best_products_time      = {}
@@ -126,10 +127,11 @@ def process_simple_career_trajectories(args):
         for impact_measure in impact_measures[field]:
             
             # measures for everyone
-            impact_values [impact_measure] = []
-            max_impacts   [impact_measure] = []    
-            yearly_impacts[impact_measure] = {}   
-            norm_factors  [impact_measure] = {}   
+            impact_values   [impact_measure] = []
+            impact_values_R [impact_measure] = []
+            max_impacts     [impact_measure] = []    
+            yearly_impacts  [impact_measure] = {}   
+            norm_factors    [impact_measure] = {}   
    
             # measures for the random ipact rule
             best_products_rank_rand[impact_measure] = []  
@@ -152,7 +154,7 @@ def process_simple_career_trajectories(args):
         for filename in files:
                  
             ijk += 1
-            print ijk, '/', nnn
+            #print ijk, '/', nnn
             
             
             # calc the stats of theserparated measures
@@ -180,7 +182,7 @@ def process_simple_career_trajectories(args):
                 # get the yearly values for the inflation curves
                 career_time_series = individuals_career.getYearlyProducts()
                                 
-                career_length = len(career_time_series)
+                career_length = len(individuals_career.getImpactValues()  )
                 add_time_series(yearly_impacts[impact_measure], career_time_series)
                 
 
@@ -194,6 +196,12 @@ def process_simple_career_trajectories(args):
                         best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                 
                     best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+
+                    impact_values_R[impact_measure] += individuals_career.getImpactValues()  
+
+                    print len(individuals_career.getImpactValues() ),  career_length
+                    
+
 
                     # get stuff for the R-model
                     best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
@@ -259,6 +267,9 @@ def process_simple_career_trajectories(args):
             # career length and max impact for testing the r-model
             extra = ''
             #if randomized: extra = '_' + str(round(time.time(), 5))
+            filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
+            write_distr_data(impact_values_R[impact_measure], filename)
+
             filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
             write_pairs(best_value_careerlength[impact_measure], filename)
 
@@ -298,7 +309,7 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields[2:3]:
+    for inp in input_fields[3:4]:
         print inp  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
