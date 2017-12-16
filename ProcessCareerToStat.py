@@ -4,6 +4,7 @@ from multiprocessing import Process
 from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
 from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 import time
+import gzip
 
 
 def add_max_impact(lista, maxvalue):
@@ -154,30 +155,45 @@ def process_simple_career_trajectories(args):
         for filename in files:
                  
             ijk += 1
-            #print ijk, '/', nnn
+            print ijk, '/', nnn
             
-            
+
             # calc the stats of theserparated measures
             for impact_measure in impact_measures[field]:
                     
                 # construct the career of the individual
                 impact_id = impact_measures[field].index(impact_measure)     
 
-                if 'book' in field:
-                    print filename, filename.split('_')[0] + '_author_bio.dat'
-                    ''' WHEN THERE IS A FUCKING WORKING MACHINE
-                        REPARSE GOODREADS PROFILES, GET YOB AND YOD PROPERLY (WTF HAPPENED)
-                        AND THAN READ THOSE FILES HERE...
-                    '''
-       
                 date_of_birth = 0
                 date_of_death = 9999
+
+                if 'book' in field:
+                    for line in gzip.open('Data/Book/book-authors-simple-profiles/' + filename.split('_')[0] + '_author_bio.dat.gz'):
+                        if 'Year_of_birth' in line:
+                            dob = int(line.strip().split('\t')[1])
+                        if 'Year_of_death' in line:
+                            dod = int(line.strip().split('\t')[1])
+                    
+                    if dob > 0:
+                        date_of_birth = dob
+                    if dod > 0:
+                        date_of_death = dod
+
+                
+                
+ 
                 
                 individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                            
                 # save the value of all impact measures
                 impact_values[impact_measure] += individuals_career.getImpactValues()  
                 max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
+                
+                if date_of_birth > 0:
+                    print filename,date_of_birth, date_of_death
+                    for iijj in  individuals_career.getImpactValues()  :
+                        print iijj
+                
                 
                 # get the yearly values for the inflation curves
                 career_time_series = individuals_career.getYearlyProducts()
@@ -198,11 +214,7 @@ def process_simple_career_trajectories(args):
                     best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
 
                     impact_values_R[impact_measure] += individuals_career.getImpactValues()  
-
-                    print len(individuals_career.getImpactValues() ),  career_length
-                    
-
-
+     
                     # get stuff for the R-model
                     best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
                     
@@ -286,6 +298,7 @@ def process_simple_career_trajectories(args):
             write_distr_data(multi_impacts, filename)
             
      
+     
 def process_fields(min_rating_count, normalized, randomized):
 
     data_folder = 'Data'     
@@ -309,7 +322,7 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields[3:4]:
+    for inp in input_fields[7:]:
         print inp  
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
@@ -326,8 +339,8 @@ if __name__ == '__main__':
 
     min_rating_count = 0      
     process_fields(min_rating_count, normalized = False, randomized = False)
-    process_fields(min_rating_count, normalized = True,  randomized = False)
-    process_fields(min_rating_count, normalized = True,  randomized = True )
+    #process_fields(min_rating_count, normalized = True,  randomized = False)
+    #process_fields(min_rating_count, normalized = True,  randomized = True )
 
     
     
