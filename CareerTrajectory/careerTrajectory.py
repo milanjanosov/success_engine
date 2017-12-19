@@ -84,12 +84,10 @@ class SimpleCareerTrajectory:
         self.impactm = impactm
         self.name    = inputfile
         events       = []   
-                  
            
         for line in gzip.open(inputfile):
         
             line = line.replace(',','')
-
 
 
             if 'year' not in line:
@@ -130,8 +128,10 @@ class SimpleCareerTrajectory:
                 except:  
                     pass
 
-       
- 
+        
+        min_year = min([e[1] for e in self.events])
+        events = [event for event in events event[1] - 81 < min_year]
+                   
         if randomized and len(events) > 0:
             impacts_to_rand = [e[2] for e in events]
             random.shuffle(impacts_to_rand)   
@@ -207,12 +207,6 @@ class SimpleCareerTrajectory:
         except ValueError:
             return 'nan'
          
-        
-      
-    def getTimes(self):
-    
-        return [e[1] for e in self.events]    
-      
         
     def getTimeOfTheBest(self):
     
