@@ -208,6 +208,12 @@ class SimpleCareerTrajectory:
             return 'nan'
          
         
+      
+    def getTimes(self):
+    
+        return [e[1] for e in self.events]    
+      
+        
     def getTimeOfTheBest(self):
     
         if len(self.events) > 0:
