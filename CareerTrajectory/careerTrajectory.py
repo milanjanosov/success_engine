@@ -129,7 +129,7 @@ class SimpleCareerTrajectory:
                     pass
 
         
-        min_year = min([e[1] for e in self.events])
+        min_year = min([e[1] for e in events])
         events = [event for event in events if (event[1] - 81 < min_year)]
                    
         if randomized and len(events) > 0:
