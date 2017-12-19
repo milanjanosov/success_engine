@@ -335,7 +335,7 @@ def process_fields(min_rating_count, normalized, randomized):
 
     Pros = []
     
-    for inp in input_fields[2:3]:
+    for inp in input_fields:
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
