@@ -90,7 +90,11 @@ class SimpleCareerTrajectory:
         
             line = line.replace(',','')
 
+
+
             if 'year' not in line:
+            
+
                                                
                 fields  = line.strip().split('\t')
                 product = fields[0]
@@ -98,7 +102,6 @@ class SimpleCareerTrajectory:
                 cango = False
 
 
-                
                 if 'film' in self.name or 'book' in self.name:
                     try:
                         if float(fields[3]) > min_rating_count:
@@ -118,7 +121,7 @@ class SimpleCareerTrajectory:
                 try:
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
-
+                    
                     if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
                         if len(norm_factors) > 0:
                             impact = impact/norm_factors[year]
@@ -145,6 +148,7 @@ class SimpleCareerTrajectory:
 
     ### this gices back the impact values of the individual as a list
     def getImpactValues(self):    
+
         return [e[2] for e in self.events]
 
 
@@ -167,6 +171,7 @@ class SimpleCareerTrajectory:
             except:
                 pass
     
+
         return time_series
         
         
@@ -245,12 +250,12 @@ class SimpleCareerTrajectory:
         return [i - log_impacts_avg for i in log_impacts]
 
         
-    '''def getQValues(self):
+    def getLogQ(self):
 
-        mu_p = 0.2
-        return np.mean([ np.log([e[2]) for e in self.events] ) - mu_p
+        #mu_p = 0.2
+        return np.mean([ np.log(e[2]) for e in self.events] ) #- mu_p
 
-    '''
+    
 
 
 def getDistribution(keys, normalized = True):
