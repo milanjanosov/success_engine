@@ -98,6 +98,8 @@ class SimpleCareerTrajectory:
                 product = fields[0]
                 
                 cango = False
+                
+                min_rating_count = 4
 
 
                 if 'film' in self.name or 'book' in self.name:
