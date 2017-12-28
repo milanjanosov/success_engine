@@ -322,20 +322,26 @@ def process_fields(min_rating_count, normalized, randomized):
                        'book'     : ['average_rating', 'rating_count', 'edition_count']  }
 
  
-    input_fields = [    (os.listdir(data_folder + '/Music/music-pop-simple-careers'),             'music',      'pop'),
-                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),         'music',      'electro'),
-                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),          'film',       'director'),
-                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),          'film',       'producer'),   
-                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),            'film',       'writer'),   
-                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),          'film',       'composer'),   
-                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),      'film',       'art-director'),   
-                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),             'book',       'authors') ]
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
+                    (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
+                    (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
+                    (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
+                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
+                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),
+                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),                                                  
+                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
+                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
+                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
+                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
+                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
+                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
 
   
 
     Pros = []
     
-    for inp in input_fields:
+    for inp in input_fields[0:8]:
         p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
         Pros.append(p)
         p.start()
