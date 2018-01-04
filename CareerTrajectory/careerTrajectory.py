@@ -89,6 +89,8 @@ class SimpleCareerTrajectory:
         
             line = line.replace(',','')
 
+            if len(norm_factors) > 0:
+                norm_mean = np.mean(norm_factors.values())
 
             if 'year' not in line:
             
@@ -124,7 +126,7 @@ class SimpleCareerTrajectory:
                     
                     if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
                         if len(norm_factors) > 0:
-                            impact = impact/norm_factors[year]
+                            impact = impact/norm_factors[year] * norm_mean
                         if impact > 0:
                             events.append((product, year, impact))
                 except:  
