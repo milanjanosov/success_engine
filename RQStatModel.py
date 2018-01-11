@@ -1,64 +1,10 @@
-import os
-import sys
-import matplotlib
-#matplotlib.use('Agg')
-import seaborn
-import numpy as np
-import random
-import matplotlib.pyplot as plt
-import CareerAnalysisHelpers.binningFunctions as binning
-import CareerAnalysisHelpers.fittingImpactDistributions as fit
-from scipy import stats
-from matplotlib.colors import LogNorm
-from CareerAnalysisHelpers.alignPlots import align_plot
-from CareerAnalysisHelpers.binningFunctions import getDistribution
+execfile("imports.py")
 
 
-
-''' TODO '''
-'''
-
-
-1. LOGNORMAL XMIN ISSUES
-+ make sure KS says what we see
-+ fit better, with cutoff, the impact distr
-+ fit properly (anomalies with xmin) the career length distr
-+ fix the cdf 
-
-
-
-2. R-MODEL TEST
-+ back to log scale
-+ quantilte bins (~ 20 bins)
-+ make sure complete data, max values..! -> IT IS, JUST NORMALIZED IMPACTS!! 
-
-
-
-3. MINIMAZITION
-- even from a larger range they should converge
-- first optimize a few, fix the rest!
-
-
-
-5. MUSIC DATA
-- process releases running
-- lastfm_get_songs, save genre tags for songs, and year, and release id!
-- launch lastfm for all genres
-
-
-
-
-
-'''
 
 
        
 
-def write_row(filename, data):
-
-    f = open(filename, 'w')
-    [f.write(str(dat)+'\n') for dat in data ]
-    f.close()    
 
 
 
