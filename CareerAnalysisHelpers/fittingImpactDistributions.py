@@ -1,12 +1,22 @@
 import numpy as np
 import powerlaw
 import random
+import os
 from matplotlib.colors import LogNorm
 from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
+from binningFunctions import getDistribution
+import os
 
 
-def fitPowerLaw(filename, ax, label, cutoff = -1, numbins = 15, noise = 0):
+def write_row(filename, data):
+
+    f = open(filename, 'w')
+    [f.write(str(dat)+'\n') for dat in data ]
+    f.close()    
+
+
+def fitPowerLaw(filename, ax, label, cutoff = -1, writeout = True, numbins = 15, noise = 0):
 
 
     rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
@@ -46,6 +56,21 @@ def fitPowerLaw(filename, ax, label, cutoff = -1, numbins = 15, noise = 0):
 
     ax.set_xlabel(label, fontsize = 20)
     ax.set_ylabel('CDF of ' + label, fontsize = 20)
+
+ 
+    if writeout:
+        out_folder = 'ResultData/1_impact_distributions/'
+        if not os.path.exists(out_folder):
+            os.makedirs(out_folder)
+     
+     
+        xfit = parassms.lines[1].get_xdata()
+        yfit = parassms.lines[1].get_ydata()  
+        
+        write_row(out_folder + label + '_powerlaw_hist_' + '.dat', rand)
+        write_row(out_folder + label + '_powerlaw_fit_'  + '.dat', [str(xfit[i]) + '\t' + str(yfit[i]) for i in range(len(xfit))] )   
+
+    
 
     return sk_results_norm[0], D
 
