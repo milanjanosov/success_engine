@@ -36,7 +36,7 @@ def plot_red_lines(ax):
     ax.set_xlim(-0.05, 1.05)
     ax.set_ylim(-0.05, 1.05)
     yyy = [1 - y0 for y0 in x]
-    ax.plot(x, yyy, '-', linewidth=8, alpha = 0.2, color = colors, label = '$U(0,1)$') 
+    ax.plot(x, yyy, '-', linewidth=8, alpha = 0.2, color = colors[0], label = '$U(0,1)$') 
     ax.set_xlabel('$N^{*}/N$', fontsize=21)
     ax.set_ylabel( r'$P( \geq  N^{*}/N)$' , fontsize=21)
 
@@ -210,19 +210,19 @@ def plot_career2(ax):
 fig =plt.figure(figsize=(24,16))
 fig.subplots_adjust(bottom=0.025, left=0.025, top = 0.975, right=0.975)
 X = [ (2,3,(1,3)), (2,2,3), (2,2,4) ]
-
+seaborn.set_style('white')  
 
 
 for index, (nrows, ncols, plot_number) in enumerate(X):
 
     sub = fig.add_subplot(nrows, ncols, plot_number)
 
-    #if index == 0: 
-    #    plot_career2(sub)
+    if index == 0: 
+        plot_career2(sub)
     if index == 1: 
         plot_NN(sub)
-    #elif index == 2: 
-    #    test_r_model(sub)
+    elif index == 2: 
+        test_r_model(sub)
     
 #    plt.tight_layout(pad=8, w_pad=8, h_pad=8)              s   
 plt.show()
