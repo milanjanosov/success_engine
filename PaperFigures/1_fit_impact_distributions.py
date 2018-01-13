@@ -26,7 +26,7 @@ def get_imapct_distr():
     
     for (label, fn) in fields:
 
-        file_cnt  = FOLDER + '/1_impact_distributions/film_rating_count_dist_'   + label + '.dat'              
+        file_cnt  = FOLDER + '/1_impact_distributions/' + fn + label + '.dat'              
 
         p = Process(target = fit.fitPowerLaw, args=(file_cnt,   ax[1,0], label, '1_impact_distributions', ))
         Pros.append(p)
