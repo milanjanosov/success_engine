@@ -46,7 +46,7 @@ def optimize_xmin():
     if not os.path.exists(outfolder):
         os.makedirs(outfolder) 
 
-    N = 1
+    N = 30
     
  
     fields = [    ('director',     'film_rating_count_dist_'),
