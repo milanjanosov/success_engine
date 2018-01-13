@@ -75,6 +75,8 @@ def get_r_test():
                   ('writer',       'film_best_product_NN_ranks_all_rating_count_'),
                   ('composer',     'film_best_product_NN_ranks_all_rating_count_'),
                   ('art-director', 'film_best_product_NN_ranks_all_rating_count_'),
+                  ('electro',      'music_best_product_NN_ranks_all_play_count_'),      
+                  ('pop',          'music_best_product_NN_ranks_all_play_count_'),      
                   ('rock',         'music_best_product_NN_ranks_all_play_count_'),      
                   ('funk',         'music_best_product_NN_ranks_all_play_count_'), 
                   ('folk',         'music_best_product_NN_ranks_all_play_count_'), 

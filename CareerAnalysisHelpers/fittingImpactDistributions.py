@@ -7,6 +7,8 @@ from scipy import stats
 from CareerTrajectory.careerTrajectory import getDistribution
 from binningFunctions import getDistribution
 import os
+import sys
+import math
 
 
 def write_row(filename, data):
@@ -16,14 +18,25 @@ def write_row(filename, data):
     f.close()    
 
 
-def fitPowerLaw(filename, ax, label, out_folder, cutoff = -1, writeout = True, numbins = 15, noise = 0):
+def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -sys.maxint, writeout = True, noise = False, distancefile = ''):
+
+    rand = []
 
 
-    rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
+    if 'log_p' in name:
+        rand = np.asarray([math.exp(float(line.strip())) + noise for line in open(filename) if  float(line.strip()) > cutoff]) 
+    elif 'log_Q' in name:
+        rand = np.asarray([math.exp(float(line.strip().split('\t')[1]))  for line in open(filename) if  len(line.strip().split('\t')) > 1 and float(line.strip().split('\t')[1]) > cutoff]) 
+    elif noise:
+        rand = np.asarray([float(line.strip()) + random.random() for line in open(filename) if float(line.strip()) > cutoff]) 
+    else:     
+        rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
+    
+
     x_rand, p_rand = getDistribution(rand)                  
     ax.set_title(label, fontsize = 18)               
     
-    
+   
     # histogram
     counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 1000), log=True,alpha=0.0, cumulative=1)
     ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.7, markersize = 0, linewidth = 5)
@@ -35,9 +48,8 @@ def fitPowerLaw(filename, ax, label, out_folder, cutoff = -1, writeout = True, n
     print 'Fit and plot the powerlaw...'
     results  = powerlaw.Fit(rand, xmin = min(x_rand), fit_method = 'KS')
     alpha    = results.power_law.alpha
-    xmin     = results.power_law.xmin 
     D        = results.power_law.KS()  
-    parassms = results.power_law.plot_cdf(color='r',ax=ax,linestyle='-',linewidth=3,label='$\\alpha$= '+str(round(alpha,2))+', $x_{min}$='+str(round(xmin,2))+'\n$D$='+str(round(D, 2)))     
+    parassms = results.power_law.plot_cdf(color='r',ax=ax,linestyle='-',linewidth=3,label='$\\alpha$= '+str(round(alpha,2))+', $D$='+str(round(D, 2)))     
   
    
     # fit and plot the powerlaw   
@@ -58,8 +70,7 @@ def fitPowerLaw(filename, ax, label, out_folder, cutoff = -1, writeout = True, n
     ax.set_ylabel('CDF of ' + label, fontsize = 20)
 
  
-    if writeout:
-        out_folder = 'ResultData/1_impact_distributions/'
+    if writeout:    
         if not os.path.exists(out_folder):
             os.makedirs(out_folder)
      
@@ -67,11 +78,14 @@ def fitPowerLaw(filename, ax, label, out_folder, cutoff = -1, writeout = True, n
         xfit = parassms.lines[1].get_xdata()
         yfit = parassms.lines[1].get_ydata()  
         
-        write_row(out_folder + label + '_powerlaw_hist_' + '.dat', rand)
-        write_row(out_folder + label + '_powerlaw_fit_'  + '.dat', [str(xfit[i]) + '\t' + str(yfit[i]) for i in range(len(xfit))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_' + '.dat', rand)
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'  + '.dat', [str(xfit[i]) + '\t' + str(yfit[i]) for i in range(len(xfit))] )   
 
+        f_Ddata = open(distancefile, 'a')
+        f_Ddata.write(label + '\t' + str(D) + '\t' + str(sk_results_norm[0]) + '\n')
+        f_Ddata.close()
+         
     
-
     return sk_results_norm[0], D
 
   
