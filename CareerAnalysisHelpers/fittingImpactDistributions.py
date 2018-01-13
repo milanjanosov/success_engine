@@ -16,7 +16,7 @@ def write_row(filename, data):
     f.close()    
 
 
-def fitPowerLaw(filename, ax, label, cutoff = -1, writeout = True, numbins = 15, noise = 0):
+def fitPowerLaw(filename, ax, label, out_folder, cutoff = -1, writeout = True, numbins = 15, noise = 0):
 
 
     rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
