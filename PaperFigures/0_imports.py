@@ -1,8 +1,8 @@
 import os
 import sys
 import matplotlib
-#matplotlib.use('Agg')
-import seaborn
+matplotlib.use('Agg')
+#import seaborn
 import numpy as np
 import random
 import matplotlib.pyplot as plt
