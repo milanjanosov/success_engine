@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from scipy import stats
 from matplotlib.colors import LogNorm
-
+from multiprocessing import Process
 
 
 sys.path.insert(0, '../')
