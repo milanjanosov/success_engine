@@ -40,6 +40,7 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
     # histogram
     counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), 1000), log=True,alpha=0.0, cumulative=1)
     ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.7, markersize = 0, linewidth = 5)
+    bins = (bins[1:] + bins[:-1])/2    
     ax.set_ylim([ min(counts), 1.05*max(counts)])
     ax.set_xlim([ min(x_rand),  max(bins)])
 
@@ -76,10 +77,11 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
      
      
         xfit = parassms.lines[1].get_xdata()
-        yfit = parassms.lines[1].get_ydata()  
         
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_' + '.dat', rand)
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'  + '.dat', [str(xfit[i]) + '\t' + str(yfit[i]) for i in range(len(xfit))] )   
+        yfit = parassms.lines[1].get_ydata()  
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_' + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'  + '.dat', [str(xfit[i])   + '\t' + str(yfit[i])       for i in range(len(xfit))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_'     + '.dat', [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))] )   
 
         f_Ddata = open(distancefile, 'a')
         f_Ddata.write(label + '\t' + str(D) + '\t' + str(sk_results_norm[0]) + '\n')
@@ -112,5 +114,52 @@ def fitSkewedNormal(filename, ax, label, alpha_hist  = 0.2, color_line = 'r'):
     ax.set_yticks(np.linspace(0, max(counts), 5))
     ax.set_yticklabels([str(int(100*y)) + '%' for y in np.linspace(0, 1.05*max(counts)/(sum(counts)), 5)])
     
+
+
+
+def fitAndStatsSkewedNormal(filename, ax, label, outfolder, name, statfile, filterparam, alpha_hist  = 0.2, color_line = 'r'):
+   
+    if 'log_Q' in name:
+        rand = np.asarray([float(line.strip().split('\t')[1]) for line in open(filename) if len(line.strip().split('\t')) > 1])
+    else:
+        rand = np.asarray([float(line.strip()) for line in open(filename)])
+
+    print 'Fitting normal...'
+    param = stats.skewnorm.fit(rand)
+
+    x_rand, p_rand = getDistribution(rand)
+    pdf_fitted = stats.skewnorm.pdf(x_rand,  param[0], loc=param[1], scale=param[2])          
+
+    mean, variance, skewness, kurtosity = stats.skewnorm.stats(param[0], loc=param[1], scale=param[2], moments='mvsk')
+    maxx = x_rand[pdf_fitted.tolist().index(max(pdf_fitted))]    
+    counts, bins, bars = ax.hist(rand, bins = np.linspace(min(x_rand), max(x_rand), 25), normed = True, alpha = alpha_hist)
+    D = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.skewnorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])) [0]  
+
+    write_row(outfolder + '/' + label + '_' + name + '_original_fit'               + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit'          + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit'          + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_original_hist_'             + '.dat', rand)
+ 
+    fout = open(statfile, 'a')
+    fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\t' + str(skewness) + '\t' + str(kurtosity) + '\n')
+    fout.close()
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    
