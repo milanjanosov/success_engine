@@ -7,7 +7,7 @@ def get_norm_log_p():
     FOLDER   = '../ProcessedData/ProcessedData_0_Normalized/'    
     f, ax    = plt.subplots(1, 2, figsize=(20, 6))
 
-    statfile = 'ResultData/5_pQ_fit/STAT_log_Q_fnorm.dat'
+    statfile = 'ResultData/5_pQ_fit/STAT_log_Q.dat'
     outfolder    = 'ResultData/5_pQ_fit'
 
     if not os.path.exists(outfolder):
@@ -33,22 +33,19 @@ def get_norm_log_p():
                   ('authors',      'book_log_Q_wout_mean_rating_count_')]
 
 
-    '''Pros = []
+    Pros = []
     
-    for (label, fn) in fields[0:1]:
+    for (label, fn) in fields:
         filenm  = FOLDER + '/11_log_Q_wout_means/' + fn + label + '.dat'              
-        p = Process(target = fit.fitAndStatsNormal, args=(filenm, ax[0], label, outfolder, 'log_Q', statfile, 10,))
+        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0], label, outfolder, 'log_Q', statfile, 10,))
 
         Pros.append(p)
         p.start()
       
     for t in Pros:
         t.join()  
-    '''
-    filenm  = FOLDER + '/11_log_Q_wout_means/' + 'film_log_Q_wout_mean_rating_count_' + 'director' + '.dat'              
-    fit.fitAndStatsNormal(filenm, ax[0], 'director', outfolder, 'log_Q', statfile, 10)
-    #fit.fitAndStatsSkewedNormal(filenm, ax[0], 'director', outfolder, 'log_Q', statfile, 10)
-    plt.show() 
+
+
  
 
 get_norm_log_p()

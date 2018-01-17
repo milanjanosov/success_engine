@@ -141,7 +141,7 @@ def fitAndStatsSkewedNormal(filename, ax, label, outfolder, name, statfile, filt
     write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
     write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
     write_row(outfolder + '/' + label + '_' + name + '_original_hist_'             + '.dat', rand)
- 
+    print 'SKEW',  mean, variance, skewness, kurtosity 
     fout = open(statfile, 'a')
     fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\t' + str(skewness) + '\t' + str(kurtosity) + '\n')
     fout.close()
@@ -149,7 +149,43 @@ def fitAndStatsSkewedNormal(filename, ax, label, outfolder, name, statfile, filt
 
     
 
+def fitAndStatsNormal(filename, ax, label, outfolder, name, statfile, filterparam, alpha_hist  = 0.2, color_line = 'r'):
+   
+    if 'log_Q' in name:
+        rand = np.asarray([float(line.strip().split('\t')[1]) for line in open(filename) if len(line.strip().split('\t')) > 1])
+    else:
+        rand = np.asarray([float(line.strip()) for line in open(filename)])
 
+    print 'Fitting normal...'
+    param = stats.norm.fit(rand)
+
+    print param
+    x_rand, p_rand = getDistribution(rand)
+    pdf_fitted = stats.norm.pdf(x_rand,  loc=param[0], scale=param[1])          
+
+    mean, variance = stats.norm.stats( loc=param[0], scale = param[1], moments='mv')
+    maxx = x_rand[pdf_fitted.tolist().index(max(pdf_fitted))]    
+    counts, bins, bars = ax.hist(rand, bins = np.linspace(min(x_rand), max(x_rand), 25), normed = True, alpha = alpha_hist)
+    D = stats.kstest(np.asarray(pdf_fitted), lambda x: stats.norm.cdf(x_rand,loc=param[0], scale=4)) [0]  
+
+    counts, bins, bars = ax.hist(rand, bins = np.linspace(min(x_rand), max(x_rand), 25), normed = True, alpha = alpha_hist)
+    ax.plot(x_rand,pdf_fitted,'-', color = color_line, linewidth = 3)
+    
+    print 'NORM',  mean, variance
+
+    '''write_row(outfolder + '/' + label + '_' + name + '_original_fit'               + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit'          + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit'          + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_original_hist_'             + '.dat', rand)
+ 
+    fout = open(statfile, 'a')
+    fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\t' + str(skewness) + '\t' + str(kurtosity) + '\n')
+    fout.close()
+    '''
+
+    
 
 
 
