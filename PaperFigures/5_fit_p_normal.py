@@ -1,13 +1,24 @@
 execfile("0_imports.py")
 
 
+def do_the_fits(filenm, ax, label, outfolder, statfile, statfile_t, statfile_f, N, var = 'log_p'):
+
+    fit.fitAndStatsSkewedNormal(filenm, ax, label, outfolder, var, statfile,   N)
+    fit.fitAndStatsNormal(filenm, ax, label, outfolder, var, statfile_f, N)
+    fit.fitAndStatsTransformedNormal(filenm, ax, label, outfolder, var, statfile_t, N)
+
+
+
+
 def get_norm_log_p():
 
     
     FOLDER   = '../ProcessedData/ProcessedData_0_Normalized/'    
     f, ax    = plt.subplots(1, 2, figsize=(20, 6))
 
-    statfile = 'ResultData/5_pQ_fit/STAT_log_p.dat'
+    statfile     = 'ResultData/5_pQ_fit/STAT_log_p.dat'
+    statfile_f   = 'ResultData/5_pQ_fit/STAT_log_p_fnorm.dat'
+    statfile_t   = 'ResultData/5_pQ_fit/STAT_log_p_tnorm.dat'
     outfolder    = 'ResultData/5_pQ_fit'
 
     if not os.path.exists(outfolder):
@@ -37,7 +48,7 @@ def get_norm_log_p():
     
     for (label, fn) in fields:
         filenm  = FOLDER + '/9_p_without_avg/' + fn + label + '.dat'              
-        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0], label, outfolder, 'log_p', statfile, 100))
+        p = Process(target = do_the_fits, args=(filenm, ax[0], label, outfolder, statfile, statfile_t, statfile_f, 100, 'log_p', ))
 
         Pros.append(p)
         p.start()

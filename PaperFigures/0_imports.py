@@ -18,6 +18,7 @@ sys.path.insert(0, '../')
 import CareerAnalysisHelpers.binningFunctions as binning
 import CareerAnalysisHelpers.fittingImpactDistributions as fit
 from CareerAnalysisHelpers.alignPlots import align_ax
+from CareerAnalysisHelpers.alignPlots import align_plot
 from CareerAnalysisHelpers.binningFunctions import getDistribution
 from CareerAnalysisHelpers.writeRow import write_row
-from CareerAnalysisHelpers.hierarchicalClustering import do_clustering
+#from CareerAnalysisHelpers.hierarchicalClustering import do_clustering
