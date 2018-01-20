@@ -80,17 +80,17 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, norm_factors, randomized, min_rating_count, date_of_birth, date_of_death):
+    def __init__(self, name, inputfile, impactm, normalize, norm_factors, randomized, min_rating_count, date_of_birth, date_of_death):
         self.impactm = impactm
         self.name    = inputfile
         events       = []   
+
+
+        
            
         for line in gzip.open(inputfile):
         
             line = line.replace(',','')
-
-            if len(norm_factors) > 0:
-                norm_mean = np.mean(norm_factors.values())
 
             if 'year' not in line:
             
@@ -121,12 +121,29 @@ class SimpleCareerTrajectory:
                 
                
                 try:
+                #if 2 == 2:
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
                     
                     if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
-                        if len(norm_factors) > 0:
-                            impact = impact/norm_factors[year] * norm_mean
+                        if 'no' not in normalize:
+
+
+                            if 'yearly_avg' in normalize: 
+                                impact = impact/norm_factors[year]
+   
+                            elif 'years_all' in normalize: 
+                                impact = impact * norm_factors
+
+                            elif 'field_avg' in normalize: 
+                                impact = impact / norm_factors
+
+                            elif 'fields_all' in normalize: 
+                                impact = impact * norm_factors
+
+
+
+                            
                         if impact > 0:
                             events.append((product, year, impact))
                 except:  

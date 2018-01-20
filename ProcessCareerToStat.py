@@ -97,11 +97,12 @@ def process_simple_career_trajectories(args):
 
 
     input_data  = args[0]
-    normalized  = args[1]
+    normalize   = args[1]
     randomized  = args[2]
     data_folder = args[3]
     impact_measures  = args[4]
     min_rating_count = args[5]
+    input_fields     = args[6]
  
     
     for (files, field, label) in [input_data]:
@@ -148,16 +149,56 @@ def process_simple_career_trajectories(args):
 
 
         # read the normalization vectors if we want to work with normalized impact measures     
-        if normalized: 
+        if 'yearly_avg' in normalize: 
             for impact_measure in impact_measures[field]:
                 norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedData_0/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
    
+                #print norm_factors    
+
+
+        elif 'years_all' in normalize: 
+
+            for impact_measure in impact_measures[field]:
+                norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_yearly_avg/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
+
+
+
+        elif 'field_avg' in normalize: 
+
+            for impact_measure in impact_measures[field]:
+                norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_years_all/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
+
+                #print norm_factors    
+
+
+        elif 'fields_all' in normalize: 
+
+
+            for impact_measure in impact_measures[field]:
+
+                all_stuff = []
+                for (fffiles, fffield, fflabel) in input_fields:
+
+                    if 'music' in fffield:
+                        impact_measuree = 'play_count'
+                    else:
+                        impact_measuree = 'rating_count'
+                    all_stuff += parse_norm_factors('ProcessedData/ProcessedDataNormalized_field_avg/6_yearly_averages/' + fffield + '_yearly_average_' + impact_measuree + '_' + fflabel + '.dat' ).values()
+
+                norm_factors[impact_measure] = np.mean(all_stuff)
+                
+                #print all_stuff    
+    
+
+
+
+
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:100]:
                  
             ijk += 1
-            print ijk, '/', nnn
+            #print  ijk, '/', nnn
             
 
             # calc the stats of theserparated measures
@@ -170,90 +211,79 @@ def process_simple_career_trajectories(args):
                 date_of_death = 9999
 
                 if 'book' in field:
-                    for line in gzip.open('Data/Book/book-authors-simple-profiles/' + filename.split('_')[0] + '_author_bio.dat.gz'):
-                        if 'Year_of_birth' in line:
-                            dob = int(line.strip().split('\t')[1])
-                        if 'Year_of_death' in line:
-                            dod = int(line.strip().split('\t')[1])
                     
-                    if dob > 0:
-                        date_of_birth = dob
-                    if dod > 0:
-                        date_of_death = dod
-
-                
+                    try:
+                        for line in gzip.open('Data/Book/book-authors-simple-profiles/' + filename.split('_')[0] + '_author_bio.dat.gz'):
+                            if 'Year_of_birth' in line:
+                                dob = int(line.strip().split('\t')[1])
+                            if 'Year_of_death' in line:
+                                dod = int(line.strip().split('\t')[1])
+                        
+                        if dob > 0:
+                            date_of_birth = dob
+                        if dod > 0:
+                            date_of_death = dod
+                    except:
+                        pass
                 
  
                 
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id,norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                        
                 
-                           
+                         
                 # save the value of all impact measures
                 impact_values[impact_measure] += individuals_career.getImpactValues()  
-                max_impacts  [impact_measure].append(individuals_career.getMaxImpact())  
-                
-          
-                # get the yearly values for the inflation curves
                 career_time_series = individuals_career.getYearlyProducts()
-                                
-                career_length = len(individuals_career.getImpactValues()  )
-                add_time_series(yearly_impacts[impact_measure], career_time_series)
-                
+                add_time_series(yearly_impacts[impact_measure], career_time_series)          
 
-                # do further stats if he is a good one with at least ... products
-                if career_length > 14:
+   
+                #if 2 == 2:
+                if 'fields_all' == normalize:
 
-                    individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
+                    # get the yearly values for the inflation curves
+                    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
+                    career_length = len(individuals_career.getImpactValues()  )
 
-                    # get the rank and time of the best product for the random impact rule
-                    (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
-                    if 'nan' not in str(NN_rand):
-                        best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
-                        best_products_rank_rand[impact_measure] .append((NN_rand, N))                
-                
-                    best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
-
-                    impact_values_R[impact_measure] += individuals_career.getImpactValues()  
                     
+                    # do further stats if he is a good one with at least ... products
+                    if career_length > 9:
 
-     
-                    # get stuff for the R-model
-                    best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
+
+                        # get the rank and time of the best product for the random impact rule
+                        (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                        if 'nan' not in str(NN_rand):
+                            best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                            best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                     
-                    # getting things for the Qmodel
-                    career_lengths[impact_measure] .append(career_length)                 
-                    p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
-                    log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
+                        best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+
+                        impact_values_R[impact_measure] += individuals_career.getImpactValues()  
+                        
+
+                        # get stuff for the R-model
+                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        
+                        # getting things for the Qmodel
+                        career_lengths[impact_measure] .append(career_length)                 
+                        p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
+                        log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
 
 
 
 
             # more than one impact measure is used - for the correlation plots
-            multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized, date_of_birth, date_of_death) 
-            multi_impacts += multiimpact_career.getImpactValues()
+            # multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized, date_of_birth, date_of_death) 
+            # multi_impacts += multiimpact_career.getImpactValues()
             
       
         ''' write out the results '''                      
-        out_root = 'ProcessedData/ProcessedData_' + str(min_rating_count) 
-        if normalized: out_root = out_root + '_Normalized'
+        out_root = 'ProcessedData/ProcessedData'
+        if normalize:  out_root = out_root + 'Normalized_' + normalize
         if randomized: out_root = out_root + 'Randomized'            
             
-    
-        create_folder(out_root + '/1_impact_distributions')    
-        create_folder(out_root + '/2_max_impact_distributions')    
-        create_folder(out_root + '/3_inflation_curves')    
-        create_folder(out_root + '/4_NN_rank_N')    
-        create_folder(out_root + '/5_time_of_the_best')    
-        create_folder(out_root + '/6_yearly_averages')    
-        create_folder(out_root + '/7_career_length_max_impact')                
-        create_folder(out_root + '/8_career_length')                            
-        create_folder(out_root + '/9_p_without_avg')                                        
-        create_folder(out_root + '/10_multiple_impacts')  
-        create_folder(out_root + '/11_log_Q_wout_means')  
-                                                          
-        
-        
+                                                           
         for impact_measure in impact_measures[field]:
             
             # write impact measures
@@ -262,64 +292,65 @@ def process_simple_career_trajectories(args):
             filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
             write_distr_data(impact_values[impact_measure], filename)
         
-            # write max values
-            filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
-            write_distr_data(max_impacts[impact_measure], filename)
-        
-            # inflation curves
-            filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
-            write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
-                  
-            # rank of the best products
-            filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
-            filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
-            write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
 
-            # time of the best product
-            filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
-            write_distr_data(best_products_time[impact_measure], filename)
-            
             # normalizing factors
             filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' 
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
-            # career length and max impact for testing the r-model
-            extra = ''
-            #if randomized: extra = '_' + str(round(time.time(), 5))
-            filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
-            write_distr_data(impact_values_R[impact_measure], filename)
 
-            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
-            write_pairs(best_value_careerlength[impact_measure], filename)
+            if 'fields_all' == normalize:
+            
+                # write max values
+                filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
+                write_distr_data(max_impacts[impact_measure], filename)
+            
+                # inflation curves
+                filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
+                write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
+                      
+                # rank of the best products
+                filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
+                filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
+                write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
 
-            # career length distribution
-            filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
-            write_distr_data(career_lengths[impact_measure], filename)
-            
-            # the distribution of p - mu_p in the impact = pQ formula
-            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
-            write_distr_data(p_without_mean[impact_measure], filename)
-            
-            # write out multiple impact data
-            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
-            write_distr_data(multi_impacts, filename)
-            
-            # write out the logQ_i + mu_p
-            filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + '.dat'
-            write_distr_data(log_Q_wout_mean[impact_measure], filename)
-            
-        
-            print len(log_Q_wout_mean[impact_measure])
+                # time of the best product
+                filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
+                write_distr_data(best_products_time[impact_measure], filename)
+                
+                # career length and max impact for testing the r-model
+                extra = ''
+                filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
+                write_distr_data(impact_values_R[impact_measure], filename)
+
+                filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
+                write_pairs(best_value_careerlength[impact_measure], filename)
+
+                # career length distribution
+                filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
+                write_distr_data(career_lengths[impact_measure], filename)
+                
+                # the distribution of p - mu_p in the impact = pQ formula
+                filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
+                write_distr_data(p_without_mean[impact_measure], filename)
+                
+                # write out multiple impact data
+                filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
+                write_distr_data(multi_impacts, filename)
+                
+                # write out the logQ_i + mu_p
+                filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + '.dat'
+                write_distr_data(log_Q_wout_mean[impact_measure], filename)
+                
+  
      
      
-     
-def process_fields(min_rating_count, normalized, randomized):
+def process_fields(min_rating_count, normalize, randomized):
 
     data_folder = 'Data'     
      
-    impact_measures = {'film'     : ['average_rating', 'rating_count', 'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
-                       'music'    : ['play_count'],
-                       'book'     : ['average_rating', 'rating_count', 'edition_count']  }
+    impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
+                       'music'    : ['play_count'  ], #,
+                       'book'     : ['rating_count']}#'average_rating',, 'edition_count']  }
 
  
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
@@ -328,8 +359,8 @@ def process_fields(min_rating_count, normalized, randomized):
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
                     (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
                     (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),
-                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),                                                  
+                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
+                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),           
                     (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
                     (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
                     (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
@@ -337,12 +368,33 @@ def process_fields(min_rating_count, normalized, randomized):
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
 
+
+    out_root = 'ProcessedData/ProcessedData'
+    if normalize:  out_root = out_root + 'Normalized_' + normalize
+    if randomized: out_root = out_root + 'Randomized'   
+
+    if 'fields_all' == normalize:         
+        create_folder(out_root + '/2_max_impact_distributions')    
+        create_folder(out_root + '/3_inflation_curves')    
+        create_folder(out_root + '/4_NN_rank_N')    
+        create_folder(out_root + '/5_time_of_the_best')    
+        create_folder(out_root + '/7_career_length_max_impact')                
+        create_folder(out_root + '/8_career_length')                            
+        create_folder(out_root + '/9_p_without_avg')                                        
+        create_folder(out_root + '/10_multiple_impacts')  
+        create_folder(out_root + '/11_log_Q_wout_means')  
+             
+         
+               
+    create_folder(out_root + '/1_impact_distributions')    
+    create_folder(out_root + '/6_yearly_averages')    
+                
   
 
     Pros = []
     
-    for inp in input_fields[0:8]:
-        p = Process(target = process_simple_career_trajectories, args=([inp, normalized, randomized, data_folder, impact_measures, min_rating_count], ))
+    for inp in input_fields:
+        p = Process(target = process_simple_career_trajectories, args=([inp, normalize, randomized, data_folder, impact_measures, min_rating_count, input_fields], ))
         Pros.append(p)
         p.start()
        
@@ -356,10 +408,15 @@ if __name__ == '__main__':
    
 
     min_rating_count = 0      
-    process_fields(min_rating_count, normalized = False, randomized = False)
-    process_fields(min_rating_count, normalized = True,  randomized = False)
-    #process_fields(min_rating_count, normalized = True,  randomized = True )
 
+
+#    process_fields(min_rating_count, normalize = False, randomized = False)
+#    process_fields(min_rating_count, normalized = True,  randomized = False)
+    process_fields(min_rating_count, normalize = 'no',  randomized = False )
+    process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
+    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )    
+    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
+    process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
     
-    
+   
 
