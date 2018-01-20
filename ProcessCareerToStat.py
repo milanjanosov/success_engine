@@ -151,7 +151,7 @@ def process_simple_career_trajectories(args):
         # read the normalization vectors if we want to work with normalized impact measures     
         if 'yearly_avg' in normalize: 
             for impact_measure in impact_measures[field]:
-                norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedData_0/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
+                norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
    
                 #print norm_factors    
 
@@ -205,7 +205,11 @@ def process_simple_career_trajectories(args):
             for impact_measure in impact_measures[field]:
                     
                 # construct the career of the individual
-                impact_id = impact_measures[field].index(impact_measure)     
+                impact_id = 1#impact_measures[field].index(impact_measure)     
+                
+                if 'music' in field:
+                    impact_id = 0
+
 
                 date_of_birth = 0
                 date_of_death = 9999
@@ -367,6 +371,14 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
+    '''
+
+
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
+                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
+                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
+
+    '''
 
 
     out_root = 'ProcessedData/ProcessedData'
