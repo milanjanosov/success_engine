@@ -198,7 +198,7 @@ def process_simple_career_trajectories(args):
         for filename in files[0:100]:
                  
             ijk += 1
-            #print  ijk, '/', nnn
+            print  ijk, '/', nnn
             
 
             # calc the stats of theserparated measures
