@@ -18,6 +18,51 @@ def write_row(filename, data):
     f.close()    
 
 
+
+def fitLognormal(filename, ax, label = '', out_folder = '', name = '', cutoff = -sys.maxint, writeout = True, noise = False, norm = 'no'):
+
+    rand = []
+
+
+    if 'log_p' in name:
+        rand = np.asarray([math.exp(float(line.strip())) + noise for line in open(filename) if  float(line.strip()) > cutoff]) 
+    elif 'log_Q' in name:
+        rand = np.asarray([math.exp(float(line.strip().split('\t')[1]))  for line in open(filename) if  len(line.strip().split('\t')) > 1 and float(line.strip().split('\t')[1]) > cutoff]) 
+    elif noise:
+        rand = np.asarray([float(line.strip()) + random.random() for line in open(filename) if float(line.strip()) > cutoff]) 
+    else:     
+        rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
+   
+    x_rand, p_rand = getDistribution(rand)                  
+  
+    
+    # fit and plot the powerlaw   
+    print 'Fit and plot the lognormal...' + label
+    p0 = stats.lognorm._fitstart(rand)
+    p1 = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
+    param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
+
+
+    ppdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])
+    mu =  np.log(param[2])
+    sigma = param[0]
+ 
+
+    ax.set_xlabel(label, fontsize = 20)
+    ax.set_ylabel('CDF of ' + label, fontsize = 20)
+
+ 
+    if writeout:    
+        if not os.path.exists(out_folder):
+            os.makedirs(out_folder)
+     
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_' + norm  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
+
+
+  
+    return 
+
+
 def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -sys.maxint, writeout = True, noise = False, distancefile = ''):
 
     rand = []
@@ -59,7 +104,8 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
     p1 = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
     param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
 
-    pdf_fitted = stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])
+    pdf_fitted  = stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])
+    ppdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])
     mu =  np.log(param[2])
     sigma = param[0]
  
@@ -79,9 +125,11 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
         xfit = parassms.lines[1].get_xdata()
         
         yfit = parassms.lines[1].get_ydata()  
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_' + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'  + '.dat', [str(xfit[i])   + '\t' + str(yfit[i])       for i in range(len(xfit))] )   
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_'     + '.dat', [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_'  + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'   + '.dat', [str(xfit[i])   + '\t' + str(yfit[i])       for i in range(len(xfit))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_'      + '.dat', [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_'  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
+
 
         f_Ddata = open(distancefile, 'a')
         f_Ddata.write(label + '\t' + str(D) + '\t' + str(sk_results_norm[0]) + '\n')
