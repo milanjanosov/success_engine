@@ -39,12 +39,12 @@ def write_yearly_avgs(dict_data, filename):
         f.close()
 
 
-def parse_norm_factors(filename):
+def parse_norm_factors(filename, norm = 1):
                 
     norm_factors = {}
     for line in open(filename):   
         fields = line.strip().split('\t')
-        norm_factors[float(fields[0])] = float(fields[1])
+        norm_factors[int(float(fields[0]))] = float(fields[1]) * norm
                         
     return norm_factors
     
@@ -149,7 +149,7 @@ def process_simple_career_trajectories(args):
 
 
         # read the normalization vectors if we want to work with normalized impact measures     
-        if 'yearly_avg' in normalize: 
+        '''if 'yearly_avg' in normalize: 
             for impact_measure in impact_measures[field]:
                 norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
    
@@ -161,13 +161,13 @@ def process_simple_career_trajectories(args):
             for impact_measure in impact_measures[field]:
                 norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_yearly_avg/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
 
+        '''
 
-
-        elif 'field_avg' in normalize: 
+        '''if 'field_avg' in normalize: 
 
             for impact_measure in impact_measures[field]:
-                norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_years_all/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
-
+                #norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_years_all/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
+                norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
                 #print norm_factors    
 
 
@@ -183,22 +183,60 @@ def process_simple_career_trajectories(args):
                         impact_measuree = 'play_count'
                     else:
                         impact_measuree = 'rating_count'
-                    all_stuff += parse_norm_factors('ProcessedData/ProcessedDataNormalized_field_avg/6_yearly_averages/' + fffield + '_yearly_average_' + impact_measuree + '_' + fflabel + '.dat' ).values()
+                    all_stuff += parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + fffield + '_yearly_average_' + impact_measuree + '_' + fflabel + '.dat' ).values()
 
                 norm_factors[impact_measure] = np.mean(all_stuff)
                 
-                #print all_stuff    
-    
+
+        elif 'yearly_avg' in normalize: 
+            for impact_measure in impact_measures[field]:
+                norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_field_avg/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' )
+   
+                #print norm_factors    
+
+
+        elif 'years_all' in normalize: 
+
+            for impact_measure in impact_measures[field]:
+                norm_factors[impact_measure] = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
+        '''
+
+        if 'no' not in normalize: 
+
+
+            for impact_measure in impact_measures[field]:
+           
+                all_stuff = []
+                for (fffiles, fffield, fflabel) in input_fields:
+
+                    if 'music' in fffield: impact_measuree = 'play_count'
+                    else: impact_measuree = 'rating_count'
+                    
+                    all_stuff += parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + fffield + '_yearly_average_' + impact_measuree + '_' + fflabel + '.dat' ).values()
+
+                total_avg = float(np.mean(all_stuff))
+                field_avg = np.mean(parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' ).values())
+              
+                norm_const = 1.0
+                if 'field_avg' in normalize:
+                    norm_const = 1.0/field_avg
+                elif 'fields_all' in normalize:
+                    norm_const = total_avg/field_avg
+
+                print normalize, norm_const
+                norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' , norm_const)
 
 
 
+
+        #   print  field, label, normalize, norm_factors, '\n'
 
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:1000]:
                  
             ijk += 1
-            print  ijk, '/', nnn
+            #print  ijk, '/', nnn
             
 
             # calc the stats of theserparated measures
@@ -357,7 +395,8 @@ def process_fields(min_rating_count, normalize, randomized):
                        'book'     : ['rating_count']}#'average_rating',, 'edition_count']  }
 
  
-    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+    
+    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -377,8 +416,7 @@ def process_fields(min_rating_count, normalize, randomized):
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-
-    '''
+    
 
 
     out_root = 'ProcessedData/ProcessedData'
@@ -425,10 +463,11 @@ if __name__ == '__main__':
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
     process_fields(min_rating_count, normalize = 'no',  randomized = False )
+    
+
     process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
-    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )    
     process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
     process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
-    
+   # process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
    
 
