@@ -233,7 +233,7 @@ def process_simple_career_trajectories(args):
 
 
         ''' iterate over all the careers and do the job '''
-        for filename in files[0:1000]:
+        for filename in files:
                  
             ijk += 1
             #print  ijk, '/', nnn
