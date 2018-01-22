@@ -5,7 +5,7 @@ def get_imapct_distr():
       
 
 
-    for normalize in ['no', 'yearly_avg', 'years_all', 'field_avg' ,  'fields_all']:
+    for normalize in [ 'years_all']#, 'no', 'yearly_avg', 'field_avg' ,  'fields_all']:
 
 
 
