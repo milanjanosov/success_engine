@@ -44,7 +44,7 @@ def parse_norm_factors(filename, norm = 1):
     norm_factors = {}
     for line in open(filename):   
         fields = line.strip().split('\t')
-        norm_factors[int(float(fields[0]))] = float(fields[1]) * norm
+        norm_factors[int(float(fields[0]))] = float(fields[1]) / norm
                         
     return norm_factors
     
