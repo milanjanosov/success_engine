@@ -42,6 +42,13 @@ def fitLognormal(filename, ax, label = '', out_folder = '', name = '', cutoff = 
     p1 = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
     param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
 
+    # histogram
+    nbins = 20
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), nbins), log=True,alpha=0.0, cumulative=0)
+    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.7, markersize = 0, linewidth = 5)
+    bins = (bins[1:] + bins[:-1])/2    
+
+
 
     ppdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])
     mu =  np.log(param[2])
@@ -56,8 +63,8 @@ def fitLognormal(filename, ax, label = '', out_folder = '', name = '', cutoff = 
         if not os.path.exists(out_folder):
             os.makedirs(out_folder)
      
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_' + norm  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
-
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_'                          + norm  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_hist_pdf_' + str(nbins) + '_'  + norm  + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
 
   
     return 

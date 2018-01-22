@@ -281,36 +281,35 @@ def process_simple_career_trajectories(args):
 
    
                 #if 2 == 2:
-                if 'fields_all' == normalize:
+        
+                # get the yearly values for the inflation curves
+                max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
+                career_length = len(individuals_career.getImpactValues()  )
 
-                    # get the yearly values for the inflation curves
-                    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
-                    career_length = len(individuals_career.getImpactValues()  )
+                
+                # do further stats if he is a good one with at least ... products
+                if career_length > 9:
 
+                    individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
+
+                    # get the rank and time of the best product for the random impact rule
+                    (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                    if 'nan' not in str(NN_rand):
+                        best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                        best_products_rank_rand[impact_measure] .append((NN_rand, N))                
+                
+                    best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+
+                    impact_values_R[impact_measure] += individuals_career.getImpactValues()  
                     
-                    # do further stats if he is a good one with at least ... products
-                    if career_length > 9:
 
-                        individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
-
-                        # get the rank and time of the best product for the random impact rule
-                        (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
-                        if 'nan' not in str(NN_rand):
-                            best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
-                            best_products_rank_rand[impact_measure] .append((NN_rand, N))                
+                    # get stuff for the R-model
+                    best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
                     
-                        best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
-
-                        impact_values_R[impact_measure] += individuals_career.getImpactValues()  
-                        
-
-                        # get stuff for the R-model
-                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
-                        
-                        # getting things for the Qmodel
-                        career_lengths[impact_measure] .append(career_length)                 
-                        p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
-                        log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
+                    # getting things for the Qmodel
+                    career_lengths[impact_measure] .append(career_length)                 
+                    p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
+                    log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
 
 
 
@@ -340,48 +339,47 @@ def process_simple_career_trajectories(args):
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
 
-            if 'fields_all' == normalize:
+          
+            # write max values
+            filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
+            write_distr_data(max_impacts[impact_measure], filename)
+        
+            # inflation curves
+            filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
+            write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
+                  
+            # rank of the best products
+            filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
+            filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
+            write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
+
+            # time of the best product
+            filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
+            write_distr_data(best_products_time[impact_measure], filename)
             
-                # write max values
-                filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
-                write_distr_data(max_impacts[impact_measure], filename)
+            # career length and max impact for testing the r-model
+            extra = ''
+            filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
+            write_distr_data(impact_values_R[impact_measure], filename)
+
+            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
+            write_pairs(best_value_careerlength[impact_measure], filename)
+
+            # career length distribution
+            filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
+            write_distr_data(career_lengths[impact_measure], filename)
             
-                # inflation curves
-                filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
-                write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
-                      
-                # rank of the best products
-                filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
-                filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
-                write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
-
-                # time of the best product
-                filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
-                write_distr_data(best_products_time[impact_measure], filename)
-                
-                # career length and max impact for testing the r-model
-                extra = ''
-                filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
-                write_distr_data(impact_values_R[impact_measure], filename)
-
-                filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
-                write_pairs(best_value_careerlength[impact_measure], filename)
-
-                # career length distribution
-                filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
-                write_distr_data(career_lengths[impact_measure], filename)
-                
-                # the distribution of p - mu_p in the impact = pQ formula
-                filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
-                write_distr_data(p_without_mean[impact_measure], filename)
-                
-                # write out multiple impact data
-                filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
-                write_distr_data(multi_impacts, filename)
-                
-                # write out the logQ_i + mu_p
-                filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + '.dat'
-                write_distr_data(log_Q_wout_mean[impact_measure], filename)
+            # the distribution of p - mu_p in the impact = pQ formula
+            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
+            write_distr_data(p_without_mean[impact_measure], filename)
+            
+            # write out multiple impact data
+            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
+            write_distr_data(multi_impacts, filename)
+            
+            # write out the logQ_i + mu_p
+            filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + '.dat'
+            write_distr_data(log_Q_wout_mean[impact_measure], filename)
                 
   
      
