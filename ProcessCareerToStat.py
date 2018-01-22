@@ -421,17 +421,17 @@ def process_fields(min_rating_count, normalize, randomized):
     if normalize:  out_root = out_root + 'Normalized_' + normalize
     if randomized: out_root = out_root + 'Randomized'   
 
-    if 'fields_all' == normalize:         
-        create_folder(out_root + '/2_max_impact_distributions')    
-        create_folder(out_root + '/3_inflation_curves')    
-        create_folder(out_root + '/4_NN_rank_N')    
-        create_folder(out_root + '/5_time_of_the_best')    
-        create_folder(out_root + '/7_career_length_max_impact')                
-        create_folder(out_root + '/8_career_length')                            
-        create_folder(out_root + '/9_p_without_avg')                                        
-        create_folder(out_root + '/10_multiple_impacts')  
-        create_folder(out_root + '/11_log_Q_wout_means')  
-             
+    #if 'fields_all' == normalize:         
+    create_folder(out_root + '/2_max_impact_distributions')    
+    create_folder(out_root + '/3_inflation_curves')    
+    create_folder(out_root + '/4_NN_rank_N')    
+    create_folder(out_root + '/5_time_of_the_best')    
+    create_folder(out_root + '/7_career_length_max_impact')                
+    create_folder(out_root + '/8_career_length')                            
+    create_folder(out_root + '/9_p_without_avg')                                        
+    create_folder(out_root + '/10_multiple_impacts')  
+    create_folder(out_root + '/11_log_Q_wout_means')  
+         
          
                
     create_folder(out_root + '/1_impact_distributions')    
