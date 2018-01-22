@@ -462,12 +462,12 @@ if __name__ == '__main__':
 
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
-   # process_fields(min_rating_count, normalize = 'no',  randomized = False )
+    process_fields(min_rating_count, normalize = 'no',  randomized = False )
     
 
-    #process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
-    #process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
-    #process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
+    process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
+    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
+    process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
     process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
    
 
