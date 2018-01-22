@@ -396,7 +396,7 @@ def process_fields(min_rating_count, normalize, randomized):
 
  
     
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -416,7 +416,7 @@ def process_fields(min_rating_count, normalize, randomized):
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    
+    '''
 
 
     out_root = 'ProcessedData/ProcessedData'
