@@ -222,6 +222,8 @@ def process_simple_career_trajectories(args):
                     norm_const = 1.0/field_avg
                 elif 'fields_all' in normalize:
                     norm_const = total_avg/field_avg
+                elif 'years_all' in normalize:
+                    norm_const = total_avg
 
                 print normalize, norm_const
                 norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' , norm_const)
@@ -466,6 +468,6 @@ if __name__ == '__main__':
     process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
     process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
     process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
-   # process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
+    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
    
 
