@@ -125,40 +125,40 @@ class SimpleCareerTrajectory:
                     year    = int(float(fields[1]))
                     impact  = float(fields[impactm + 2])
 
-                    if year > 1910 and year < 2016:
-                    
-                        if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
-                            if 'no' not in normalize:
+                   # if year > 1910 and year < 2016:
+                
+                    if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
+                        if 'no' not in normalize:
 
+                            impact = impact/norm_factors[year]
+
+                            '''if 'yearly_avg' in normalize: 
                                 impact = impact/norm_factors[year]
 
-                                '''if 'yearly_avg' in normalize: 
-                                    impact = impact/norm_factors[year]
 
 
+   
+                            elif 'years_all' in normalize: 
+                                impact = impact# * norm_factors
 
-       
-                                elif 'years_all' in normalize: 
-                                    impact = impact# * norm_factors
 
+                                #print norm_factors
 
-                                    #print norm_factors
-
-                                elif 'field_avg' in normalize: 
-                                    impact = impact / norm_factors
-                                    #print norm_factors
+                            elif 'field_avg' in normalize: 
+                                impact = impact / norm_factors
+                                #print norm_factors
 
 
 
 
-                                elif 'fields_all' in normalize: 
-                                    impact = impact * norm_factors
-                                    #print norm_factors
-                                '''
+                            elif 'fields_all' in normalize: 
+                                impact = impact * norm_factors
+                                #print norm_factors
+                            '''
 
-                                
-                            if impact > 0:
-                                events.append((product, year, impact))
+                            
+                        if impact > 0:
+                            events.append((product, year, impact))
                 except:  
                     pass
 
