@@ -39,6 +39,14 @@ def write_yearly_avgs(dict_data, filename):
         f.close()
 
 
+def write_yearly_values(dict_data, filename):
+
+    if len(dict_data) >  0:
+        f = open(filename, 'w')      
+        [f.write(str(year) + '\t' + '\t'.join([str(v) for v in values]) + '\n' )  for year, values in  dict_data.items()] 
+        f.close()
+
+
 def parse_norm_factors(filename, norm = 1):
                 
     norm_factors = {}
@@ -235,7 +243,7 @@ def process_simple_career_trajectories(args):
 
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:100]:
                  
             ijk += 1
             print  ijk, '/', nnn
@@ -340,6 +348,9 @@ def process_simple_career_trajectories(args):
             filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' 
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
+            filename = out_root + '/12_yearly_values/' + field + 'yearly_values' + impact_measure + '_' + label + '.dat' 
+            write_yearly_values(yearly_impacts[impact_measure],  filename)
+
 
           
             # write max values
@@ -438,7 +449,7 @@ def process_fields(min_rating_count, normalize, randomized):
                
     create_folder(out_root + '/1_impact_distributions')    
     create_folder(out_root + '/6_yearly_averages')    
-                
+    create_folder(out_root + '/12_yearly_values')    
   
 
     Pros = []
