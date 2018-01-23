@@ -284,22 +284,22 @@ def process_simple_career_trajectories(args):
                        
                 timestamps = individuals_career.getTimeStamps()                
 
-                if min(timestamps) > 1959:
+
+
+                if len(timestamps) > 0 and min(timestamps) > 1959:
 
                          
                     # save the value of all impact measures
                     impact_values[impact_measure] += individuals_career.getImpactValues()  
                     career_time_series = individuals_career.getYearlyProducts()
                     add_time_series(yearly_impacts[impact_measure], career_time_series)          
+     
 
-       
-                    #if 2 == 2:
-            
                     # get the yearly values for the inflation curves
                     max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
                     career_length = len(individuals_career.getImpactValues()  )
 
-                    
+             
                     # do further stats if he is a good one with at least ... products
                     if career_length > 9:
 
