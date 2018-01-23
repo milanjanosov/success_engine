@@ -282,44 +282,47 @@ def process_simple_career_trajectories(args):
                 
                 individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                        
-                
+                timestamps = individuals_career.getTimeStamps()                
+
+                if min(timestamps) > 1959:
+
                          
-                # save the value of all impact measures
-                impact_values[impact_measure] += individuals_career.getImpactValues()  
-                career_time_series = individuals_career.getYearlyProducts()
-                add_time_series(yearly_impacts[impact_measure], career_time_series)          
+                    # save the value of all impact measures
+                    impact_values[impact_measure] += individuals_career.getImpactValues()  
+                    career_time_series = individuals_career.getYearlyProducts()
+                    add_time_series(yearly_impacts[impact_measure], career_time_series)          
 
-   
-                #if 2 == 2:
-        
-                # get the yearly values for the inflation curves
-                max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
-                career_length = len(individuals_career.getImpactValues()  )
+       
+                    #if 2 == 2:
+            
+                    # get the yearly values for the inflation curves
+                    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
+                    career_length = len(individuals_career.getImpactValues()  )
 
-                
-                # do further stats if he is a good one with at least ... products
-                if career_length > 9:
-
-                    individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
-
-                    # get the rank and time of the best product for the random impact rule
-                    (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
-                    if 'nan' not in str(NN_rand):
-                        best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
-                        best_products_rank_rand[impact_measure] .append((NN_rand, N))                
-                
-                    best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
-
-                    impact_values_R[impact_measure] += individuals_career.getImpactValues()  
                     
+                    # do further stats if he is a good one with at least ... products
+                    if career_length > 9:
 
-                    # get stuff for the R-model
-                    best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
+
+                        # get the rank and time of the best product for the random impact rule
+                        (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                        if 'nan' not in str(NN_rand):
+                            best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                            best_products_rank_rand[impact_measure] .append((NN_rand, N))                
                     
-                    # getting things for the Qmodel
-                    career_lengths[impact_measure] .append(career_length)                 
-                    p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
-                    log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
+                        best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+
+                        impact_values_R[impact_measure] += individuals_career.getImpactValues()  
+                        
+
+                        # get stuff for the R-model
+                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        
+                        # getting things for the Qmodel
+                        career_lengths[impact_measure] .append(career_length)                 
+                        p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
+                        log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
 
 
 

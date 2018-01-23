@@ -125,7 +125,7 @@ class SimpleCareerTrajectory:
                     year    = int(float(fields[1]))
                     impact  = float(fields[impactm + 2])
 
-                    if year > 1959:# and year < 2016:
+                    if year > 1500:# and year < 2016:
                 
                         if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
                             if 'no' not in normalize:
