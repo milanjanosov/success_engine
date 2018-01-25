@@ -21,9 +21,12 @@ total    = 0
 tenbooks = 0
 poets    = 0
 
-for filename in files:
+n = len(files)
+
+for index, filename in enumerate(files):
 
 
+    print index, '/', n
 
     date_of_birth = 0
     date_of_death = 9999
