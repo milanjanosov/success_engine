@@ -66,8 +66,8 @@ def get_r_test():
 
 
     num_of_bins = 10
-    f, ax       = plt.subplots(1, 2, figsize=(23, 23)) 
-    folder      = '../ProcessedData/ProcessedData_0_Normalized'    
+
+    folder      = '../ProcessedData/ProcessedDataNormalized_years_all'    
     
 
     fields = [    ('director',     'film_best_product_NN_ranks_all_rating_count_'),
@@ -88,9 +88,10 @@ def get_r_test():
 
     for (label, fn) in fields:
         print label
+        f, ax       = plt.subplots(1, 2, figsize=(23, 23)) 
         plot_ccdf(folder, fn, num_of_bins, ax[0], label)
 
-
+        plt.show()
 
  
 get_r_test()

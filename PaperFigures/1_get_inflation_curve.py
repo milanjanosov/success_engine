@@ -31,9 +31,9 @@ def plot_measure(average_ratings_year, label, num_of_bins, ax, color, aa, music 
     bx_average_ratings_year = (bx_average_ratings_year[1:] + bx_average_ratings_year[:-1])/2
 
   
-    write_row('ResultData/1_impact_distributions/' + label + '_inflation.dat', [str(bx_average_ratings_year[i]) + '\t' + str(bp_average_ratings_year[i]) + '\t' + str(bperr_average_ratings_year[i]) for i in range(len(bx_average_ratings_year))] )   
+   # write_row('ResultData/1_impact_distributions/' + label + '_inflation.dat', [str(bx_average_ratings_year[i]) + '\t' + str(bp_average_ratings_year[i]) + '\t' + str(bperr_average_ratings_year[i]) for i in range(len(bx_average_ratings_year))] )   
   
-
+    write_row('FinalData/2_' + label + '_inflation.dat', [str(bx_average_ratings_year[i]) + '\t' + str(bp_average_ratings_year[i]) + '\t' + str(bperr_average_ratings_year[i]) for i in range(len(bx_average_ratings_year))] )   
 
 
     ax.fill_between(bx_average_ratings_year, bp_average_ratings_year-bperr_average_ratings_year, bp_average_ratings_year+bperr_average_ratings_year, alpha = 0.2, color = color)
@@ -58,7 +58,7 @@ def get_inflation_curves():
     title_font = 25 
   	
 
-    FOLDER = '../ProcessedData/ProcessedData_0'
+    FOLDER = '../ProcessedData_all_years/ProcessedDataNormalized_no'
     YEAR_MIN = 1900
 
     professions = [('director',     'k'), 
@@ -85,12 +85,12 @@ def get_inflation_curves():
         rating_cnt_year = np.asarray([line.strip() for line in open(file_meta_year)  if float(line.strip().split('\t')[0]) > YEAR_MIN ] )
         plot_measure(rating_cnt_year, label, num_of_bins, ax[0,1], 'royalblue', '')    
 
-    plt.show()
+    #plt.show()
     
     ''' ---------------------------------------------- '''
     ''' MUSIC   '''
     
-    '''genres = ['electro', 'pop']
+    genres = ['electro']#, 'pop']
      
     f, muax = plt.subplots(3, 3, figsize=(25, 25))
     st = f.suptitle( "Music inflation curves", fontsize=title_font)
@@ -103,22 +103,21 @@ def get_inflation_curves():
                 print 'PROCESSING -- ' + genre
                 file_meta_year  = FOLDER + '/3_inflation_curves/music_yearly_play_count_dist_'+genre+'.dat'
                 play_cnt_year = np.asarray([line.strip() for line in open(file_meta_year)  if float(line.strip().split('\t')[0]) > YEAR_MIN ] )
-                plot_measure(play_cnt_year, genre + ', Play count', num_of_bins, muax[i,j], 'forestgreen', '')    
-    '''
+                plot_measure(play_cnt_year, genre , num_of_bins, muax[i,j], 'forestgreen', '')    
+    
    
-   
+
     ''' ---------------------------------------------- '''
     ''' BOOKS   '''      
    
-    '''f, bax = plt.subplots(1, 3, figsize=(25, 12))
+    f, bax = plt.subplots(1, 3, figsize=(25, 12))
     st = f.suptitle( "Books inflation curves", fontsize=title_font)
 
     print 'PROCESSING --  books' 
-    file_cnt_year  = FOLDER + '/3_inflation_curves/book_yearly_edition_count_dist_authors.dat'
+    file_cnt_year  = FOLDER + '/3_inflation_curves/book_yearly_rating_count_dist_authors.dat'
     rating_cnt_book = np.asarray([line.strip() for line in open(file_cnt_year)  if float(line.strip().split('\t')[0]) > YEAR_MIN ] )
-    plot_measure(rating_cnt_book,   'Book, edition count',  num_of_bins, bax[2], 'Firebrick', '') 
-    '''
- 
+    plot_measure(rating_cnt_book,   'author' ,  num_of_bins, bax[2], 'Firebrick', '') 
+     
 
 get_inflation_curves()
 

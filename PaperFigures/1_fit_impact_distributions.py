@@ -36,7 +36,9 @@ def get_imapct_distr():
 
     Pros = []
     
-    for (label, fn) in fields[0:1]:
+    for (label, fn) in fields[12:13]:
+
+        print label
 
         file_cnt  = FOLDER + '/1_impact_distributions/' + fn + label + '.dat'              
         p = Process(target = fit.fitPowerLaw, args=(file_cnt, ax[1,0], label, 'ResultData/1_impact_distributions', 'impact_distributions', -sys.maxint, True, 0, distancefile, ))

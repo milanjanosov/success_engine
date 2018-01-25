@@ -5,7 +5,7 @@ def get_imapct_distr():
       
 
 
-    for normalize in ['no', 'yearly_avg', 'years_all', 'field_avg' ,  'fields_all']:
+    for normalize in ['no', 'yearly_avg', 'years_all', 'field_avg' ,  'fields_all'][2:3]:
 
 
 
@@ -35,7 +35,7 @@ def get_imapct_distr():
 
         Pros = []
         
-        for (label, fn) in fields:
+        for (label, fn) in fields[5:6]:
 
             print label
 
