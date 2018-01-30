@@ -410,7 +410,7 @@ def process_fields(min_rating_count, normalize, randomized):
 
  
     
-   input_fields = [(os.listdir(data_folder + '/Music/music-pop-release-careers'),          'music',      'pop'),
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-release-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-release-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-release-careers'),         'music',      'folk'),
