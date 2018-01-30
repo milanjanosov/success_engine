@@ -422,7 +422,8 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
                     (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
-                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-direct
+                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
+                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
 
 
 
