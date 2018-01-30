@@ -122,7 +122,7 @@ class SimpleCareerTrajectory:
                
                 try:
                 #if 2 == 2:
-                    year    = int(float(fields[1]))
+                    year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
 
                     if year > 1500:# and year < 2016:
