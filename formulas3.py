@@ -156,8 +156,9 @@ career = 'director'
 files = os.listdir('Data/Film/film-' + career + '-simple-careers')
 c = []
 for filename in files:
-    individuals_career = SimpleCareerTrajectory(filename, 'Data/Film/film-' + career + '-simple-careers/' + filename, 0, [], False, 0, 0, 9999)  
+    individuals_career = SimpleCareerTrajectory(filename, 'Data/Film/film-' + career + '-simple-careers/' + filename, 1, [], False, 0, 0, 9999)  
     c_i = individuals_career.getImpactValues()
+#    print c_i
     if len(c_i) > 4:
         c.append(c_i)
 

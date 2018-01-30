@@ -139,7 +139,7 @@ def LogL_i(parameters, args):
  
 
 # parameters
-N = 5
+NNN = 25
 
 f_max = 0
 x_max = []
@@ -147,14 +147,15 @@ x_max = []
 initmax = float(sys.argv[1])
 
 
-f = open('MLE/MLE_params_director_' + str(initmax) + '_' + str(N) + '.dat', 'w') 
+f = open('MLE/MLE_params_director_' + str(initmax) + '_' + str(NNN) + '.dat', 'w') 
 header = ['mu_p', 'mu_Q', 'mu_N', 'sigma_p', 'sigma_Q', 'sigma_N', 'sigma_pQ', 'sigma_pN', 'sigma_QN', ]
 header = [h + '_init' for h in header] + header 
 f.write('initmax' + '\t' + '\t'.join(header) + '\n')
 
 
-for i in range(N):
+for i in range(NNN):
 
+    print i, '/', NNN
     # variables to minimize
     mu_p = random.uniform(0.0, initmax)
     mu_Q = random.uniform(0.0, initmax )
@@ -172,14 +173,17 @@ for i in range(N):
     # careers
     career = 'director'
     files = os.listdir('Data/Film/film-' + career + '-simple-careers')
+
+    print 'files: ', len(files)
     c = []
     for filename in files:
-        individuals_career = SimpleCareerTrajectory(filename, 'Data/Film/film-' + career + '-simple-careers/' + filename, 0, [], False, 0, 0, 9999)  
+        individuals_career = SimpleCareerTrajectory(filename, 'Data/Film/film-' + career + '-simple-careers/' + filename, 1, [], False, 0, 0, 9999)  
         c_i = individuals_career.getImpactValues()
         if len(c_i) > 14:
+
             c.append(c_i)
 
-    print 'Careers: ', len(c_i)
+    print 'Careers: ', len(c)
 
 
     # stat data

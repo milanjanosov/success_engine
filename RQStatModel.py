@@ -1,10 +1,60 @@
-execfile("imports.py")
+import os
+import sys
+import matplotlib
+#matplotlib.use('Agg')
+import seaborn
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+import CareerAnalysisHelpers.binningFunctions as binning
+import CareerAnalysisHelpers.fittingImpactDistributions as fit
+from scipy import stats
+from matplotlib.colors import LogNorm
+from CareerAnalysisHelpers.alignPlots import align_plot
+from CareerAnalysisHelpers.binningFunctions import getDistribution
 
 
+
+''' TODO '''
+'''
+
+
+
+5. reading papers
+    - luck skill fraction
+    - experts opinion about the ranking
+
+
+3. SUCCESS CODE
+
+    1.1. create release level career
+        - max()
+        - sum()
+
+    1.2. Do we need inflation normalization?
+        - Check pdfs (friday notes)
+        - Figure3 supplementary: N_N stats for everyone, see if releases are better
+     
+    1.3. Is lognormal good enough?
+        - xmin
+        - yearmin
+
+
+
+
+
+
+
+'''
 
 
        
 
+def write_row(filename, data):
+
+    f = open(filename, 'w')
+    [f.write(str(dat)+'\n') for dat in data ]
+    f.close()    
 
 
 
@@ -167,19 +217,22 @@ def get_imapct_distr():
 
  
 
-    for mode in ['', 'Normalized'][1:]:
+    for mode in ['', 'Normalized'][0:1]:
     
         
         mode_    = 'Original' if mode == '' else 'Normalized'
         FOLDER_S = 'ProcessedDataSample/ProcessedData_0_' + mode + '_Sample' 
-        FOLDER   = 'ProcessedData/ProcessedData_0_' + mode# + '_Sample'        
+        #FOLDER   = 'ProcessedData/ProcessedData_0_' + mode# + '_Sample'        
   
+
+        FOLDER   = 'ProcessedData/ProcessedData_0'        
+
         ''' ---------------------------------------------- '''
         ''' MOVIES   '''
         
         professions = ['_MERGED', 'director', 'producer', 'writer', 'composer', 'art-director']
    
-        for label in professions[1:]:
+        for label in professions[1:2]:
             
             print 'PROCESSING -- ' + label
             #f, ax = plt.subplots(3, 2, figsize=(23, 23))
@@ -195,7 +248,7 @@ def get_imapct_distr():
             file_gros = FOLDER + '/1_impact_distributions/film_gross_revenue_dist_'  + label + '.dat'
             
             #fit.fitSkewedNormal(file_avg,   ax[0,0], 'IMDb, average ratings' + label)                       
-            fit.fitPowerLaw(file_cnt,   ax[1,0], 'IMDb, rating counts'   + label )#), 0.01)
+            fit.fitPowerLaw(file_cnt,   ax[1,0], 'IMDb, rating counts'   + label, writeout = False, cutoff = 100 )#), 0.01)
             #fit.fitSkewedNormal(file_meta,  ax[0,1], 'IMDb, metascores'      + label)             
             #fit.fitPowerLaw    (file_crit,  ax[1,1], 'IMDb, critic reviews'  + label, 0.05)                    
             #fit.fitPowerLaw    (file_user,  ax[2,1], 'IMDb, user reviews'    + label, 0.05)
@@ -203,7 +256,7 @@ def get_imapct_distr():
             
             #pltplot(ax)
             #plt.show()
-            savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_' + cut + '_log.png')
+            #savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_IMDB_fitted_impact_distros_' + label + '_' + cut + '_log.png')
           
         
         
@@ -211,7 +264,7 @@ def get_imapct_distr():
         ''' ---------------------------------------------- '''
         ''' MUSIC   '''
         
-        genres = ['electro', 'pop', 'rock', 'funk', 'folk', 'classical', 'jazz', 'hiphop']#['electro', 'pop']
+        '''genres = ['electro']#, 'pop', 'rock', 'funk', 'folk', 'classical', 'jazz', 'hiphop']#['electro', 'pop']
         
         f, muax = plt.subplots(3, 3, figsize=(25, 25))
         st = f.suptitle( mode + "Music impact distributions", fontsize=title_font)
@@ -227,11 +280,11 @@ def get_imapct_distr():
 
 
         savefig_nice(ax, 'Figs/1_impact_distributions/'+ mode_ +'_Music_fitted_impact_distros_' + cut + '.png')
-             
+        '''   
        
         ''' ---------------------------------------------- '''
         ''' BOOKS   '''      
-        f, bax = plt.subplots(1, 3, figsize=(25, 12))
+        '''f, bax = plt.subplots(1, 3, figsize=(25, 12))
         st = f.suptitle( mode + "Books impact distributions", fontsize=title_font)
         
         print 'PROCESSING --  books'       
@@ -244,7 +297,7 @@ def get_imapct_distr():
         #fit.fitPowerLaw    (book_ed,  bax[2], 'Goodreads, number of editions', 0.2)  
 
         savefig_nice(bax, 'Figs/1_impact_distributions/'+ mode_ +'_Books_fitted_impact_distros_' + cut + '.png')        
-        
+        '''
         
 
         
@@ -723,7 +776,7 @@ def get_career_length():
 
 
             
-    cutoff = 0.001
+    '''cutoff = 0.001
     cutoffs = []
     Dlogs = []
     Dpows = []
@@ -761,7 +814,7 @@ def get_career_length():
     plt.xscale('log')
 
     plt.show()
-    
+    ''' 
     
 
 
@@ -777,9 +830,9 @@ def get_career_length():
 
     ''' movie '''
     professions = ['_MERGED', 'director', 'producer', 'writer', 'composer', 'art-director'] 
-          
-    '''
-    for label in professions[1:2]:
+         
+    
+    '''for label in professions[1:2]:
     
         
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
@@ -810,10 +863,10 @@ def get_career_length():
         file_gross = FOLDER +'/film_career_length_gross_revenue_'+label+'.dat'
         fit.fitPowerLaw(file_gross, ax[2,1], 'Movie directors career length - gross revenue', 10)  
 
-        #plt.show()
+        plt.show()
         savefig_nice(ax, 'Figs/5_career_length/IMDB_career_lengths_distros_' + label + '.png')
-        
-    '''
+    '''    
+    
 
 
     ''' music '''
@@ -910,6 +963,11 @@ def plot_ccdf(file_avg_all, num_of_bins, ax, color, label, Nmin, title, marker):
                                               # getBinnedDistribution       getPercentileBinnedDistribution           binning.getPercentileBinnedDistribution(np.asarray(career_len),  np.asarray(data_max), num_of_bins) 
  
 
+    bx_average_ratings    = np.asarray(list(bx_average_ratings)) 
+    bp_average_ratings    = np.asarray(list(bp_average_ratings))
+    bperr_average_ratings = np.asarray(list(bperr_average_ratings)) 
+
+
     binss = bx_average_ratings  #(bx_average_ratings[1:] + bx_average_ratings[:-1])/2
     
 
@@ -979,7 +1037,7 @@ def get_r_test():
     
     
     
-    num_of_bins = 15
+    num_of_bins = 7
     title_font  = 25 
     Nmin = 15
     seaborn.set_style('white')   
@@ -1003,8 +1061,8 @@ def get_r_test():
                    ('composer',     'g',  '8'),
                    ('art-director', 'y',  'x')]
 
-    '''
-    for (label, color, marker) in professions[1:]:
+    
+    '''for (label, color, marker) in professions[1:]:
 
 
         f, ax = plt.subplots(3, 2, figsize=(23, 23))
@@ -1012,17 +1070,24 @@ def get_r_test():
    
 
        
-        file_avg_all  = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_average_rating_' + label + '.dat'
-        file_cnt_all  = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_rating_count_'   + label + '.dat'
-        file_mets_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_metascore_'      + label + '.dat'
-        file_crit_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_critic_reviews_' + label + '.dat'
-        file_user_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_user_reviews_'   + label + '.dat'
-        file_gross    = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_gross_revenue_'  + label + '.dat'          
+        #file_avg_all  = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_average_rating_' + label + '.dat'
+        #file_cnt_all  = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_rating_count_'   + label + '.dat'
+        #file_mets_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_metascore_'      + label + '.dat'
+        #file_crit_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_critic_reviews_' + label + '.dat'
+        #file_user_all = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_user_reviews_'   + label + '.dat'
+        #file_gross    = folder +  '_Normalized' + '/4_NN_rank_N/film_best_product_NN_ranks_all_gross_revenue_'  + label + '.dat'          
+        
+        file_avg_all  = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_average_rating_' + label + '.dat'
+        file_cnt_all  = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_rating_count_'   + label + '.dat'
+        file_mets_all = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_metascore_'      + label + '.dat'
+        file_crit_all = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_critic_reviews_' + label + '.dat'
+        file_user_all = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_user_reviews_'   + label + '.dat'
+        file_gross    = folder +   '/4_NN_rank_N/film_best_product_NN_ranks_all_gross_revenue_'  + label + '.dat'          
       
  
             
-        colorm = 'b'
-        mode = ''           
+        colorm  = 'b'
+        mode    = ''           
         markerm = 'o'                                         
                                                                                                    
         r_square_avg   = plot_ccdf(file_avg_all,  num_of_bins, ax[0,0], colorm, mode, Nmin, 'Individual, IMDb average ratings' , markerm)
@@ -1038,7 +1103,7 @@ def get_r_test():
         plt.show()
         #savefig_nice(ax, 'Figs/3_best_rank_distr/Film_NN_stat_' + str(min_rating) + '_' + label + '.png')          
               
-    '''     
+    '''        
     
             
             
@@ -1059,7 +1124,8 @@ def get_r_test():
             if genre_ind < len(genres):                   
                 genre = genres[genre_ind]          
                 print 'PROCESSING -- ' + genre
-                file_music   = folder + '_Normalized' + '/4_NN_rank_N/music_best_product_NN_ranks_all_play_count_'+genre+'.dat'
+                #file_music   = folder + '_Normalized' + '/4_NN_rank_N/music_best_product_NN_ranks_all_play_count_'+genre+'.dat'
+                file_music   = folder +  '/4_NN_rank_N/music_best_product_NN_ranks_all_play_count_'+genre+'.dat'
                 r_square_cnt = plot_ccdf(file_music,  num_of_bins, muax[i,j], 'g', genre, Nmin, 'Play count, ' + genre, markerm)
 
     plot_red_lines(muax, xxx)

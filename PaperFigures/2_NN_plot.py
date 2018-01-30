@@ -65,9 +65,9 @@ def parse_N_star_N_data(filename):
 def get_r_test():
 
 
-    num_of_bins = 10
+    num_of_bins = 5
 
-    folder      = '../ProcessedData/ProcessedDataNormalized_years_all'    
+    folder      = '../ProcessedData_1960_careers/ProcessedDataNormalized_years_all'    
     
 
     fields = [    ('director',     'film_best_product_NN_ranks_all_rating_count_'),
@@ -91,7 +91,7 @@ def get_r_test():
         f, ax       = plt.subplots(1, 2, figsize=(23, 23)) 
         plot_ccdf(folder, fn, num_of_bins, ax[0], label)
 
-        plt.show()
+        #plt.show()
 
  
 get_r_test()

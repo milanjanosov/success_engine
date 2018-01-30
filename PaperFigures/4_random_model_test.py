@@ -80,7 +80,7 @@ def do_the_r_model():
 
     num_of_bins = 12
     
-    folder = '../ProcessedData/ProcessedData_0_Normalized' 
+    folder = '../ProcessedData_1960_careers/ProcessedDataNormalized_years_all' 
     f, ax  = plt.subplots(3, 2, figsize=(23, 23))
 
 
@@ -97,10 +97,10 @@ def do_the_r_model():
                   ('classical',    'music_play_count_dist_',         'music_career_length_max_play_count_'), 
                   ('jazz',         'music_play_count_dist_',         'music_career_length_max_play_count_'), 
                   ('hiphop',       'music_play_count_dist_',         'music_career_length_max_play_count_'), 
-                  ('authors',      'book_rating_count_dist_authors', 'book_career_length_max_rating_count_authors')]
+                  ('authors',      'book_rating_count_dist_', 'book_career_length_max_rating_count_')]
 
 
-    for (label, fn1, fn2) in fields:
+    for (label, fn1, fn2) in fields[13:]:
 
         file_cnt    = folder + '/1_impact_distributions/'     + fn1 + label + '.dat'
         max_rat_cnt = folder + '/7_career_length_max_impact/' + fn2 + label + '.dat'  
