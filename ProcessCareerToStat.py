@@ -280,13 +280,13 @@ def process_simple_career_trajectories(args):
                 
  
                 
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-release-max-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                        
                 timestamps = individuals_career.getTimeStamps()                
 
 
 
-                if len(timestamps) > 0 and min(timestamps) > 1959:
+                if len(timestamps) > 0 and min(timestamps) > 0:
 
                          
                     # save the value of all impact measures
@@ -409,9 +409,16 @@ def process_fields(min_rating_count, normalize, randomized):
                        'book'     : ['rating_count']}#'average_rating',, 'edition_count']  }
 
  
+        
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
+                    (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
+                    (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
+                    (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
+                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
+                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
+                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock') ]
     
-    input_fields = [(os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz')]
-
 
 
     '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
