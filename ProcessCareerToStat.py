@@ -280,7 +280,7 @@ def process_simple_career_trajectories(args):
                 
  
                 
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-release-max-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                        
                 timestamps = individuals_career.getTimeStamps()                
 
@@ -410,20 +410,7 @@ def process_fields(min_rating_count, normalize, randomized):
 
  
     
-    input_fields = [(os.listdir(data_folder + '/Music/music-pop-release-careers'),          'music',      'pop'),
-                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
-                    (os.listdir(data_folder + '/Music/music-classical-release-careers'),    'music',      'classical'),
-                    (os.listdir(data_folder + '/Music/music-folk-release-careers'),         'music',      'folk'),
-                    (os.listdir(data_folder + '/Music/music-funk-release-careers'),         'music',      'funk'),
-                    (os.listdir(data_folder + '/Music/music-jazz-release-careers'),         'music',      'jazz'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-release-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-release-careers'),         'music',      'rock'),           
-                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
-                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
-                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
-                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
-                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
-                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
+    input_fields = [(os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz')]
 
 
 
@@ -497,8 +484,8 @@ if __name__ == '__main__':
     
 
     process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
-    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
-    process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
-    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
+  #  process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
+  #  process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
+  #  process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
    
 
