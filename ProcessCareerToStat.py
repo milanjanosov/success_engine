@@ -301,7 +301,7 @@ def process_simple_career_trajectories(args):
 
              
                     # do further stats if he is a good one with at least ... products
-                    if career_length > 9:
+                    if career_length > 3:
 
                         individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
 
