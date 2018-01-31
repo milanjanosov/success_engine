@@ -236,7 +236,7 @@ class SimpleCareerTrajectory:
     
     ### if we are looking for the max validtue and is is degenerated, then this  function gives back _ALL_
     ### the top value time events - here we get the rank!
-    def getRankOfMaxImpact(self):
+    '''def getRankOfMaxImpact(self):
         
         N = len(self.events)
         
@@ -248,8 +248,28 @@ class SimpleCareerTrajectory:
             return (ranks_of_maxs, random.choice(ranks_of_maxs), N)
         except ValueError:
             return ('nan', 'nan', 'nan')
+       
+    '''
+    def getRankOfMaxImpact(self):
+        
+        N = len(self.events)
+        
+        try:
+            maxValue      = max([e[2] for e in self.events])
+            sorted_events = sorted(self.events, key=lambda tup: tup[1])         
+            years         = sorted(list(set([s[1] for s in sorted_events])))  
             
+            maxes = []
+            for s in sorted_events:
+                if s[2] == maxValue:
+                    maxes.append(years.index(s[1]) + 1 )                
+
+            return (maxes, random.choice(maxes), len(years))
+
+        except ValueError:
+            return ('nan', 'nan', 'nan')
             
+    
     # log p_alpha = log_c_10ialpha - log Q_i
     # assume Q_i is constant over the career and P(p) is lognormal:
     # log Q_i = <log c_10ialpha> - mu_p
@@ -325,14 +345,14 @@ def getPercentileBinnedDistribution(x, y, nbins):
 
 
 
-'''
-pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, {}, False, min_rating_count = 0, date_of_birth = 2000, date_of_death = 9999)
+
+pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999)
 
 
-events = pista.events
-for e in events:
-    print e
-'''
+events = pista.getRankOfMaxImpact()
+
+print events
+
 #print pista.getTimeOfTheBest()
 #
 #print pista.getAutoCorrelCoeff()
