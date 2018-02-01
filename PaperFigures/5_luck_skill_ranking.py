@@ -11,7 +11,7 @@ def do_the_fits(filenm, ax, label, outfolder, statfile, statfile_t, statfile_f, 
 def fit_everything():
 
    
-    FOLDER   = '../ProcessedData/ProcessedDataNormalized_no/'    
+    FOLDER   = '../ProcessedData/ProcessedDataNormalized_no'    
     f, ax    = plt.subplots(1, 2, figsize=(20, 6))
 
     statfile     = 'ResultData/5_pQ_fit/STAT_log_p.dat'
@@ -54,35 +54,36 @@ def fit_everything():
         #p.start()
 
 
-        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0,0], label, outfolder, 'log_Q', statfile, 10, ))
+        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0], label, outfolder, 'log_Q', statfile, 10, ))
         Pros.append(p)
         p.start()
 
 
-        p = Process(target = fit.fitAndStatsNormal, args=(filenm, ax[0,0], label, outfolder, 'log_Q', statfile_t, 10, ))
+        p = Process(target = fit.fitAndStatsNormal, args=(filenm, ax[0], label, outfolder, 'log_Q', statfile_t, 10, ))
         Pros.append(p)
         p.start()
 
 
-        p = Process(target = fit.fitAndStatsTransformedNormal, args=(filenm, ax[0,0], label, outfolder, 'log_Q', statfile_f, 10, ))
+        p = Process(target = fit.fitAndStatsTransformedNormal, args=(filenm, ax[0], label, outfolder, 'log_Q', statfile_f, 10, ))
         Pros.append(p)
         p.start()
 
         
 
         fn = fn.replace('log_Q', 'log_p')
-    
-        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0,0], label, outfolder, 'log_p', statfile, 100, ))
+        filenm  = FOLDER + '/9_p_without_avg/' + fn + label + '.dat'              
+
+        p = Process(target = fit.fitAndStatsSkewedNormal, args=(filenm, ax[0], label, outfolder, 'log_p', statfile, 100, ))
         Pros.append(p)
         p.start()
 
 
-        p = Process(target = fit.fitAndStatsNormal, args=(filenm, ax[0,0], label, outfolder, 'log_p', statfile_t, 100, ))
+        p = Process(target = fit.fitAndStatsNormal, args=(filenm, ax[0], label, outfolder, 'log_p', statfile_t, 100, ))
         Pros.append(p)
         p.start()
 
 
-        p = Process(target = fit.fitAndStatsTransformedNormal, args=(filenm, ax[0,0], label, outfolder, 'log_p', statfile_f, 100, ))
+        p = Process(target = fit.fitAndStatsTransformedNormal, args=(filenm, ax[0], label, outfolder, 'log_p', statfile_f, 100, ))
         Pros.append(p)
         p.start()
 
