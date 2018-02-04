@@ -243,11 +243,12 @@ def process_simple_career_trajectories(args):
 
 
         ''' iterate over all the careers and do the job '''
-        for filename in files:
+        for filename in files[0:1000]:
                  
             ijk += 1
-            print  ijk, '/', nnn
+            #print  ijk, '/', nnn
             
+            career_type = filename.split('_')[2]
 
             # calc the stats of theserparated measures
             for impact_measure in impact_measures[field]:
@@ -279,8 +280,8 @@ def process_simple_career_trajectories(args):
                         pass
                 
  
-                
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
+
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-' + career_type + '-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
                        
                 timestamps = individuals_career.getTimeStamps()                
 
@@ -341,40 +342,43 @@ def process_simple_career_trajectories(args):
         for impact_measure in impact_measures[field]:
             
             # write impact measures
-            extra = ''
+            if 'simple' in career_type:
+                extra = ''
+            else:
+                extra = '_' + career_type
+
             #if randomized: extra = '_' + str(round(time.time(), 5))
             filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
             write_distr_data(impact_values[impact_measure], filename)
         
 
             # normalizing factors
-            filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' 
+            filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + extra + '.dat' 
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
-            filename = out_root + '/12_yearly_values/' + field + 'yearly_values' + impact_measure + '_' + label + '.dat' 
+            filename = out_root + '/12_yearly_values/' + field + 'yearly_values' + impact_measure + '_' + label + extra + '.dat' 
             write_yearly_values(yearly_impacts[impact_measure],  filename)
 
 
           
             # write max values
-            filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + '.dat'       
+            filename = out_root + '/2_max_impact_distributions/' + field + '_max_' + impact_measure + '_dist_' + label + extra + '.dat'       
             write_distr_data(max_impacts[impact_measure], filename)
         
             # inflation curves
-            filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + '.dat'       
+            filename = out_root + '/3_inflation_curves/' + field + '_yearly_' + impact_measure + '_dist_' + label + extra + '.dat'       
             write_distr_data(get_dict_data(yearly_impacts[impact_measure]), filename)
                   
             # rank of the best products
-            filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + '.dat'
-            filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + '.dat'                                                
+            filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + extra + '.dat'
+            filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + extra + '.dat'                                                
             write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
 
             # time of the best product
-            filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + '.dat'
+            filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + extra + '.dat'
             write_distr_data(best_products_time[impact_measure], filename)
             
             # career length and max impact for testing the r-model
-            extra = ''
             filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
             write_distr_data(impact_values_R[impact_measure], filename)
 
@@ -382,22 +386,22 @@ def process_simple_career_trajectories(args):
             write_pairs(best_value_careerlength[impact_measure], filename)
 
             # career length distribution
-            filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + '.dat'
+            filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + extra + '.dat'
             write_distr_data(career_lengths[impact_measure], filename)
             
             # the distribution of p - mu_p in the impact = pQ formula
-            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + '.dat'
+            filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + extra + '.dat'
             write_distr_data(p_without_mean[impact_measure], filename)
             
             # write out multiple impact data
-            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + '.dat'
+            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + extra + '.dat'
             write_distr_data(multi_impacts, filename)
             
             # write out the logQ_i + mu_p
-            filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + '.dat'
+            filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + extra + '.dat'
             write_distr_data(log_Q_wout_mean[impact_measure], filename)
-                
   
+
      
      
 def process_fields(min_rating_count, normalize, randomized):
@@ -410,6 +414,14 @@ def process_fields(min_rating_count, normalize, randomized):
 
  
         
+    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
+                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),     'music',      'jazz') ]    
+
+    '''
+
+
+
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
@@ -417,18 +429,15 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
                     (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
                     (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock') ]
-    
+                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),  
+
+                    (os.listdir(data_folder + '/Music/music-folk-release-max-careers'),         'music',      'folk'),
+                    (os.listdir(data_folder + '/Music/music-funk-release-max-careers'),         'music',      'funk'),
+                    (os.listdir(data_folder + '/Music/music-hiphop-release-max-careers'),       'music',      'hiphop'),                   		
+                    (os.listdir(data_folder + '/Music/music-rock-release-max-careers'),         'music',      'rock'),  
+                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz'),
 
 
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
-                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
-                    (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
-                    (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
-                    (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
-                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),           
                     (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
                     (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
                     (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
@@ -438,7 +447,7 @@ def process_fields(min_rating_count, normalize, randomized):
     
 
 
-    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
+    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
     '''
@@ -487,12 +496,10 @@ if __name__ == '__main__':
 
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
-    process_fields(min_rating_count, normalize = 'no',  randomized = False )
-    
-
+    process_fields(min_rating_count, normalize = 'no',          randomized = False )   
     process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
-  #  process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
-  #  process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
-  #  process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
+    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
+    process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
+    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
    
 
