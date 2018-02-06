@@ -233,7 +233,7 @@ def process_simple_career_trajectories(args):
                 elif 'years_all' in normalize:
                     norm_const = total_avg
 
-                print normalize, norm_const
+#                print normalize, norm_const
                 norm_factors[impact_measure] = parse_norm_factors('ProcessedData/ProcessedDataNormalized_no/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + '.dat' , norm_const)
 
 
@@ -246,10 +246,14 @@ def process_simple_career_trajectories(args):
         for filename in files[0:1000]:
                  
             ijk += 1
-            #print  ijk, '/', nnn
-            
-            career_type = filename.split('_')[2]
+            print  ijk, '/', nnn
+	    
 
+	    if 'music' == field:            
+                career_type = filename.split('_')[2]
+	    else:
+		career_type = 'simple'
+#	    print career_type, filename 
             # calc the stats of theserparated measures
             for impact_measure in impact_measures[field]:
                     
@@ -302,7 +306,7 @@ def process_simple_career_trajectories(args):
 
              
                     # do further stats if he is a good one with at least ... products
-                    if career_length > 3:
+                    if career_length > 10:
 
                         individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
 
@@ -431,11 +435,6 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
                     (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),  
 
-                    (os.listdir(data_folder + '/Music/music-folk-release-max-careers'),         'music',      'folk'),
-                    (os.listdir(data_folder + '/Music/music-funk-release-max-careers'),         'music',      'funk'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-release-max-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-release-max-careers'),         'music',      'rock'),  
-                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz'),
 
 
                     (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
@@ -445,6 +444,17 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
     
+
+
+    '''
+                        (os.listdir(data_folder + '/Music/music-folk-release-max-careers'),         'music',      'folk'),
+                    (os.listdir(data_folder + '/Music/music-funk-release-max-careers'),         'music',      'funk'),
+                    (os.listdir(data_folder + '/Music/music-hiphop-release-max-careers'),       'music',      'hiphop'),                   		
+                    (os.listdir(data_folder + '/Music/music-rock-release-max-careers'),         'music',      'rock'),  
+                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz'),
+
+
+    '''
 
 
     '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
@@ -496,10 +506,18 @@ if __name__ == '__main__':
 
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
-    process_fields(min_rating_count, normalize = 'no',          randomized = False )   
+    '''process_fields(min_rating_count, normalize = 'no',          randomized = False )   
     process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
     process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
     process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
     process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
+    '''
+
+    process_fields(min_rating_count, normalize = 'no',          randomized = True )   
+    process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = True )
+    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = True )     
+    process_fields(min_rating_count, normalize = 'fields_all',  randomized = True )     
+    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = True )   
    
+  
 
