@@ -76,14 +76,20 @@ def write_pairs(data, filename):
         f.close()  
         
 
-def write_NN_rank(NNdata_all, NNdata_rand, filename1, filename2):
-                
+def write_NN_rank(NNdata_all, NNdata_rand, filename1, filename2, random = False):
+             
+    mode = 'w'   
+    if random:
+        if os.path.exists(filename1):
+            mode = 'a'
+
+
     if len(NNdata_all) > 0:     
     
-        f = open(filename1, 'w')
+        f = open(filename1, mode)
         [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NNdata_all]
         f.close() 
-        f = open(filename2, 'w')
+        f = open(filename2, mode)
         [f.write(str(a[0]) + '\t' + str(a[1]) + '\n') for a in NNdata_rand]
         f.close()      
 
@@ -243,7 +249,7 @@ def process_simple_career_trajectories(args):
 
 
         ''' iterate over all the careers and do the job '''
-        for filename in files[0:1000]:
+        for filename in files:
                  
             ijk += 1
             print  ijk, '/', nnn
@@ -303,7 +309,7 @@ def process_simple_career_trajectories(args):
                     # get the yearly values for the inflation curves
                     max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
                     career_length = len(individuals_career.getImpactValues()  )
-
+                    career_lengths[impact_measure] .append(career_length)                 
              
                     # do further stats if he is a good one with at least ... products
                     if career_length > 10:
@@ -325,7 +331,7 @@ def process_simple_career_trajectories(args):
                         best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
                         
                         # getting things for the Qmodel
-                        career_lengths[impact_measure] .append(career_length)                 
+
                         p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
                         log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
 
@@ -376,7 +382,7 @@ def process_simple_career_trajectories(args):
             # rank of the best products
             filename1 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_all_' + impact_measure + '_' + label + extra + '.dat'
             filename2 = out_root + '/4_NN_rank_N/' + field + '_best_product_NN_ranks_rand_'+ impact_measure + '_' + label + extra + '.dat'                                                
-            write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2)
+            write_NN_rank(best_products_rank_all[impact_measure], best_products_rank_rand[impact_measure], filename1, filename2, random = randomized)
 
             # time of the best product
             filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + extra + '.dat'
@@ -425,8 +431,21 @@ def process_fields(min_rating_count, normalize, randomized):
     '''
 
 
-
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
+                    (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
+                    (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
+                    (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
+                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
+                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
+                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock') ]
+    
+
+
+
+
+
+    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -443,7 +462,7 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    
+    '''
 
 
     '''
@@ -511,13 +530,13 @@ if __name__ == '__main__':
     process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
     process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
     process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
-    '''
-
-    process_fields(min_rating_count, normalize = 'no',          randomized = True )   
-    process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = True )
-    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = True )     
-    process_fields(min_rating_count, normalize = 'fields_all',  randomized = True )     
-    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = True )   
+    '''    
+    for i in range(100):
+        process_fields(min_rating_count, normalize = 'no',          randomized = True )   
+        process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = True )
+        process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = True )     
+        process_fields(min_rating_count, normalize = 'fields_all',  randomized = True )     
+        process_fields(min_rating_count, normalize = 'years_all' ,  randomized = True )   
    
   
 
