@@ -5,6 +5,7 @@ from CareerTrajectory.careerTrajectory import SimpleCareerTrajectory
 from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 import time
 import gzip
+import random
 
 
 def add_max_impact(lista, maxvalue):
@@ -117,12 +118,27 @@ def process_simple_career_trajectories(args):
     impact_measures  = args[4]
     min_rating_count = args[5]
     input_fields     = args[6]
+    frac             = args[7]
+
+
+
+    
+
+
  
     
     for (files, field, label) in [input_data]:
 
         ijk = 0
+
+
+        if frac < 1.0:        
+            files = random.sample(files, int(len(files) * frac + 100*random.random()    ))
+
+
         nnn = len(files)
+        #print nnn
+
 
         ''' init variables and stuff '''           
         # initialize a dict to store all the impact measures' values
@@ -252,11 +268,11 @@ def process_simple_career_trajectories(args):
         for filename in files:
                  
             ijk += 1
-            print  ijk, '/', nnn
+            #print  ijk, '/', nnn
 	    
 
 	    if 'music' == field:            
-                career_type = filename.split('_')[2]
+            career_type = filename.split('_')[2]
 	    else:
 		career_type = 'simple'
 #	    print career_type, filename 
@@ -312,7 +328,7 @@ def process_simple_career_trajectories(args):
                     career_lengths[impact_measure] .append(career_length)                 
              
                     # do further stats if he is a good one with at least ... products
-                    if career_length > 10:
+                    if career_length > 4:
 
                         individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
 
@@ -341,10 +357,41 @@ def process_simple_career_trajectories(args):
             # more than one impact measure is used - for the correlation plots
             # multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized, date_of_birth, date_of_death) 
             # multi_impacts += multiimpact_career.getImpactValues()
-            
+         
+
+#        try:
+        if 2 == 2:
+
+            avgQ = str(np.mean([float(fff.split('\t')[1]) for fff in log_Q_wout_mean.values()[0]]))
+            varQ = str(np.std([float(fff.split('\t')[1]) for fff  in log_Q_wout_mean.values()[0]]))
+
+
+
+
+
+            avgp = str(np.mean([float(fff) for fff in p_without_mean.values()[0]]))
+            varp = str(np.std([float(fff) for fff  in p_without_mean.values()[0]]))
+
+
+
+            #print label, avgQ
+
+            if 'nan' not in avgQ and 'nan' not in varQ:
+
+                string = label + '\t' + str(nnn) + '\t' + str(len(log_Q_wout_mean.values()[0])) + '\t' + avgQ + '\t' + varQ + '\t' + avgp + '\t' + varp
+                #print string
+                fQ = open('ProcessedData/SampleSize_vs_Q.dat', 'a')
+                fQ.write(string + '\n')
+                fQ.close()
+              
+  #      except:
+   #         pass
+          
+
+   
       
         ''' write out the results '''                      
-        out_root = 'ProcessedData/ProcessedData'
+        '''out_root = 'ProcessedData/ProcessedData'
         if normalize:  out_root = out_root + 'Normalized_' + normalize
         if randomized: out_root = out_root + 'Randomized'            
             
@@ -410,11 +457,11 @@ def process_simple_career_trajectories(args):
             # write out the logQ_i + mu_p
             filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + extra + '.dat'
             write_distr_data(log_Q_wout_mean[impact_measure], filename)
-  
+        '''  
 
      
      
-def process_fields(min_rating_count, normalize, randomized):
+def process_fields(min_rating_count, normalize, frac, randomized):
 
     data_folder = 'Data'     
      
@@ -428,8 +475,6 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
                     (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),     'music',      'jazz') ]    
 
-    '''
-
 
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
@@ -441,11 +486,10 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock') ]
     
 
+    '''
 
 
-
-
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -453,33 +497,39 @@ def process_fields(min_rating_count, normalize, randomized):
                     (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
                     (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
                     (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock'),  
-
-
-
                     (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
                     (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
                     (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    '''
 
 
-    '''
-                        (os.listdir(data_folder + '/Music/music-folk-release-max-careers'),         'music',      'folk'),
-                    (os.listdir(data_folder + '/Music/music-funk-release-max-careers'),         'music',      'funk'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-release-max-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-release-max-careers'),         'music',      'rock'),  
-                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),         'music',      'jazz'),
 
-
-    '''
+    
 
 
     '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
+    
+
+
+
+    input_fields = [
+                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
+                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
+                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
+                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
+                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director')]#,   
+                    #(os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
     '''
+
+
+
+
+
+
 
 
     out_root = 'ProcessedData/ProcessedData'
@@ -507,7 +557,7 @@ def process_fields(min_rating_count, normalize, randomized):
     Pros = []
     
     for inp in input_fields:
-        p = Process(target = process_simple_career_trajectories, args=([inp, normalize, randomized, data_folder, impact_measures, min_rating_count, input_fields], ))
+        p = Process(target = process_simple_career_trajectories, args=([inp, normalize, randomized, data_folder, impact_measures, min_rating_count, input_fields, frac], ))
         Pros.append(p)
         p.start()
        
@@ -525,18 +575,34 @@ if __name__ == '__main__':
 
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
-    '''process_fields(min_rating_count, normalize = 'no',          randomized = False )   
-    process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
+
+    f = open('ProcessedData/SampleSize_vs_Q.dat', 'w')
+
+
+
+    fractions = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+
+    for frac in fractions:
+
+        for i in range(int(3/frac)):
+
+            print frac, i
+
+            process_fields(min_rating_count, normalize = 'no', frac = frac,   randomized = False )   
+      
+
+
+    '''process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
     process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
     process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
     process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
-    '''    
+
     for i in range(100):
         process_fields(min_rating_count, normalize = 'no',          randomized = True )   
         process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = True )
         process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = True )     
         process_fields(min_rating_count, normalize = 'fields_all',  randomized = True )     
         process_fields(min_rating_count, normalize = 'years_all' ,  randomized = True )   
-   
+    '''   
   
 
