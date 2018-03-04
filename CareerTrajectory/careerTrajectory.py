@@ -32,21 +32,26 @@ class MultipleImpactCareerTrajectory:
             
             if 'year' not in line:
                 fields  = line.strip().split('\t')
+
+               # print fields
                 #print fields
                 
                 product = fields[0]
                 impacts = [0 if imp is None else imp  for imp in fields[2:] ]    
-                impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]                                        
+                impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]    
+
+                                    
                 try:              
                     year    = float(fields[1]) 
                     if yearIsOK(year, date_of_birth, date_of_death):
                         if len(norm_factors) > 0:
                             impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
+                        #print product , year, [str(i) for i in impacts]
                         events.append((product, year, [str(i) for i in impacts]))
                 except:
                     pass
         
-        if randomized and len(events) > 0:
+        '''if randomized and len(events) > 0:
             
             events_rand = []
             impacts_to_rand = []
@@ -58,7 +63,9 @@ class MultipleImpactCareerTrajectory:
                 events_rand.append((events[i][0], events[i][1], [impacts_to_rand[impact][i] for impact in range(len(events[0][2]))] ))
             
             events = events_rand
-                                      
+        '''
+        #print events                                      
+
         self.events = events   
 
 
@@ -66,6 +73,9 @@ class MultipleImpactCareerTrajectory:
         
         if len(self.events) > 0:
             num_impacts    = len(self.events[0][2]) 
+
+            #print self.events
+
             return [event[0] + '\t' + '\t'.join(event[2]) for event in self.events]
         else:
             return []

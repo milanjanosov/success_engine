@@ -266,17 +266,27 @@ def process_simple_career_trajectories(args):
 
         ''' iterate over all the careers and do the job '''
         for filename in files:
-                 
+                     
             ijk += 1
-            #print  ijk, '/', nnn
-	    
+            print  ijk, '/', nnn
+	        
 
-	    if 'music' == field:            
-            career_type = filename.split('_')[2]
-	    else:
-		career_type = 'simple'
-#	    print career_type, filename 
+            if 'music' == field:            
+                career_type = filename.split('_')[2]
+            else:
+        		career_type = 'simple'
+    #	    print career_type, filename 
             # calc the stats of theserparated measures
+
+
+
+
+
+            
+
+
+
+
             for impact_measure in impact_measures[field]:
                     
                 # construct the career of the individual
@@ -352,11 +362,14 @@ def process_simple_career_trajectories(args):
                         log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
 
 
-
-
             # more than one impact measure is used - for the correlation plots
-            # multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, norm_factors.values(), randomized, date_of_birth, date_of_death) 
-            # multi_impacts += multiimpact_career.getImpactValues()
+            if 'music' not in field:
+                multiimpact_career = MultipleImpactCareerTrajectory(filename,data_folder+'/'+field.title()+'/'+field+'-'+label+'-simple-careers/'+filename, [], randomized, date_of_birth, date_of_death) 
+                multi_impacts += multiimpact_career.getImpactValues()
+         
+
+            #print multiimpact_career.getImpactValues()
+
          
 
 #        try:
@@ -388,10 +401,9 @@ def process_simple_career_trajectories(args):
    #         pass
           
 
-   
       
         ''' write out the results '''                      
-        '''out_root = 'ProcessedData/ProcessedData'
+        out_root = 'ProcessedData/ProcessedData'
         if normalize:  out_root = out_root + 'Normalized_' + normalize
         if randomized: out_root = out_root + 'Randomized'            
             
@@ -457,7 +469,7 @@ def process_simple_career_trajectories(args):
             # write out the logQ_i + mu_p
             filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + extra + '.dat'
             write_distr_data(log_Q_wout_mean[impact_measure], filename)
-        '''  
+        
 
      
      
@@ -576,7 +588,7 @@ if __name__ == '__main__':
 #    process_fields(min_rating_count, normalize = False, randomized = False)
 #    process_fields(min_rating_count, normalized = True,  randomized = False)
 
-    f = open('ProcessedData/SampleSize_vs_Q.dat', 'w')
+    '''f = open('ProcessedData/SampleSize_vs_Q.dat', 'w')
 
 
 
@@ -589,13 +601,15 @@ if __name__ == '__main__':
             print frac, i
 
             process_fields(min_rating_count, normalize = 'no', frac = frac,   randomized = False )   
-      
+    '''  
 
 
-    '''process_fields(min_rating_count, normalize = 'yearly_avg',  randomized = False )
-    process_fields(min_rating_count, normalize = 'field_avg' ,  randomized = False )     
-    process_fields(min_rating_count, normalize = 'fields_all',  randomized = False )     
-    process_fields(min_rating_count, normalize = 'years_all' ,  randomized = False )   
+    process_fields(min_rating_count, normalize = 'no' , frac = 1,  randomized = False )     
+
+    '''process_fields(min_rating_count, normalize = 'yearly_avg', frac = 1,  randomized = False )
+    process_fields(min_rating_count, normalize = 'field_avg' , frac = 1,  randomized = False )     
+    process_fields(min_rating_count, normalize = 'fields_all', frac = 1,  randomized = False )     
+    process_fields(min_rating_count, normalize = 'years_all' , frac = 1,  randomized = False )   
 
     for i in range(100):
         process_fields(min_rating_count, normalize = 'no',          randomized = True )   
