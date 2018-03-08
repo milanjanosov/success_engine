@@ -32,21 +32,26 @@ class MultipleImpactCareerTrajectory:
             
             if 'year' not in line:
                 fields  = line.strip().split('\t')
+
+               # print fields
                 #print fields
                 
                 product = fields[0]
                 impacts = [0 if imp is None else imp  for imp in fields[2:] ]    
-                impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]                                        
+                impacts = [0 if 'None' in imp else imp  for imp in fields[2:] ]    
+
+                                    
                 try:              
                     year    = float(fields[1]) 
                     if yearIsOK(year, date_of_birth, date_of_death):
                         if len(norm_factors) > 0:
                             impacts = [float(impacts[i])/norm_factors[i][year] if year in norm_factors[i]  else 0  for i in range(len(norm_factors))  ]
+                        #print product , year, [str(i) for i in impacts]
                         events.append((product, year, [str(i) for i in impacts]))
                 except:
                     pass
         
-        if randomized and len(events) > 0:
+        '''if randomized and len(events) > 0:
             
             events_rand = []
             impacts_to_rand = []
@@ -58,7 +63,9 @@ class MultipleImpactCareerTrajectory:
                 events_rand.append((events[i][0], events[i][1], [impacts_to_rand[impact][i] for impact in range(len(events[0][2]))] ))
             
             events = events_rand
-                                      
+        '''
+        #print events                                      
+
         self.events = events   
 
 
@@ -66,6 +73,9 @@ class MultipleImpactCareerTrajectory:
         
         if len(self.events) > 0:
             num_impacts    = len(self.events[0][2]) 
+
+            #print self.events
+
             return [event[0] + '\t' + '\t'.join(event[2]) for event in self.events]
         else:
             return []
@@ -236,7 +246,7 @@ class SimpleCareerTrajectory:
     
     ### if we are looking for the max validtue and is is degenerated, then this  function gives back _ALL_
     ### the top value time events - here we get the rank!
-    def getRankOfMaxImpact(self):
+    '''def getRankOfMaxImpact(self):
         
         N = len(self.events)
         
@@ -248,8 +258,54 @@ class SimpleCareerTrajectory:
             return (ranks_of_maxs, random.choice(ranks_of_maxs), N)
         except ValueError:
             return ('nan', 'nan', 'nan')
+       
+    '''
+    def getRankOfMaxImpact(self):
+        
+        N = len(self.events)
+        
+        try:
+            maxValue      = max([e[2] for e in self.events])
+            sorted_events = sorted(self.events, key=lambda tup: tup[1])         
+            years         = sorted(list(set([s[1] for s in sorted_events])))  
             
+            maxes = []
+            for s in sorted_events:
+                if s[2] == maxValue:
+                    maxes.append(years.index(s[1]) + 1 )                
+
+            return (maxes, random.choice(maxes), len(years))
+
+        except ValueError:
+            return ('nan', 'nan', 'nan')
+ 
+
+
+
+    def getRankOfMaxImpact(self):
+        
+        N = len(self.events)
+        
+        try:
+            maxValue      = max([e[2] for e in self.events])
+            sorted_events = sorted(self.events, key=lambda tup: tup[1])         
+            years         = sorted(list(set([s[1] for s in sorted_events])))  
             
+            maxes = []
+            for s in sorted_events:
+                if s[2] == maxValue:
+                    maxes.append(years.index(s[1]) + 1 )                
+
+            return (maxes, random.choice(maxes), len(years))
+
+        except ValueError:
+            return ('nan', 'nan', 'nan')
+            
+ 
+
+
+           
+    
     # log p_alpha = log_c_10ialpha - log Q_i
     # assume Q_i is constant over the career and P(p) is lognormal:
     # log Q_i = <log c_10ialpha> - mu_p
@@ -325,14 +381,14 @@ def getPercentileBinnedDistribution(x, y, nbins):
 
 
 
-'''
-pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, {}, False, min_rating_count = 0, date_of_birth = 2000, date_of_death = 9999)
+
+#pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999)
 
 
-events = pista.events
-for e in events:
-    print e
-'''
+#events = pista.getRankOfMaxImpact()
+
+#print events
+
 #print pista.getTimeOfTheBest()
 #
 #print pista.getAutoCorrelCoeff()

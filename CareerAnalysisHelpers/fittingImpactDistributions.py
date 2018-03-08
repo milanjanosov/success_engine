@@ -31,41 +31,60 @@ def fitLognormal(filename, ax, label = '', out_folder = '', name = '', cutoff = 
     elif noise:
         rand = np.asarray([float(line.strip()) + random.random() for line in open(filename) if float(line.strip()) > cutoff]) 
     else:     
-        rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
+        rand = np.asarray([float(line.strip()) + random.random()  for line in open(filename) if float(line.strip()) > cutoff]) 
    
     x_rand, p_rand = getDistribution(rand)                  
   
     
-    # fit and plot the powerlaw   
-    print 'Fit and plot the lognormal...' + label
-    p0 = stats.lognorm._fitstart(rand)
-    p1 = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
-    param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
 
     # histogram
     nbins = 20
-    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), nbins), log=True,alpha=0.0, cumulative=0)
-    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.7, markersize = 0, linewidth = 5)
+    counts, bins, bars = ax.hist(rand, normed = True, bins = 10 ** np.linspace(np.log10(min(x_rand)), np.log10(max(x_rand)), nbins), log=True,alpha=0.0, cumulative=1)
+    ax.plot((bins[1:] + bins[:-1])/2, counts, 's-', color = 'royalblue', alpha = 0.0, markersize = 0, linewidth = 5)
     bins = (bins[1:] + bins[:-1])/2    
 
 
 
-    ppdf_fitted = stats.lognorm.pdf(x_rand, param[0], loc=param[1], scale=param[2])
+
+
+    # fit and plot the powerlaw   
+    print 'Fit and plot the lognormal...' + label
+    p0    = stats.lognorm._fitstart(rand)
+    p1    = stats.lognorm.fit(rand, p0[0], loc  = p0[1],scale = p0[2])
+    param = stats.lognorm.fit(rand, p1[0], loc  = p1[1],scale = p1[2])
+    
+    
+
+
+
+    ppdf_fitted = stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])
     mu =  np.log(param[2])
     sigma = param[0]
- 
+    
 
     ax.set_xlabel(label, fontsize = 20)
     ax.set_ylabel('CDF of ' + label, fontsize = 20)
+    
+    cdf_fitted = stats.lognorm.cdf(x_rand, param[0], loc=param[1], scale=param[2])
+    sk_results_norm = stats.ks_2samp(cdf_fitted, np.cumsum(p_rand))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu 
 
- 
+
+   
+
+    print label, '\t', norm, '\t', sk_results_norm[0]
+
+
+    extra = ''
+    if 'release' in filename:
+        extra = '_release-max'
+
     if writeout:    
         if not os.path.exists(out_folder):
             os.makedirs(out_folder)
      
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_'                          + norm  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_hist_pdf_' + str(nbins) + '_'  + norm  + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
-
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_'                          + norm + extra + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_hist_pdf_' + str(nbins) + '_'  + norm + extra + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
+    
   
     return 
 
@@ -82,7 +101,7 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
     elif noise:
         rand = np.asarray([float(line.strip()) + random.random() for line in open(filename) if float(line.strip()) > cutoff]) 
     else:     
-        rand = np.asarray([float(line.strip()) + noise for line in open(filename) if float(line.strip()) > cutoff]) 
+        rand = np.asarray([float(line.strip()) + random.random() for line in open(filename) if float(line.strip()) > cutoff]) 
     
 
     x_rand, p_rand = getDistribution(rand)                  
@@ -119,11 +138,17 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
     sk_results_norm = stats.ks_2samp(pdf_fitted, np.cumsum(p_rand))   # stats.ks_2samp(np.cumsum(p_rand), np.cumsu 
     ax.plot(x_rand,pdf_fitted,'k-', linewidth = 4, label = 'Lognormal fit, $\\mu$=' + str(round(mu,2)) + '\n$\\sigma$=' + str(round(sigma, 2)) + ', $D$='+str(round(sk_results_norm[0], 2)))
    
+    print sk_results_norm, D
 
     ax.set_xlabel(label, fontsize = 20)
     ax.set_ylabel('CDF of ' + label, fontsize = 20)
 
  
+    extra = ''
+    if 'release' in filename:
+        extra = '_release-max'
+
+
     if writeout:    
         if not os.path.exists(out_folder):
             os.makedirs(out_folder)
@@ -132,10 +157,10 @@ def fitPowerLaw(filename, ax, label = '', out_folder = '', name = '', cutoff = -
         xfit = parassms.lines[1].get_xdata()
         
         yfit = parassms.lines[1].get_ydata()  
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_'  + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
-        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'   + '.dat', [str(xfit[i])   + '\t' + str(yfit[i])       for i in range(len(xfit))] )   
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_'      + '.dat', [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))] )   
-        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_'  + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_hist_' + extra + '.dat', [str(bins[i])   + '\t' + str(counts[i]) for i in range(len(counts))] )
+        write_row(out_folder + '/' + label + '_' + name + '_powerlaw_fit_'  + extra + '.dat', [str(xfit[i])   + '\t' + str(yfit[i])       for i in range(len(xfit))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_'     + extra + '.dat', [str(x_rand[i]) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))] )   
+        write_row(out_folder + '/' + label + '_' + name + '_lognormal_pdf_' + extra + '.dat', [str(x_rand[i]) + '\t' + str(ppdf_fitted[i]) for i in range(len(x_rand))] )   
 
 
         f_Ddata = open(distancefile, 'a')
@@ -196,15 +221,20 @@ def fitAndStatsSkewedNormal(filename, ax, label, outfolder, name, statfile, filt
     legend = ax.legend(loc='left', shadow=True, fontsize = 20)
 
 
-    write_row(outfolder + '/' + label + '_' + name + '_original_fit'               + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit'          + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit'          + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_original_hist_'             + '.dat', rand)
+    extra = ''
+    if 'release' in filename:
+        extra = '_release-max'
+
+
+    write_row(outfolder + '/' + label + '_' + name + '_original_fit'               + extra + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit'          + extra + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit'          + extra + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_mean_centered_fit' + extra + 'sample'  + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_peak_centered_fit' + extra + 'sample'  + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_original_hist_'             + extra + '.dat', rand)
     print 'SKEW',  mean, variance, skewness, kurtosity 
     fout = open(statfile, 'a')
-    fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\t' + str(skewness) + '\t' + str(kurtosity) + '\n')
+    fout.write(label + '\t' + name + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\t' + str(skewness) + '\t' + str(kurtosity) + '\n')
     fout.close()
 
 
@@ -236,15 +266,19 @@ def fitAndStatsNormal(filename, ax, label, outfolder, name, statfile, filterpara
  
     print 'NORM',  mean, variance
 
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_original_fit'               + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit'          + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit'          + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_fnorm_original_hist_'             + '.dat', rand)
+    extra = ''
+    if 'release' in filename:
+        extra = '_release-max'
+
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_original_fit'               + extra + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit'          + extra + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit'          + extra + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_mean_centered_fit_sample'   + extra + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_peak_centered_fit_sample'   + extra + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_fnorm_original_hist_'             + extra + '.dat', rand)
  
     fout = open(statfile, 'a')
-    fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\n')
+    fout.write(label + '\t' + name +'\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\n')
     fout.close()
     
 
@@ -279,15 +313,19 @@ def fitAndStatsTransformedNormal(filename, ax, label, outfolder, name, statfile,
 
     print 'NORM',  mean, variance
 
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_original_fit'               + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_mean_centered_fit'          + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_peak_centered_fit'          + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_mean_centered_fit_sample'   + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_peak_centered_fit_sample'   + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
-    write_row(outfolder + '/' + label + '_' + name + '_tnorm_original_hist_'             + '.dat', rand)
+    extra = ''
+    if 'release' in filename:
+        extra = '_release-max'
+
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_original_fit'               + extra + '.dat', [str(x_rand[i])        + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_mean_centered_fit'          + extra + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_peak_centered_fit'          + extra + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand)) ])
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_mean_centered_fit' + extra + 'sample' + '.dat', [str(x_rand[i] - mean) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_peak_centered_fit' + extra + 'sample' + '.dat', [str(x_rand[i] - maxx) + '\t' + str(pdf_fitted[i]) for i in range(len(x_rand))[0::filterparam] ])
+    write_row(outfolder + '/' + label + '_' + name + '_tnorm_original_hist_'             + extra + '.dat', rand)
  
     fout = open(statfile, 'a')
-    fout.write(label + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\n')
+    fout.write(label + '\t' + name + '\t' + str(D) + '\t' + str(mean) + '\t' + str(variance) + '\n')
     fout.close()
     
 
