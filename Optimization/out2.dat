@@ -1,0 +1,1238 @@
+aOptimization terminated successfully.
+         Current function value: 1.000000
+         Iterations: 1
+         Function evaluations: 3
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	14.7 	0.0 	0.999985973181
+0 	14.7 	-0.00025 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	0.0 	0.999957919542
+0 	16.8 	0.0 	0.999887785446
+0 	16.0 	0.00025 	0.999957919542
+0 	16.8 	-0.00025 	0.999915839084
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	0.0 	0.999747517253
+0 	18.9 	0.0 	0.999018122651
+0 	18.0 	0.00025 	0.999747517253
+0 	18.9 	-0.00025 	0.99903214947
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	0.0 	0.998583291253
+0 	21.0 	0.0 	0.996942153397
+0 	20.0 	0.00025 	0.998597318072
+0 	21.0 	-0.00025 	0.997138528867
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	0.0 	0.988904785951
+0 	23.1 	0.0 	0.97588789766
+0 	22.0 	0.00025 	0.989073107782
+0 	23.1 	-0.00025 	0.973194748359
+0 	23.65 	-0.0005 	0.964638388599
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	0.0 	0.949769960164
+0 	25.2 	0.0 	0.849253773214
+0 	24.0 	0.00025 	0.949755933345
+0 	25.2 	0.00025 	0.852003029793
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	0.0 	0.591595129888
+0 	27.3 	0.0 	0.315308870561
+0 	26.0 	0.00025 	0.592114122202
+0 	27.3 	-0.00025 	0.347809010829
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	0.0 	0.674100880884
+0 	29.4 	0.0 	0.945618021657
+0 	28.0 	0.00025 	0.643718790327
+0 	26.6 	0.00025 	0.277843236268
+0 	25.2 	0.000375 	0.851610278853
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	0.0 	0.95859282949
+0 	31.5 	0.0 	0.988680356842
+0 	30.0 	0.00025 	0.979057958817
+0 	28.5 	0.00025 	0.79489984851
+0 	27.0 	0.000375 	0.120742860349
+Warning: Maximum number of iterations has been exceeded.
+0 	32.0 	0.0 	0.991219211132
+0 	33.6 	0.0 	0.998891881277
+0 	32.0 	0.00025 	0.993337260843
+0 	30.4 	0.00025 	0.972254951467
+0 	28.8 	0.000375 	0.863294619312
+Warning: Maximum number of iterations has been exceeded.
+0 	34.0 	0.0 	0.998414969422
+0 	35.7 	0.0 	0.999831678169
+0 	34.0 	0.00025 	0.997699601638
+0 	32.3 	0.00025 	0.992495651686
+0 	30.6 	0.000375 	0.980965606239
+Warning: Maximum number of iterations has been exceeded.
+0 	36.0 	0.0 	0.999677383157
+0 	37.8 	0.0 	0.999971946361
+0 	36.0 	0.00025 	0.999859731807
+0 	34.2 	0.00025 	0.999074229928
+0 	32.4 	0.000375 	0.99300061718
+Warning: Maximum number of iterations has been exceeded.
+0 	38.0 	0.0 	0.999985973181
+0 	38.0 	0.00025 	0.999943892723
+0 	36.1 	0.00025 	0.999957919542
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	12.6 	2.0 	0.999985973181
+0 	12.6 	1.9 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	2.0 	0.999957919542
+0 	14.7 	2.0 	0.999915839084
+0 	14.0 	2.1 	0.999957919542
+0 	14.7 	1.9 	0.999929865904
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	2.0 	0.999733490434
+0 	16.8 	2.0 	0.999102283566
+0 	16.0 	2.1 	0.999677383157
+0 	16.8 	2.1 	0.999046176289
+0 	17.2 	2.15 	0.998891881277
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	2.0 	0.998583291253
+0 	18.9 	2.0 	0.997447118891
+0 	18.0 	2.1 	0.998583291253
+0 	18.9 	1.9 	0.997910003928
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	2.0 	0.989002973686
+0 	21.0 	2.0 	0.978707288335
+0 	20.0 	2.1 	0.988750490939
+0 	21.0 	2.1 	0.978188296022
+0 	21.5 	2.15 	0.964470066768
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	2.0 	0.951453178477
+0 	23.1 	2.0 	0.865216293553
+0 	22.0 	2.1 	0.948844190091
+0 	23.1 	2.1 	0.834441452056
+0 	23.65 	2.15 	0.672305448017
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	2.0 	0.589547214274
+0 	25.2 	2.0 	0.297466756438
+0 	24.0 	2.1 	0.507406160579
+0 	25.2 	2.1 	0.369634741626
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	2.0 	0.674128934523
+0 	27.3 	2.0 	0.902569713292
+0 	26.0 	2.1 	0.712688660719
+0 	24.7 	2.1 	0.0612972002469
+0 	23.4 	2.15 	0.740770352915
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	2.0 	0.939432194356
+0 	29.4 	2.0 	0.989718341469
+0 	28.0 	2.1 	0.96462436178
+0 	26.6 	2.1 	0.806780564439
+0 	25.2 	2.15 	0.343572911407
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	2.0 	0.991415586602
+0 	31.5 	2.0 	0.99824664759
+0 	30.0 	2.1 	0.996437187903
+0 	28.5 	2.1 	0.969631936262
+0 	27.0 	2.15 	0.882763844471
+Warning: Maximum number of iterations has been exceeded.
+0 	32.0 	2.0 	0.999677383157
+0 	33.6 	2.0 	0.999873758626
+0 	32.0 	2.1 	0.999326712675
+0 	30.4 	2.1 	0.992706053975
+0 	28.8 	2.15 	0.979955675251
+Warning: Maximum number of iterations has been exceeded.
+0 	34.0 	2.0 	0.999691409976
+0 	35.7 	2.0 	0.999831678169
+0 	34.0 	2.1 	0.999677383157
+0 	32.3 	2.1 	0.99922852494
+0 	30.6 	2.15 	0.997026314313
+Warning: Maximum number of iterations has been exceeded.
+0 	36.0 	2.0 	0.999985973181
+0 	37.8 	2.0 	0.999985973181
+0 	36.0 	2.1 	0.999943892723
+0 	34.2 	2.1 	0.999985973181
+0 	36.9 	2.025 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+0 	38.475 	2.05 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	4.0 	0.999957919542
+0 	12.6 	4.0 	0.999929865904
+0 	12.0 	4.2 	0.999943892723
+0 	12.6 	4.2 	0.999887785446
+0 	12.9 	4.3 	0.99980362453
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	4.0 	0.999705436795
+0 	14.7 	4.0 	0.99922852494
+0 	14.0 	4.2 	0.999649329518
+0 	14.7 	4.2 	0.999018122651
+0 	15.05 	4.3 	0.998877854458
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	4.0 	0.998597318072
+0 	16.8 	4.0 	0.99805027212
+0 	16.0 	4.2 	0.998527183976
+0 	16.8 	4.2 	0.997348931156
+0 	17.2 	4.3 	0.993225046289
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	4.0 	0.989101161421
+0 	18.9 	4.0 	0.981049767155
+0 	18.0 	4.2 	0.988624249565
+0 	18.9 	4.2 	0.975986085395
+0 	19.35 	4.3 	0.963908993997
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	4.0 	0.954216461875
+0 	21.0 	4.0 	0.868175952421
+0 	20.0 	4.2 	0.948577680525
+0 	21.0 	4.2 	0.846827133479
+0 	21.5 	4.3 	0.690848903103
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	4.0 	0.582772260562
+0 	23.1 	4.0 	0.150970655894
+0 	22.0 	4.2 	0.492748134433
+0 	23.1 	4.2 	0.38199236941
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	4.0 	0.650830387701
+0 	25.2 	4.0 	0.887168265724
+0 	24.0 	4.2 	0.704034113224
+0 	22.8 	4.2 	0.160663188015
+0 	21.6 	4.3 	0.655024406666
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	4.0 	0.953809684116
+0 	27.3 	4.0 	0.987979015878
+0 	26.0 	4.2 	0.961818997924
+0 	24.7 	4.2 	0.88277787129
+0 	23.4 	4.3 	0.5408180441
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	4.0 	0.994206923638
+0 	29.4 	4.0 	0.996801885205
+0 	28.0 	4.2 	0.99377209224
+0 	26.6 	4.2 	0.973419177467
+0 	25.2 	4.3 	0.938492397464
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	4.0 	0.999789597711
+0 	31.5 	4.0 	0.999831678169
+0 	30.0 	4.2 	0.999551141783
+0 	28.5 	4.2 	0.99824664759
+0 	27.0 	4.3 	0.983364192336
+Warning: Maximum number of iterations has been exceeded.
+0 	32.0 	4.0 	0.999845704988
+0 	33.6 	4.0 	0.999915839084
+0 	32.0 	4.2 	0.999705436795
+0 	30.4 	4.2 	0.999747517253
+Warning: Maximum number of iterations has been exceeded.
+0 	34.0 	4.0 	0.999985973181
+0 	35.7 	4.0 	0.999985973181
+0 	34.0 	4.2 	0.999985973181
+0 	34.85 	4.0 	0.999901812265
+0 	34.0 	4.1 	0.999957919542
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	6.0 	0.999957919542
+0 	10.5 	6.0 	0.999929865904
+0 	10.0 	6.3 	0.999929865904
+0 	10.5 	6.3 	0.999887785446
+0 	10.75 	6.45 	0.99980362453
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	6.0 	0.999747517253
+0 	12.6 	6.0 	0.999452954048
+0 	12.0 	6.3 	0.999621275879
+0 	12.6 	6.3 	0.999018122651
+0 	12.9 	6.45 	0.998905908096
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	6.0 	0.998597318072
+0 	14.7 	6.0 	0.997966111205
+0 	14.0 	6.3 	0.998471076699
+0 	14.7 	6.3 	0.997433092072
+0 	15.05 	6.45 	0.993056724457
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	6.0 	0.989031027324
+0 	16.8 	6.0 	0.98600123436
+0 	16.0 	6.3 	0.988512035011
+0 	16.8 	6.3 	0.975607361275
+0 	17.2 	6.45 	0.966041070527
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	6.0 	0.95470740055
+0 	18.9 	6.0 	0.868652864276
+0 	18.0 	6.3 	0.9389552825
+0 	18.9 	6.3 	0.849618470516
+0 	19.35 	6.45 	0.655403130786
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	6.0 	0.549121921113
+0 	21.0 	6.0 	0.142330135219
+0 	20.0 	6.3 	0.45508612467
+0 	21.0 	6.3 	0.335325141671
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	6.0 	0.657998092353
+0 	23.1 	6.0 	0.891418391965
+0 	22.0 	6.3 	0.892035572014
+0 	23.1 	5.7 	0.835830107165
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	6.0 	0.950976266622
+0 	25.2 	6.0 	0.984766874264
+0 	24.0 	6.3 	0.963740672165
+0 	22.8 	6.3 	0.902724008304
+0 	21.6 	6.45 	0.70042922067
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	6.0 	0.993323234023
+0 	27.3 	6.0 	0.998877854458
+0 	26.0 	6.3 	0.995946249229
+0 	24.7 	6.3 	0.977571115974
+0 	23.4 	6.45 	0.936262133199
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	6.0 	0.998344835325
+0 	29.4 	6.0 	0.999915839084
+0 	28.0 	6.3 	0.998849800819
+0 	26.6 	6.3 	0.998667452169
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	6.0 	0.999943892723
+0 	31.5 	6.0 	0.999929865904
+0 	30.0 	6.3 	0.999971946361
+0 	31.5 	5.7 	0.999985973181
+0 	30.375 	6.15 	0.999817651349
+Warning: Maximum number of iterations has been exceeded.
+0 	32.0 	6.0 	0.999915839084
+0 	33.6 	6.0 	0.999971946361
+0 	32.0 	6.3 	0.999985973181
+0 	32.8 	6.0 	0.999985973181
+0 	32.0 	6.15 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	8.0 	0.999957919542
+0 	8.4 	8.0 	0.999929865904
+0 	8.0 	8.4 	0.999929865904
+0 	8.4 	8.4 	0.999901812265
+0 	8.6 	8.6 	0.99980362453
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	8.0 	0.999747517253
+0 	10.5 	8.0 	0.999523088145
+0 	10.0 	8.4 	0.999537114964
+0 	10.5 	8.4 	0.999018122651
+0 	10.75 	8.6 	0.998891881277
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	8.0 	0.998583291253
+0 	12.6 	8.0 	0.998218593952
+0 	12.0 	8.4 	0.998302754867
+0 	12.6 	8.4 	0.99727879706
+0 	12.9 	8.6 	0.993603770409
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	8.0 	0.989101161421
+0 	14.7 	8.0 	0.985959153902
+0 	14.0 	8.4 	0.988175391348
+0 	14.7 	8.4 	0.978651181058
+0 	15.05 	8.6 	0.964638388599
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	8.0 	0.949812040622
+0 	16.8 	8.0 	0.877082982663
+0 	16.0 	8.4 	0.911196207148
+0 	16.8 	8.4 	0.839406946081
+0 	17.2 	8.6 	0.694061044717
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	8.0 	0.567749537115
+0 	18.9 	8.0 	0.0357543623408
+0 	18.0 	8.4 	0.337457218201
+0 	18.9 	8.4 	0.331145149526
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	8.0 	0.68877293385
+0 	21.0 	8.0 	0.900830387701
+0 	20.0 	8.4 	0.811269146608
+0 	19.0 	8.4 	0.439291926163
+0 	18.0 	8.6 	0.277773102171
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	8.0 	0.938043539247
+0 	23.1 	8.0 	0.976448970431
+0 	22.0 	8.4 	0.980671043034
+0 	23.1 	7.6 	0.973138641082
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	8.0 	0.991850417999
+0 	25.2 	8.0 	0.997152555686
+0 	24.0 	8.4 	0.992748134433
+0 	22.8 	8.4 	0.977935813275
+0 	21.6 	8.6 	0.981288223083
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	8.0 	0.999102283566
+0 	27.3 	8.0 	0.999971946361
+0 	26.0 	8.4 	0.999312685855
+0 	24.7 	8.4 	0.99824664759
+0 	23.4 	8.6 	0.990980755204
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	8.0 	0.999719463614
+0 	29.4 	8.0 	0.999957919542
+0 	28.0 	8.4 	0.999789597711
+0 	26.6 	8.4 	0.999761544072
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	8.0 	0.999985973181
+0 	31.5 	8.0 	0.999971946361
+0 	30.0 	8.4 	0.999985973181
+0 	30.375 	8.2 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	10.0 	0.999957919542
+0 	6.3 	10.0 	0.999929865904
+0 	6.0 	10.5 	0.999929865904
+0 	6.3 	10.5 	0.999915839084
+0 	6.45 	10.75 	0.99980362453
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	10.0 	0.999747517253
+0 	8.4 	10.0 	0.999537114964
+0 	8.0 	10.5 	0.999438927229
+0 	8.4 	10.5 	0.998990069012
+0 	8.6 	10.75 	0.998891881277
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	10.0 	0.998597318072
+0 	10.5 	10.0 	0.998288728048
+0 	10.0 	10.5 	0.998148459855
+0 	10.5 	10.5 	0.997405038433
+0 	10.75 	10.75 	0.993744038602
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	10.0 	0.988946866409
+0 	12.6 	10.0 	0.986365931661
+0 	12.0 	10.5 	0.987993042698
+0 	12.6 	10.5 	0.976743533636
+0 	12.9 	10.75 	0.963866913539
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	10.0 	0.94944734332
+0 	14.7 	10.0 	0.883282836784
+0 	14.0 	10.5 	0.900998709533
+0 	14.7 	10.5 	0.853517926275
+0 	15.05 	10.75 	0.692924872356
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	10.0 	0.602339673456
+0 	16.8 	10.0 	0.117292262806
+0 	16.0 	10.5 	0.335717892611
+0 	16.8 	10.5 	0.284912753184
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	10.0 	0.686121865006
+0 	18.9 	10.0 	0.890015710038
+0 	18.0 	10.5 	0.801183863547
+0 	17.1 	10.5 	0.50932783482
+0 	16.2 	10.75 	0.0650984682713
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	10.0 	0.952715592212
+0 	21.0 	10.0 	0.983784996914
+0 	20.0 	10.5 	0.975060315323
+0 	19.0 	10.5 	0.9288419458
+0 	18.0 	10.75 	0.848776861359
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	10.0 	0.995385176457
+0 	23.1 	10.0 	0.998022218482
+0 	22.0 	10.5 	0.995286988722
+0 	20.9 	10.5 	0.987445996746
+0 	19.8 	10.75 	0.958059810357
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	10.0 	0.997433092072
+0 	25.2 	10.0 	0.999845704988
+0 	24.0 	10.5 	0.999481007687
+0 	22.8 	10.5 	0.998667452169
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	10.0 	0.999789597711
+0 	27.3 	10.0 	0.999887785446
+0 	26.0 	10.5 	0.999957919542
+0 	27.3 	9.5 	0.999971946361
+0 	26.325 	10.25 	0.999845704988
+Warning: Maximum number of iterations has been exceeded.
+0 	28.0 	10.0 	0.999817651349
+0 	29.4 	9.5 	0.999943892723
+Warning: Maximum number of iterations has been exceeded.
+0 	30.0 	10.25 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	12.6 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	12.0 	0.999957919542
+0 	4.2 	12.0 	0.999943892723
+0 	4.0 	12.6 	0.999929865904
+0 	4.2 	12.6 	0.999915839084
+0 	4.3 	12.9 	0.999831678169
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	12.0 	0.999719463614
+0 	6.3 	12.0 	0.999635302699
+0 	6.0 	12.6 	0.999144364024
+0 	6.3 	12.6 	0.999018122651
+0 	6.45 	12.9 	0.998891881277
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	12.0 	0.998597318072
+0 	8.4 	12.0 	0.998372888964
+0 	8.0 	12.6 	0.998134433036
+0 	8.4 	12.6 	0.997068394771
+0 	8.6 	12.9 	0.993603770409
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	12.0 	0.989059080963
+0 	10.5 	12.0 	0.987081299445
+0 	10.0 	12.6 	0.986842843517
+0 	10.5 	12.6 	0.975719575829
+0 	10.75 	12.9 	0.964708522695
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	12.0 	0.952855860405
+0 	12.6 	12.0 	0.898473882063
+0 	12.0 	12.6 	0.904715816641
+0 	12.6 	12.6 	0.834693934803
+0 	12.9 	12.9 	0.709434438647
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	12.0 	0.612831734276
+0 	14.7 	12.0 	0.195113056163
+0 	14.0 	12.6 	0.261936823206
+0 	14.7 	12.6 	0.316388935645
+0 	14.525 	12.45 	0.196137013971
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	12.0 	0.694832519778
+0 	16.8 	12.0 	0.885120350109
+0 	16.0 	12.6 	0.819923694103
+0 	15.2 	12.6 	0.546372664535
+0 	14.4 	12.9 	0.309277338271
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	12.0 	0.947006676766
+0 	18.9 	12.0 	0.978917690624
+0 	18.0 	12.6 	0.974835886214
+0 	17.1 	12.6 	0.95956068002
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	12.0 	0.993281153566
+0 	21.0 	12.0 	0.995946249229
+0 	20.0 	12.6 	0.996437187903
+0 	21.0 	11.4 	0.997362957976
+0 	20.25 	12.3 	0.996872019301
+0 	20.5 	12.0 	0.995763900578
+0 	20.0 	12.3 	0.994655781855
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	12.0 	0.999270605398
+0 	23.1 	12.0 	0.999985973181
+0 	22.0 	12.6 	0.99903214947
+0 	20.9 	12.6 	0.997559333446
+0 	19.8 	12.9 	0.997096448409
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	12.0 	0.999593222241
+0 	25.2 	12.0 	0.999985973181
+0 	24.0 	12.6 	0.999775570892
+0 	22.8 	12.6 	0.999747517253
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	12.0 	0.99980362453
+0 	27.3 	11.4 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	14.7 	0.999985973181
+0 	-0.00025 	14.7 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	14.0 	0.999957919542
+0 	2.1 	14.0 	0.999957919542
+0 	2.0 	14.7 	0.999915839084
+0 	1.9 	14.7 	0.999929865904
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	14.0 	0.999747517253
+0 	4.2 	14.0 	0.999677383157
+0 	4.0 	14.7 	0.999102283566
+0 	4.2 	14.7 	0.999074229928
+0 	4.3 	15.05 	0.998835774
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	14.0 	0.998583291253
+0 	6.3 	14.0 	0.998344835325
+0 	6.0 	14.7 	0.998134433036
+0 	6.3 	14.7 	0.997362957976
+0 	6.45 	15.05 	0.993603770409
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	14.0 	0.988946866409
+0 	8.4 	14.0 	0.988175391348
+0 	8.0 	14.7 	0.98600123436
+0 	8.4 	14.7 	0.975915951299
+0 	8.6 	15.05 	0.966279526455
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	14.0 	0.952631431297
+0 	10.5 	14.0 	0.907366885485
+0 	10.0 	14.7 	0.899273410761
+0 	10.5 	14.7 	0.853167255793
+0 	10.75 	15.05 	0.683526903439
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	14.0 	0.575688716827
+0 	12.6 	14.0 	0.219926499467
+0 	12.0 	14.7 	0.20334679908
+0 	12.6 	14.7 	0.347261964877
+0 	12.45 	14.525 	0.0912725130449
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	14.0 	0.698703921899
+0 	14.7 	14.0 	0.819951747742
+0 	14.0 	14.7 	0.821803287886
+0 	14.7 	13.3 	0.676808057005
+0 	15.05 	12.6 	0.537886438871
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	14.0 	0.967261403804
+0 	16.8 	14.0 	0.973573472479
+0 	16.0 	14.7 	0.980053862986
+0 	16.8 	13.3 	0.957063906189
+0 	17.2 	12.6 	0.944383661561
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	14.0 	0.991106996577
+0 	18.9 	14.0 	0.997447118891
+0 	18.0 	14.7 	0.995301015542
+0 	17.1 	14.7 	0.987628345396
+0 	16.2 	15.05 	0.981554732649
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	14.0 	0.999663356337
+0 	21.0 	14.0 	0.999901812265
+0 	20.0 	14.7 	0.998990069012
+0 	19.0 	14.7 	0.998527183976
+0 	18.0 	15.05 	0.998358862144
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	14.0 	0.999915839084
+0 	23.1 	14.0 	0.999929865904
+0 	22.0 	14.7 	0.999873758626
+0 	20.9 	14.7 	0.99960724906
+0 	19.8 	15.05 	0.999859731807
+Warning: Maximum number of iterations has been exceeded.
+0 	24.0 	14.0 	0.999901812265
+0 	25.2 	14.0 	0.999985973181
+0 	24.0 	14.7 	0.999985973181
+0 	25.2 	13.3 	0.999985973181
+0 	24.6 	14.0 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+0 	26.0 	14.0 	0.999985973181
+0 	26.0 	14.7 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	16.0 	0.999957919542
+0 	0.00025 	16.0 	0.999957919542
+0 	0.0 	16.8 	0.999915839084
+0 	-0.00025 	16.8 	0.999915839084
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	16.0 	0.999719463614
+0 	2.1 	16.0 	0.999705436795
+0 	2.0 	16.8 	0.999102283566
+0 	2.1 	16.8 	0.999074229928
+0 	2.15 	17.2 	0.998751613084
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	16.0 	0.998597318072
+0 	4.2 	16.0 	0.998555237614
+0 	4.0 	16.8 	0.997910003928
+0 	4.2 	16.8 	0.996367053807
+0 	4.3 	17.2 	0.99300061718
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	16.0 	0.989045054144
+0 	6.3 	16.0 	0.988399820457
+0 	6.0 	16.8 	0.98249452954
+0 	6.3 	16.8 	0.976533131347
+0 	6.45 	17.2 	0.965269595467
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	16.0 	0.949798013802
+0 	8.4 	16.0 	0.922571957583
+0 	8.0 	16.8 	0.880126802446
+0 	8.4 	16.8 	0.854247320878
+0 	8.6 	17.2 	0.693794535151
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	16.0 	0.583810245189
+0 	10.5 	16.0 	0.32094765191
+0 	10.0 	16.8 	0.0864472872132
+0 	10.5 	16.8 	0.297256354149
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	16.0 	0.733350165516
+0 	12.6 	16.0 	0.841412781238
+0 	12.0 	16.8 	0.834876283454
+0 	11.4 	16.8 	0.738680356842
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	16.0 	0.97141334231
+0 	14.7 	16.0 	0.965031139539
+0 	14.0 	16.8 	0.974274813443
+0 	14.7 	15.2 	0.938408236548
+0 	15.05 	14.4 	0.945968692139
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	16.0 	0.992818268529
+0 	16.8 	16.0 	0.997531279807
+0 	16.0 	16.8 	0.996675643831
+0 	15.2 	16.8 	0.994094709084
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	16.0 	0.999747517253
+0 	18.9 	16.0 	0.999789597711
+0 	18.0 	16.8 	0.999663356337
+0 	17.1 	16.8 	0.997391011614
+0 	16.2 	17.2 	0.996773831566
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	16.0 	0.999691409976
+0 	21.0 	16.0 	0.999873758626
+0 	20.0 	16.8 	0.999733490434
+0 	19.0 	16.8 	0.999481007687
+0 	18.0 	17.2 	0.999775570892
+Warning: Maximum number of iterations has been exceeded.
+0 	22.0 	16.0 	0.999957919542
+0 	23.1 	15.2 	0.999957919542
+Warning: Maximum number of iterations has been exceeded.
+0 	25.2 	15.2 	0.999943892723
+0 	25.8 	14.4 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	18.0 	0.999719463614
+0 	0.00025 	18.0 	0.999705436795
+0 	0.0 	18.9 	0.99903214947
+0 	0.00025 	18.9 	0.999018122651
+0 	0.000375 	19.35 	0.998863827638
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	18.0 	0.998597318072
+0 	2.1 	18.0 	0.998597318072
+0 	2.0 	18.9 	0.997447118891
+0 	1.9 	18.9 	0.997881950289
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	18.0 	0.988820625035
+0 	4.2 	18.0 	0.988512035011
+0 	4.0 	18.9 	0.982382314986
+0 	4.2 	18.9 	0.975873870841
+0 	4.3 	19.35 	0.964329798575
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	18.0 	0.954665320092
+0 	6.3 	18.0 	0.929697581776
+0 	6.0 	18.9 	0.86917185659
+0 	6.3 	18.9 	0.84681310666
+0 	6.45 	19.35 	0.707330415755
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	18.0 	0.600137462829
+0 	8.4 	18.0 	0.374754530663
+0 	8.0 	18.9 	0.0533580205353
+0 	8.4 	18.9 	0.343095999551
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	18.0 	0.725439039443
+0 	10.5 	18.0 	0.849478202323
+0 	10.0 	18.9 	0.894602479942
+0 	10.5 	17.1 	0.51885204511
+0 	10.75 	16.2 	0.0664871233799
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	18.0 	0.967555967009
+0 	12.6 	18.0 	0.97141334231
+0 	12.0 	18.9 	0.98133030354
+0 	12.6 	17.1 	0.919626325534
+0 	12.9 	16.2 	0.896117376424
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	18.0 	0.995062559614
+0 	14.7 	18.0 	0.99806429894
+0 	14.0 	18.9 	0.995301015542
+0 	13.3 	18.9 	0.994487460024
+0 	12.6 	19.35 	0.991934578915
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	18.0 	0.997489199349
+0 	16.8 	18.0 	0.999256578578
+0 	16.0 	18.9 	0.999677383157
+0 	16.8 	17.1 	0.999144364024
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	18.0 	0.999971946361
+0 	18.9 	18.0 	0.999971946361
+0 	18.9 	17.1 	0.999859731807
+0 	19.35 	16.2 	0.999705436795
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	18.0 	0.999929865904
+0 	20.0 	18.9 	0.999985973181
+0 	19.0 	18.9 	0.999957919542
+Warning: Maximum number of iterations has been exceeded.
+0 	23.1 	17.1 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	20.0 	0.998597318072
+0 	0.00025 	20.0 	0.998597318072
+0 	0.0 	21.0 	0.997236716602
+0 	-0.00025 	21.0 	0.997306850699
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	20.0 	0.989045054144
+0 	2.1 	20.0 	0.988820625035
+0 	2.0 	21.0 	0.979492790215
+0 	2.1 	21.0 	0.976813667733
+0 	2.15 	21.5 	0.967443752455
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	20.0 	0.951565393031
+0 	4.2 	20.0 	0.948184929585
+0 	4.0 	21.0 	0.868680917915
+0 	4.2 	21.0 	0.836138697189
+0 	4.3 	21.5 	0.671281490209
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	20.0 	0.591721371262
+0 	6.3 	20.0 	0.414688885148
+0 	6.0 	21.0 	0.170257532402
+0 	6.3 	21.0 	0.310806261572
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	20.0 	0.601624305672
+0 	8.4 	20.0 	0.770913987544
+0 	8.0 	21.0 	0.9082505751
+0 	8.4 	19.0 	0.425980474668
+0 	8.6 	18.0 	0.22298434607
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	20.0 	0.941999102284
+0 	10.5 	20.0 	0.975340851708
+0 	10.0 	21.0 	0.992060820288
+0 	10.5 	19.0 	0.922375582113
+0 	10.75 	18.0 	0.846476462997
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	20.0 	0.997713628458
+0 	12.6 	20.0 	0.997559333446
+0 	12.0 	21.0 	0.997517252988
+0 	12.6 	21.0 	0.998877854458
+0 	12.15 	20.25 	0.993309207204
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	20.0 	0.997433092072
+0 	14.7 	20.0 	0.999481007687
+0 	14.0 	21.0 	0.999733490434
+0 	14.7 	19.0 	0.997306850699
+0 	15.05 	18.0 	0.997587387084
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	20.0 	0.999817651349
+0 	16.8 	20.0 	0.999957919542
+0 	16.0 	21.0 	0.999957919542
+0 	16.8 	19.0 	0.99960724906
+0 	17.2 	18.0 	0.999509061325
+Warning: Maximum number of iterations has been exceeded.
+0 	18.0 	21.0 	0.999957919542
+0 	17.1 	21.0 	0.999733490434
+0 	16.2 	21.5 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+0 	20.0 	20.0 	0.999985973181
+0 	21.0 	19.0 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	22.0 	0.989045054144
+0 	0.00025 	22.0 	0.988946866409
+0 	0.0 	23.1 	0.975635414913
+0 	0.00025 	23.1 	0.975831790383
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	22.0 	0.951172642092
+0 	2.1 	22.0 	0.949769960164
+0 	2.0 	23.1 	0.863757504348
+0 	2.1 	23.1 	0.850446052853
+0 	2.15 	23.65 	0.701032373899
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	22.0 	0.618119845144
+0 	4.2 	22.0 	0.475649441733
+0 	4.0 	23.1 	0.197034730405
+0 	4.2 	23.1 	0.294030185715
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	22.0 	0.659751444762
+0 	6.3 	22.0 	0.73795096224
+0 	6.0 	23.1 	0.865342534927
+0 	6.3 	20.9 	0.188338102452
+0 	6.45 	19.8 	0.474877966672
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	22.0 	0.950864052068
+0 	8.4 	22.0 	0.978959771082
+0 	8.0 	23.1 	0.985089491107
+0 	8.4 	20.9 	0.918630421366
+0 	8.6 	19.8 	0.757364080121
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	22.0 	0.997966111205
+0 	10.5 	22.0 	0.994627728216
+0 	10.0 	23.1 	0.998681478988
+0 	10.5 	20.9 	0.984528418336
+0 	10.75 	19.8 	0.974106491612
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	22.0 	0.998962015373
+0 	12.6 	22.0 	0.999859731807
+0 	12.0 	23.1 	0.998709532626
+0 	11.4 	23.1 	0.999761544072
+0 	11.7 	22.825 	0.999649329518
+Warning: Maximum number of iterations has been exceeded.
+0 	14.0 	22.0 	0.999957919542
+0 	14.7 	22.0 	0.999901812265
+0 	14.7 	20.9 	0.999593222241
+0 	15.05 	19.8 	0.999144364024
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	22.0 	0.999985973181
+0 	16.8 	20.9 	0.999971946361
+0 	17.2 	19.8 	0.999761544072
+Warning: Maximum number of iterations has been exceeded.
+0 	18.45 	22.0 	0.999831678169
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	24.0 	0.949798013802
+0 	0.00025 	24.0 	0.949826067441
+0 	0.0 	25.2 	0.837555405936
+0 	-0.00025 	25.2 	0.850095382371
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	24.0 	0.608497447119
+0 	2.1 	24.0 	0.534912753184
+0 	2.0 	25.2 	0.220992537732
+0 	2.1 	25.2 	0.318647253549
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	24.0 	0.665853111149
+0 	4.2 	24.0 	0.766621780845
+0 	4.0 	25.2 	0.884264714133
+0 	4.2 	22.8 	0.0673567861752
+0 	4.3 	21.6 	0.656483195871
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	24.0 	0.956615047972
+0 	6.3 	24.0 	0.955801492454
+0 	6.0 	25.2 	0.98696908489
+0 	6.3 	22.8 	0.894854962689
+0 	6.45 	21.6 	0.665530494305
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	24.0 	0.991948605734
+0 	8.4 	24.0 	0.994767996409
+0 	8.0 	25.2 	0.99670369747
+0 	8.4 	22.8 	0.997615440723
+0 	8.1 	24.6 	0.996872019301
+0 	8.2 	24.0 	0.99377209224
+0 	8.0 	24.6 	0.994838130506
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	24.0 	0.998919934916
+0 	10.5 	24.0 	0.999438927229
+0 	10.0 	25.2 	0.999845704988
+0 	10.5 	22.8 	0.998779666723
+0 	10.75 	21.6 	0.993533636313
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	24.0 	0.999943892723
+0 	12.6 	24.0 	0.999929865904
+0 	12.0 	25.2 	0.999887785446
+0 	12.6 	25.2 	0.999929865904
+0 	12.45 	24.9 	0.999817651349
+Warning: Maximum number of iterations has been exceeded.
+0 	14.7 	24.0 	0.999915839084
+0 	14.35 	24.0 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+0 	16.0 	24.0 	0.999985973181
+0 	16.4 	24.0 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	26.0 	0.6108118723
+0 	0.00025 	26.0 	0.585198900297
+0 	0.0 	27.3 	0.291940189643
+0 	0.00025 	27.3 	0.279792964147
+0 	0.000375 	27.95 	0.685350389946
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	26.0 	0.69810076867
+0 	2.1 	26.0 	0.679936037704
+0 	2.0 	27.3 	0.953585255008
+0 	2.1 	24.7 	0.14716938787
+0 	2.15 	23.4 	0.752552881109
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	26.0 	0.957835381249
+0 	4.2 	26.0 	0.97316669472
+0 	4.0 	27.3 	0.984598552432
+0 	4.2 	24.7 	0.898866633002
+0 	4.3 	23.4 	0.5824356169
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	26.0 	0.99067216518
+0 	6.3 	26.0 	0.994038601807
+0 	6.0 	27.3 	0.998835774
+0 	6.3 	24.7 	0.978244403299
+0 	6.45 	23.4 	0.975298771251
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	26.0 	0.998976042193
+0 	8.4 	26.0 	0.999270605398
+0 	8.0 	27.3 	0.999452954048
+0 	8.4 	24.7 	0.994501486843
+0 	8.6 	23.4 	0.995104640072
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	26.0 	0.999733490434
+0 	10.5 	26.0 	0.999845704988
+0 	10.0 	27.3 	0.999985973181
+0 	10.5 	24.7 	0.999382819952
+0 	10.75 	23.4 	0.999284632217
+Warning: Maximum number of iterations has been exceeded.
+0 	12.0 	26.0 	0.999985973181
+0 	12.6 	26.0 	0.999957919542
+0 	12.6 	24.7 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	28.0 	0.654140717051
+0 	0.00025 	28.0 	0.762455815519
+0 	0.0 	29.4 	0.943794535151
+0 	0.00025 	26.6 	0.231372383998
+0 	0.000375 	25.2 	0.838284800539
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	28.0 	0.96306738484
+0 	2.1 	28.0 	0.959224036358
+0 	2.0 	29.4 	0.987263648095
+0 	2.1 	26.6 	0.833684003815
+0 	2.15 	25.2 	0.366015822252
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	28.0 	0.995595578747
+0 	4.2 	28.0 	0.99495034506
+0 	4.0 	29.4 	0.998990069012
+0 	4.2 	26.6 	0.978160242383
+0 	4.3 	25.2 	0.946487684453
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	28.0 	0.998008191662
+0 	6.3 	28.0 	0.999242551759
+0 	6.0 	29.4 	0.999691409976
+0 	6.3 	26.6 	0.996100544241
+0 	6.45 	25.2 	0.989634180553
+Warning: Maximum number of iterations has been exceeded.
+0 	8.0 	28.0 	0.999915839084
+0 	8.4 	28.0 	0.999691409976
+0 	8.0 	29.4 	0.999957919542
+0 	8.4 	26.6 	0.999691409976
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	28.0 	0.999957919542
+0 	10.5 	26.6 	0.999859731807
+0 	10.75 	25.2 	0.999859731807
+Warning: Maximum number of iterations has been exceeded.
+0 	12.6 	26.6 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+0 	14.7 	26.6 	0.999985973181
+0 	15.05 	25.2 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	30.0 	0.962043427032
+0 	0.00025 	30.0 	0.963951074454
+0 	0.0 	31.5 	0.993253099927
+0 	0.00025 	28.5 	0.824173820344
+0 	0.000375 	27.0 	0.284379734052
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	30.0 	0.992537732144
+0 	2.1 	30.0 	0.993617797228
+0 	2.0 	31.5 	0.998751613084
+0 	2.1 	28.5 	0.970599786792
+0 	2.15 	27.0 	0.906216686304
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	30.0 	0.999326712675
+0 	4.2 	30.0 	0.998471076699
+0 	4.0 	31.5 	0.999887785446
+0 	4.2 	28.5 	0.994908264602
+0 	4.3 	27.0 	0.986029287999
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	30.0 	0.999677383157
+0 	6.3 	30.0 	0.999887785446
+0 	6.0 	31.5 	0.999901812265
+0 	6.3 	28.5 	0.999747517253
+Warning: Maximum number of iterations has been exceeded.
+0 	8.4 	30.0 	0.999943892723
+0 	8.4 	28.5 	0.999663356337
+0 	8.6 	27.0 	0.999747517253
+Warning: Maximum number of iterations has been exceeded.
+0 	10.0 	30.75 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	32.0 	0.997405038433
+0 	0.00025 	32.0 	0.991401559782
+0 	0.0 	33.6 	0.999004095831
+0 	0.00025 	30.4 	0.961243898334
+0 	0.000375 	28.8 	0.876101105313
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	32.0 	0.999396846771
+0 	2.1 	32.0 	0.997980138024
+0 	2.0 	33.6 	0.999719463614
+0 	2.1 	30.4 	0.995777927397
+0 	2.15 	28.8 	0.984935196095
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	32.0 	0.999691409976
+0 	4.2 	32.0 	0.999929865904
+0 	4.0 	33.6 	0.999957919542
+0 	4.2 	30.4 	0.999354766313
+0 	4.3 	28.8 	0.997110475229
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	32.0 	0.999887785446
+0 	6.3 	32.0 	0.999929865904
+0 	6.3 	30.4 	0.999705436795
+0 	6.45 	28.8 	0.999649329518
+Warning: Maximum number of iterations has been exceeded.
+0 	8.4 	32.0 	0.999971946361
+0 	8.4 	30.4 	0.999985973181
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	34.0 	0.998835774
+0 	0.00025 	34.0 	0.998793693542
+0 	0.0 	35.7 	0.999733490434
+0 	0.00025 	32.3 	0.99806429894
+0 	0.000375 	30.6 	0.977234472311
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	34.0 	0.999957919542
+0 	2.1 	34.0 	0.999887785446
+0 	2.0 	35.7 	0.999985973181
+0 	2.1 	32.3 	0.999677383157
+0 	2.15 	30.6 	0.996577456096
+Warning: Maximum number of iterations has been exceeded.
+0 	4.0 	34.0 	0.999971946361
+0 	4.2 	34.0 	0.999887785446
+0 	4.2 	32.3 	0.999831678169
+0 	4.3 	30.6 	0.999705436795
+Warning: Maximum number of iterations has been exceeded.
+0 	6.0 	34.0 	0.999985973181
+0 	6.3 	32.3 	0.999929865904
+0 	6.45 	30.6 	0.999789597711
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.0 	36.0 	0.999887785446
+0 	0.00025 	36.0 	0.999691409976
+0 	0.0 	37.8 	0.999957919542
+0 	0.00025 	34.2 	0.999046176289
+0 	0.000375 	32.4 	0.994641755036
+Warning: Maximum number of iterations has been exceeded.
+0 	2.0 	36.0 	0.999985973181
+0 	2.1 	34.2 	0.999873758626
+0 	2.15 	32.4 	0.999621275879
+Warning: Maximum number of iterations has been exceeded.
+0 	4.2 	36.0 	0.999985973181
+0 	4.1 	36.9 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+0 	0.00025 	38.0 	0.999929865904
+0 	0.00025 	36.1 	0.999789597711
+0 	0.000375 	34.2 	0.999102283566
+Warning: Maximum number of iterations has been exceeded.
+0 	2.1 	36.1 	0.999985973181
+0 	2.15 	34.2 	0.999971946361
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.
+Warning: Maximum number of iterations has been exceeded.

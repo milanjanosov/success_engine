@@ -35,7 +35,7 @@ def gen():
 
 
     
-    Num = 2000
+    Num = 10000
 
     logN, logQ         = zip(*np.random.multivariate_normal(mu2, cov2, Num))
     N                  = [int(np.exp(n)) for n in logN]

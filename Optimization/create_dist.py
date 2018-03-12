@@ -88,8 +88,9 @@ for sigma_p in np.arange(1, 3, 0.25):
 
 
 
-ps = [np.exp(pp) for pp in list(np.random.normal(20.4, 1, len(I)))]
-Qs = [np.exp(pp) for pp in list(np.random.normal(6.5, 1, len(N)))]
+ps = [np.exp(pp) for pp in list(np.random.normal( 18.9, 1, len(I)))]   		
+
+Qs = [np.exp(pp) for pp in list(np.random.normal( 8, 1, len(N)))]
 
 
 Isynt = []
