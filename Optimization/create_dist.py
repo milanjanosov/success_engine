@@ -35,9 +35,15 @@ for filename in files:
 '''
 
 
-
+#  3.0    6.5      
 #sigma_p, mu_p, sigma_Q, mu_Q
 #2	5	1	21.5
+
+
+
+
+#  1.625	4.2083333333	0.5833333333	23
+
 
 
 
