@@ -45,7 +45,7 @@ for filename in files:
 #  1.625	4.2083333333	0.5833333333	23
 
 
-
+'''
 
 for sigma_p in np.arange(1, 3, 0.25):
 
@@ -83,11 +83,59 @@ for sigma_p in np.arange(1, 3, 0.25):
 
 
                 print  sigma_p, mu_p, sigma_Q, mu_Q, stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+'''
+
+
+
+
+ps = [np.exp(pp) for pp in list(np.random.normal(20.4, 1, len(I)))]
+Qs = [np.exp(pp) for pp in list(np.random.normal(6.5, 1, len(N)))]
+
+
+Isynt = []
+nnn = len(N)
+
+
+for index, n in enumerate(N):
+
+
+
+    for i in range(n):
+        
+        Q = Qs[index]
+        p = ps[0]#np.random.choice(ps, 1)[0]
+        ps.remove(p)
+
+        impact = Q * p
+        Isynt.append(impact)
+
+
+
+
+print  stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+
 
 plt.yscale('log')
-plt.hist(I, bins = 200, color = 'b', alpha = 0.5)
-plt.hist(Isynt, bins = 200, color = 'r', alpha = 0.5)
+plt.hist(I, bins = 40, color = 'b', alpha = 0.5)
+plt.hist(Isynt, bins = 40, color = 'r', alpha = 0.5)
 plt.show()
+
+
+
+'''
+
+3.625220546
+19.5405405565
+5.67637379148
+
+'''
+
+
+
+
+
+
+
 
 '''
 mu_p =

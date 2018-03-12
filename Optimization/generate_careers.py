@@ -8,85 +8,79 @@ import math
 
 def gen():
 
-    cov = np.array([[1.0,  0.05,  0.05,],
-                    [0.05, 2.0,   0.05,],
-                    [0.05, 0.05,  3.0]])
+
+    if not os.path.exists('career_data'):
+        os.makedirs('career_data')
 
 
-    mu  = [3.1, 20.2, 6.5]
+    # N, Q, p
 
-    p1 = []
-    p2 = []
-    p3 = []
-    m1 = []
-    m2 = []
-    m3 = []
 
-    Ns = []
-    Qs = []
-    ps = []
+    cov3 = np.array([ [1.0, 0.5,  0.8,],
+                      [0.5, 1.0,  0.8,],
+                      [0.8, 0.8,  1.0 ]])
 
-    for i in range(4000):
-
-        x = np.random.multivariate_normal(mu, cov, 10)
-
-        #x = np.exp(x)
+    cov2 = np.array([[1.0, 0.5],
+                     [0.5, 1.0]])
 
 
 
-        N = [x[i][0] for i in range(10)]
-        Q = [x[i][1] for i in range(10)]
-        p = [x[i][2] for i in range(10)]
-
-
-        Ns += N
-        Qs += Q
-        ps += p
-
-        p1.append( pearsonr(N,Q)[0])
-        p2.append( pearsonr(N,p)[0])
-        p3.append( pearsonr(Q,p)[0])
-        m1.append( np.mean(N))
-        m2.append( np.mean(Q))
-        m3.append( np.mean(p))
-
-
-    print pearsonr(Ns,Qs)
-    measured_Ns = [int(np.exp(n)) for n in Ns[0:200]]
-    measured_Qs = [np.exp(q) for q in Qs[0:200]]
-
-    total_N     =  sum(measured_Ns) 
-    measured_ps = [np.exp(p) for p in ps]
-
-    print np.mean([np.log(float(b)) for b in measured_Qs])
-    #print pearsonr([math.log(n) for n in measured_Ns],[math.log(q) for q in measured_Qs])
+    mu2  = [3.1, 20.2]
+    mu3  = [3.1, 20.2, 6.5]
 
 
 
 
-    for index, N in enumerate(measured_Ns):
-
-        fout = open('careers/' + str(index) + '_career.dat', 'w')
-        fout2 = open('career_data/' + str(index) + '_career_impacts.dat', 'w')
-
-        for i in range(N):
-            
-            Q = measured_Qs[index]
-            p = np.random.choice(measured_ps, 1)[0]
-            measured_ps.remove(p)
-
-            impact = Q * p
 
 
-            fout.write(str(N) + '\t' + str(Q) + '\t' + str(impact) + '\n')
-            fout2.write(str(i) + '\t' + str(impact) + '\n')
+
+    
+    Num = 2000
+
+    logN, logQ         = zip(*np.random.multivariate_normal(mu2, cov2, Num))
+    N                  = [int(np.exp(n)) for n in logN]
+    logN2, logQ2, logp = zip(*np.random.multivariate_normal(mu3, cov3, sum(N)))
     
 
-        fout.close()
+
+
+    print 'mu_N', mu2[0], '\t', np.mean(logN)
+    print 'mu_Q', mu3[1], '\t', np.mean(logQ)
+    print 'mu_p', mu3[2], '\t', np.mean(logp)
+
+    print 'sigma_N', cov2[0,0], '\t', np.std(logN)**2
+    print 'sigma_Q', cov2[1,1], '\t', np.std(logQ)**2
+    print 'sigma_p', cov3[2,2], '\t', np.std(logp)**2
+
+    print 'sigma_NQ', cov3[0,1], '\t', pearsonr(logN,  logQ)[0]
+    print 'sigma_pQ', cov3[1,2], '\t', pearsonr(logQ2, logp)[0]
+    print 'sigma_pN', cov3[0,2], '\t', pearsonr(logN2, logp)[0]
+
+
+    print len(logQ), len(logQ2), len(logp)
+
+
+
+    p = [math.exp(pp) for pp in logp]
+    
+    for index, n in enumerate(N):
+
+        fout2 = open('career_data/' + str(index) + '_career_impacts.dat', 'w')
+
+        for i in range(n):
+            
+            Q = math.exp(logQ[index])
+            pp = p[0]
+            p.remove(pp)
+
+            impact = Q * pp
+
+            fout2.write(str(i) + '\t' + str(impact) + '\n')
+
         fout2.close()
 
 
-
+   
 
 
 
