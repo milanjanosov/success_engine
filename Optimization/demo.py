@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import math
 import random
 from scipy.optimize import minimize
@@ -128,7 +127,7 @@ def stage2():
 
 
         x0 = np.array([mu_p, mu_Q])#, 1.0, 6.5, 1.0])
-        res = minimize(rosen, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 1e-1, 'disp': True, 'maxiter' : 2})
+        res = minimize(rosen, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 1e-1, 'disp': True, 'maxiter' : 20})
 
 
 
