@@ -16,17 +16,19 @@ def gen():
     # N, Q, p
 
 
-    cov3 = np.array([ [1.0, 0.5,  0.8,],
-                      [0.5, 1.0,  0.8,],
-                      [0.8, 0.8,  1.0 ]])
+    cov3 = np.array([ [4.0,  0.05,  0.02,],
+                      [0.02,  3.0,  0.02,],
+                      [0.02, 0.02,  2.0 ]])
 
-    cov2 = np.array([[1.0, 0.5],
-                     [0.5, 1.0]])
+    cov2 = np.array([[4.0, 0.2],
+                     [0.2, 3.0]])
 
 
 
-    mu2  = [3.1, 20.2]
-    mu3  = [3.1, 20.2, 6.5]
+    ''' N, Q, p '''
+
+    mu2  = [2.1, 5.2]
+    mu3  = [2.1, 5.2, 2.5]
 
 
 
@@ -35,7 +37,7 @@ def gen():
 
 
     
-    Num = 10000
+    Num = 2000
 
     logN, logQ         = zip(*np.random.multivariate_normal(mu2, cov2, Num))
     N                  = [int(np.exp(n)) for n in logN]
@@ -104,13 +106,9 @@ def test():
             impact = float(fields[2])
             p      = impact/Q
 
-
             ps.append(p)
 
-        #Qs.append(math.log(Q))
-        #Ns.append(math.log(N))
-        
-      
+   
         Qs.append(Q)
         Ns.append(N)
               

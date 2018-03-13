@@ -88,9 +88,17 @@ for sigma_p in np.arange(1, 3, 0.25):
 
 
 
-ps = [np.exp(pp) for pp in list(np.random.normal( 18.9, 1, len(I)))]   		
 
-Qs = [np.exp(pp) for pp in list(np.random.normal( 8, 1, len(N)))]
+
+
+
+
+
+ps = [np.exp(pp) for pp in list(np.random.normal(20.2,  1,len(I)))]   		#  	 	2 	  	 		0.0546403893358
+
+
+
+Qs = [np.exp(pp) for pp in list(np.random.normal( 6.5 , 1 , len(N)))]
 
 
 Isynt = []
@@ -114,6 +122,7 @@ for index, n in enumerate(N):
 
 
 print  stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+print KL(np.cumsum(I), np.cumsum(Isynt))
 
 
 plt.yscale('log')
