@@ -228,13 +228,13 @@ def stage3():
    
 
 
-    for mu_Q0 in np.arange(0,10,1):
+    for mu_Q0 in np.arange(0.1,10,1):
 
-        for mu_p0 in np.arange(0,10,1):
+        for mu_p0 in np.arange(0.1,10,1):
 
-            for sigma_Q0 in np.arange(0,10,1):
+            for sigma_Q0 in np.arange(0.1,10,1):
 
-                for sigma_p0 in np.arange(0,10,1):
+                for sigma_p0 in np.arange(0.1,10,1):
 
     
 
