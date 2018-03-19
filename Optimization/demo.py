@@ -9,19 +9,6 @@ from multiprocessing import Process
 
 
 
-def KL(a, b):
-
-    a = [aa + 0.00001 for aa in a]
-    b = [bb + 0.00001 for bb in b]
-
-    a = np.asarray(a, dtype=np.float)
-    b = np.asarray(b, dtype=np.float)
-
-   
-    s1 = np.sum(np.where(a != 0, a * np.log(a / b), 0))
-    s2 = np.sum(np.where(b != 0, b * np.log(b / a), 0))
-
-    return (s1 + s2) / 2
 
 def is_number(s):
     try:
@@ -32,6 +19,30 @@ def is_number(s):
 
 
 
+def dist(I, Isynt):
+
+    S = 0
+
+    for index, i in enumerate(I):
+        
+        S += (np.log(i) - np.log(Isynt[index]))**2
+
+    return S
+
+
+
+def chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
 
 def rosen(x, *args):
     
@@ -39,8 +50,9 @@ def rosen(x, *args):
     N   = args[0][1]
     ijk = args[0][2]
     
-    ps = [np.exp(pp) for pp in list(np.random.normal(x[0],  1, len(I)))]
-    Qs = [np.exp(pp) for pp in list(np.random.normal(x[1],  1, len(N)))]
+    Qs = [np.exp(pp) for pp in list(np.random.normal(x[0],1, len(N)))]
+    ps = [np.exp(pp) for pp in list(np.random.normal(x[1],1, len(I)))]
+
     
     Isynt = []
 
@@ -53,17 +65,33 @@ def rosen(x, *args):
             Isynt.append(impact)
 
             
-    S = stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+    #S = stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+    S = dist(I, Isynt)
 
-    if S < 1.0: 
+
+    #if S < 1.0: 
     #if S < 0.02:
-        print ijk, '\t', x[0], '\t', x[1], '\t', S
+    print x[1], '\t', x[0], '\t', S
     
     return S
 
  
     #return sum(100.0*(x[1:]-x[:-1]**2.0)**2.0 + (1-x[:-1])**2.0)
 
+
+
+'''
+mu_N 2.1 	2.13961975032
+mu_Q 5.2 	5.23015861122
+mu_p 2.5 	2.498606304
+sigma_N 1.0 	1.03779120062
+sigma_Q 1.0 	1.04111404623
+sigma_p 1.0 	0.991256968701
+sigma_NQ 0.05 	0.219626934701
+sigma_pQ 0.02 	0.0131432351906
+sigma_pN 0.02 	0.0204936942337
+
+'''
 
 
 
@@ -91,13 +119,12 @@ def stage1():
         #mu_p0 = 40*random.random()
         #mu_Q0 = 40*random.random()
       
-    for mu_Q0 in np.arange(0,40,2):
+    for mu_Q0 in np.arange(0.5,8,1):
 
-        for mu_p0 in np.arange(0,40,2):
-
-          
+        for mu_p0 in np.arange(0.5,8,1):
+           
             x0 = np.array([mu_p0, mu_Q0])#, 1.0, 6.5, 1.0])
-            res = minimize(rosen, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 1e-1, 'disp': True, 'maxiter' : 2})
+            res = minimize(rosen, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 0.1,'disp': True, 'maxiter' : 10})
 
 
 
@@ -210,7 +237,7 @@ sigma_pN 0.02 	0.00845189029387
 '''
 
 
-def stage3():
+def stage3(inputs):
 
     ''' data '''
 
@@ -225,22 +252,11 @@ def stage3():
 
 
     ''' optimizer '''
-   
-
-
-    for mu_Q0 in np.arange(0.1,10,1):
-
-        for mu_p0 in np.arange(0.1,10,1):
-
-            for sigma_Q0 in np.arange(0.1,10,1):
-
-                for sigma_p0 in np.arange(0.1,10,1):
-
+    for (mu_Q0, mu_p0, sigma_Q0, sigma_p0) in inputs:
+          
+        x0 = np.array([ mu_Q0, mu_p0, sigma_Q0, sigma_p0])#, 1.0, 6.5, 1.0])
     
-
-                  
-                    x0 = np.array([ mu_Q0, mu_p0, sigma_Q0, sigma_p0])#, 1.0, 6.5, 1.0])
-                    res = minimize(rosen2, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 1e-1, 'disp': True, 'maxiter' : 2})
+        res = minimize(rosen2, x0,  args=([I, N, 0] , ),  method='Nelder-Mead', options={'xtol': 1e-1, 'disp': True, 'maxiter' : 10})
 
 
    
@@ -264,10 +280,28 @@ if __name__ == '__main__':
         fout.close()
 
 
+
+
+
+        inputs = []
+
+        for mu_Q0 in np.arange(0.3,8,1):
+
+            for mu_p0 in np.arange(0.3,8,1):
+
+                for sigma_Q0 in np.arange(0.3,8,1):
+
+                    for sigma_p0 in np.arange(0.3,8,1):
+
+                        inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
+
+
+        num_threads = 40
+        inputs_chunks = chunkIt(inputs, num_threads)
         Pros = []
 
-        for i in range(10):
-            p = Process(target = stage3)
+        for i in range(num_threads):
+            p = Process(target = stage3, args = (inputs_chunks[i], ))
             Pros.append(p)
             p.start()
            

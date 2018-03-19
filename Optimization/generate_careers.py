@@ -6,37 +6,30 @@ from scipy.stats.stats import pearsonr
 import math
 
 
+
 def gen():
 
 
-    if not os.path.exists('career_data'):
-        os.makedirs('career_data')
 
+    ''' N, Q, p     '''
+    ''' init params '''
 
-    # N, Q, p
+    cov3 = np.array([ [1.0,  0.05,  0.02,],
+                      [0.02,  1.0,  0.02,],
+                      [0.02, 0.02,  1.0 ]])
 
-
-    cov3 = np.array([ [4.0,  0.05,  0.02,],
-                      [0.02,  3.0,  0.02,],
-                      [0.02, 0.02,  2.0 ]])
-
-    cov2 = np.array([[4.0, 0.2],
-                     [0.2, 3.0]])
-
-
-
-    ''' N, Q, p '''
+    cov2 = np.array([[1.0, 0.2],
+                     [0.2, 1.0]])
 
     mu2  = [2.1, 5.2]
     mu3  = [2.1, 5.2, 2.5]
 
 
 
-
-
-
-
     
+    ''' N, Q, p       '''
+    ''' generate data '''
+
     Num = 2000
 
     logN, logQ         = zip(*np.random.multivariate_normal(mu2, cov2, Num))
@@ -45,6 +38,9 @@ def gen():
     
 
 
+
+    ''' N, Q, p      '''
+    ''' print params '''
 
     print 'mu_N', mu2[0], '\t', np.mean(logN)
     print 'mu_Q', mu3[1], '\t', np.mean(logQ)
@@ -58,10 +54,15 @@ def gen():
     print 'sigma_pQ', cov3[1,2], '\t', pearsonr(logQ2, logp)[0]
     print 'sigma_pN', cov3[0,2], '\t', pearsonr(logN2, logp)[0]
 
-
     print len(logQ), len(logQ2), len(logp)
 
 
+
+
+    ''' N, Q, p   '''
+    ''' save data '''
+
+    if not os.path.exists('career_data'):  os.makedirs('career_data')
 
     p = [math.exp(pp) for pp in logp]
     
