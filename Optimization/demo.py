@@ -277,7 +277,7 @@ if __name__ == '__main__':
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-        fout = open('fasz/opt_res_out', 'w')
+        fout = open('fasz/opt_res_out2', 'w')
         fout.close()
 
 
