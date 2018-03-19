@@ -204,12 +204,13 @@ def rosen2(x, *args):
             Isynt.append(impact)
 
             
-    S = stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+    #S = stats.ks_2samp(np.cumsum(I), np.cumsum(Isynt))[0]
+    S = dist(I, Isynt)
 
     #if S < 1.0: 
     #if S < 0.02:
 
-    fout = open('fasz/opt_res_out', 'a')
+    fout = open('fasz/opt_res_out2', 'a')
     fout.write( str(x[0]) + '\t' + str(x[1]) + '\t' + str(x[2]) + '\t' + str(x[3]) + '\t' + str(S) + '\n')
     fout.close()
 
