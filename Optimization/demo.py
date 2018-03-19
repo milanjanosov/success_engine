@@ -209,7 +209,7 @@ def rosen2(x, *args):
     #if S < 1.0: 
     #if S < 0.02:
 
-    fout = open('fasz/opt_res_out', 'w')
+    fout = open('fasz/opt_res_out', 'a')
     fout.write( str(x[0]) + '\t' + str(x[1]) + '\t' + str(x[2]) + '\t' + str(x[3]) + '\t' + str(S) + '\n')
     fout.close()
 
