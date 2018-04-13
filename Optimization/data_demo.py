@@ -19,6 +19,7 @@ def is_number(s):
 
 
 
+
 def dist(I, Isynt):
 
     S = 0
@@ -149,6 +150,8 @@ def rosen2(x, *args):
 
 
 
+
+
 def stage3(*args):
 
 
@@ -156,9 +159,6 @@ def stage3(*args):
     I        = args[1]
     N        = args[2]
     filename = args[3]
-
-
-   
 
 
 
@@ -218,6 +218,9 @@ if __name__ == '__main__':
                 sigma_p_min = 0.01
                 sigma_p_max = 0.6
 
+
+                nnn = 15
+
                 nmu_Q     = (mu_Q_max    - mu_Q_min)    / 15.0
                 nmu_p     = (mu_p_max    - mu_p_min)    / 15.0
                 nsigma_Q  = (sigma_Q_max - sigma_Q_min) / 15.0
@@ -245,26 +248,43 @@ if __name__ == '__main__':
 
                 inputs = []
 
-                #print np.arange( sigma_Q_min, sigma_Q_max, nsigma_Q )
-
+      
                 for mu_Q0 in np.arange( mu_Q_min, mu_Q_max, nmu_Q ):
 
                     for mu_p0 in np.arange( mu_p_min, mu_p_max, nmu_p ):
 
                         for sigma_Q0 in np.arange( sigma_Q_min, sigma_Q_max, nsigma_Q):
 
-
-
                             for sigma_p0 in np.arange( sigma_p_min, sigma_p_max, nsigma_p ):
-
 
                                 inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
 
+                '''
 
-                 
+                muQs    = np.random.uniform(mu_Q_min,    mu_Q_max,    nnn)
+                mups    = np.random.uniform(mu_p_min,    mu_p_max,    nnn)
+                sigmaQs = np.random.uniform(sigma_Q_min, sigma_Q_max, nnn)
+                sigmaps = np.random.uniform(sigma_p_min, sigma_p_max, nnn)
 
 
-                num_threads = 4
+                for mu_Q0 in muQs:
+
+                    for mu_p0 in mups:
+
+                        for sigma_Q0 in sigmaQs:
+
+                            for sigma_p0 in sigmaps:
+
+                                inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
+                '''
+
+
+
+
+
+
+               
+                num_threads = 40
                 inputs_chunks = chunkIt(inputs, num_threads)
                 Pros = []
 
@@ -297,7 +317,7 @@ if __name__ == '__main__':
                     f.write(k)
 
                 f.close()
-       
+                
 
 
 
