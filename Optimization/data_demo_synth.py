@@ -74,10 +74,10 @@ def rosen(x, *args):
  
 
 
-def get_I(field):
+def get_I():
 
 
-    files = os.listdir('DataSample/Film/film-' + field + '-simple-careers')
+    files = os.listdir('career_data')
 
     I = []
     N = []
@@ -86,10 +86,11 @@ def get_I(field):
 
         c_i = []
 
-        for line in gzip.open('DataSample/Film/film-' + field + '-simple-careers/' + filename):
+        for line in open('career_data/' + filename):
             if 'rating_count' not in line:
                 try:
-                    ccc = float(line.strip().split('\t')[3])
+                    ccc = float(line.strip().split('\t')[1])
+            
                     if ccc > 0:
                         c_i.append(ccc)
                 except:
@@ -182,146 +183,128 @@ if __name__ == '__main__':
 
 
 
+    folder = 'fasz'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 
-    if sys.argv[1] == 'stage1':
-        I, N = get_I('art-director')
-        stage1(I, N)
-    elif sys.argv[1] == 'stage2':
-        I, N = get_I('art-director')
-        stage2(I, N)
-    elif sys.argv[1] == 'stage3':
-
-        folder = 'fasz'
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+    folder = 'fasz/synth'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 
-        folder = 'fasz/synth'
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+    for i in range(100):
 
 
-        for i in range(100):
+        I, N  = get_I()
+
+        print I
+
+        mu_Q_min = 0.1
+        mu_Q_max = 6.1
+        mu_p_min = 0.1
+        mu_p_max = 6.1
+
+        sigma_Q_min = 0.01
+        sigma_Q_max = 0.6
+        sigma_p_min = 0.01
+        sigma_p_max = 0.6
+
+
+        nnn = 15
+
+        nmu_Q     = (mu_Q_max    - mu_Q_min)    / 15.0
+        nmu_p     = (mu_p_max    - mu_p_min)    / 15.0
+        nsigma_Q  = (sigma_Q_max - sigma_Q_min) / 15.0
+        nsigma_p  = (sigma_p_max - sigma_p_min) / 15.0
+
     
-
-            fields = ['director', 'producer', 'writer', 'composer', 'art-director']
-
-            for field in fields:
+        string = '_'.join([str(aa) for aa in [mu_Q_min, mu_Q_max, mu_p_min, mu_p_max, sigma_Q_min, sigma_Q_max, sigma_p_min, sigma_p_max]])
 
 
-                I, N  = get_I(field)
+        filename = 'fasz/synth/opt_res_out_synth_' + string
 
-                mu_Q_min = 0.1
-                mu_Q_max = 6.1
-                mu_p_min = 0.1
-                mu_p_max = 6.1
+        lfiles = len([fff.split('--')[0] for fff in os.listdir('fasz') ])
 
-                sigma_Q_min = 0.01
-                sigma_Q_max = 0.6
-                sigma_p_min = 0.01
-                sigma_p_max = 0.6
+        filename = filename + '--' + str(lfiles/2)
+        
+        fout = open(filename, 'w')
+        fout.close()
 
 
-                nnn = 15
 
-                nmu_Q     = (mu_Q_max    - mu_Q_min)    / 15.0
-                nmu_p     = (mu_p_max    - mu_p_min)    / 15.0
-                nsigma_Q  = (sigma_Q_max - sigma_Q_min) / 15.0
-                nsigma_p  = (sigma_p_max - sigma_p_min) / 15.0
+        inputs = []
 
+
+        '''for mu_Q0 in np.arange( mu_Q_min, mu_Q_max, nmu_Q ):
+
+            for mu_p0 in np.arange( mu_p_min, mu_p_max, nmu_p ):
+
+                for sigma_Q0 in np.arange( sigma_Q_min, sigma_Q_max, nsigma_Q):
+
+                    for sigma_p0 in np.arange( sigma_p_min, sigma_p_max, nsigma_p ):
+
+                        inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
+
+        '''
+
+        muQs    = np.random.uniform(mu_Q_min,    mu_Q_max,    nnn)
+        mups    = np.random.uniform(mu_p_min,    mu_p_max,    nnn)
+        sigmaQs = np.random.uniform(sigma_Q_min, sigma_Q_max, nnn)
+        sigmaps = np.random.uniform(sigma_p_min, sigma_p_max, nnn)
+
+
+        for mu_Q0 in muQs:
+
+            for mu_p0 in mups:
+
+                for sigma_Q0 in sigmaQs:
+
+                    for sigma_p0 in sigmaps:
+
+                        inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
+        
+
+
+
+
+
+
+       
+        num_threads = 40
+        inputs_chunks = chunkIt(inputs, num_threads)
+        Pros = []
+
+        for i in range(num_threads):
+            p = Process(target = stage3, args = (inputs_chunks[i], I, N, filename, ))
+            Pros.append(p)
+            p.start()
+           
+        for t in Pros:
+            t.join()
+
+        
+        
+
+        results = []
+
+        for line in open( filename):
+    
+            value = float(line.strip().split('\t')[-1])
+
+            results.append(( value, line))
+
+
+
+        sorted_results = sorted(results, key=lambda tup: tup[0])
+
+        f = open( filename + '_sorted', 'w')
+
+        for v, k in sorted_results[0:10000]:
+            f.write(k)
+
+        f.close()
             
-                string = '_'.join([str(aa) for aa in [mu_Q_min, mu_Q_max, mu_p_min, mu_p_max, sigma_Q_min, sigma_Q_max, sigma_p_min, sigma_p_max]])
-
-
-                filename = 'fasz/synth/opt_res_out_synth_' + field + '_' + string
-
-                lfiles = len([fff.split('--')[0] for fff in os.listdir('fasz') if field in fff])
-
-                filename = filename + '--' + str(lfiles/2)
-                
-                fout = open(filename, 'w')
-                fout.close()
-
-
-                #print nmu_Q, nmu_p
-
-
-                
-
-
-                inputs = []
-
-      
-                '''for mu_Q0 in np.arange( mu_Q_min, mu_Q_max, nmu_Q ):
-
-                    for mu_p0 in np.arange( mu_p_min, mu_p_max, nmu_p ):
-
-                        for sigma_Q0 in np.arange( sigma_Q_min, sigma_Q_max, nsigma_Q):
-
-                            for sigma_p0 in np.arange( sigma_p_min, sigma_p_max, nsigma_p ):
-
-                                inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
-
-                '''
-
-                muQs    = np.random.uniform(mu_Q_min,    mu_Q_max,    nnn)
-                mups    = np.random.uniform(mu_p_min,    mu_p_max,    nnn)
-                sigmaQs = np.random.uniform(sigma_Q_min, sigma_Q_max, nnn)
-                sigmaps = np.random.uniform(sigma_p_min, sigma_p_max, nnn)
-
-
-                for mu_Q0 in muQs:
-
-                    for mu_p0 in mups:
-
-                        for sigma_Q0 in sigmaQs:
-
-                            for sigma_p0 in sigmaps:
-
-                                inputs.append((mu_Q0, mu_p0, sigma_Q0, sigma_p0))
-                
-
-
-
-
-
-
-               
-                num_threads = 40
-                inputs_chunks = chunkIt(inputs, num_threads)
-                Pros = []
-
-                for i in range(num_threads):
-                    p = Process(target = stage3, args = (inputs_chunks[i], I, N, filename, ))
-                    Pros.append(p)
-                    p.start()
-                   
-                for t in Pros:
-                    t.join()
-
-                
-                
-
-                results = []
-
-                for line in open( filename):
-            
-                    value = float(line.strip().split('\t')[-1])
-
-                    results.append(( value, line))
-
-
-
-                sorted_results = sorted(results, key=lambda tup: tup[0])
-
-                f = open( filename + '_sorted', 'w')
-
-                for v, k in sorted_results[0:10000]:
-                    f.write(k)
-
-                f.close()
-                
 
 
 
