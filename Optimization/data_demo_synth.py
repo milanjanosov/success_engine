@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
         I, N  = get_I()
 
-        print I
+
 
         mu_Q_min = 0.1
         mu_Q_max = 6.1
