@@ -1,7 +1,7 @@
 import os
 import gzip
 root  = 'simple-careers/'
-types = ['director']#['producer', 'director', 'composer', 'art-director', 'writer']
+types = ['producer', 'director', 'composer', 'art-director', 'writer']
 
 for ctype in types:
     
