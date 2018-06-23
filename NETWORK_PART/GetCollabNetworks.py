@@ -144,7 +144,8 @@ def remapping_collab_careers(sample):
     for ind, fn in enumerate(ffiles):
         
     
-        print 'Remap collab nws\t', ind, '/', nnn
+        if ind % 1000 == 0:
+            print 'Remap collab nws\t', ind, '/', nnn
         #if ind == 10000: break
 
         fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
@@ -223,8 +224,9 @@ def process_yearly_nw(args):
         for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
-                  
-            print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+                 
+            if ind % 1000 == 0: 
+                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
             for line in open(root + fn):
 
@@ -405,7 +407,9 @@ def yearly_graph_data(args):
         outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
 
 
-        print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
+        if ind % 1000 == 0:
+            print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
+
         if not os.path.exists(outfolder): os.makedirs(outfolder)
 
 
