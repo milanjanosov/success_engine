@@ -7,6 +7,7 @@ import os
 from multiprocessing import Process
 import time
 import pandas as pd
+import random
 from igraph import Graph
 from shutil import copyfile
 import gzip
@@ -354,6 +355,7 @@ def create_full_nws(sample):
     for tipus in tipusok: 
 
         yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+        random.shuffle(yearLIMITs)
 
         num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
@@ -528,6 +530,8 @@ def create_igraphnw(sample):
     for tipus in tipusok: 
 
         yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+        random.shuffle(yearLIMITs)
+
 
         num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
