@@ -4,6 +4,7 @@ import sys
 from shutil import copyfile
 import gzip
 import os
+from multiprocessing import Process
 import time
 import pandas as pd
 from igraph import Graph
@@ -105,7 +106,7 @@ def get_sample():
     roots = 'collab-careers_sample/film-director-collab-careers_sample/'
     if not os.path.exists(roots): os.makedirs(roots)
 
-    for fn in files[0:100]:
+    for fn in files[0:2000]:
         copyfile(root + fn[0], roots + fn[0])
 
 
@@ -135,8 +136,15 @@ def remapping_collab_careers(sample):
     if len( os.listdir(file_Qdir_EVER)) == 0:
         get_sample()
 
-    for ind, fn in enumerate(os.listdir(file_Qdir_EVER)):
+
+    ffiles = os.listdir(file_Qdir_EVER)
+    nnn    = len(ffiles)
+
+    for ind, fn in enumerate(ffiles):
         
+    
+        print 'Remap collab nws\t', ind, '/', nnn
+        if ind == 10000: break
 
         fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
         fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
@@ -165,7 +173,7 @@ def remapping_collab_careers(sample):
 
 
 ''' ================================================= '''
-'''    REMAP COLLAB NETWORKS BASED ON WHO HAS > 4     '''
+'''    PREPROC THE NETWORKS FOR THE IGRAPH STUFF      '''
 ''' ================================================= '''
 
 
@@ -174,6 +182,138 @@ def remapping_collab_careers(sample):
 - film-director-collab-careers_QEVER  -->
 - film-director-collab-careers_EVER   -->
 '''
+
+
+def process_yearly_nw(args):
+
+
+    yearLIMITs  = args[0]
+    thread_id   = args[1]
+    num_threads = args[2]
+    sam         = args[3] 
+    ctype       = args[4]
+    tipus       = args[5]
+
+
+
+    for yearLIMIT in yearLIMITs:
+
+        edges     = {}
+        edge_dist = {}
+        nodes     = set()
+
+
+        outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
+   
+
+
+
+        if not os.path.exists(outfolder): os.makedirs(outfolder)
+
+
+        root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
+        files = os.listdir(root)
+        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_'  + str(yearLIMIT) + '.dat', 'w')
+        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
+        n     = len(files)
+
+
+        for ind, fn in enumerate(files):
+                  
+            director = fn.split('_')[0]
+                  
+            print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+
+            for line in open(root + fn):
+
+                fields = line.strip().split('\t') 
+       
+                if len(fields) == 4:
+
+                    movie, year, rating, cast = fields
+                    if len(year) > 0:
+                        year = min([float(y) for y in year.split('-')])
+
+                    year = float(year)
+
+                    try:
+
+                        rating = float(rating)                        
+
+                        if year <= yearLIMIT and rating > 0.0:                        
+
+                            # casts need to be handled as full graphs 
+                            cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc]
+
+                            for c1 in cast:
+
+                                if c1 not in nodes:
+                                    nodes.add(c1)
+
+                                for c2 in cast:
+                                    if c1 != c2:
+
+                                        edge = '\t'.join(sorted([c1, c2]))
+
+
+                                        if edge not in edges:
+                                            edges[edge]     = 1
+                                            edge_dist[edge] = rating
+                                        else:
+                                            edges[edge]     += 1
+                                            edge_dist[edge] += rating
+
+
+                    except:
+                        pass
+
+                
+
+        dataout   = open('networks' + sam + '/networks_statistics.dat', 'a') 
+        dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t' + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
+        dataout.close()
+
+
+        f = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_edges' + str(yearLIMIT) + '.dat', 'w')
+        f.write('Source'+'\t'+'Target'+'\t'+'Weight'+'\t'+'Type'+'\n')      
+
+
+        for e, v in edges.items():
+            gout.write(e + '\t' + str(edge_dist[e]) + '\n')
+            hout.write(e + '\t' + str(v)            + '\n')              
+
+
+        f.close()
+        
+
+        ''' PROB ADDING THE DICT OF BEST PRODUCTS HERE AND WRITE THEM AS NODE ATTRIBUTES '''
+        #g = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_nodes.dat', 'w')
+        #g.write('ID' + '\t' + 'Label' +'\t'+ 'House'+ '\n')    
+        #for n, h in list(nodes):
+        #    g.write(n + '\t' + n + '\t' + h + '\n')
+        #g.close()
+
+
+
+        gout.close()
+        hout.close()
+
+
+
+  
+
+def chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+        
+
 
 
 
@@ -196,165 +336,179 @@ def create_full_nws(sample):
 
 
     if sample: sam = '_sample'
+
+    if sample and not os.path.exists('networks_sample'): 
+        os.makedirs('networks_sample')
+    if not os.path.exists('networks'): 
+        os.makedirs('networks')
+
+
+
     dataout   = open('networks' + sam + '/networks_statistics.dat', 'w') 
     dataout.write('network\tyear\tnodes\tedges\n')
+    dataout.close()
+
 
 
     for tipus in tipusok: 
 
+        yearLIMITs = [1990, 2000, 2010, 2020]
 
-
-        for yearLIMIT in [1990, 2000, 2010, 2020]:
-
-
-
-            edges     = {}
-            edge_dist = {}
-            nodes     = set()
-
-
-            outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
-
-
-            if not os.path.exists(outfolder): os.makedirs(outfolder)
-
-
-            root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
-            files = os.listdir(root)
-
-            #fout = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_'      + str(yearLIMIT) + '.lgl', 'w')
-            gout = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_'  + str(yearLIMIT) + '.dat', 'w')
-            hout = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
-
-            n = len(files)
-
-            x = 0
-        
-            for ind, fn in enumerate(files):
-                      
-                director = fn.split('_')[0]
-                      
-
-                #if ind == 2: break
-            #    print ind, '/', n
-
-                for line in open(root + fn):
-
-                    fields = line.strip().split('\t') 
-           
-                    if len(fields) == 4:
-
-                        movie, year, rating, cast = fields
-                        if len(year) > 0:
-                            year = min([float(y) for y in year.split('-')])
-
-                        
-                        year = float(year)
-
-                        try:
-
-                            rating = float(rating)                        
-
-                            if year <= yearLIMIT and rating > 0.0:                        
-
-
-
-                                # casts need to be handled as full graphs 
-                                cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc]
-
-
-                                for c1 in cast:
-
-                                    if c1 not in nodes:
-                                        nodes.add(c1)
-
-                                    for c2 in cast:
-                                        if c1 != c2:
-
-                                            edge = '\t'.join(sorted([c1, c2]))
-
-                                             
-
-                                            if edge not in edges:
-                                                edges[edge]     = 1
-                                                edge_dist[edge] = rating
-                                            else:
-                                                edges[edge]     += 1
-                                                edge_dist[edge] += rating
-
-                                            #if c1 not in neighbrs:
-                                           #     neighbrs[c1] = [(c2,     movie, str(year), rating)]
-                                           # else:
-                                            #    neighbrs[c1].append((c2, movie, str(year), rating))
-                            
-                        except:
-                            pass
-
+        num_threads = 4
+        files_chunks = chunkIt(yearLIMITs, num_threads)
+        Pros = []
                     
-            '''aa = 0
-            bb = 0      
+            
+        for i in range(0,num_threads):  
+            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus], ))
+            Pros.append(p)
+            p.start()
+           
+        for t in Pros:
+            t.join()
 
-            for user, nghb in neighbrs.items():
-                
-                fout.write('# ' + director + '\n')
 
-                for n in nghb: 
-                    fout.write(n[0] + ' '  + str(edges['\t'.join([user, n[0]])])    + '\n')
-                    gout.write(user + '\t' + n[0] + '\t' + n[1] + '\t' + n[2] + '\t' + n[3] + '\n')
-                    hout.write(user + '\t' + n[0] + '\t' + str(edges['\t'.join(sorted([user, n[0]]))]) + '\n')
-                  
-                    aa += 1
-                    bb += 1
 
-            '''
-          
-    
+     
+
+
+
+
+
+
+''' ======================================================== '''
+'''    GENERATE THE IGRAPH STUFF OUTPUT IS NODE FEATURES     '''
+''' ======================================================== '''
+
+
+def yearly_graph_data(args):
+
+    yearLIMITs  = args[0]
+    thread_id   = args[1]
+    num_threads = args[2]
+    sam         = args[3] 
+    ctype       = args[4]
+    tipus       = args[5]
+    sample      = args[6]
+
+
+    for yearLIMIT in yearLIMITs:
+
+
+        edges = {}
+        nodes = set()
+
+
+        outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
+
+
+        print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
+        if not os.path.exists(outfolder): os.makedirs(outfolder)
+
+
+        root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
+        files = os.listdir(root)
+
+        #filename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_'      + str(yearLIMIT) + '.lgl'
+        gilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_' + str(yearLIMIT) + '.dat'
+        hilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'   + str(yearLIMIT) + '.dat'
+
+        G        = Graph.Read_Ncol(hilename, weights = True, directed = False) 
+
+        edge_ratings = {}
+
+        for line in open(gilename):
+            source, target, rating = line.strip().split('\t')
+
+            rating = float(rating)
+            edge   =  '\t'.join([source, target])
+
+            edge_ratings[edge] = rating
+
+
+        ratings = []
+
+        for ind, g in enumerate(G.es()):
+
+            target = G.vs[g.target]['name']
+            source = G.vs[g.source]['name']
+            edge   = '\t'.join(sorted([source, target]))
+            
+            ratings.append( edge_ratings[edge])
+
+
+        G.es['ratings'] = ratings
+
+
+        for g in G.es():
+            target = G.vs[g.target]['name']
+            source = G.vs[g.source]['name']
+           
+
+
+
+        t1 = time.time()
+        degree  = G.strength(                   weights=None)
+        print thread_id, '/', num_threads, '\t', 'degree   ', time.time() - t1
+
+
+        t1 = time.time()
+        strength     = G.strength(                      weights='weight')
+        print thread_id, '/', num_threads, '\t', 'strengthes   ', time.time() - t1
+
+
+        t1 = time.time()
+        ratings     = G.strength(                      weights='ratings')
+        print thread_id, '/', num_threads, '\t', 'ratings   ', time.time() - t1
+
+
+        t1 = time.time()
+        betweenness  = G.betweenness(                   weights='weight')
+        print thread_id, '/', num_threads, '\t', 'betweennesses   ', time.time() - t1
+
+
+        t1 = time.time()
+        clustering    = G.transitivity_local_undirected( weights='weight')
+        print thread_id, '/', num_threads, '\t', 'clustering   ', time.time() - t1
+
+
+        t1 = time.time()
+        pagerank      = G.pagerank(                      weights='weight')
+        print thread_id, '/', num_threads, '\t', 'pagerank   ', time.time() - t1
+
+
+        t1 = time.time()
+        eigenvector   = G.eigenvector_centrality(        weights='weight')
+        print thread_id, '/', num_threads, '\t', 'eigenvector   ', time.time() - t1
         
-            dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t' + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
-
-            print 'Parsing  ', len(edges)
 
 
-            f = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_edges' + str(yearLIMIT) + '.dat', 'w')
-            f.write('Source'+'\t'+'Target'+'\t'+'Weight'+'\t'+'Type'+'\n')      
+
+        node_centralities = {}
+        
+
+        for i in range(len(G.vs)):
+
+            node = G.vs[i]['name']
 
 
-            for e, v in edges.items():
-
-                if 'nm0797928\tnm0522327' == e:
-                    print 'hello'
-
-                gout.write(e + '\t' + str(edge_dist[e]) + '\n')
-                hout.write(e + '\t' + str(v)            + '\n')              
-                #f.write(e + '\t' + str(v) + '\t' + 'undirected' + '\n')  
-
-            f.close()
-            
-
-            ''' PROB ADDING THE DICT OF BEST PRODUCTS HERE AND WRITE THEM AS NODE ATTRIBUTES '''
-
-            #g = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_nodes.dat', 'w')
-            #g.write('ID' + '\t' + 'Label' +'\t'+ 'House'+ '\n')    
-            #for n, h in list(nodes):
-            #    g.write(n + '\t' + n + '\t' + h + '\n')
-            #g.close()
+            node_centralities[node] = { 'degree'      : degree[i],
+                                        'strength'    : strength[i], 
+                                        'ratings'     : ratings[i], 
+                                        'betweenness' : betweenness[i], 
+                                        'clustering'  : clustering[i], 
+                                        'pagerank'    : pagerank[i], 
+                                        'eigenvector' : eigenvector[i]}
 
 
-            #fout.close()
-            gout.close()
-            hout.close()
-            
+
+        df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
+        df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_NODE_CENTRALITIES_' + str(yearLIMIT) + '.dat', sep = '\t', index = True)
 
 
 
 
-        dataout.close()
 
-
-
-#''' ================================================= '''
-#'''    PARSE AS AN IGRAPH FILE AND CALC A FEW BASIC MEASURES...MEASURE TIME ON CNS2     '''
-#''' ================================================= '''
 
 
 def create_igraphnw(sample):
@@ -372,151 +526,26 @@ def create_igraphnw(sample):
 
     for tipus in tipusok: 
 
+        yearLIMITs = [1990, 2000, 2010, 2020]
 
-        for yearLIMIT in [1990, 2000, 2010, 2020][0:1]:
-
-
-            print 'Parsing the network of year ', yearLIMIT
-
-            edges = {}
-            nodes = set()
-
-
-            outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
-
-
-            print outfolder
-            if not os.path.exists(outfolder): os.makedirs(outfolder)
-
-
-            root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
-            files = os.listdir(root)
-
-            #filename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_'      + str(yearLIMIT) + '.lgl'
-            gilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_' + str(yearLIMIT) + '.dat'
-            hilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'   + str(yearLIMIT) + '.dat'
-
-
-            #G         = Graph.Read_Lgl(filename, names = True, weights = True, directed = False)
-            G            = Graph.Read_Ncol(hilename, weights = True, directed = False) 
-            edge_ratings = {}
-
-            for line in open(gilename):
-                source, target, rating = line.strip().split('\t')
-
-                rating = float(rating)
-                edge   =  '\t'.join([source, target])
-  
-                edge_ratings[edge] = rating
-
-
-
-            print 'igraph  ', len(G.es()),len(edge_ratings)
-
+        num_threads = 4
+        files_chunks = chunkIt(yearLIMITs, num_threads)
+        Pros = []
+                    
             
-
-            ratings = []
-
-            for ind, g in enumerate(G.es()):
-
-                target = G.vs[g.target]['name']
-                source = G.vs[g.source]['name']
-                edge   = '\t'.join(sorted([source, target]))
-                
-               
-
-                ratings.append( edge_ratings[edge])
-
-         
-        
-
-            G.es['ratings'] = ratings
-
-
-
-            for g in G.es():
-                target = G.vs[g.target]['name']
-                source = G.vs[g.source]['name']
-               
-
-      
-
-
-
-
-
-
-            t1 = time.time()
-            degree  = G.strength(                   weights=None)
-            print 'degree   ', time.time() - t1
-
-
-            t1 = time.time()
-            strength     = G.strength(                      weights='weight')
-            print 'strengthes   ', time.time() - t1
-
-
-            t1 = time.time()
-            ratings     = G.strength(                      weights='ratings')
-            print 'ratings   ', time.time() - t1
-
-
-            '''t1 = time.time()
-            betweenness  = G.betweenness(                   weights='weight')
-            print 'betweennesses   ', time.time() - t1
-
-
-            t1 = time.time()
-            clustering    = G.transitivity_local_undirected( weights='weight')
-            print 'clusterings   ', time.time() - t1
-
-
-            t1 = time.time()
-            pagerank      = G.pagerank(                      weights='weight')
-            print 'pageranks   ', time.time() - t1
-
-
-            t1 = time.time()
-            eigenvector   = G.eigenvector_centrality(        weights='weight')
-            print 'eigenvectors   ', time.time() - t1
-            '''
-
-
-
-
-            node_centralities = {}
-            
+        for i in range(0,num_threads):  
+            p = Process(target = yearly_graph_data, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, sample], ))
+            Pros.append(p)
+            p.start()
            
-
-            for i in range(len(G.vs)):
-
-                node = G.vs[i]['name']
-
-
-                node_centralities[node] = { 
-                                            'degree'   : degree[i],
-                                            'strength' : strength[i], 
-                                            'ratings'  : ratings[i]}
-
-
-            df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
-
-            print df_centr.head()
-
-            df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_NODE_CENTRALITIES_' + str(yearLIMIT) + '.dat', sep = '\t', index = True)
+        for t in Pros:
+            t.join()
 
 
 
+     
+         
 
-
-            #t1 = time.time()
-            #closenesses    = G.closeness(                     weights='weight')
-            #print 'closenesses   ', time.time() - t1
-
-
-            #t1 = time.time()
-            #constraint     = G.constraint(                    weights='weight') 
-            #print 'constraint   ', time.time() - t1       
 
 
 
