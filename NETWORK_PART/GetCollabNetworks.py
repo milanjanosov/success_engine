@@ -407,8 +407,8 @@ def yearly_graph_data(args):
         outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
 
 
-        if ind % 1000 == 0:
-            print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
+        #if ind % 1000 == 0:
+        #    print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
 
         if not os.path.exists(outfolder): os.makedirs(outfolder)
 
