@@ -107,7 +107,7 @@ def get_sample():
     roots = 'collab-careers_sample/film-director-collab-careers_sample/'
     if not os.path.exists(roots): os.makedirs(roots)
 
-    for fn in files[0:2000]:
+    for fn in files[0:100]:
         copyfile(root + fn[0], roots + fn[0])
 
 
@@ -146,7 +146,7 @@ def remapping_collab_careers(sample):
     
         if ind % 1000 == 0:
             print 'Remap collab nws\t', ind, '/', nnn
-        #if ind == 10000: break
+        if ind == 100: break
 
         fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
         fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
@@ -336,7 +336,7 @@ def create_full_nws(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QQ']#, '-QE', '']
+    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
 
 
     if sample: sam = '_sample'
@@ -525,7 +525,7 @@ def create_igraphnw(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QQ']#, '-QE', '']
+    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
 
     print tipusok
 
