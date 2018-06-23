@@ -355,7 +355,7 @@ def create_full_nws(sample):
 
         yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
 
-        num_threads = 4
+        num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
