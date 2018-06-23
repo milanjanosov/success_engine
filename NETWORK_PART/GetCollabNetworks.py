@@ -235,6 +235,8 @@ def process_yearly_nw(args):
                     if len(year) > 0:
                         year = min([float(y) for y in year.split('-')])
 
+    
+                    print year
                     year = float(year)
 
                     try:
