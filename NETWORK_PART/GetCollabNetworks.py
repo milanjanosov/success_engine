@@ -144,7 +144,7 @@ def remapping_collab_careers(sample):
         
     
         print 'Remap collab nws\t', ind, '/', nnn
-        if ind == 10000: break
+        #if ind == 10000: break
 
         fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
         fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
@@ -183,6 +183,7 @@ def remapping_collab_careers(sample):
 - film-director-collab-careers_EVER   -->
 '''
 
+#source /opt/virtualenv-python2.7/bin/activate
 
 def process_yearly_nw(args):
 
@@ -352,7 +353,7 @@ def create_full_nws(sample):
 
     for tipus in tipusok: 
 
-        yearLIMITs = [1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
 
         num_threads = 4
         files_chunks = chunkIt(yearLIMITs, num_threads)
@@ -449,37 +450,37 @@ def yearly_graph_data(args):
 
         t1 = time.time()
         degree  = G.strength(                   weights=None)
-        print thread_id, '/', num_threads, '\t', 'degree   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'degree   ', time.time() - t1
 
 
         t1 = time.time()
         strength     = G.strength(                      weights='weight')
-        print thread_id, '/', num_threads, '\t', 'strengthes   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'strengthes   ', time.time() - t1
 
 
         t1 = time.time()
         ratings     = G.strength(                      weights='ratings')
-        print thread_id, '/', num_threads, '\t', 'ratings   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'ratings   ', time.time() - t1
 
 
         t1 = time.time()
         betweenness  = G.betweenness(                   weights='weight')
-        print thread_id, '/', num_threads, '\t', 'betweennesses   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses   ', time.time() - t1
 
 
         t1 = time.time()
         clustering    = G.transitivity_local_undirected( weights='weight')
-        print thread_id, '/', num_threads, '\t', 'clustering   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering   ', time.time() - t1
 
 
         t1 = time.time()
         pagerank      = G.pagerank(                      weights='weight')
-        print thread_id, '/', num_threads, '\t', 'pagerank   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank   ', time.time() - t1
 
 
         t1 = time.time()
         eigenvector   = G.eigenvector_centrality(        weights='weight')
-        print thread_id, '/', num_threads, '\t', 'eigenvector   ', time.time() - t1
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector   ', time.time() - t1
         
 
 
@@ -526,9 +527,9 @@ def create_igraphnw(sample):
 
     for tipus in tipusok: 
 
-        yearLIMITs = [1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
 
-        num_threads = 4
+        num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
@@ -597,7 +598,7 @@ if __name__ == '__main__':
 
 
 
-
+## source /opt/virtualenv-python2.7/bin/activate
 
 
 
