@@ -45,7 +45,7 @@ def proc_careers(args):
 
         year = fn.split('_')[-1].replace('.dat', '')
 
-        print ind, '/', nnn
+        print thread_id, '/', num_threads, '\t', ind, '/', nnn
 
         for line in open(fn):
             if 'between' in line:

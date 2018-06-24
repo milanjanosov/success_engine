@@ -280,11 +280,11 @@ def process_yearly_nw(args):
 
                                         if edge not in edges:
                                             edges[edge]     = 1
-                                            edge_dist[edge] = rating
+                                            edge_dist[edge] = (rating, [movie])
                                         else:
-                                            edges[edge]     += 1
-                                            edge_dist[edge] += rating
-
+                                            edges[edge]        += 1
+                                            edge_dist[edge][0] += rating
+                                            edge_dist[edge][1].append(movie)
 
                     except:
                         pass
@@ -301,7 +301,7 @@ def process_yearly_nw(args):
 
 
         for e, v in edges.items():
-            gout.write(e + '\t' + str(edge_dist[e]) + '\n')
+            gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '\t'.join(edge_dist[e][1]) + '\n')
             hout.write(e + '\t' + str(v)            + '\n')              
 
 
@@ -377,7 +377,7 @@ def create_full_nws(sample):
 
 
 
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 1910)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
         num_threads = 40
