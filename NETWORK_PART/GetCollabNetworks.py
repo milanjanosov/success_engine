@@ -383,8 +383,8 @@ def process_yearly_nw(args):
                
             #if ind == 1000: break
 
-            if ind % 1000 == 0: 
-                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+          #  if ind % 1000 == 0: 
+          #      print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
             for line in open(root + fn):
 
@@ -394,51 +394,51 @@ def process_yearly_nw(args):
 
                     movie, year, rating, cast = fields
                     if len(year) > 0:
-                        year = min([float(y) for y in year.split('-')])
+                        year = str(int(min([float(y) for y in year.split('-')])))
 
             
-                    #if 2 == 2:
-                    if  len(str(year)) == 4 and rating is not None and year is not None:
-                    #try:
-                        year = float(year)
-                        rating = float(rating)                        
-          
-
-                        if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
-
-                            # casts need to be handled as full graphs 
-                            cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] >= year]
-        
+                        #if 2 == 2:
+                        if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':# and year is not None:
+                        #try:
+            
+                            year = float(year)
+                            rating = float(rating)                        
 
 
-                            for c1 in cast:
+                            if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
-                                if c1 not in nodes:
-                                    nodes.add(c1)
-
-                                for c2 in cast:
-                                    if c1 != c2:
-
-                                        edge = '\t'.join(sorted([c1, c2]))
+                                # casts need to be handled as full graphs 
+                                cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] >= year]
+            
 
 
+                                for c1 in cast:
 
-                                        if edge not in edges:
-                                            edges[edge]     = 1
-                                            edge_dist[edge] = [rating, [movie]]
-                                        else:
-                                            edges[edge]        += 1
-                                            edge_dist[edge][0] += rating
-                                            edge_dist[edge][1].append(movie)
+                                    if c1 not in nodes:
+                                        nodes.add(c1)
+
+                                    for c2 in cast:
+                                        if c1 != c2:
+
+                                            edge = '\t'.join(sorted([c1, c2]))
 
 
-                                        
+                                            if edge not in edges:
+                                                edges[edge]     = 1
+                                                edge_dist[edge] = [rating, [movie]]
+                                            else:
+                                                edges[edge]        += 1
+                                                edge_dist[edge][0] += rating
+                                                edge_dist[edge][1].append(movie)
 
-                        #if 'nm0000184' == director:
-                       #     print edge
 
-                    #except:
-                    #    pass
+                                            
+
+                            #if 'nm0000184' == director:
+                           #     print edge
+
+                        #except:
+                        #    pass
 
                 
 
