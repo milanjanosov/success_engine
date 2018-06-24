@@ -393,7 +393,9 @@ def process_yearly_nw(args):
                         year = float(year)
                         rating = float(rating)                        
             
-                        if 'nm0000184' == director:
+                        if 'tt0177707' == movie:
+
+                       # if 'nm0000184' == director:
                             print year, user_first[director]
 
 
