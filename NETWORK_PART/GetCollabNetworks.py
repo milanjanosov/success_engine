@@ -125,6 +125,8 @@ def remapping_collab_careers(sample):
     file_Qdir_Qdir   = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers-QQ' + sam + '/'      
 
 
+
+
     if not os.path.exists(file_Qdir_EVER): os.makedirs(file_Qdir_EVER)
     if not os.path.exists(file_Qdir_QEVER): os.makedirs(file_Qdir_QEVER)
     if not os.path.exists(file_Qdir_Qdir) : os.makedirs(file_Qdir_Qdir)
@@ -132,6 +134,8 @@ def remapping_collab_careers(sample):
 
     Qdir  = set([line.strip() for line in open('users_types/Q' + ctype + '_namelist.dat')])
     QEVER = set([line.strip() for line in open('users_types/QEVERYone')])
+
+    print len(Qdir), len(QEVER)
 
 
     if len( os.listdir(file_Qdir_EVER)) == 0:
@@ -146,12 +150,15 @@ def remapping_collab_careers(sample):
     
         if ind % 1000 == 0:
             print 'Remap collab nws\t', ind, '/', nnn
-        if ind == 100: break
+       # if ind == 100: break
+
+
+        director = fn.split('_')[0]
+
 
         fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
         fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
         
-        director = fn.split('_')[0]
 
 
         for line in open(file_Qdir_EVER + fn):
@@ -160,8 +167,16 @@ def remapping_collab_careers(sample):
             if len(fields) == 4:
 
                 cast    = fields[3].split(',')
-                cast_QE = ','.join([ccc for ccc in cast if ccc in QEVER and ccc != director])
-                cast_QQ = ','.join([ccc for ccc in cast if ccc in Qdir  and ccc != director])
+                cast_QE = ''
+                cast_QQ = ''
+
+                if director in QEVER:
+                    cast_QE = ','.join([ccc for ccc in cast if ccc in QEVER and ccc != director])
+
+                if director in Qdir:
+                    cast_QQ = ','.join([ccc for ccc in cast if ccc in Qdir  and ccc != director])
+
+    
 
                 if len(cast_QE) > 0:
                     fQEout.write(fields[0] + '\t' + fields[1] + '\t' + fields[2] + '\t' + cast_QE + '\n')
@@ -273,7 +288,7 @@ def process_yearly_nw(args):
 
                 
 
-        dataout   = open('networks' + sam + '/networks_statistics.dat', 'a') 
+        dataout   = open('networks' + sam + '/networks_statistics' + tipus + '.dat', 'a') 
         dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t' + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
         dataout.close()
 
