@@ -435,7 +435,7 @@ def process_yearly_nw(args):
                                             
 
                                             if 'nm0000184' == director:
-                                                print edge
+                                                print 'suly  ', edge, edges[edge]
 
                         #except:
                         #    pass
