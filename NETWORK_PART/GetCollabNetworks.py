@@ -377,7 +377,7 @@ def create_full_nws(sample):
 
 
 
-        yearLIMITs = range(1900, 1910)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
         num_threads = 40
