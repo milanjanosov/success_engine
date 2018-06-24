@@ -402,7 +402,7 @@ def process_yearly_nw(args):
                         if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
                             # casts need to be handled as full graphs 
-                            cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc]
+                            cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] >= year]
 
                             for c1 in cast:
 
