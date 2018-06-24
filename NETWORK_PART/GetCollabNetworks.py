@@ -341,6 +341,14 @@ def process_yearly_nw(args):
 
 
 
+    ''' ATTENTION : THE user_first[name] >= YEAR CONDITION IS A STRONG ONE
+        REASON: GEORGE LUCAS WAS FEATURED ON A MOVIE FROM 1902, BC HIS COMPANY RE-RELEASED THE THING
+        PROBABL ON THE LARGE SCALE DOESNT MATTER, BUT THIS IS A BUT WEIRD TO HAVE AS 'EARLY CAREER COLLAB
+        SO I AM DROPPING THOSE
+    '''
+    
+
+
     ''' parse year stuff, only for QQ right now '''
     user_first = {}  
     for line in open('users_types/FirstYears_Qdirector.dat'):
@@ -374,8 +382,8 @@ def process_yearly_nw(args):
             director = fn.split('_')[0]
                
 
-            ##if ind % 1000 == 0: 
-            #    print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+            if ind % 1000 == 0: 
+                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
             for line in open(root + fn):
 
@@ -392,12 +400,7 @@ def process_yearly_nw(args):
                     try:
                         year = float(year)
                         rating = float(rating)                        
-            
-                        if 'tt0177707' == movie:
-
-                       # if 'nm0000184' == director:
-                            print year, user_first[director]
-
+          
 
                         if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
