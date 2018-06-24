@@ -90,10 +90,134 @@ def get_merged_user_lists():
 
 
 
+''' ================================================= '''
+'''              GET EVERYONES FIRST MOVIE            '''
+''' ================================================= '''
+
+
+
+
+def get_everyones_first():
+
+
+    ctype  = 'director'
+
+    Qdir   = set([line.strip() for line in open('users_types/Q' + ctype + '_namelist.dat')])
+    QEVER  = set([line.strip() for line in open('users_types/QEVERYone')])
+
+
+    names_first_years = {}
+
+ 
+    ''' ctype first years '''
+
+    ffiles = ['simple-careers/film-' + ctype + '-simple-careers/' + fn for fn in   os.listdir('simple-careers/film-' + ctype + '-simple-careers')]
+    nnn    = len(ffiles)
+
+    fout   = open('users_types/FirstYears_Q' + ctype + '.dat', 'w')
+
+
+    for ind, fn in enumerate(ffiles):
+
+        name = fn.split('/')[-1].split('_')[0]
+
+        
+        if ind % 1000 == 0:
+            print 'Dir :',  ind, '/', nnn
+
+        if name in Qdir:
+
+            years = []
+
+            for line in gzip.open(fn):
+
+                
+                if 'year' not in line:
+                    year = line.strip().split('\t')[1]             
+                    if len(year) > 0:
+                        if len(year) > 4:
+                            year = min([float(yy) for yy in year.split('-')])
+                            years.append(float(year))
+                        else:
+                            years.append(float(year))
+        
+            fout.write(name + '\t' + str(min(years)) + '\n')
+
+
+            names_first_years[name] = [min(years)]
+
+    fout.close()
+    
+
+
+
+    ''' ctype first years '''
+    types  = list(set(['producer', 'director', 'composer', 'art-director', 'writer']).difference(set([ctype])))
+    ffiles = []
+
+
+
+    for tipus in types:
+        ffiles += ['simple-careers/film-' + tipus + '-simple-careers/' + fn for fn in   os.listdir('simple-careers/film-' + tipus + '-simple-careers')]
+
+    nnn = len(ffiles)
+
+
+   
+    for ind, fn in enumerate(ffiles):
+
+        name = fn.split('/')[-1].split('_')[0]
+
+        if ind % 1000 == 0:
+            print 'EVER  ', ind, '/', nnn
+
+        if name in QEVER:
+
+            years = []
+
+            for line in gzip.open(fn):
+
+                
+                if 'year' not in line:
+                    year = line.strip().split('\t')[1]             
+                    if len(year) > 0:
+                        if len(year) > 4:
+                            year = min([float(yy) for yy in year.split('-')])
+                            years.append(float(year))
+                        else:
+                            years.append(float(year))
+        
+   
+
+            if name not in names_first_years:
+                names_first_years[name] = [min(years)]
+            else:
+                names_first_years[name].append(min(years))
+
+
+
+
+    gout = open('users_types/FirstYears_QEVER' + ctype + '.dat', 'w')
+    for name, years in names_first_years.items():
+        gout.write(name + '\t' + str(min(years)) + '\n')
+    gout.close()
+
+
+
+
+
+
+
+
+
+
+
+
 
 ''' ================================================= '''
 '''    REMAP COLLAB NETWORKS BASED ON WHO HAS > 4     '''
 ''' ================================================= '''
+
 
 
 def get_sample():
@@ -339,7 +463,10 @@ def chunkIt(seq, num):
 
 
 
+
+
 def create_full_nws(sample):
+
 
 
     ### THIS CODE HERE CREATES LGL EDGELIST FILE OUT OF THE COLLAB CARREER FILES !!!!
@@ -602,6 +729,10 @@ if __name__ == '__main__':
         if sys.argv[2] == 'sample':
             sample = True  
         remapping_collab_careers(sample)
+
+
+    elif sys.argv[1] == 'get_first_dates':
+        get_everyones_first()
 
 
     elif sys.argv[1] == 'get_full_network':
