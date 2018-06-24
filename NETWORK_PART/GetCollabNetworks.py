@@ -291,8 +291,8 @@ def process_yearly_nw(args):
 
                 
 
-        dataout   = open('networks' + sam + '/networks_statistics' + tipus + '.dat', 'a') 
-        dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t' + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
+        dataout   = open('networks' + sam  + '/networks_statistics' + tipus + '.dat', 'a') 
+        dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t'  + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
         dataout.close()
 
 
@@ -354,7 +354,7 @@ def create_full_nws(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
+    tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
 
 
     if sample: sam = '_sample'
@@ -366,7 +366,7 @@ def create_full_nws(sample):
 
 
 
-    dataout   = open('networks' + sam + '/networks_statistics.dat', 'w') 
+    dataout   = open('networks' + sam + '/networks_statistics_' + tipus + '.dat', 'w') 
     dataout.write('network\tyear\tnodes\tedges\n')
     dataout.close()
 
@@ -543,7 +543,7 @@ def create_igraphnw(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
+    tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
 
     print tipusok
 
