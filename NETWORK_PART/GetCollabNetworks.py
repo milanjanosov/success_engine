@@ -374,8 +374,8 @@ def process_yearly_nw(args):
             director = fn.split('_')[0]
                
 
-            if ind % 1000 == 0: 
-                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+            ##if ind % 1000 == 0: 
+            #    print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
             for line in open(root + fn):
 
@@ -392,6 +392,10 @@ def process_yearly_nw(args):
                     try:
                         year = float(year)
                         rating = float(rating)                        
+            
+                        if 'nm0000184' == director:
+                            print year, user_first[director]
+
 
                         if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
