@@ -366,13 +366,16 @@ def create_full_nws(sample):
 
 
 
-    dataout   = open('networks' + sam + '/networks_statistics_' + tipus + '.dat', 'w') 
-    dataout.write('network\tyear\tnodes\tedges\n')
-    dataout.close()
-
 
 
     for tipus in tipusok: 
+
+
+        dataout   = open('networks' + sam + '/networks_statistics_' + tipus + '.dat', 'w') 
+        dataout.write('network\tyear\tnodes\tedges\n')
+        dataout.close()
+
+
 
         yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
