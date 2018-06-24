@@ -317,7 +317,7 @@ def remapping_collab_careers(sample):
 
 
 ''' ================================================= '''
-'''    PREPROC THE NETWORKS FOR THE IGRAPH STUFF      '''
+'''    PREPROC	 THE NETWORKS FOR THE IGRAPH STUFF      '''
 ''' ================================================= '''
 
 
@@ -441,7 +441,7 @@ def process_yearly_nw(args):
 
 
         for e, v in edges.items():
-            gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '\t'.join(edge_dist[e][1]) + '\n')
+            gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '--'.join(edge_dist[e][1]) + '\n')
             hout.write(e + '\t' + str(v)            + '\n')              
 
 
@@ -589,7 +589,7 @@ def yearly_graph_data(args):
         edge_ratings = {}
 
         for line in open(gilename):
-            source, target, rating = line.strip().split('\t')
+            source, target, rating, movies = line.strip().split('\t')
 
             rating = float(rating)
             edge   =  '\t'.join([source, target])
