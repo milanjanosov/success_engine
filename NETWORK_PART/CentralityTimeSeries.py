@@ -34,12 +34,14 @@ def create_centrality_careers(ctype, sample, tipusok):
 
 
         files = [infolder + '/' + fo + '/' + 'Q' + ctype + '_' + ctype + tipus +'_NODE_CENTRALITIES_' + fo.split('_')[-1] + '.dat' for fo in os.listdir(infolder) if 'QQ' in fo]
+        nnn   = len(files)
 
-
-        for fn in files:
+        for ind, fn in enumerate(files):
 
 
             year = fn.split('_')[-1].replace('.dat', '')
+
+            print ind, '/', nnn
 
             for line in open(fn):
                 if 'between' in line:
