@@ -97,7 +97,7 @@ def create_centrality_careers(ctype, sample, tipusok):
             os.makedirs(outfolder)
 
             
-        files = [infolder + '/' + fo + '/' + 'Q' + ctype + '_' + ctype + tipus +'_NODE_CENTRALITIES_' + fo.split('_')[-1] + '.dat' for fo in os.listdir(infolder) if 'QQ' in fo]
+        files = [infolder + '/' + fo + '/' + 'Q' + ctype + '_' + ctype + tipus +'_NODE_CENTRALITIES_' + fo.split('_')[-1] + '.dat' for fo in os.listdir(infolder) if 'QQ' in fo and '.dat' not in fo]
         
 
         num_threads = 4
