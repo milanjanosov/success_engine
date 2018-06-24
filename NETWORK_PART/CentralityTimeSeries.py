@@ -1,7 +1,77 @@
 import os
 import shutil
 import gzip
+from multiprocessing import Process
 
+
+
+
+''' ============================================================= '''
+'''                     CREATE CENTRALITY CAREERS                 '''
+''' ============================================================= '''
+
+
+
+
+def chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
+
+''' ================ base function ================ '''
+
+
+def proc_careers(args):
+
+
+    files       = args[0]
+    thread_id   = args[1]
+    num_threads = args[2]
+    outfolder   = args[3]
+
+
+    nnn   = len(files)
+
+    for ind, fn in enumerate(files):
+
+
+        year = fn.split('_')[-1].replace('.dat', '')
+
+        print ind, '/', nnn
+
+        for line in open(fn):
+            if 'between' in line:
+                header = 'year\t' + '\t'.join(line.strip().split('\t')) + '\n'
+
+            else:
+                user     = line.strip().split('\t')[0]
+                record   = year + '\t' + '\t'.join(line.strip().split('\t')[1:]) + '\n'
+                filename = outfolder + '/' + user + '_centrality_career.dat'
+
+                if not os.path.exists(filename):
+                    fout = open(filename, 'w')
+                    fout.write(header)
+                    fout.write(record)
+                    fout.close()
+                else:
+                    fout = open(filename, 'a')
+                    fout.write(record)
+                    fout.close()
+
+
+
+
+
+
+''' ================ base function ================ '''
 
 def create_centrality_careers(ctype, sample, tipusok):
 
@@ -12,12 +82,8 @@ def create_centrality_careers(ctype, sample, tipusok):
 
 
 
-
-
     if sample: sam = '_sample'
-
-    infolder = 'networks' + sam #+ '/' + ctype + tipus + '_' + str(yearLIMIT)
-
+    infolder       = 'networks' + sam #+ '/' + ctype + tipus + '_' + str(yearLIMIT)
 
 
 
@@ -31,37 +97,33 @@ def create_centrality_careers(ctype, sample, tipusok):
             os.makedirs(outfolder)
 
             
-
-
         files = [infolder + '/' + fo + '/' + 'Q' + ctype + '_' + ctype + tipus +'_NODE_CENTRALITIES_' + fo.split('_')[-1] + '.dat' for fo in os.listdir(infolder) if 'QQ' in fo]
-        nnn   = len(files)
+        
 
-        for ind, fn in enumerate(files):
+        num_threads = 4
+        files_chunks = chunkIt(files, num_threads)
+        Pros = []
+                    
+            
+        for i in range(0,num_threads):  
+            p = Process(target = proc_careers, args=([files_chunks[i], i+1, num_threads, outfolder], ))
+            Pros.append(p)
+            p.start()
+           
+        for t in Pros:
+            t.join()
 
 
-            year = fn.split('_')[-1].replace('.dat', '')
 
-            print ind, '/', nnn
 
-            for line in open(fn):
-                if 'between' in line:
-                    header = 'year\t' + '\t'.join(line.strip().split('\t')) + '\n'
 
-                else:
-                    user     = line.strip().split('\t')[0]
-                    record   = year + '\t' + '\t'.join(line.strip().split('\t')[1:]) + '\n'
-                    filename = outfolder + '/' + user + '_centrality_career.dat'
 
-                    if not os.path.exists(filename):
-                        fout = open(filename, 'w')
-                        fout.write(header)
-                        fout.write(record)
-                        fout.close()
-                    else:
-                        fout = open(filename, 'a')
-                        fout.write(record)
-                        fout.close()
 
+
+
+''' ============================================================= '''
+'''              MERGE CENTRALITY AND SIMPLE CAREERS              '''
+''' ============================================================= '''
 
 
 
