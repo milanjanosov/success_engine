@@ -188,11 +188,11 @@ def get_everyones_first():
                             years.append(float(year))
         
    
-
-            if name not in names_first_years:
-                names_first_years[name] = [min(years)]
-            else:
-                names_first_years[name].append(min(years))
+            if len(years) > 0:  
+                if name not in names_first_years:
+                    names_first_years[name] = [min(years)]
+                else:
+                    names_first_years[name].append(min(years))
 
 
 
