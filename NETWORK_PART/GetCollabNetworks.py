@@ -341,6 +341,13 @@ def process_yearly_nw(args):
 
 
 
+    ''' parse year stuff, only for QQ right now '''
+    user_first = {}  
+    for line in open('users_types/FirstYears_Qdirector.dat'):
+        fields = line.strip().split('\t')
+        user_first[fields[0]] = float(fields[1]) 
+    
+
     for yearLIMIT in yearLIMITs:
 
         edges     = {}
@@ -350,7 +357,6 @@ def process_yearly_nw(args):
 
         outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
    
-
 
 
         if not os.path.exists(outfolder): os.makedirs(outfolder)
@@ -366,7 +372,8 @@ def process_yearly_nw(args):
         for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
-                 
+               
+
             if ind % 1000 == 0: 
                 print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
@@ -386,7 +393,7 @@ def process_yearly_nw(args):
                         year = float(year)
                         rating = float(rating)                        
 
-                        if year <= yearLIMIT and rating > 0.0:                        
+                        if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
                             # casts need to be handled as full graphs 
                             cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc]
