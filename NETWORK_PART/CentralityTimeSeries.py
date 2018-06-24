@@ -2,7 +2,7 @@ import os
 import shutil
 import gzip
 from multiprocessing import Process
-
+import sys
 
 
 
@@ -150,6 +150,7 @@ def merge_career_types(ctype, tipusok):
             user        = fn.split('/')[-1].split('_')[0]
             simple_file = simple_folder + '/' + user + '_' + ctype + '_simple_career.gz'
 
+            print user, simple_file
 
             centralities = {}
             for line in open(fn):
@@ -162,6 +163,8 @@ def merge_career_types(ctype, tipusok):
                     centralities [year] = record
 
             
+
+
             events = {}
             for line in gzip.open(simple_file):
                 if 'rating' in line:
@@ -172,8 +175,12 @@ def merge_career_types(ctype, tipusok):
                 events[year] = line
 
 
+            print len(centralities), len(events), '\t', len(set(centralities.keys())), len(set(events.keys()))
+            print centralities.keys()
+            print events.keys(), '\n\n'
+    
 
-            fout = open(outfolder + user + '_centralities_success.dat', 'w')
+            '''fout = open(outfolder + user + '_centralities_success.dat', 'w')
             fout.write(header2 + '\t' + header)
             for year, event in events.items():
 
@@ -181,7 +188,7 @@ def merge_career_types(ctype, tipusok):
 
 
             fout.close()
-
+            '''
             
 
 
@@ -191,8 +198,18 @@ sample    = False
 tipusok   = ['-QQ']#, '-QE', '']
 
 
-create_centrality_careers(ctype, sample, tipusok)
-#merge_career_types(ctype, tipusok)
+
+
+
+    
+if __name__ == '__main__':         
+
+
+    if sys.argv[1] == 'centrality_careers':
+        create_centrality_careers(ctype, sample, tipusok)
+
+    elif sys.argv[1] == 'merged_careers':
+        merge_career_types(ctype, tipusok)
 
 
 
