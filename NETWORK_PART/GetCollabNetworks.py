@@ -156,8 +156,8 @@ def remapping_collab_careers(sample):
         director = fn.split('_')[0]
 
 
-        fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
-        fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
+        if director in QEVER: fQEout = open(file_Qdir_QEVER + fn.replace('.dat', '') + '_QE.dat', 'w')
+        if director in Qdir:  fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
         
 
 
@@ -185,6 +185,9 @@ def remapping_collab_careers(sample):
                     fQQout.write(fields[0] + '\t' + fields[1] + '\t' + fields[2] + '\t' + cast_QQ + '\n')
       
      
+        if director in QEVER: fQEout.close()
+        if director in Qdir: fQQout.close()
+    
         
 
 
