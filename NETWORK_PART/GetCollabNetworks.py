@@ -372,10 +372,10 @@ def process_yearly_nw(args):
 
         root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
         files = os.listdir(root)
-        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_'  + str(yearLIMIT) + '.dat', 'w')
+        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_'  + str(yearLIMIT) + '.dat', 'a')
         hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
         n     = len(files)
-
+        nodes = set()
 
         for ind, fn in enumerate(files):
                   
@@ -397,9 +397,8 @@ def process_yearly_nw(args):
                         year = str(int(min([float(y) for y in year.split('-')])))
 
             
-                        #if 2 == 2:
                         if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':# and year is not None:
-                        #try:
+          
             
                             year = float(year)
                             rating = float(rating)                        
@@ -408,7 +407,8 @@ def process_yearly_nw(args):
                             if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
                                 # casts need to be handled as full graphs 
-                                cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] >= year]
+        
+                                cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
             
 
 
@@ -422,6 +422,8 @@ def process_yearly_nw(args):
 
                                             edge = '\t'.join(sorted([c1, c2]))
 
+                                            nodes.add(c1)
+                                            nodes.add(c2)
 
                                             if edge not in edges:
                                                 edges[edge]     = 1
@@ -434,8 +436,7 @@ def process_yearly_nw(args):
 
                                             
 
-                                            if 'nm0000184' == director:
-                                                print 'suly  ', edge, edges[edge]
+                                      
 
                         #except:
                         #    pass
@@ -446,14 +447,14 @@ def process_yearly_nw(args):
         dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t'  + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
         dataout.close()
 
+        print 'NODES ', len(nodes), 'nm0000184' in nodes
 
         f = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_edges' + str(yearLIMIT) + '.dat', 'w')
         f.write('Source'+'\t'+'Target'+'\t'+'Weight'+'\t'+'Type'+'\n')      
 
+        print 'WRITE OUT'
 
         for e, v in edges.items():
-            if 'nm0000184' in e:
-                print e, v
             gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '--'.join(edge_dist[e][1]) + '\n')
             hout.write(e + '\t' + str(v)            + '\n')              
 
@@ -533,7 +534,7 @@ def create_full_nws(sample):
 
 
 
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(2016, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
         num_threads = 40
