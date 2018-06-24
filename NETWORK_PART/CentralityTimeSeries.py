@@ -45,16 +45,20 @@ def proc_careers(args):
 
         year = fn.split('_')[-1].replace('.dat', '')
 
-        print thread_id, '/', num_threads, '\t', ind, '/', nnn
+    #    print thread_id, '/', num_threads, '\t', ind, '/', nnn
 
         for line in open(fn):
+
             if 'between' in line:
                 header = 'year\t' + '\t'.join(line.strip().split('\t')) + '\n'
-
+                #print header
             else:
                 user     = line.strip().split('\t')[0]
                 record   = year + '\t' + '\t'.join(line.strip().split('\t')[1:]) + '\n'
                 filename = outfolder + '/' + user + '_centrality_career.dat'
+
+                if 'nm0305564' == user:
+                    print line.strip(), len(record.split('\t'))
 
                 if not os.path.exists(filename):
                     fout = open(filename, 'w')
@@ -65,7 +69,7 @@ def proc_careers(args):
                     fout = open(filename, 'a')
                     fout.write(record)
                     fout.close()
-
+        
 
 
 
@@ -150,13 +154,17 @@ def merge_career_types(ctype, tipusok):
             user        = fn.split('/')[-1].split('_')[0]
             simple_file = simple_folder + '/' + user + '_' + ctype + '_simple_career.gz'
 
-            print user, simple_file
+            print 'AAAA', fn, user, simple_file
 
             centralities = {}
             for line in open(fn):
+
+                print line.strip()
+
                 if 'between' in line:
                     header = line.strip()
                 else:
+                     
                     year   = int(line.strip().split('\t')[0])     
                     record = '\t'.join(line.strip().split('\t')[1:])
                     
@@ -165,20 +173,27 @@ def merge_career_types(ctype, tipusok):
             
 
 
-            events = {}
+            '''events = {}
             for line in gzip.open(simple_file):
                 if 'rating' in line:
                     header2 = line.strip()
                 else:
-                    year = line.strip().split('\t')[1]
+                
+                    rating = line.strip().split('\t')[2]
+                    year   = line.strip().split('\t')[1]
 
-                events[year] = line
+                    if len(year) > 0:
+
+                        year = str(int(min([float(y) for y in year.split('-')])))
+
+                        if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':
+                            events[year] = line
 
 
             print len(centralities), len(events), '\t', len(set(centralities.keys())), len(set(events.keys()))
             print centralities.keys()
             print events.keys(), '\n\n'
-    
+            '''
 
             '''fout = open(outfolder + user + '_centralities_success.dat', 'w')
             fout.write(header2 + '\t' + header)
