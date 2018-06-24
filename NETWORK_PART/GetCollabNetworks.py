@@ -381,6 +381,7 @@ def process_yearly_nw(args):
                   
             director = fn.split('_')[0]
                
+            #if ind == 1000: break
 
             if ind % 1000 == 0: 
                 print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
@@ -396,8 +397,9 @@ def process_yearly_nw(args):
                         year = min([float(y) for y in year.split('-')])
 
             
-
-                    try:
+                    #if 2 == 2:
+                    if  len(str(year)) == 4 and rating is not None and year is not None:
+                    #try:
                         year = float(year)
                         rating = float(rating)                        
           
@@ -406,6 +408,8 @@ def process_yearly_nw(args):
 
                             # casts need to be handled as full graphs 
                             cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] >= year]
+        
+
 
                             for c1 in cast:
 
@@ -418,16 +422,23 @@ def process_yearly_nw(args):
                                         edge = '\t'.join(sorted([c1, c2]))
 
 
+
                                         if edge not in edges:
                                             edges[edge]     = 1
-                                            edge_dist[edge] = (rating, [movie])
+                                            edge_dist[edge] = [rating, [movie]]
                                         else:
                                             edges[edge]        += 1
                                             edge_dist[edge][0] += rating
                                             edge_dist[edge][1].append(movie)
 
-                    except:
-                        pass
+
+                                        
+
+                        #if 'nm0000184' == director:
+                       #     print edge
+
+                    #except:
+                    #    pass
 
                 
 
@@ -441,6 +452,8 @@ def process_yearly_nw(args):
 
 
         for e, v in edges.items():
+            if 'nm0000184' in e:
+                print e, v
             gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '--'.join(edge_dist[e][1]) + '\n')
             hout.write(e + '\t' + str(v)            + '\n')              
 
