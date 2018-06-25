@@ -638,7 +638,7 @@ def yearly_graph_data(args):
 
 
         t1 = time.time()
-        betweenness_w  = G.betweenness(                   weights= False)
+        betweenness  = G.betweenness(                   weights= None)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses   ', time.time() - t1
 
 
@@ -654,13 +654,13 @@ def yearly_graph_data(args):
 
 
         t1 = time.time()
-        clustering    = G.transitivity_local_undirected( weights=False)
+        clustering    = G.transitivity_local_undirected( weights=None)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering   ', time.time() - t1
 
 
 
         t1 = time.time()
-        pagerank      = G.pagerank(                      weights=False)
+        pagerank      = G.pagerank(                      weights=None)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank   ', time.time() - t1
 
 
@@ -671,7 +671,7 @@ def yearly_graph_data(args):
 
 
         t1 = time.time()
-        eigenvector   = G.eigenvector_centrality(        weights=False)
+        eigenvector   = G.eigenvector_centrality(        weights=None)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector   ', time.time() - t1
         
 
@@ -734,7 +734,7 @@ def create_igraphnw(sample):
         random.shuffle(yearLIMITs)
 
 
-        num_threads = 40
+        num_threads = 1
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
