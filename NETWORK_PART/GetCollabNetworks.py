@@ -344,11 +344,17 @@ def process_yearly_nw(args):
 
 
     ''' parse year stuff, only for QQ right now '''
-    user_first = {}  
+    #user_first = {}  
+    #for line in open('users_types/FirstYears_Qdirector.dat'):
+    #    fields = line.strip().split('\t')
+    #    user_first[fields[0]] = float(fields[1]) 
+    
+    '''NOW QE <---- parse year stuff, only for QQ right now '''
     for line in open('users_types/FirstYears_Qdirector.dat'):
         fields = line.strip().split('\t')
         user_first[fields[0]] = float(fields[1]) 
     
+
 
     for yearLIMIT in yearLIMITs:
 
@@ -501,7 +507,7 @@ def create_full_nws(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
+    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
 
 
     if sample: sam = '_sample'
@@ -718,11 +724,16 @@ def yearly_graph_data(args):
 def create_igraphnw(sample):
 
 
+
+    '''SET UP TO QE ! ! !!  '''
+
+    ''' '''
+
     ctype     = 'director'
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
+    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
 
     print tipusok
 
