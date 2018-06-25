@@ -350,7 +350,7 @@ def process_yearly_nw(args):
     #    user_first[fields[0]] = float(fields[1]) 
     
     '''NOW QE <---- parse year stuff, only for QQ right now '''
-    for line in open('users_types/FirstYears_Qdirector.dat'):
+    for line in open('users_types/FirstYears_QEVERdirector.dat'):
         fields = line.strip().split('\t')
         user_first[fields[0]] = float(fields[1]) 
     
@@ -383,8 +383,8 @@ def process_yearly_nw(args):
                
             #if ind == 1000: break
 
-          #  if ind % 1000 == 0: 
-          #      print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+            if ind % 1000 == 0: 
+                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
             for line in open(root + fn):
 
@@ -533,7 +533,7 @@ def create_full_nws(sample):
         yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
-        num_threads = 40
+        num_threads = 1
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
@@ -544,9 +544,9 @@ def create_full_nws(sample):
             p.start()
            
 
+           
+        for t in Pros:
             t.join()
-
-
 
      
 
