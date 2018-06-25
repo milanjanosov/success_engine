@@ -341,12 +341,6 @@ def process_yearly_nw(args):
 
 
 
-    ''' ATTENTION : THE user_first[name] >= YEAR CONDITION IS A STRONG ONE
-        REASON: GEORGE LUCAS WAS FEATURED ON A MOVIE FROM 1902, BC HIS COMPANY RE-RELEASED THE THING
-        PROBABL ON THE LARGE SCALE DOESNT MATTER, BUT THIS IS A BUT WEIRD TO HAVE AS 'EARLY CAREER COLLAB
-        SO I AM DROPPING THOSE
-    '''
-    
 
 
     ''' parse year stuff, only for QQ right now '''
@@ -410,7 +404,7 @@ def process_yearly_nw(args):
         
                                 cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
             
-
+                                
 
                                 for c1 in cast:
 
@@ -447,12 +441,8 @@ def process_yearly_nw(args):
         dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t'  + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
         dataout.close()
 
-        print 'NODES ', len(nodes), 'nm0000184' in nodes
-
         f = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_edges' + str(yearLIMIT) + '.dat', 'w')
         f.write('Source'+'\t'+'Target'+'\t'+'Weight'+'\t'+'Type'+'\n')      
-
-        print 'WRITE OUT'
 
         for e, v in edges.items():
             gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '--'.join(edge_dist[e][1]) + '\n')
@@ -547,7 +537,7 @@ def create_full_nws(sample):
             Pros.append(p)
             p.start()
            
-        for t in Pros:
+
             t.join()
 
 
@@ -648,23 +638,47 @@ def yearly_graph_data(args):
 
 
         t1 = time.time()
-        betweenness  = G.betweenness(                   weights='weight')
+        betweenness_w  = G.betweenness(                   weights= False)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses   ', time.time() - t1
 
 
         t1 = time.time()
-        clustering    = G.transitivity_local_undirected( weights='weight')
+        betweenness_w  = G.betweenness(                   weights='weight')
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses_w   ', time.time() - t1
+
+
+        t1 = time.time()
+        clustering_w    = G.transitivity_local_undirected( weights='weight')
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering_w   ', time.time() - t1
+
+
+
+        t1 = time.time()
+        clustering    = G.transitivity_local_undirected( weights=False)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering   ', time.time() - t1
 
 
+
         t1 = time.time()
-        pagerank      = G.pagerank(                      weights='weight')
+        pagerank      = G.pagerank(                      weights=False)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank   ', time.time() - t1
 
 
+
         t1 = time.time()
-        eigenvector   = G.eigenvector_centrality(        weights='weight')
+        pagerank_w      = G.pagerank(                      weights='weight')
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank_w  ', time.time() - t1
+
+
+        t1 = time.time()
+        eigenvector   = G.eigenvector_centrality(        weights=False)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector   ', time.time() - t1
+        
+
+
+        t1 = time.time()
+        eigenvector_w   = G.eigenvector_centrality(        weights='weight')
+        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector_w  ', time.time() - t1
         
 
 
@@ -677,13 +691,18 @@ def yearly_graph_data(args):
             node = G.vs[i]['name']
 
 
-            node_centralities[node] = { 'degree'      : degree[i],
-                                        'strength'    : strength[i], 
-                                        'ratings'     : ratings[i], 
-                                        'betweenness' : betweenness[i], 
-                                        'clustering'  : clustering[i], 
-                                        'pagerank'    : pagerank[i], 
-                                        'eigenvector' : eigenvector[i]}
+            node_centralities[node] = { 'degree'        : degree[i],
+                                        'strength'      : strength[i], 
+                                        'ratings'       : ratings[i], 
+                                        'betweenness_w' : betweenness_w[i], 
+                                        'betweenness'   : betweenness[i], 
+                                        'clustering'    : clustering[i],
+                                        'clustering_w'  : clustering_w[i],
+                                        'pagerank_w'    : pagerank_w[i], 
+                                        'pagerank'      : pagerank[i], 
+                                        'eigenvector'   : eigenvector[i],
+                                        'eigenvector_w' : eigenvector_w[i]
+                                       }
 
 
 
