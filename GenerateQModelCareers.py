@@ -22,7 +22,7 @@ fasz = {}
 
 
 
-for i in range(100):
+for i in range(20):
 
 
     print 'Run:  ', i 
@@ -51,7 +51,7 @@ for i in range(100):
         career = []
 
         for i in range(N):
-            career.append(ps[0])
+            career.append(Q*ps[0])
             del ps[0]
 
         synth_max.append((N, max(career)))
