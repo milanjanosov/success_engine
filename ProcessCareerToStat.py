@@ -273,7 +273,7 @@ def process_simple_career_trajectories(args):
         for filename in files:
                      
             ijk += 1
-            print  ijk, '/', nnn
+         #   print  ijk, '/', nnn
 	        
 
             if 'music' == field:            
@@ -361,7 +361,7 @@ def process_simple_career_trajectories(args):
                         
                         # getting things for the Qmodel
 
-                        p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
+                        p_without_mean[impact_measure]  += individuals_career.getexactp()        
 
                         name    = individuals_name
                         exactQ  = str(individuals_career.getExactQ())
@@ -382,7 +382,7 @@ def process_simple_career_trajectories(args):
          
 
 #        try:
-        if 2 == 2:
+        '''if 2 == 2:
 
             avgQ = str(np.mean([float(fff.split('\t')[1]) for fff in log_Q_wout_mean.values()[0]]))
             varQ = str(np.std([float(fff.split('\t')[1]) for fff  in log_Q_wout_mean.values()[0]]))
@@ -405,7 +405,7 @@ def process_simple_career_trajectories(args):
                 fQ = open('ProcessedData/SampleSize_vs_Q.dat', 'a')
                 fQ.write(string + '\n')
                 fQ.close()
-              
+        '''
   #      except:
    #         pass
           
@@ -490,7 +490,7 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'Data'#Sample'     
+    data_folder = 'DataSample'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,

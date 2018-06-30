@@ -317,22 +317,25 @@ class SimpleCareerTrajectory:
           
         return [i - log_impacts_avg for i in log_impacts]
 
+
+
+    def getexactp(self):
+    
+        logQ        = math.log(self.getExactQ())
+        log_impacts = [math.log(e[2]) for e in self.events]    
+       
+        return [math.exp(i - logQ) for i in log_impacts]
+
+
         
     def getLogQ(self):
 
-        #mu_p = 0.2
         return np.mean([ np.log(e[2]) for e in self.events] ) #- mu_p
-
-    
-
 
         
     def getApproxQ(self):
 
-        fitted_Qp = self.fitted_Qp['mu_p']
-
-
-        mu_p = 0.2
+        mu_p = self.fitted_Qp['mu_p']
         return math.exp(np.mean([ np.log(e[2]) for e in self.events] ) - mu_p ) 
 
 
@@ -357,30 +360,16 @@ class SimpleCareerTrajectory:
         sigma_QN = fitted_Qp[ 'sigma_QN' ]   #     0.12
 
 
-
         logN_i    = math.log(len(self.events))
         N_i       = len(self.events)
         K_QN      = sigma_Q**2 * sigma_N**2 - sigma_QN**2  
         avg_log_c = np.mean([ np.log(e[2]) for e in self.events])
       
   
-
         TERM1 = (  sigma_N**2 * sigma_p**2 * mu_Q + sigma_QN * sigma_p**2 * (logN_i - mu_N)  ) / (N_i * K_QN)
         TERM2 = sigma_N**2 * sigma_p**2 / ( N_i * K_QN)
 
         logQ  =  (avg_log_c - mu_p + TERM1)  /  (1.0 + TERM2)
-
-        '''
-        TERM11 = (sigma_N**2 * sigma_p**2 * mu_Q   +  sigma_QN * sigma_p**2 * (logN_i - mu_N)  )    / (N_i * K_QN)
-        TERM22 = (sigma_N**2 * sigma_p**2) / ( N_i * K_QN)
-        logQ2  =  (avg_log_c - mu_p + TERM1 )  / (1.0 + TERM2)
-        
- 
-        K_QN    = sigma_Q**2 * sigma_N**2  -  sigma_QN**2
-        TERM111 = ( sigma_N**2 *sigma_p**2 + sigma_QN * sigma_p * (logN_i - mu_N)  ) / ( N_i * K_QN )
-        TERM222 = (sigma_N**2 * sigma_p**2) / ( N_i * K_QN)
-        logQ3   = (avg_log_c - mu_p  + TERM111      ) / (  1.0 +  TERM222   )
-        '''
 
 
         return math.exp(  logQ   ) 
