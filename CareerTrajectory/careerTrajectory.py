@@ -90,10 +90,11 @@ class MultipleImpactCareerTrajectory:
 class SimpleCareerTrajectory:
 
     
-    def __init__(self, name, inputfile, impactm, normalize, norm_factors, randomized, min_rating_count, date_of_birth, date_of_death):
-        self.impactm = impactm
-        self.name    = inputfile
-        events       = []   
+    def __init__(self, name, inputfile, impactm, normalize, norm_factors, randomized, min_rating_count, date_of_birth, date_of_death, fitted_Qp):
+        self.impactm    = impactm
+        self.name       = inputfile
+        self.fitted_Qp  = fitted_Qp
+        events          = []   
 
 
         
@@ -311,7 +312,7 @@ class SimpleCareerTrajectory:
     # log Q_i = <log c_10ialpha> - mu_p
     def getLogPwithZeroAvg(self):
     
-        log_impacts = [math.log(e[2]) for e in self.events]    
+        log_impacts     = [math.log(e[2]) for e in self.events]    
         log_impacts_avg = np.log(np.mean([e[2] for e in self.events]))
           
         return [i - log_impacts_avg for i in log_impacts]
@@ -323,6 +324,73 @@ class SimpleCareerTrajectory:
         return np.mean([ np.log(e[2]) for e in self.events] ) #- mu_p
 
     
+
+
+        
+    def getApproxQ(self):
+
+        fitted_Qp = self.fitted_Qp['mu_p']
+
+
+        mu_p = 0.2
+        return math.exp(np.mean([ np.log(e[2]) for e in self.events] ) - mu_p ) 
+
+
+
+
+
+       
+    def getExactQ(self):
+
+
+        fitted_Qp = self.fitted_Qp
+
+
+        mu_N     = fitted_Qp[ 'mu_N' ]       #    2.2
+        mu_p     = fitted_Qp[ 'mu_p' ]       #     0.2
+        mu_Q     = fitted_Qp[ 'mu_Q' ]       #     1.1
+        sigma_N  = fitted_Qp[ 'sigma_N' ]    #     2.1
+        sigma_Q  = fitted_Qp[ 'sigma_Q' ]    #     1.4
+        sigma_p  = fitted_Qp[ 'sigma_p' ]    #     1.4
+        sigma_pQ = fitted_Qp[ 'sigma_pQ' ]   #     0.01
+        sigma_pN = fitted_Qp[ 'sigma_pN' ]   #     0.02
+        sigma_QN = fitted_Qp[ 'sigma_QN' ]   #     0.12
+
+
+
+        logN_i    = math.log(len(self.events))
+        N_i       = len(self.events)
+        K_QN      = sigma_Q**2 * sigma_N**2 - sigma_QN**2  
+        avg_log_c = np.mean([ np.log(e[2]) for e in self.events])
+      
+  
+
+        TERM1 = (  sigma_N**2 * sigma_p**2 * mu_Q + sigma_QN * sigma_p**2 * (logN_i - mu_N)  ) / (N_i * K_QN)
+        TERM2 = sigma_N**2 * sigma_p**2 / ( N_i * K_QN)
+
+        logQ  =  (avg_log_c - mu_p + TERM1)  /  (1.0 + TERM2)
+
+        '''
+        TERM11 = (sigma_N**2 * sigma_p**2 * mu_Q   +  sigma_QN * sigma_p**2 * (logN_i - mu_N)  )    / (N_i * K_QN)
+        TERM22 = (sigma_N**2 * sigma_p**2) / ( N_i * K_QN)
+        logQ2  =  (avg_log_c - mu_p + TERM1 )  / (1.0 + TERM2)
+        
+ 
+        K_QN    = sigma_Q**2 * sigma_N**2  -  sigma_QN**2
+        TERM111 = ( sigma_N**2 *sigma_p**2 + sigma_QN * sigma_p * (logN_i - mu_N)  ) / ( N_i * K_QN )
+        TERM222 = (sigma_N**2 * sigma_p**2) / ( N_i * K_QN)
+        logQ3   = (avg_log_c - mu_p  + TERM111      ) / (  1.0 +  TERM222   )
+        '''
+
+
+        return math.exp(  logQ   ) 
+
+
+
+
+
+
+
 
 
 def getDistribution(keys, normalized = True):
@@ -381,13 +449,14 @@ def getPercentileBinnedDistribution(x, y, nbins):
 
 
 
+'''
 
-#pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999)
+pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999)
 
+print pista.getApproxQ()
+print pista.getExactQ()
 
-#events = pista.getRankOfMaxImpact()
-
-#print events
+'''
 
 #print pista.getTimeOfTheBest()
 #

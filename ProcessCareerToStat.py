@@ -261,14 +261,19 @@ def process_simple_career_trajectories(args):
 
 
 
-        #   print  field, label, normalize, norm_factors, '\n'
+
+        ''' READ MU_Q, MU_p, SIGMA PARAMS '''
+        fitted_Qp = {}
+        for line in open('QFitConstants/' + label + '.dat'):
+            var, value = line.strip().split('=')
+            fitted_Qp[var] = float(value)
 
 
         ''' iterate over all the careers and do the job '''
         for filename in files:
                      
             ijk += 1
-            print  ijk, '/', nnn
+         #   print  ijk, '/', nnn
 	        
 
             if 'music' == field:            
@@ -317,7 +322,7 @@ def process_simple_career_trajectories(args):
                 
  
 
-                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-' + career_type + '-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death) 
+                individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-' + career_type + '-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death, fitted_Qp) 
                        
                 timestamps = individuals_career.getTimeStamps()                
 
@@ -328,12 +333,12 @@ def process_simple_career_trajectories(args):
                          
                     # save the value of all impact measures
                     impact_values[impact_measure] += individuals_career.getImpactValues()  
-                    career_time_series = individuals_career.getYearlyProducts()
-                    add_time_series(yearly_impacts[impact_measure], career_time_series)          
+                 ###   career_time_series = individuals_career.getYearlyProducts()
+                 ###   add_time_series(yearly_impacts[impact_measure], career_time_series)          
      
 
                     # get the yearly values for the inflation curves
-                    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
+                ###    max_impacts  [impact_measure].append(individuals_career.getMaxImpact())                                 
                     career_length = len(individuals_career.getImpactValues()  )
                     career_lengths[impact_measure] .append(career_length)                 
              
@@ -343,14 +348,12 @@ def process_simple_career_trajectories(args):
                         individuals_name = individuals_career.name.split('_')[0].split('/')[-1]
 
                         # get the rank and time of the best product for the random impact rule
-                        (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
-                        if 'nan' not in str(NN_rand):
-                            best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
-                            best_products_rank_rand[impact_measure] .append((NN_rand, N))                
-                    
-                        best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
-
-                        impact_values_R[impact_measure] += individuals_career.getImpactValues()  
+                   ###     (NN_all, NN_rand, N) = individuals_career.getRankOfMaxImpact() 
+                   ###     if 'nan' not in str(NN_rand):
+                   ###         best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
+                   ###         best_products_rank_rand[impact_measure] .append((NN_rand, N))                                 
+                   ###     best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
+                   ###     impact_values_R[impact_measure] += individuals_career.getImpactValues()  
                         
 
                         # get stuff for the R-model
@@ -359,7 +362,13 @@ def process_simple_career_trajectories(args):
                         # getting things for the Qmodel
 
                         p_without_mean[impact_measure]  += individuals_career.getLogPwithZeroAvg()        
-                        log_Q_wout_mean[impact_measure].append(individuals_name + '\t' + str(individuals_career.getLogQ()) )    
+
+                        name    = individuals_name
+                        exactQ  = str(individuals_career.getExactQ())
+                        approxQ = str(individuals_career.getApproxQ())                          
+
+
+                        log_Q_wout_mean[impact_measure].append( name + '\t' + str(career_length) + '\t' + exactQ + '\t' + approxQ  )    
 
 
             # more than one impact measure is used - for the correlation plots
@@ -422,7 +431,7 @@ def process_simple_career_trajectories(args):
         
 
             # normalizing factors
-            filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + extra + '.dat' 
+            '''filename = out_root + '/6_yearly_averages/' + field + '_yearly_average_' + impact_measure + '_' + label + extra + '.dat' 
             write_yearly_avgs(yearly_impacts[impact_measure],  filename)
         
             filename = out_root + '/12_yearly_values/' + field + 'yearly_values' + impact_measure + '_' + label + extra + '.dat' 
@@ -454,18 +463,24 @@ def process_simple_career_trajectories(args):
             filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
             write_pairs(best_value_careerlength[impact_measure], filename)
 
+
+            # write out multiple impact data
+            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + extra + '.dat'
+            write_distr_data(multi_impacts, filename)
+            '''
+
             # career length distribution
             filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + extra + '.dat'
             write_distr_data(career_lengths[impact_measure], filename)
             
+
+
             # the distribution of p - mu_p in the impact = pQ formula
             filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + extra + '.dat'
             write_distr_data(p_without_mean[impact_measure], filename)
             
-            # write out multiple impact data
-            filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + extra + '.dat'
-            write_distr_data(multi_impacts, filename)
-            
+   
+           
             # write out the logQ_i + mu_p
             filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + extra + '.dat'
             write_distr_data(log_Q_wout_mean[impact_measure], filename)
@@ -475,27 +490,16 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'Data'     
+    data_folder = 'Data'#Sample'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
                        'book'     : ['rating_count']}#'average_rating',, 'edition_count']  }
 
  
-        
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
-                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
-                    (os.listdir(data_folder + '/Music/music-jazz-release-max-careers'),     'music',      'jazz') ]    
+   
 
-
-    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
-                    (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
-                    (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
-                    (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
-                    (os.listdir(data_folder + '/Music/music-funk-simple-careers'),         'music',      'funk'),
-                    (os.listdir(data_folder + '/Music/music-jazz-simple-careers'),         'music',      'jazz'),
-                    (os.listdir(data_folder + '/Music/music-hiphop-simple-careers'),       'music',      'hiphop'),                   		
-                    (os.listdir(data_folder + '/Music/music-rock-simple-careers'),         'music',      'rock') ]
+    input_fields = [(os.listdir(data_folder + '/Film/film-director-simple-careers'), 'film', 'director') ]
     
 
     '''
@@ -518,25 +522,7 @@ def process_fields(min_rating_count, normalize, frac, randomized):
 
 
 
-    
-
-
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),      
-                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
-                    (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    
-
-
-
-    input_fields = [
-                    (os.listdir(data_folder + '/Film/film-director-simple-careers'),       'film',       'director'),
-                    (os.listdir(data_folder + '/Film/film-producer-simple-careers'),       'film',       'producer'),   
-                    (os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),   
-                    (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
-                    (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director')]#,   
-                    #(os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
     '''
-
 
 
 
@@ -547,6 +533,8 @@ def process_fields(min_rating_count, normalize, frac, randomized):
     out_root = 'ProcessedData/ProcessedData'
     if normalize:  out_root = out_root + 'Normalized_' + normalize
     if randomized: out_root = out_root + 'Randomized'   
+
+    print out_root
 
     #if 'fields_all' == normalize:         
     create_folder(out_root + '/2_max_impact_distributions')    
