@@ -273,7 +273,7 @@ def process_simple_career_trajectories(args):
         for filename in files:
                      
             ijk += 1
-         #   print  ijk, '/', nnn
+            print  ijk, '/', nnn
 	        
 
             if 'music' == field:            
