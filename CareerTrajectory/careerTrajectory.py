@@ -335,7 +335,7 @@ class SimpleCareerTrajectory:
         
     def getApproxQ(self):
 
-        mu_p = self.fitted_Qp['mu_p']
+        mu_p = self.fitted_Qp[1]
         return math.exp(np.mean([ np.log(e[2]) for e in self.events] ) - mu_p ) 
 
 
@@ -349,15 +349,15 @@ class SimpleCareerTrajectory:
         fitted_Qp = self.fitted_Qp
 
 
-        mu_N     = fitted_Qp[ 'mu_N' ]       #    2.2
-        mu_p     = fitted_Qp[ 'mu_p' ]       #     0.2
-        mu_Q     = fitted_Qp[ 'mu_Q' ]       #     1.1
-        sigma_N  = fitted_Qp[ 'sigma_N' ]    #     2.1
-        sigma_Q  = fitted_Qp[ 'sigma_Q' ]    #     1.4
-        sigma_p  = fitted_Qp[ 'sigma_p' ]    #     1.4
-        sigma_pQ = fitted_Qp[ 'sigma_pQ' ]   #     0.01
-        sigma_pN = fitted_Qp[ 'sigma_pN' ]   #     0.02
-        sigma_QN = fitted_Qp[ 'sigma_QN' ]   #     0.12
+        mu_N     = fitted_Qp[0]   #    2.2
+        mu_p     = fitted_Qp[1]   #    0.2
+        mu_Q     = fitted_Qp[2]   #    1.1
+        sigma_N  = fitted_Qp[3]   #    2.1
+        sigma_Q  = fitted_Qp[4]   #    1.4
+        sigma_p  = fitted_Qp[5]   #    1.4
+        sigma_pQ = fitted_Qp[6]   #    0.01
+        sigma_pN = fitted_Qp[7]   #    0.02
+        sigma_QN = fitted_Qp[8]   #    0.12
 
 
         logN_i    = math.log(len(self.events))
