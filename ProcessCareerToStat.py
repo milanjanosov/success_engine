@@ -6,6 +6,7 @@ from CareerTrajectory.careerTrajectory import MultipleImpactCareerTrajectory
 import time
 import gzip
 import random
+import sys
 
 
 def add_max_impact(lista, maxvalue):
@@ -119,7 +120,7 @@ def process_simple_career_trajectories(args):
     min_rating_count = args[5]
     input_fields     = args[6]
     frac             = args[7]
-
+    opt_sol          = args[8]
 
 
     
@@ -263,17 +264,28 @@ def process_simple_career_trajectories(args):
 
 
         ''' READ MU_Q, MU_p, SIGMA PARAMS '''
-        fitted_Qp = {}
-        for line in open('QFitConstants/' + label + '.dat'):
-            var, value = line.strip().split('=')
-            fitted_Qp[var] = float(value)
+
+        for ind, line in enumerate(open('QFitConstants/' + label + '.dat')):
+
+       
+
+            if ind == opt_sol:
+
+
+                maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(fff) for fff in line.strip().split('\t')]
+                fitted_Qp = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+                print 'AA', opt_sol, fitted_Qp
+        
+
+
 
 
         ''' iterate over all the careers and do the job '''
         for filename in files:
                      
             ijk += 1
-            print  ijk, '/', nnn
+            #print  ijk, '/', nnn
 	        
 
             if 'music' == field:            
@@ -353,7 +365,7 @@ def process_simple_career_trajectories(args):
                    ###         best_products_rank_all[impact_measure]  += [(n, N) for n in NN_all ]
                    ###         best_products_rank_rand[impact_measure] .append((NN_rand, N))                                 
                    ###     best_products_time[impact_measure].append(individuals_career.getTimeOfTheBest())
-                   ###     impact_values_R[impact_measure] += individuals_career.getImpactValues()  
+                        impact_values_R[impact_measure] += individuals_career.getImpactValues()  
                         
 
                         # get stuff for the R-model
@@ -413,9 +425,13 @@ def process_simple_career_trajectories(args):
       
         ''' write out the results '''                      
         out_root = 'ProcessedData/ProcessedData'
-        if normalize:  out_root = out_root + 'Normalized_' + normalize
+        if normalize:  out_root = out_root + 'Normalized_' + normalize  + '_' + str(opt_sol)
         if randomized: out_root = out_root + 'Randomized'            
             
+
+        if not os.path.exists(out_root):
+            os.makedirs(out_root)
+
                                                            
         for impact_measure in impact_measures[field]:
             
@@ -427,6 +443,8 @@ def process_simple_career_trajectories(args):
 
             #if randomized: extra = '_' + str(round(time.time(), 5))
             filename = out_root + '/1_impact_distributions/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
+            if not os.path.exists(out_root + '/1_impact_distributions/'):
+                os.makedirs(out_root + '/1_impact_distributions/')
             write_distr_data(impact_values[impact_measure], filename)
         
 
@@ -456,41 +474,68 @@ def process_simple_career_trajectories(args):
             filename = out_root + '/5_time_of_the_best/' + field + '_time_of_the_best_'+ impact_measure + '_' + label + extra + '.dat'
             write_distr_data(best_products_time[impact_measure], filename)
             
-            # career length and max impact for testing the r-model
-            filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
-            write_distr_data(impact_values_R[impact_measure], filename)
-
-            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
-            write_pairs(best_value_careerlength[impact_measure], filename)
-
+        
 
             # write out multiple impact data
             filename = out_root + '/10_multiple_impacts/' + field + '_multiple_impacts_'  + label + extra + '.dat'
             write_distr_data(multi_impacts, filename)
             '''
 
+
+            # career length and max impact for testing the r-model
+            filename = out_root + '/7_career_length_max_impact/' + field + '_' + impact_measure + '_dist_' + label + extra + '.dat'
+            if not os.path.exists(out_root + '/7_career_length_max_impact/'):
+                os.makedirs(out_root + '/7_career_length_max_impact/')
+            write_distr_data(impact_values_R[impact_measure], filename)
+            filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
+            write_pairs(best_value_careerlength[impact_measure], filename)
+
+
+
+
             # career length distribution
             filename = out_root + '/8_career_length/'  + field + '_career_length_' + impact_measure + '_' + label + extra + '.dat'
+            if not os.path.exists(out_root + '/8_career_length/'):
+                os.makedirs(out_root + '/8_career_length/')
             write_distr_data(career_lengths[impact_measure], filename)
             
 
 
             # the distribution of p - mu_p in the impact = pQ formula
             filename = out_root + '/9_p_without_avg/' + field + '_p_without_mean_' + impact_measure + '_' + label + extra + '.dat'
+            if not os.path.exists(out_root + '/9_p_without_avg/'):
+                os.makedirs(out_root + '/9_p_without_avg/')
             write_distr_data(p_without_mean[impact_measure], filename)
             
    
            
             # write out the logQ_i + mu_p
             filename = out_root + '/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + impact_measure + '_'  + label + extra + '.dat'
+            if not os.path.exists(out_root + '/11_log_Q_wout_means/'):
+                os.makedirs(out_root + '/11_log_Q_wout_means/')
             write_distr_data(log_Q_wout_mean[impact_measure], filename)
+
         
+
+            Qvalues = [float(fff.split('\t')[2]) for fff in log_Q_wout_mean[impact_measure]]
+            pvalues = p_without_mean[impact_measure]
+
+            Q_avg = str(np.mean(Qvalues))
+            Q_std = str(np.std(Qvalues))
+            p_avg = str(np.mean(pvalues))
+            p_std = str(np.std(pvalues))
+
+
+            
+            fout = open(out_root + '/QpMeanStd_' + str(opt_sol) + '.dat', 'a')
+            fout.write(label + '\t' + Q_avg + '\t' + Q_std + '\t' + p_avg + '\t' + p_std + '\n')
+            fout.close()
 
      
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'Data'     
+    data_folder = 'DataSample'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
@@ -499,10 +544,12 @@ def process_fields(min_rating_count, normalize, frac, randomized):
  
    
 
-    input_fields = [(os.listdir(data_folder + '/Film/film-director-simple-careers'), 'film', 'director') ]
+   # input_fields = [(os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director') ,
+                    #(os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),  
+                     #   ]
     
 
-    '''
+
 
 
     input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
@@ -519,14 +566,15 @@ def process_fields(min_rating_count, normalize, frac, randomized):
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
+    
 
 
-
-    '''
-
+  
 
 
+    opt_sol = int(sys.argv[1])
 
+  
 
 
 
@@ -534,7 +582,11 @@ def process_fields(min_rating_count, normalize, frac, randomized):
     if normalize:  out_root = out_root + 'Normalized_' + normalize
     if randomized: out_root = out_root + 'Randomized'   
 
-    print out_root
+
+    fout = open(out_root + '/QpMeanStd_' + str(opt_sol) + '.dat', 'w')
+    fout.write('label\tQ_avg\tQ_std\tp_avg\tp_std\n')
+    fout.close()
+
 
     #if 'fields_all' == normalize:         
     create_folder(out_root + '/2_max_impact_distributions')    
@@ -557,13 +609,13 @@ def process_fields(min_rating_count, normalize, frac, randomized):
     Pros = []
     
     for inp in input_fields:
-        p = Process(target = process_simple_career_trajectories, args=([inp, normalize, randomized, data_folder, impact_measures, min_rating_count, input_fields, frac], ))
+        p = Process(target = process_simple_career_trajectories, args=([inp, normalize, randomized, data_folder, impact_measures, min_rating_count, input_fields, frac, opt_sol], ))
         Pros.append(p)
         p.start()
        
     for t in Pros:
         t.join()
-
+    
 
         
 if __name__ == '__main__':  
