@@ -275,9 +275,7 @@ def process_simple_career_trajectories(args):
                 maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(fff) for fff in line.strip().split('\t')]
                 fitted_Qp = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
 
-                print 'AA', opt_sol, fitted_Qp
         
-
 
 
 
@@ -535,7 +533,7 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'DataSample'     
+    data_folder = 'Data'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
