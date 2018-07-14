@@ -64,7 +64,7 @@ for (field, label) in input_fields:
                 if 'count' not in line:
                     #movie_id, year, rating_value, rating_count, metascore, review_count_user, review_count_critic, gross, opening_weekend = line.strip().split('\t')
                     if len(line.strip().split('\t')) == 3:
-                        movie_id, rating_count, year = line.strip().split('\t')
+                        movie_id, year, rating_count = line.strip().split('\t')
 
                         try:
                             rating_count = float(rating_count)
