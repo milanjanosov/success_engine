@@ -367,7 +367,7 @@ def process_simple_career_trajectories(args):
                         
 
                         # get stuff for the R-model
-                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
+                        best_value_careerlength[impact_measure].append(( individuals_name + '\t' + str(individuals_career.getMaxImpact()) + '\t' +  str(career_length)))           
                         
                         # getting things for the Qmodel
 
@@ -492,7 +492,7 @@ def process_simple_career_trajectories(args):
                 os.makedirs(out_root + '/7_career_length_max_impact/')
             write_distr_data(impact_values_R[impact_measure], filename)
             filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
-            write_pairs(best_value_careerlength[impact_measure], filename)
+            write_distr_data(best_value_careerlength[impact_measure], filename)
 
 
 
