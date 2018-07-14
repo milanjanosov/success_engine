@@ -63,7 +63,7 @@ for (field, label) in input_fields:
             for line in gzip.open('Data/' + field.title() + '/' + field + '-' + label + '-simple-careers/' + name + '_' + label.replace('-', '_') + '_simple_career.gz'):
                 if 'count' not in line:
                     #movie_id, year, rating_value, rating_count, metascore, review_count_user, review_count_critic, gross, opening_weekend = line.strip().split('\t')
-                    if len(line.strip().split('\t')) = 3:
+                    if len(line.strip().split('\t')) == 3:
                         movie_id, rating_count, year = line.strip().split('\t')
 
                         try:
