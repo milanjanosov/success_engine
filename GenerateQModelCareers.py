@@ -45,7 +45,7 @@ def generate_career_data(args):
 
 
 
-    NNN = 100
+    NNN = 1000
     outfolder = 'QTESTRESULTS/' + label + '_' + str(NNN)
 
 
@@ -76,7 +76,7 @@ def generate_career_data(args):
     
 
 
-    #random.shuffle(allps)
+    random.shuffle(allps)
 
 
     split_ps = divideUnequal(career_len, allps)  
@@ -210,7 +210,7 @@ input_fields = [('film',       'director'),
 
 
 
-for (field, label) in input_fields:
+for (field, label) in input_fields[0:2]:
 
 
 
