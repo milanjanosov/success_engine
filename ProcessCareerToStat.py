@@ -332,7 +332,6 @@ def process_simple_career_trajectories(args):
                 
  
 
-                print filename
                 individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-' + career_type + '-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death, fitted_Qp) 
                        
                 timestamps = individuals_career.getTimeStamps()                
@@ -368,7 +367,7 @@ def process_simple_career_trajectories(args):
                         
 
                         # get stuff for the R-model
-                        best_value_careerlength[impact_measure].append(( individuals_name + '\t' + str(individuals_career.getMaxImpact()) + '\t' +  str(career_length)))           
+                        best_value_careerlength[impact_measure].append((individuals_career.getMaxImpact(), career_length))           
                         
                         # getting things for the Qmodel
 
@@ -379,7 +378,7 @@ def process_simple_career_trajectories(args):
                         p_without_mean[impact_measure]  += usersps#individuals_career.getexactp()        
 
 
-
+                        print usersps
 
                         exactQ  = str(individuals_career.getExactQ())
                         approxQ = str(individuals_career.getApproxQ())                          
@@ -493,7 +492,7 @@ def process_simple_career_trajectories(args):
                 os.makedirs(out_root + '/7_career_length_max_impact/')
             write_distr_data(impact_values_R[impact_measure], filename)
             filename = out_root + '/7_career_length_max_impact/' + field + '_career_length_max_' + impact_measure + '_' + label + extra + '.dat'
-            write_distr_data(best_value_careerlength[impact_measure], filename)
+            write_pairs(best_value_careerlength[impact_measure], filename)
 
 
 
@@ -540,7 +539,7 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'Data'     
+    data_folder = 'DataSample'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
@@ -549,15 +548,15 @@ def process_fields(min_rating_count, normalize, frac, randomized):
  
    
 
-    input_fields = [(os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director') ]
+    '''input_fields = [(os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director') ]
                     #(os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),  
                      #   ]
     
+    '''
 
 
 
-
-    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -571,7 +570,7 @@ def process_fields(min_rating_count, normalize, frac, randomized):
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    '''
+    
 
 
   
