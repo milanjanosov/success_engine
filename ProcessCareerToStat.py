@@ -332,6 +332,7 @@ def process_simple_career_trajectories(args):
                 
  
 
+                print filename
                 individuals_career=SimpleCareerTrajectory(filename, data_folder+'/'+field.title()+'/'+field+'-'+label+'-' + career_type + '-careers/'+filename,impact_id, normalize, norm_factors[impact_measure], randomized, min_rating_count, date_of_birth, date_of_death, fitted_Qp) 
                        
                 timestamps = individuals_career.getTimeStamps()                
@@ -378,7 +379,7 @@ def process_simple_career_trajectories(args):
                         p_without_mean[impact_measure]  += usersps#individuals_career.getexactp()        
 
 
-                        print usersps
+
 
                         exactQ  = str(individuals_career.getExactQ())
                         approxQ = str(individuals_career.getApproxQ())                          
