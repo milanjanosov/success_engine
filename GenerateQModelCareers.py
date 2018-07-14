@@ -54,13 +54,16 @@ def generate_career_data(args):
 
     for line in open(pfolder):
 
-        name, p = line.strip().split('\t')
+        try:
+            name, p = line.strip().split('\t')
 
-        if name not in ps:
-            ps[name] = [float(p)]
-        else:
-            ps[name].append(float(p))
+            if name not in ps:
+                ps[name] = [float(p)]
+            else:
+                ps[name].append(float(p))
+        except:
 
+            pass
         
     
 
@@ -169,7 +172,7 @@ def generate_career_data(args):
 
 
 
-    '''for nbins in [7, 8, 10, 12, 15, 20]:
+    for nbins in [7, 8, 10, 12, 15, 20]:
 
         print label, '  binning:  ', nbins
 
@@ -180,7 +183,7 @@ def generate_career_data(args):
         for i in range(len(xb_Qgen)):
             fout.write( str(xb_Qgen[i]) + '\t' + str(pb_Qgen[i]) + '\t' + str(pberr_Qgen[i]) + '\n' )
         fout.close()
-    '''
+    
     
     
 
