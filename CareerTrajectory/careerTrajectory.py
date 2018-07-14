@@ -106,18 +106,23 @@ class SimpleCareerTrajectory:
             if 'year' not in line:
             
 
+          
+
                                                
                 fields  = line.strip().split('\t')
                 product = fields[0]
                 
                 cango = False
-                
-                min_rating_count = 4
+              
+                min_rating_count = 4.0
 
-
+    
                 if 'film' in self.name or 'book' in self.name:
+                    
+
+
                     try:
-                        if float(fields[3]) > min_rating_count:
+                        if int(fields[3]) > min_rating_count:
                             cango = True
                     except:
                         pass
@@ -130,14 +135,19 @@ class SimpleCareerTrajectory:
                     except:
                         pass
                 
+
                
                 try:
                 #if 2 == 2:
                     year    = float(fields[1])
                     impact  = float(fields[impactm + 2])
 
+
+
                     if year > 1500:# and year < 2016:
                 
+                        
+
                         if impact > 0 and yearIsOK(year, date_of_birth, date_of_death) and cango:
                             if 'no' not in normalize:
 
@@ -162,6 +172,8 @@ class SimpleCareerTrajectory:
                 events_rand.append((e[0], e[1], impacts_to_rand[events.index(e)]))
 
             events = events_rand
+
+
 
         self.events = events                                  
                     
@@ -335,6 +347,8 @@ class SimpleCareerTrajectory:
         
     def getApproxQ(self):
 
+
+
         mu_p = self.fitted_Qp[1]
         return math.exp(np.mean([ np.log(e[2]) for e in self.events] ) - mu_p ) 
 
@@ -438,14 +452,38 @@ def getPercentileBinnedDistribution(x, y, nbins):
 
 
 
+
+
+
+'''opt_sol = 0
+for ind, line in enumerate(open('../QFitConstants/art-director.dat')):
+    if ind == opt_sol:
+        maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(fff) for fff in line.strip().split('\t')]
+        print mu_p
+        #mu_p = 15.0
+        fitted_Qp = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+
+
+
+#pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999, fitted_Qp = fitted_Qp)
+pista = SimpleCareerTrajectory('film', 'film_george_lucas.gz', 1, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999, fitted_Qp = fitted_Qp)
+
+print 'Qa\t ', pista.getApproxQ()
+print 'Qe\t', pista.getExactQ()
+print [round(p,3) for p in pista.getexactp()]
+
+ps = [round(p,3) for p in pista.getexactp()]
+Q  = pista.getExactQ()
+
+for p in ps:
+    print p*Q
+
+
+print [t[2] for t in pista.events]
 '''
 
-pista = SimpleCareerTrajectory('filmbook', 'music_kiss_pista.dat.gz', 0, 'no', {}, False, min_rating_count = 0, date_of_birth = 0, date_of_death = 9999)
 
-print pista.getApproxQ()
-print pista.getExactQ()
-
-'''
 
 #print pista.getTimeOfTheBest()
 #
