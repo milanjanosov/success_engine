@@ -7,20 +7,20 @@ import gzip
 
 
 
-input_fields = [ 'music',      'pop'),
-                 'music',      'electro'),
-                 'music',      'classical'),
-                 'music',      'folk'),
-                 'music',      'funk'),
-                 'music',      'jazz'),
-                 'music',      'hiphop'),                   		
-                 'music',      'rock'),  
-                 'film',       'director'),
-                 'film',       'producer'),   
-                 'film',       'writer'),   
-                 'film',       'composer'),   
-                 'film',       'art-director'),   
-                 'book',       'authors') ]
+input_fields = [ ('music',      'pop'),
+                 ('music',      'electro'),
+                 ('music',      'classical'),
+                 ('music',      'folk'),
+                 ('music',      'funk'),
+                 ('music',      'jazz'),
+                 ('music',      'hiphop'),                   		
+                 ('music',      'rock'),  
+                 ('film',       'director'),
+                 ('film',       'producer'),   
+                 ('film',       'writer'),   
+                 ('film',       'composer'),   
+                 ('film',       'art-director'),   
+                 ('book',       'authors') ]
 
 
 
