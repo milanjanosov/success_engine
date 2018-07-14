@@ -207,7 +207,7 @@ input_fields = [('film',       'director'),
 
 
 
-for (field, label) in input_fields[1:2]:
+for (field, label) in input_fields:
 
 
 
