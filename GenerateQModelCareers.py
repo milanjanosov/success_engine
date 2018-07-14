@@ -112,8 +112,8 @@ def generate_career_data(args):
             career = []
     
 
-            #print name, sorted(ps[name])
-            #print name, sorted(split_ps[ind]), '\n'
+           # print name, sorted(ps[name])
+           # print name, sorted(split_ps[ind]), '\n'
 
 
             #for p in ps[name]:
@@ -124,6 +124,7 @@ def generate_career_data(args):
             #for i in range(N):
             #    career.append(Q*allps[0])
             #    del allps[0]
+
 
             synth_max.append((N, max(career)))
 
@@ -136,8 +137,12 @@ def generate_career_data(args):
         os.makedirs(outfolder)
 
     gout = open(outfolder + '/QCareerData_' + label + '.dat', 'w')
+    n = []
+    q = []
     for (N, Iavg) in synth_max:
         gout.write(str( N) + '\t' + str( np.mean(Iavg)) + '\n')
+        n.append(N)
+        q.append(np.mean(Iavg))
     gout.close
 
     
@@ -152,32 +157,19 @@ def generate_career_data(args):
 
 
    
-    hhhout = outfolder + '/QCareerData_'+label+'.dat'
+    '''hhhout = outfolder + '/QCareerData_' + label + '.dat'
+    print hhhout
+    for line in open( outfolder + '/QCareerData_' + label + '.dat'):
+        print 'FASZ'
+    '''
+  
+
+    #n, q   = zip(*[ tuple([float(fff) for fff in line.strip().split('\t')]) for line in open(hhhout) ])
 
 
 
-    values = {}
-    for line in open(hhhout):
 
-        n, q = tuple([float(fff) for fff in line.strip().split('\t')])
-
-        if n not in values:
-            values[n] = [q]
-        else:
-            values[n].append(q)
-        #print [float(fff) for fff in line.strip().split('\t') if 'Q' not in line]
-
-
-    fout = open(outfolder + '/' + label + '_qmodel_' + label + '_avg', 'w')
-    for n, qs in values.items():
-        fout.write(str(n) + '\t' + str(np.mean(qs)) + '\n')
-    fout.close()
-    
-
-    n, q   = zip(*[ tuple([float(fff) for fff in line.strip().split('\t')]) for line in open(hhhout) ])
-
-
-    for nbins in [7, 8, 10, 12, 15, 20]:
+    '''for nbins in [7, 8, 10, 12, 15, 20]:
 
         print label, '  binning:  ', nbins
 
@@ -188,7 +180,7 @@ def generate_career_data(args):
         for i in range(len(xb_Qgen)):
             fout.write( str(xb_Qgen[i]) + '\t' + str(pb_Qgen[i]) + '\t' + str(pberr_Qgen[i]) + '\n' )
         fout.close()
-
+    '''
     
     
 
@@ -215,7 +207,7 @@ input_fields = [('film',       'director'),
 
 
 
-for (field, label) in input_fields:
+for (field, label) in input_fields[1:2]:
 
 
 
