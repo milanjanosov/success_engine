@@ -378,7 +378,7 @@ def process_simple_career_trajectories(args):
                         p_without_mean[impact_measure]  += usersps#individuals_career.getexactp()        
 
 
-                        print usersps
+                 #      print usersps
 
                         exactQ  = str(individuals_career.getExactQ())
                         approxQ = str(individuals_career.getApproxQ())                          
@@ -539,7 +539,7 @@ def process_simple_career_trajectories(args):
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'DataSample'     
+    data_folder = 'Data'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
