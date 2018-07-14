@@ -371,9 +371,15 @@ def process_simple_career_trajectories(args):
                         
                         # getting things for the Qmodel
 
-                        p_without_mean[impact_measure]  += individuals_career.getexactp()        
-
                         name    = individuals_name
+
+                        usersps = [name + '\t' + str(ppp) for ppp in individuals_career.getexactp()]
+
+                        p_without_mean[impact_measure]  += usersps#individuals_career.getexactp()        
+
+
+                        print usersps
+
                         exactQ  = str(individuals_career.getExactQ())
                         approxQ = str(individuals_career.getApproxQ())                          
 
@@ -515,8 +521,8 @@ def process_simple_career_trajectories(args):
 
         
 
-            Qvalues = [float(fff.split('\t')[2]) for fff in log_Q_wout_mean[impact_measure]]
-            pvalues = p_without_mean[impact_measure]
+            '''Qvalues = [float(fff.split('\t')[2]) for fff in log_Q_wout_mean[impact_measure]]
+            pvalues = [float(fff.split('\t')[2]) for fff in p_without_mean[impact_measure]] 
 
             Q_avg = str(np.mean(Qvalues))
             Q_std = str(np.std(Qvalues))
@@ -528,12 +534,12 @@ def process_simple_career_trajectories(args):
             fout = open(out_root + '/QpMeanStd_' + str(opt_sol) + '.dat', 'a')
             fout.write(label + '\t' + Q_avg + '\t' + Q_std + '\t' + p_avg + '\t' + p_std + '\n')
             fout.close()
-
+            '''
      
      
 def process_fields(min_rating_count, normalize, frac, randomized):
 
-    data_folder = 'Data'     
+    data_folder = 'DataSample'     
      
     impact_measures = {'film'     : ['rating_count'],#, 'average_rating',  'metascore', 'critic_reviews', 'user_reviews', 'gross_revenue'],
                        'music'    : ['play_count'  ], #,
@@ -542,7 +548,7 @@ def process_fields(min_rating_count, normalize, frac, randomized):
  
    
 
-   # input_fields = [(os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director') ,
+    input_fields = [(os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director') ]
                     #(os.listdir(data_folder + '/Film/film-writer-simple-careers'),         'film',       'writer'),  
                      #   ]
     
@@ -550,7 +556,7 @@ def process_fields(min_rating_count, normalize, frac, randomized):
 
 
 
-    input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
+    '''input_fields = [(os.listdir(data_folder + '/Music/music-pop-simple-careers'),          'music',      'pop'),
                     (os.listdir(data_folder + '/Music/music-electro-simple-careers'),      'music',      'electro'),
                     (os.listdir(data_folder + '/Music/music-classical-simple-careers'),    'music',      'classical'),
                     (os.listdir(data_folder + '/Music/music-folk-simple-careers'),         'music',      'folk'),
@@ -564,7 +570,7 @@ def process_fields(min_rating_count, normalize, frac, randomized):
                     (os.listdir(data_folder + '/Film/film-composer-simple-careers'),       'film',       'composer'),   
                     (os.listdir(data_folder + '/Film/film-art-director-simple-careers'),   'film',       'art-director'),   
                     (os.listdir(data_folder + '/Book/book-authors-simple-careers'),        'book',       'authors') ]
-    
+    '''
 
 
   
