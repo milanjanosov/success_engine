@@ -45,7 +45,7 @@ def generate_career_data(args):
 
 
 
-    NNN = 1000
+    NNN = 100
     outfolder = 'QTESTRESULTS/' + label + '_' + str(NNN)
 
 
@@ -210,7 +210,7 @@ input_fields = [('film',       'director'),
 
 
 
-for (field, label) in input_fields[0:2]:
+for (field, label) in input_fields[0:13]:
 
 
 
@@ -219,8 +219,8 @@ for (field, label) in input_fields[0:2]:
         cnt = 'play'
 
 
-    Qfolder = 'ProcessedData/ProcessedDataNormalized_no_0/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + cnt + '_count_' + label + '.dat'
-    pfolder = 'ProcessedData/ProcessedDataNormalized_no_0/9_p_without_avg/'     + field + '_p_without_mean_'  + cnt + '_count_' + label + '.dat'
+    Qfolder = 'ProcessedData/ProcessedDataNormalized_no_3/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + cnt + '_count_' + label + '.dat'
+    pfolder = 'ProcessedData/ProcessedDataNormalized_no_3/9_p_without_avg/'     + field + '_p_without_mean_'  + cnt + '_count_' + label + '.dat'
 
 
     Pros = []
