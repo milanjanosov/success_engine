@@ -45,7 +45,7 @@ def generate_career_data(args):
 
 
 
-    NNN = 100
+    NNN = 10000
     outfolder = 'QTESTRESULTS/' + label + '_' + str(NNN)
 
 
@@ -219,8 +219,8 @@ for (field, label) in input_fields[0:13]:
         cnt = 'play'
 
 
-    Qfolder = 'ProcessedData/ProcessedDataNormalized_no_1/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + cnt + '_count_' + label + '.dat'
-    pfolder = 'ProcessedData/ProcessedDataNormalized_no_1/9_p_without_avg/'     + field + '_p_without_mean_'  + cnt + '_count_' + label + '.dat'
+    Qfolder = 'ProcessedData/ProcessedDataNormalized_no_0/11_log_Q_wout_means/' + field + '_log_Q_wout_mean_' + cnt + '_count_' + label + '.dat'
+    pfolder = 'ProcessedData/ProcessedDataNormalized_no_0/9_p_without_avg/'     + field + '_p_without_mean_'  + cnt + '_count_' + label + '.dat'
 
 
     Pros = []
