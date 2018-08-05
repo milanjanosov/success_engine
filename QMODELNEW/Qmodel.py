@@ -71,10 +71,10 @@ def divideUnequal(list1, list2):
 
 
 
-def preproc_data(infolder, LIMIT, field):
+def preproc_data(infolder, LIMIT, field, label):
 
 
-    infolder  = '../Data/Film/film-' + field + '-simple-careers'
+    infolder  = '../Data/' + label.title() + '/' + label + '-' + field + '-simple-careers'
 
 
 
@@ -122,7 +122,7 @@ def preproc_data(infolder, LIMIT, field):
 
 
  
-    folderout = 'Data/film-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
+    folderout = 'Data/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
     if not os.path.exists(folderout):
         os.makedirs(folderout)
 
@@ -315,7 +315,7 @@ def get_Q_model_stats(id_data, Qfitparams):
     ax[1].set_yscale('log')
     ax[1].set_xscale('log')
 
-    #plt.close()
+    plt.close()
 
 #    plt.show()
     return imdbid_Q, ps
@@ -476,15 +476,16 @@ if __name__ == '__main__':
 
     
 
-    LIMIT    = 20
+    LIMIT    = 10
     nbins    = 12
-    field    = sys.argv[2]  #'director'
-    infolder = 'Data/film-' + field + '-simple-careers'
+    field    = sys.argv[3]  #'director'
+    label    = sys.argv[2]
+    infolder = 'Data/' + label + '-' + field + '-simple-careers'
 
 
 
     for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
-        if ind == 0:
+        if ind == 1:
             mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
         
     Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
@@ -493,7 +494,7 @@ if __name__ == '__main__':
 
 
     if sys.argv[1] == 'preproc': 
-        preproc_data(infolder, LIMIT, field)
+        preproc_data(infolder, LIMIT, field, label)
 
     elif sys.argv[1] == 'proc':
         id_data = read_data(infolder, LIMIT)
