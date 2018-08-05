@@ -23,46 +23,50 @@ def preproc_data(infolder, LIMIT, field, label):
     
         print ind, '/', nnn
 
-        #try:
-
-        for line in gzip.open(fn):
-            if 'year' not in line:
+        if ind == 100000: break
 
 
-                if 'film' == label:
+        try:
 
-                    fields = line.strip().split('\t')
-                    if 'None' != fields[3] and len(fields[1]) > 0:                      
-                        if '-' in fields[1]:
-                            year = min([float(f) for f in fields[1].split('-')])
-                        else:
-                            year = float(fields[1])
+            for line in gzip.open(fn):
+                if 'year' not in line:
 
-                        if float(fields[3]) > 0:
-                   
-                            data.append( (fields[0], year, float(fields[3])) )
+                    line = line.replace(',','')
 
-                elif 'music' in label:
-        
-                    fields = line.strip().split('\t')
-                    if 'None' != fields[2] and len(fields[1]) > 0:                      
-                        if '-' in fields[1]:
-                            year = min([float(f) for f in fields[1].split('-')])
-                        else:
-                            year = float(fields[1])
+                    if 'film' == label or 'book' in label:
 
-                        if float(fields[2]) > 0:   
-                            data.append( (fields[0], year, float(fields[2])) )
+                        fields = line.strip().split('\t')
+                        if 'None' != fields[3] and len(fields[1]) > 0:                      
+                            if '-' in fields[1]:
+                                year = min([float(f) for f in fields[1].split('-')])
+                            else:
+                                year = float(fields[1])
+
+                            if float(fields[3]) > 0:
+                       
+                                data.append( (fields[0], year, float(fields[3])) )
+
+                    elif 'music' in label:
+            
+                        fields = line.strip().split('\t')
+                        if 'None' != fields[2] and len(fields[1]) > 0:                      
+                            if '-' in fields[1]:
+                                year = min([float(f) for f in fields[1].split('-')])
+                            else:
+                                year = float(fields[1])
+
+                            if float(fields[2]) > 0:   
+                                data.append( (fields[0], year, float(fields[2])) )
 
 
-        
+            
 
 
-        if len(data) >= LIMIT:
-            id_data[imdbid] = data
-        
-        #except:
-        #    pass
+            if len(data) >= LIMIT:
+                id_data[imdbid] = data
+            
+        except:
+            pass
 
 
  
@@ -87,11 +91,41 @@ def preproc_data(infolder, LIMIT, field, label):
 
 if __name__ == '__main__':  
 
-    label    = sys.argv[1]
-    field    = sys.argv[2]
-    LIMIT    = int(sys.argv[3])
-    infolder = 'Data/' + label + '-' + field + '-simple-careers'
+
+
+
+
+
+
+    labels = ['film', 'music', 'book']
+
+    fields = {'film'  : ['director', 'art-director', 'producer', 'composer', 'writer'],
+              'music' : ['electro', 'pop', 'rock', 'funk', 'folk', 'jazz',   'hiphop'],
+              'book'  : ['authors'] }
+
+    LIMITs = [[5, 10, 15, 20], [10, 20, 30, 40], [5, 10, 15, 20]]
+
+    
+    LIMIT = 5
+    field = 'authors'
+    label = 'book'
 
     preproc_data(infolder, LIMIT, field, label)
 
+
+    '''for ind, label in enumerate(labels):
+
+    
+        for field in fields[label]:
+
+        
+            for LIMIT in LIMITs[ind]:
+
+                print label, field, LIMIT
+
+                infolder = 'Data/' + label + '-' + field + '-simple-careers'
+
+
+                preproc_data(infolder, LIMIT, field, label)
+    '''
 
