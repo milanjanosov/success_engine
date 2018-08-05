@@ -87,9 +87,9 @@ def preproc_data(infolder, LIMIT, field, label):
 
 if __name__ == '__main__':  
 
-    label    = sys.argv[2]
-    field    = sys.argv[3]
-    LIMIT    = int(sys.argv[4])
+    label    = sys.argv[1]
+    field    = sys.argv[2]
+    LIMIT    = int(sys.argv[3])
     infolder = 'Data/' + label + '-' + field + '-simple-careers'
 
     preproc_data(infolder, LIMIT, field, label)
