@@ -21,7 +21,7 @@ def preproc_data(infolder, LIMIT, field, label):
 
         data = []
     
-        print ind, '/', nnn
+        #print ind, '/', nnn
 
         if ind == 1000: break
 
