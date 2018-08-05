@@ -76,12 +76,12 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
 
 
 
-##          film:    [5,   10,  15, -20-]
-##          music:   [10, -20-, 30,  40]
-##          boooks   [5,   10,  15, -20-]
+##          film:    [5,   -10-,  15, -20-]
+##          music:   [10,  -20-,  30,  40]
+##          boooks   [5,   -10-,  15, -20-]
 
 
-LIMIT = 10
+LIMIT = 40
 
 
 ##    python2.7 test_evolution.py -m mlesuccess_director

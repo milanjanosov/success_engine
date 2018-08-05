@@ -11,7 +11,7 @@ import numpy as np
 
 
 ROOT   = '../../../../Data/'
-LIMIT  = 10
+LIMIT  = 40
 limit  = '-limit-' + str(LIMIT)
 
 
