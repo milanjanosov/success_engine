@@ -76,6 +76,38 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
 
 
 
+##          film:    [5,   10,  15, -20-]
+##          music:   [10, -20-, 30,  40]
+##          boooks   [5,   10,  15, -20-]
+
+
+LIMIT = 10
+
+
+##    python2.7 test_evolution.py -m mlesuccess_director
+##    python2.7 test_evolution.py -m mlesuccess_art_director
+##    python2.7 test_evolution.py -m mlesuccess_producer
+##    python2.7 test_evolution.py -m mlesuccess_writer
+##    python2.7 test_evolution.py -m mlesuccess_composer
+
+
+##    python2.7 test_evolution.py -m mlesuccess_electro
+##    python2.7 test_evolution.py -m mlesuccess_rock
+##    python2.7 test_evolution.py -m mlesuccess_pop
+##    python2.7 test_evolution.py -m mlesuccess_folk
+##    python2.7 test_evolution.py -m mlesuccess_funk
+##    python2.7 test_evolution.py -m mlesuccess_jazz
+##    python2.7 test_evolution.py -m mlesuccess_classical
+##    python2.7 test_evolution.py -m mlesuccess_hiphop
+
+
+##    python2.7 test_evolution.py -m mlesuccess_authors
+
+
+## source /opt/virtualenv-python2.7/bin/activate
+
+
+
 # if arguments are passed to main(argv), parse them
 if argv:
     options = argparser.parse_args(argv)
@@ -87,7 +119,7 @@ else:
 
 
 
-LIMIT = 20
+
 
 
 
