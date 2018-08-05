@@ -100,18 +100,26 @@ if __name__ == '__main__':
     labels = ['film', 'music', 'book']
 
     fields = {'film'  : ['director', 'art-director', 'producer', 'composer', 'writer'],
-              'music' : ['electro', 'pop', 'rock', 'funk', 'folk', 'jazz',   'hiphop'],
+              'music' : ['electro', 'pop', 'rock', 'funk', 'folk', 'jazz',   'hiphop', 'classical'],
               'book'  : ['authors'] }
 
-    LIMITs = [[5, 10, 15, 20], [10, 20, 30, 40], [5, 10, 15, 20]]
+    LIMITs = [[5, 10, 15, 20], 
+             [10, 20, 30, 40], 
+              [5, 10, 15, 20]]
 
     
 
 
     for ind, label in enumerate(labels):
-        for field in fields[label]:        
-            for LIMIT in LIMITs[ind]:
-                infolder = 'Data/' + label + '-' + field + '-simple-careers'
-                preproc_data(infolder, LIMIT, field, label)
-    
+
+        if 'music' == label:
+
+            for field in fields[label]:
+
+                if field == 'classical':
+        
+                    for LIMIT in LIMITs[ind]:
+                        infolder = 'Data/' + label + '-' + field + '-simple-careers'
+                        preproc_data(infolder, LIMIT, field, label)
+            
 
