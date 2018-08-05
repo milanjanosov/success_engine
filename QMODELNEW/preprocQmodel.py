@@ -110,6 +110,8 @@ if __name__ == '__main__':
     field = 'authors'
     label = 'book'
 
+
+    infolder = 'Data/' + label + '-' + field + '-simple-careers'
     preproc_data(infolder, LIMIT, field, label)
 
 
