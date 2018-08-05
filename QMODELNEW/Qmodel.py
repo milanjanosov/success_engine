@@ -179,7 +179,7 @@ def get_impact_distribution(id_data, nbins):
     ax.set_ylabel('Rating frequency')
 
 
-    plt.show()
+  #  plt.show()
 #    plt.close()
 
 
@@ -367,8 +367,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins):
         Impacts_S += [d[2] for d in data]
 
         
-    for i in range(2):
-        
+    for i in range(2):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -403,7 +402,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins):
     N_Istar_avg_Q = {}
 
 
-    for i in range(3):
+    for i in range(2):
 
         psQ = [p for p in ps]
         random.shuffle(psQ)    
@@ -477,7 +476,7 @@ if __name__ == '__main__':
 
     
 
-    LIMIT    = 10
+    LIMIT    = 20
     nbins    = 12
     field    = sys.argv[2]  #'director'
     infolder = 'Data/film-' + field + '-simple-careers'
