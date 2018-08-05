@@ -492,8 +492,10 @@ if __name__ == '__main__':
 
     LIMIT    = 10
     nbins    = 12
-    field    = sys.argv[3]  #'director'
     label    = sys.argv[2]
+    field    = sys.argv[3]  #'director'
+    LIMIT    = int(sys.argv[4])
+
     infolder = 'Data/' + label + '-' + field + '-simple-careers'
 
 
