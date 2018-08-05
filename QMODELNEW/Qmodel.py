@@ -90,30 +90,44 @@ def preproc_data(infolder, LIMIT, field, label):
         imdbid = fn.split('/')[-1].split('_')[0]
 
         data = []
-        #if ind == 10: break
-
+    
         print ind, '/', nnn
-
 
         try:
 
             for line in gzip.open(fn):
                 if 'year' not in line:
-                    fields = line.strip().split('\t')
 
-                    if 'None' != fields[3] and len(fields[1]) > 0:
-                    
-                        if '-' in fields[1]:
-                            year = min([float(f) for f in fields[1].split('-')])
-                        else:
-                            year = float(fields[1])
+
+                    if 'film' == label:
+
+                        fields = line.strip().split('\t')
+                        if 'None' != fields[3] and len(fields[1]) > 0:                      
+                            if '-' in fields[1]:
+                                year = min([float(f) for f in fields[1].split('-')])
+                            else:
+                                year = float(fields[1])
+
+                            if float(fields[3]) > 0:
                        
-                    
-                        if float(fields[3]) > 0:
-                   
-                            data.append( (fields[0], year, float(fields[3])) )
+                                data.append( (fields[0], year, float(fields[3])) )
+
+                    elif 'music' in label:
             
+                        fields = line.strip().split('\t')
+                        if 'None' != fields[2] and len(fields[1]) > 0:                      
+                            if '-' in fields[1]:
+                                year = min([float(f) for f in fields[1].split('-')])
+                            else:
+                                year = float(fields[1])
+
+                            if float(fields[2]) > 0:   
+                                data.append( (fields[0], year, float(fields[2])) )
+
+
             
+
+
             if len(data) >= LIMIT:
                 id_data[imdbid] = data
             
