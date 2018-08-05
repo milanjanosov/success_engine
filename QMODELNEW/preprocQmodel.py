@@ -23,7 +23,7 @@ def preproc_data(infolder, LIMIT, field, label):
     
         print ind, '/', nnn
 
-        if ind == 100000: break
+        if ind == 1000: break
 
 
         try:
@@ -81,7 +81,7 @@ def preproc_data(infolder, LIMIT, field, label):
         fout.close()
 
 
-    print 'numfiles  ',  len(id_data)
+    print field, label, '\tnumfiles:  ',  len(id_data)
 
 
 
@@ -106,16 +106,13 @@ if __name__ == '__main__':
     LIMITs = [[5, 10, 15, 20], [10, 20, 30, 40], [5, 10, 15, 20]]
 
     
-    LIMIT = 5
-    field = 'authors'
-    label = 'book'
 
 
-    infolder = 'Data/' + label + '-' + field + '-simple-careers'
-    preproc_data(infolder, LIMIT, field, label)
+    #infolder = 'Data/' + label + '-' + field + '-simple-careers'
+    #preproc_data(infolder, LIMIT, field, label)
 
 
-    '''for ind, label in enumerate(labels):
+    for ind, label in enumerate(labels):
 
     
         for field in fields[label]:
@@ -129,5 +126,5 @@ if __name__ == '__main__':
 
 
                 preproc_data(infolder, LIMIT, field, label)
-    '''
+    
 
