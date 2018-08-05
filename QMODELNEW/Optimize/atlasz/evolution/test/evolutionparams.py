@@ -44,15 +44,15 @@ params_as_environment = [
 
 # number of iterations/generations in the evolution
 # typical: 50-100
-generations = 10
+generations = 100
 
 # number of competing phenotypes/candidate solutions, i.e. population size
 # typical: 100
-phenotypes = 10
+phenotypes = 100
 
 # number of random environments in one generation used for all phenotypes
 # typical: ?????
-environments = 10
+environments = 50
 
 
 ################################################################################
