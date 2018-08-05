@@ -295,7 +295,7 @@ def fitness_mlesuccess_rock(pvalues):
 
     tipus     = 'rock'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -323,7 +323,7 @@ def fitness_mlesuccess_pop(pvalues):
 
     tipus     = 'pop'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -349,7 +349,7 @@ def fitness_mlesuccess_hiphop(pvalues):
 
     tipus     = 'hiphop'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -377,7 +377,7 @@ def fitness_mlesuccess_electro(pvalues):
 
     tipus     = 'electro'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -403,7 +403,7 @@ def fitness_mlesuccess_folk(pvalues):
 
     tipus     = 'folk'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -429,7 +429,7 @@ def fitness_mlesuccess_funk(pvalues):
 
     tipus     = 'funk'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -456,7 +456,7 @@ def fitness_mlesuccess_jazz(pvalues):
 
     tipus     = 'jazz'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -482,7 +482,7 @@ def fitness_mlesuccess_classical(pvalues):
 
     tipus     = 'classical'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/music-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -507,7 +507,7 @@ def fitness_mlesuccess_authors(pvalues):
 
     tipus     = 'authors'
     fitnesses = {}
-    careerf   = ROOT + tipus + '/film-' + tipus + '-simple-careers' + limit
+    careerf   = ROOT + tipus + '/book-' + tipus + '-simple-careers' + limit
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
