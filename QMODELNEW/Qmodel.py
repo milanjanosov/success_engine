@@ -74,6 +74,11 @@ def divideUnequal(list1, list2):
 def preproc_data(infolder, LIMIT, field):
 
 
+    infolder  = '../Data/Film/film-' + field + '-simple-careers'
+
+
+
+
     files = [infolder + '/' + fn for fn in os.listdir(infolder)]   
 
     id_data = {}
