@@ -2,7 +2,7 @@ import os
 import gzip
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import random
 import math
@@ -75,11 +75,7 @@ def preproc_data(infolder, LIMIT, field, label):
 
 
     infolder  = '../Data/' + label.title() + '/' + label + '-' + field + '-simple-careers'
-
-
-
-
-    files = [infolder + '/' + fn for fn in os.listdir(infolder)]   
+    files     = [infolder + '/' + fn for fn in os.listdir(infolder)]   
 
     id_data = {}
 
@@ -136,7 +132,7 @@ def preproc_data(infolder, LIMIT, field, label):
 
 
  
-    folderout = 'Data/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
+    folderout = 'Data/' + field + '/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
     if not os.path.exists(folderout):
         os.makedirs(folderout)
 
@@ -154,7 +150,7 @@ def preproc_data(infolder, LIMIT, field, label):
 
 def read_data(infolder, LIMIT):
 
-    folder  = infolder + '-limit-' + str(LIMIT) + '/'
+    folder  = 'Data/' + field + '/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
     files   = [folder  + fn for fn in  os.listdir(folder)]
     id_data = {}
 
