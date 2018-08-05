@@ -23,7 +23,7 @@ def preproc_data(infolder, LIMIT, field, label):
     
         #print ind, '/', nnn
 
-        if ind == 1000: break
+        #if ind == 1000: break
 
 
         try:
@@ -108,23 +108,10 @@ if __name__ == '__main__':
     
 
 
-    #infolder = 'Data/' + label + '-' + field + '-simple-careers'
-    #preproc_data(infolder, LIMIT, field, label)
-
-
     for ind, label in enumerate(labels):
-
-    
-        for field in fields[label]:
-
-        
+        for field in fields[label]:        
             for LIMIT in LIMITs[ind]:
-
-                print label, field, LIMIT
-
                 infolder = 'Data/' + label + '-' + field + '-simple-careers'
-
-
                 preproc_data(infolder, LIMIT, field, label)
     
 
