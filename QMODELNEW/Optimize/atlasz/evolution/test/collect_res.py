@@ -3,7 +3,7 @@ import os
 
 
 
-folders   = ['Results/' + fn for fn in os.listdir('Results')]
+folders   = sorted(['Results/' + fn for fn in os.listdir('Results')])
 folderout = 'Qparamfit'
 
 if not os.path.exists(folderout):
@@ -64,8 +64,15 @@ for folder in folders:
     #fields_results = fields_results.sort(key=lambda tup: tup[0])
     fields_results_s = sorted(fields_results, key=lambda tup: tup[0], reverse = True)
 
-    print field, len(fields_results_s)
+    if len(field) < 8:
+        field = field + '   '
+    if len(field) < len('art_director-20'):
+        field  = field + '      '
 
+
+    print field, '\t', len(fields_results_s)
+
+    field = field.replace(' ', '')
 
     fout = open(folderout + '/' + field + '_qmodel_params.dat', 'w')
 
