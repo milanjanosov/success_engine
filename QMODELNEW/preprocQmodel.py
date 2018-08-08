@@ -106,7 +106,9 @@ if __name__ == '__main__':
     LIMITs = [[5, 10, 15, 20], 
              #[10, 20, 30, 40, 60, 80], 
              [ 60, 80,100], 
-              [5, 10, 15, 20]]
+             # [5, 10, 15, 20]
+             [30, 40, 50]
+            ]
 
 
     
@@ -117,7 +119,7 @@ if __name__ == '__main__':
 
     for ind, label in enumerate(labels):
 
-        if 'music' == label:
+        if 'book' == label:
 
             for field in fields[label]:
 

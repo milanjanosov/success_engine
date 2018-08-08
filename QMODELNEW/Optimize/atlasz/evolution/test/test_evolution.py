@@ -81,7 +81,7 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
 ##          boooks   [5,   -10-,  15, -20-]
 
 
-LIMIT = 80
+LIMIT = 50
 
 
 ##    python2.7 test_evolution.py -m mlesuccess_director
