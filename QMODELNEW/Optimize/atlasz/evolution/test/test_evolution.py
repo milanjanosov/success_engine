@@ -81,7 +81,7 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
 ##          boooks   [5,   -10-,  15, -20-]
 
 
-LIMIT = 40
+LIMIT = 60
 
 
 ##    python2.7 test_evolution.py -m mlesuccess_director
@@ -123,7 +123,7 @@ else:
 
 
 
-for run in range(150, 250):
+for run in range(0, 250):
 
     # parse evolution parameters to be used
     eparams = importlib.import_module("evolutionparams")

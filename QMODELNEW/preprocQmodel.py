@@ -104,8 +104,12 @@ if __name__ == '__main__':
               'book'  : ['authors'] }
 
     LIMITs = [[5, 10, 15, 20], 
-             [10, 20, 30, 40], 
+             [10, 20, 30, 40, 60, 80], 
               [5, 10, 15, 20]]
+
+
+    
+
 
     
 
@@ -116,10 +120,9 @@ if __name__ == '__main__':
 
             for field in fields[label]:
 
-                if field == 'classical':
         
-                    for LIMIT in LIMITs[ind]:
-                        infolder = 'Data/' + label + '-' + field + '-simple-careers'
-                        preproc_data(infolder, LIMIT, field, label)
-            
+                for LIMIT in LIMITs[ind]:
+                    infolder = 'Data/' + label + '-' + field + '-simple-careers'
+                    preproc_data(infolder, LIMIT, field, label)
+        
 
