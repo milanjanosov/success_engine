@@ -277,6 +277,8 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
     N_Istar     = {}
     N_Istar_avg = {}
 
+    print title, '  read ...'
+
     for ind, (imdbid, data) in enumerate(id_data.items()):
 
         N       = len(data)
@@ -297,8 +299,10 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
 
 
 
-
     ''' ADD THE R MODEL '''
+
+
+    print title, '  R model ...'
 
     NsS           = []
     Impacts_S     = []
@@ -339,6 +343,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
 
     ''' ADD THE Q MODEL '''
 
+    print title, '  Q model ...'
 
 
     Impacts_Q     = []
@@ -392,7 +397,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
 
 
 
-
+    print title, '  plot ...'
 
 
     f, ax = plt.subplots(1,1, figsize = (7, 6))
