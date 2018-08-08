@@ -81,7 +81,7 @@ def preproc_data(infolder, LIMIT, field, label):
         fout.close()
 
 
-    print field, label, '\tnumfiles:  ',  len(id_data)
+    print field, LIMIT, label, '\tnumfiles:  ',  len(id_data)
 
 
 
