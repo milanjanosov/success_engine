@@ -2,7 +2,7 @@ import os
 import gzip
 import numpy as np
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import random
 import math
@@ -71,87 +71,14 @@ def divideUnequal(list1, list2):
 
 
 
-def preproc_data(infolder, LIMIT, field, label):
-
-
-    infolder  = '../Data/' + label.title() + '/' + label + '-' + field + '-simple-careers'
-    files     = [infolder + '/' + fn for fn in os.listdir(infolder)]   
-
-    id_data = {}
-
-    nnn = len(files)
-
-    for ind, fn in enumerate(files):
-        
-        imdbid = fn.split('/')[-1].split('_')[0]
-
-        data = []
-    
-        print ind, '/', nnn
-
-        try:
-
-            for line in gzip.open(fn):
-                if 'year' not in line:
-
-
-                    if 'film' == label:
-
-                        fields = line.strip().split('\t')
-                        if 'None' != fields[3] and len(fields[1]) > 0:                      
-                            if '-' in fields[1]:
-                                year = min([float(f) for f in fields[1].split('-')])
-                            else:
-                                year = float(fields[1])
-
-                            if float(fields[3]) > 0:
-                       
-                                data.append( (fields[0], year, float(fields[3])) )
-
-                    elif 'music' in label:
-            
-                        fields = line.strip().split('\t')
-                        if 'None' != fields[2] and len(fields[1]) > 0:                      
-                            if '-' in fields[1]:
-                                year = min([float(f) for f in fields[1].split('-')])
-                            else:
-                                year = float(fields[1])
-
-                            if float(fields[2]) > 0:   
-                                data.append( (fields[0], year, float(fields[2])) )
-
-
-            
-
-
-            if len(data) >= LIMIT:
-                id_data[imdbid] = data
-            
-        except:
-            pass
-
-
- 
-    folderout = 'Data/' + field + '/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
-    if not os.path.exists(folderout):
-        os.makedirs(folderout)
-
-    for imdbid, data in id_data.items():
-        fout = open(folderout + '/' + imdbid + '.dat', 'w')
-        for d in data:
-            fout.write(str(d[0]) + '\t' + str(d[1]) + '\t' + str(d[2]) + '\n' )
-        fout.close()
-
-
-    print 'numfiles  ',  len(id_data)
 
 
 
 
-def read_data(infolder, LIMIT):
 
-    folder  = 'Data/' + field + '/' + label + '-' + field + '-simple-careers-limit-' + str(LIMIT) + '/'
-    files   = [folder  + fn for fn in  os.listdir(folder)]
+def read_data(infolder):
+
+    files   = [infolder + '/' + fn for fn in  os.listdir(infolder)]
     id_data = {}
 
     for fn in files:
@@ -168,7 +95,7 @@ def read_data(infolder, LIMIT):
    
 
 
-def get_impact_distribution(id_data, nbins):    
+def get_impact_distribution(id_data, nbins, fileout, title):    
 
     impacts = []
 
@@ -187,10 +114,13 @@ def get_impact_distribution(id_data, nbins):
     ax.set_xscale('log')
     ax.set_xlabel('Rating value')
     ax.set_ylabel('Rating frequency')
+    ax.set_title(title, fontsize = 17)
 
 
+    plt.tight_layout()
+    plt.savefig(fileout)
+    plt.close()
   #  plt.show()
-#    plt.close()
 
 
 
@@ -202,7 +132,8 @@ def get_impact_distribution(id_data, nbins):
 
 
 
-def get_N_star_N(id_data, bins):
+
+def get_N_star_N(id_data, bins, fileout, title):
 
     N_star_N   = []
     N_star_N_r = []
@@ -231,9 +162,11 @@ def get_N_star_N(id_data, bins):
     x = np.arange(0,1, 0.1)
     ax.hist(N_star_N, bins = 100, cumulative = True, normed = True, alpha = 0.5)
     ax.plot(x,x, color ='r', linewidth = 4)
+    ax.set_title(title, fontsize = 17)
 
-
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(fileout)
+    plt.close()
 
 
 
@@ -281,7 +214,7 @@ def get_p(career, Q):
 
 
 
-def get_Q_model_stats(id_data, Qfitparams):
+def get_Q_model_stats(id_data, Qfitparams, fileout, title):
 
     imdbid_Q = {}
 
@@ -293,9 +226,6 @@ def get_Q_model_stats(id_data, Qfitparams):
     xQ, pQ = getDistribution(Qs)
 
     bxQ, bpQ, err = getLogBinnedDistribution(xQ, pQ, nbins)
-
-
-
 
 
 
@@ -312,30 +242,34 @@ def get_Q_model_stats(id_data, Qfitparams):
 
 
 
-
-
     f, ax = plt.subplots(1,2, figsize = (12, 5))
+    ax[0].set_title('Q - ' + title, fontsize = 17)
     ax[0].plot(xQ, pQ, 'o')
     ax[0].plot(bxQ, bpQ, 'r-')
     ax[0].set_xscale('log')
     ax[0].set_yscale('log')
 
+    ax[1].set_title('p - ' + title, fontsize = 17)
     ax[1].plot(xp, pp, 'o')
     ax[1].plot(bxp, bpp, 'r-')
     ax[1].set_yscale('log')
     ax[1].set_xscale('log')
 
+ 
+    plt.tight_layout()
+    plt.savefig(fileout)
     plt.close()
 
-#    plt.show()
+
+
     return imdbid_Q, ps
 
 
-    #plt.show()
 
 
 
-def bests_career_length(id_data, imdbid_Q, ps, nbins):
+
+def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
 
 
     ''' JUST THE DATA '''
@@ -377,7 +311,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins):
         Impacts_S += [d[2] for d in data]
 
         
-    for i in range(2):        
+    for i in range(20):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -412,14 +346,10 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins):
     N_Istar_avg_Q = {}
 
 
-    for i in range(2):
+    for i in range(20):
 
         psQ = [p for p in ps]
         random.shuffle(psQ)    
-
-
-
-        print len(psQ)
 
 
         for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
@@ -474,7 +404,19 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins):
     ax.set_yscale('log')
     ax.set_xscale('log')
 
-    plt.show()
+    ax.set_title(title, fontsize = 17)
+
+    plt.tight_layout()
+    plt.savefig(fileout)
+    plt.close()
+
+
+
+
+
+
+
+
 
 
 
@@ -486,39 +428,97 @@ if __name__ == '__main__':
 
     
 
-    LIMIT    = 10
-    nbins    = 12
-    label    = sys.argv[2]
-    field    = sys.argv[3]  #'director'
-    LIMIT    = int(sys.argv[4])
+    fields = {  'director'     : 'film', 
+                'art-director' : 'film', 
+                'producer'     : 'film', 
+                'writer'       : 'film', 
+                'composer'     : 'film', 
+                'electro'      : 'music', 
+                'rock'         : 'music', 
+                'pop'          : 'music', 
+                'funk'         : 'music', 
+                'folk'         : 'music', 
+                'hiphop'       : 'music', 
+                'jazz'         : 'music', 
+                'classical'    : 'music', 
+                'authors'      : 'book' }
 
-    infolder = 'Data/' + label + '-' + field + '-simple-careers'
 
 
 
-    for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
-        if ind == 1:
-            mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+    nbins     = 12
+    resfolder = 'Optimize/atlasz/evolution/test/Results/'
+    resfiles  = [resfolder + res for res in os.listdir(resfolder)]
+
+
+
+    if sys.argv[1] == 'auto':
+
+
+        opt_rank = 0
+
+
+
+        for resfile in resfiles:
+
+            field_o   = resfile.split('_', 1)[1]
+            limit     = field_o.split('-')[1]
+            field     = field_o.split('-')[0].replace('_','-')
+            infolder  = 'Data/' + field + '/' + fields[field] + '-' + field + '-simple-careers-limit-' + limit
+            folderout = 'ResultFigs/' 
+
+
+            if not os.path.exists(folderout):
+                os.makedirs(folderout)
+
+            print field_o
+
+            Qfitparams = []
+ 
+            for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
+                if ind == opt_rank:
+                    mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+                
+            Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+
+            id_data = read_data(infolder)
+            get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
+            get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
         
-    Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+            imdbid_Q, ps = get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '.png', field_o)	   
+
+            if len(Qfitparams) > 0:
+                bests_career_length(id_data, imdbid_Q, ps, nbins, folderout + '4_R_Q_model_test_' + field_o + '_' + str(opt_rank) + '.png', field_o)
+
+
+
+    elif sys.argv[1] == 'manual':
+
+        label    = sys.argv[2]
+        field    = sys.argv[3]  #'director'
+        LIMIT    = int(sys.argv[4])
+
+        infolder = 'Data/' + label + '-' + field + '-simple-careers'
+
+
+        '''or ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
+            if ind == 1:
+                mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+            
+        Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
 
 
 
 
-    if sys.argv[1] == 'preproc': 
-        preproc_data(infolder, LIMIT, field, label)
 
-    elif sys.argv[1] == 'proc':
         id_data = read_data(infolder, LIMIT)
 
 
-
-
-
-
-     #   get_impact_distribution(id_data, nbins) 
-     #   get_N_star_N(id_data, nbins)
+        #get_impact_distribution(id_data, nbins) 
+        #get_N_star_N(id_data, nbins)
         imdbid_Q, ps = get_Q_model_stats(id_data, Qfitparams)	
         bests_career_length(id_data, imdbid_Q, ps, nbins)
 
+        '''
 
