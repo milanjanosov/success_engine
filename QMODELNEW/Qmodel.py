@@ -311,7 +311,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
         Impacts_S += [d[2] for d in data]
 
         
-    for i in range(20):        
+    for i in range(10):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -346,7 +346,7 @@ def bests_career_length(id_data, imdbid_Q, ps, nbins, fileout, title):
     N_Istar_avg_Q = {}
 
 
-    for i in range(20):
+    for i in range(10):
 
         psQ = [p for p in ps]
         random.shuffle(psQ)    
@@ -483,8 +483,8 @@ if __name__ == '__main__':
 
 
             id_data = read_data(infolder)
-            get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-            get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+            #get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
+            #get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
         
             imdbid_Q, ps = get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '.png', field_o)	   
 
