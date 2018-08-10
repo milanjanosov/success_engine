@@ -96,8 +96,8 @@ def read_data(infolder):
 
     for ind, fn in enumerate(files):
 
-
-        print infolder, '\t', ind, '/', nnn
+        if ind % 500 == 0:
+            print infolder, '\t', ind, '/', nnn
 
         imdbid = fn.split('/')[-1].split('_')[0].replace('.dat','')
         data   = []
@@ -261,7 +261,8 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     for ind, (imdb, Q) in enumerate(imdbid_Q.items()):
 
 
-        print title, '\t', ind, '/', nnn
+        if ind % 500 == 0:
+            print title, '\t', ind, '/', nnn
 
         career = [d[2] for d in id_data[imdb]]
         ps += get_p(career, Q)
