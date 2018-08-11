@@ -754,7 +754,7 @@ if __name__ == '__main__':
 
         Pros = []
    
-        for resfile in resfiles[0:3]:
+        for resfile in resfiles:
             p = Process(target = process_Qs_paralel, args=(resfile, ))
             Pros.append(p)
             p.start()
