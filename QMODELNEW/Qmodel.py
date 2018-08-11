@@ -333,7 +333,6 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
-
     ps       = [float(line.strip()) for line in open(folder2 + '/' + 'p_distribution_' + title + '.dat')]
     imdbid_Q = { line.strip().split('\t')[0] : float(line.strip().split('\t')[1])  for line in open(folder2 + '/' + 'Q_distribution_' + title + '.dat')}    
     careers  = [ [float(fff) for fff in line.strip().split('\t')] for line in open(folder3 + '/' + title.rsplit('_',1)[0].replace('_', '-') + '_id_data.dat')]
@@ -360,7 +359,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
         
 
     for N, Istars in N_Istar.items():
-        N_Istar_avg[N] = np.mean(Istars)
+        N_Istar_avg[N] = math.log(np.mean(Istars))
         
          
     Ns,  Istars     = zip(*[(n, i) for n, i in  N_Istar_avg.items()])
@@ -383,7 +382,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
         Impacts_S += career
 
         
-    for i in range(2):        
+    for i in range(10):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -400,7 +399,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
     for N, IstarsS in N_Istar_S.items():
-        N_Istar_avg_S[N] = np.mean(IstarsS)
+        N_Istar_avg_S[N] = math.log(np.mean(IstarsS))
 
         
     NsS, IstarsS = zip(*[(n, i) for n, i in  N_Istar_avg_S.items()])   
@@ -419,26 +418,17 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     N_Istar_avg_Q = {}
 
 
-    for i in range(5):
+    for i in range(50):
 
-        print i
 
         psQ = [p for p in ps]
         random.shuffle(psQ)    
 
-
+ 
         for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
 
-            N  = careers_length[imdbid]
-
-  
-
-            career = []
-            for i in range(N):
-                career.append(psQ[0] * Q)
-                del psQ[0]
-            IstarQs = max(career)
-
+            N       = careers_length[imdbid]
+            IstarQs =  max([psQ[ind + ijk] * Q for ijk in range(N)  ])         
 
             if N not in N_Istar_Q:
                 N_Istar_Q[N] = [IstarQs]
@@ -447,10 +437,9 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
     for n, istars in N_Istar_Q.items():        
-        N_Istar_avg_Q[n] = np.mean(istars)
+        N_Istar_avg_Q[n] = math.log(np.mean(istars))
     
 
-    
  
     NsSQ,  IstarsSQ = zip(*[(n, i) for n, i in  N_Istar_avg_Q.items()])   
     bNsSQ, bIstarsSQ, err = getLogBinnedDistribution(NsSQ,   IstarsSQ, nbins)
@@ -460,199 +449,44 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
-
-
-
-
-
-
     print title, '  plot ...'
 
 
-    f, ax = plt.subplots(1,1, figsize = (7, 6))
-    ax.plot(Ns,  Istars, 'o')#    ax.plot(bNs, bIstars, 'r', linewidth = 3)
-    ax.plot(bNs, bIstars, 'r', linewidth = 3)
-    ax.plot(bNsS, bIstarsS, 'k', linewidth = 3)
-    ax.plot(bNsSQ,  bIstarsSQ, 'g', linewidth = 3)
-    ax.set_yscale('log')
+    f, ax = plt.subplots(1,1, figsize = (12, 7))
+    ax.plot(Ns,  Istars, 'o', markersize = 12, alpha = 0.5, color = 'lightgrey', label = 'Data')#    ax.plot(bNs, bIstars, 'r', linewidth = 3)
+    ax.plot(bNs, bIstars,  'o', color = 'r', markersize = 15, label = 'Binned data')
+    ax.errorbar(bNs, bIstars, yerr = e, color = 'r', markersize = 15)
+    ax.fill_between(bNs, np.asarray(bIstars)- np.asarray(e), np.asarray(bIstars) + np.asarray(e), color = 'r', alpha = 0.1)
+
+    ax.plot(bNsS,   bIstarsS,  'k', linewidth = 3, label= 'Rmodel')
+    ax.plot(bNsSQ,  bIstarsSQ, 'g', linewidth = 5, color = 'steelblue', label = 'Qmodel')
     ax.set_xscale('log')
+    ax.set_ylim([1, 1.2*max(bIstarsS)])
+    ax.legend(loc = 'best', fontsize = 13)
+    ax.set_xlabel('Career length', fontsize = 15)
+    ax.set_ylabel('Log I*', fontsize = 15)
 
-    ax.set_title(title, fontsize = 17)
 
-    plt.tight_layout()
-    plt.show()
-    #plt.savefig(fileout)
-    #plt.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def bests_career_length_new(id_data, nbins, fileout, folder2, title):
-
-
-
-
-    ps       = [float(line.strip()) for line in open(folder2 + '/' + 'p_distribution_' + title + '.dat')]
-    imdbid_Q = { line.strip().split('\t')[0] : float(line.strip().split('\t')[1])  for line in open(folder2 + '/' + 'Q_distribution_' + title + '.dat')}    
-
-
-
-
-
-
-
-    ''' JUST THE DATA '''
-
-    N_Istar     = {}
-    N_Istar_avg = {}
-
-    print title, '  read ...'
-
-    for ind, (imdbid, data) in enumerate(id_data.items()):
-
-        N       = len(data)
-        Istar   = max([d[2] for d in data])
-        
-        if N not in N_Istar:
-            N_Istar[N]  = [Istar]
-        else:
-            N_Istar[N].append(Istar)
-        
-
-    for N, Istars in N_Istar.items():
-        N_Istar_avg[N] = np.mean(Istars)
-        
-         
-    Ns,  Istars     = zip(*[(n, i) for n, i in  N_Istar_avg.items()])
-    bNs, bIstars, e = getLogBinnedDistribution(Ns, Istars, nbins)
-
-
-
-    ''' ADD THE R MODEL '''
-
-
-    print title, '  R model ...'
-
-    NsS           = []
-    Impacts_S     = []
-    N_Istar_S     = {}
-    N_Istar_avg_S = {}
-
-
-    for ind, (imdbid, data) in enumerate(id_data.items()):
-        NsS.append(len(data))
-        Impacts_S += [d[2] for d in data]
-
-        
-    for i in range(1):        
-
-        random.shuffle(Impacts_S)    
-        Scareers = divideUnequal(NsS, Impacts_S) 
-        
-        for ind, data in enumerate(Scareers):
-            N     = len(data)
-            Istar = max(data)
-
-
-            if N not in N_Istar_S:
-                N_Istar_S[N]  = [Istar]
-            else:
-                N_Istar_S[N].append(Istar)
-
-
-    for N, IstarsS in N_Istar_S.items():
-        N_Istar_avg_S[N] = np.mean(IstarsS)
-
-        
-    NsS, IstarsS = zip(*[(n, i) for n, i in  N_Istar_avg_S.items()])   
-    bNsS, bIstarsS, err = getLogBinnedDistribution(NsS,   IstarsS, nbins)
-
-
-
-
-    ''' ADD THE Q MODEL '''
-
-    print title, '  Q model ...'
-
-
-    Impacts_Q     = []
-    N_Istar_Q     = {}
-    N_Istar_avg_Q = {}
-
-
-    for i in range(1):
-
-        print i
-
-        psQ = [p for p in ps]
-        random.shuffle(psQ)    
-
-
-        for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
-
-            N  = len([d for d in id_data[imdbid]])
-
-  
-
-            career = []
-            for i in range(N):
-                career.append(psQ[0] * Q)
-                del psQ[0]
-            IstarQs = max(career)
-
-
-            if N not in N_Istar_Q:
-                N_Istar_Q[N] = [IstarQs]
-            else:
-                N_Istar_Q[N].append(IstarQs)
-
-
-    for n, istars in N_Istar_Q.items():        
-        N_Istar_avg_Q[n] = np.mean(istars)
-    
-
-    
  
-    NsSQ,  IstarsSQ = zip(*[(n, i) for n, i in  N_Istar_avg_Q.items()])   
-    bNsSQ, bIstarsSQ, err = getLogBinnedDistribution(NsSQ,   IstarsSQ, nbins)
 
-        
+    field    = title.split('_')[0].split('-')[0]
+    length   = title.split('-')[-1].split('_')[0]
+    solution = title.split('_')[-1]
+
+    if 'art' == field:
+        field = 'art director'
 
 
-    print title, '  plot ...'
 
+    fileout  = 'ResultFigs/4_R_Q_model_test_'  + title + '.png'
+    title    = field + ',  mincareer length = ' + length + ',   optimization solution = ' + solution
 
-    f, ax = plt.subplots(1,1, figsize = (7, 6))
-    ax.plot(Ns,  Istars, 'o')
-    ax.plot(bNs, bIstars, 'r', linewidth = 3)
+    ax.set_title(title, fontsize = 18)
 
-    ax.plot(bNsS, bIstarsS, 'k', linewidth = 3)
-    ax.plot(bNsSQ,  bIstarsSQ, 'g', linewidth = 3)
-    ax.set_yscale('log')
-    ax.set_xscale('log')
-
-    ax.set_title(title, fontsize = 17)
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig(fileout)
-    #plt.close()
-
-
-
+    plt.savefig(fileout)
+    plt.close()
 
 
 
@@ -684,21 +518,21 @@ def process_Qs_paralel(resfile):
 
     for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
 
+        if ind == 3: break
 
         mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
         
         Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
 
 
-        print field_o
 
-
-
-        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+        #id_data = read_data(infolder, folderout3, field + '-' + str(limit))
         #get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
         #get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
-    
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
+        #get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
+
+
+        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
 
 
 
@@ -706,9 +540,6 @@ def process_Qs_paralel(resfile):
 
 if __name__ == '__main__':  
 
-
-
-    
 
     fields = {  'director'     : 'film', 
                 'art-director' : 'film', 
@@ -726,8 +557,6 @@ if __name__ == '__main__':
                 'authors'      : 'book' }
 
 
-
-
     nbins      = 8
     resfolder  = 'Optimize/atlasz/evolution/test/Results/'
     resfiles   = [resfolder + res for res in os.listdir(resfolder)]
@@ -736,21 +565,12 @@ if __name__ == '__main__':
     folderout3 = 'IdData/' 
 
 
-
-
-    if not os.path.exists(folderout):
-        os.makedirs(folderout)
-
-    if not os.path.exists(folderout2):
-        os.makedirs(folderout2)
-
-    if not os.path.exists(folderout3):
-        os.makedirs(folderout3)
-
+    if not os.path.exists(folderout):  os.makedirs(folderout)
+    if not os.path.exists(folderout2): os.makedirs(folderout2)
+    if not os.path.exists(folderout3): os.makedirs(folderout3)
 
 
     if sys.argv[1] == 'auto':
-
 
         Pros = []
    
@@ -761,35 +581,6 @@ if __name__ == '__main__':
            
         for t in Pros:
             t.join()
-
-
-
-        '''for resfile in resfiles:
-
-        field_o   = resfile.split('_', 1)[1]
-        limit     = field_o.split('-')[1]
-        field     = field_o.split('-')[0].replace('_','-')
-        infolder  = 'Data/' + field + '/' + fields[field] + '-' + field + '-simple-careers-limit-' + limit
-
-        if 'art' in field_o and '20' in field_o:
-
-            Qfitparams = []
-
-            for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
-
-                mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]             
-                Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
-                print field_o, Qfitparams
-
-                id_data = read_data(infolder)
-                #get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-                #get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)              
-                get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '.png', folderout2, field_o)	   
-
-               # if len(Qfitparams) > 0:
-               #     bests_career_length(id_data, nbins, folderout + '4_R_Q_model_test_' + field_o + '_' + str(opt_rank) + '.png', folderout2, field_o)
-
-        '''
 
 
 
