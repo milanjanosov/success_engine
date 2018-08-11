@@ -526,7 +526,7 @@ def process_Qs_paralel(resfile):
 
 
 
-        #id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
         #get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
         #get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
         #get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
