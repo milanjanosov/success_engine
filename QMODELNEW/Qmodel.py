@@ -582,13 +582,13 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
     fout = open(datafolder + '4_RQModel_data_' + title + '.dat', 'w')
     for i in range(len(Ns)):
-        fout.write( str(Ns[i]) + '\t' + str(Istars[i]) + '\t' + str(e[i]) + '\n' )
+        fout.write( str(Ns[i]) + '\t' + str(Istars[i])  + '\n' )
     fout.close()
 
 
     fout = open(datafolder + '4_RQModel_binned_' + title + '.dat', 'w')
     for i in range(len(bNs)):
-        fout.write( str(bNs[i]) + '\t' + str(bIstars[i]) + '\n' )
+        fout.write( str(bNs[i]) + '\t' + str(bIstars[i]) + '\t' + str(e[i]) + '\n' )
     fout.close()
 
 
