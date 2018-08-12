@@ -582,7 +582,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
     fout = open(datafolder + '4_RQModel_data_' + title + '.dat', 'w')
     for i in range(len(Ns)):
-        fout.write( str(Ns[i]) + '\t' + str(Istars[i]) + '\n' )
+        fout.write( str(Ns[i]) + '\t' + str(Istars[i]) + '\t' + str(e[i]) + '\n' )
     fout.close()
 
 
@@ -664,10 +664,10 @@ def process_Qs_paralel(resfile):
 
 
 
-        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
-        get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-        get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
+      #  id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+     #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
+     #   get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+     #   get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
 
         bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
 
@@ -684,7 +684,7 @@ if __name__ == '__main__':
                 'writer'       : 'film', 
                 'composer'     : 'film', 
                 'electro'      : 'music', 
-                'rock'         : 'music', 
+                'rock'        : 'music', 
                 'pop'          : 'music', 
                 'funk'         : 'music', 
                 'folk'         : 'music', 
