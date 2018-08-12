@@ -152,6 +152,26 @@ def get_impact_distribution(id_data, nbins, fileout, title):
     ax.plot(ximpacts,  pimpacts)
     ax.plot(bximpacts, bpimpacts, color = 'r', linewidth = 3)
 
+
+
+    datafolder = 'DataToPlot/1_impact_distribution/'
+    if not os.path.exists(datafolder):
+        os.makedirs(datafolder)
+
+
+    fout = open(datafolder + '1_impact_distribution_data_' + title + '.dat', 'w')
+    for i in range(len(ximpacts)):
+        fout.write( str(ximpacts[i]) + '\t' +  str(pimpacts[i]) + '\n'  )
+    fout.close()
+
+    fout = open(datafolder + '1_impact_distribution_binned_' + title + '.dat', 'w')
+    for i in range(len(bximpacts)):
+        fout.write( str(bximpacts[i]) + '\t' +  str(bpimpacts[i]) + '\n'  )
+    fout.close()
+
+
+
+
     ax.set_yscale('log')
     ax.set_xscale('log')
     ax.set_xlabel('Rating value')
@@ -202,6 +222,18 @@ def get_N_star_N(id_data, bins, fileout, title):
     ax.hist(N_star_N, bins = 100, cumulative = True, normed = True, alpha = 0.5)
     ax.plot(x,x, color ='r', linewidth = 4)
     ax.set_title(title, fontsize = 17)
+
+
+
+    datafolder = 'DataToPlot/2_N_Nstar/'
+    if not os.path.exists(datafolder):
+        os.makedirs(datafolder)
+
+    fout = open(datafolder + '2_N_Nstar' + title + '.dat', 'w')
+    fout.write('\n'.join([str(n) for n in N_star_N]))
+    fout.close()
+
+
 
     plt.tight_layout()
     plt.savefig(fileout)
@@ -294,21 +326,65 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     bxp, bpp, err = getLogBinnedDistribution(xp, pp, nbins)
 
 
-   # if 'art' in title:
-   #     title = 'art-director'
-
-    print title
     title = title.replace('art-', 'art_')
 
     fout = open(folder2 + '/' + 'p_distribution_' + title + '_' + str(jind) + '.dat', 'w')
     fout.write('\n'.join([str(f) for f in ps]))
     fout.close()
 
-
     fout = open(folder2 + '/' + 'Q_distribution_' + title + '_' + str(jind) + '.dat', 'w')
     fout.write('\n'.join([ imdb + '\t' + str(Q)   for imdb, Q in imdbid_Q.items()]))
     fout.close()
     
+
+
+    datafolder = 'DataToPlot/3_pQ_distributions/'
+    if not os.path.exists(datafolder):
+        os.makedirs(datafolder)
+
+
+
+
+
+
+
+    fout = open(datafolder + '/' + 'p_distribution_data_' + title + '_' + str(jind) + '.dat', 'w')
+
+    for i in range(len(xp)):
+        fout.write( str(xp[i]) + '\t' + str(pp[i]) + '\n')
+    fout.close()
+
+    fout = open(datafolder + '/' + 'p_distribution_binned_' + title + '_' + str(jind) + '.dat', 'w')
+
+    for i in range(len(bxp)):
+        fout.write( str(bxp[i]) + '\t' + str(bpp[i]) + '\n')
+    fout.close()
+
+
+
+
+
+
+
+
+
+    fout = open(datafolder + '/' + 'Q_distribution_data_' + title + '_' + str(jind) + '.dat', 'w')
+    for i in range(len(xQ)):
+        fout.write( str(xQ[i]) + '\t' + str(pQ[i]) + '\n')
+    fout.close()
+
+
+    fout = open(datafolder + '/' + 'Q_distribution_binned_' + title + '_' + str(jind) + '.dat', 'w')
+    for i in range(len(bxQ)):
+        fout.write( str(bxQ[i]) + '\t' + str(bpQ[i]) + '\n')
+    fout.close()
+
+
+
+
+
+
+
 
 
 
@@ -401,7 +477,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
         Impacts_S += career
 
         
-    for i in range(10):        
+    for i in range(25):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -437,7 +513,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     N_Istar_avg_Q = {}
 
 
-    for i in range(10):
+    for i in range(25):
 
 
         psQ = [p for p in ps]
@@ -498,10 +574,51 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
+
+
+    datafolder = 'DataToPlot/4_RQModel/'
+    if not os.path.exists(datafolder):
+        os.makedirs(datafolder)
+
+    fout = open(datafolder + '4_RQModel_data_' + title + '.dat', 'w')
+    for i in range(len(Ns)):
+        fout.write( str(Ns[i]) + '\t' + str(Istars[i]) + '\n' )
+    fout.close()
+
+
+    fout = open(datafolder + '4_RQModel_binned_' + title + '.dat', 'w')
+    for i in range(len(bNs)):
+        fout.write( str(bNs[i]) + '\t' + str(bIstars[i]) + '\n' )
+    fout.close()
+
+
+    fout = open(datafolder + '4_RQModel_rmodel_' + title + '.dat', 'w')
+    for i in range(len(bNsS)):
+        fout.write( str(bNsS[i]) + '\t' + str(bIstarsS[i]) + '\n' )
+    fout.close()
+
+    fout = open(datafolder + '4_RQModel_qmodel_' + title + '.dat', 'w')
+    for i in range(len(bNsSQ)):
+        fout.write( str(bNsSQ[i]) + '\t' + str(bIstarsSQ[i]) + '\n' )
+    fout.close()
+
+
+
+
+
+
     fileout  = 'ResultFigs/4_R_Q_model_test_'  + title + '.png'
     title    = field + ',  mincareer length = ' + length + ',   optimization solution = ' + solution
 
     ax.set_title(title, fontsize = 18)
+
+
+
+
+
+
+
+
 
 
     plt.tight_layout()
@@ -548,10 +665,9 @@ def process_Qs_paralel(resfile):
 
 
         id_data = read_data(infolder, folderout3, field + '-' + str(limit))
-        #get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-        #get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+        get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
+        get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
         get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
-
 
         bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
 
@@ -578,7 +694,7 @@ if __name__ == '__main__':
                 'authors'      : 'book' }
 
 
-    nbins      = 8
+    nbins      = 10
     resfolder  = 'Optimize/atlasz/evolution/test/Results/'
     resfiles   = [resfolder + res for res in os.listdir(resfolder)]
     folderout  = 'ResultFigs/' 
@@ -615,12 +731,10 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'manual':
 
         label    = sys.argv[2]
-        field    = sys.argv[3]  #'director'
+        field    = sys.argv[3]  
         LIMIT    = int(sys.argv[4])
         infolder = 'Data/' + field + '/' + fields[field] + '-' + field + '-simple-careers-limit-' + str(LIMIT)
 
-
-        #for ind, line in enumerate(open('../QFitConstants/' + field + '.dat')):
         for ind, line in enumerate(open('Qparamfit/' + field.replace('-', '_') +  '-' + str(LIMIT) + '_qmodel_params.dat')):
 
             if ind ==0:
@@ -630,17 +744,12 @@ if __name__ == '__main__':
 
 
 
-
-
-#        3.46389747581	0.204935372209	3.39034203793	2.19970349711	3.49509533371	0.00111298836217	-0.000777450760588	-0.00239089439166	-0.0931080747298
- #       Qfitparams  = (1.62409941132, 0.152556341355, 2.1537035159999998, 3.7047859615199994, 2.18953046271, 0.0074163128042900005, -0.0147058088882, -0.0116277213795, 0.0)
-
-
-
-        #get_impact_distribution(id_data, nbins) 
-        #get_N_star_N(id_data, nbins)
-        id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
-      #  bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
+     #   id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+     #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
+      #  get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
+      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
+
+
 
