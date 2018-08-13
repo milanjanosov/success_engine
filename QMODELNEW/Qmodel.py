@@ -296,6 +296,7 @@ def get_p(career, Q):
 def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
     imdbid_Q = {}
+    imdbid_p = {}
 
     for ind, (imdbid, data) in enumerate(id_data.items()):
         imdbid_Q[imdbid] = get_Q([d[2] for d in data], Qfitparams)
@@ -317,8 +318,14 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
         if ind % 500 == 0:
             print title, '\t', ind, '/', nnn
 
-        career = [d[2] for d in id_data[imdb]]
-        ps += get_p(career, Q)
+        career   = [d[2] for d in id_data[imdb]]
+        career_p = get_p(career, Q)
+        ps += career_p
+
+ 
+        imdbid_p[imdb] = career_p
+
+
 
 
     pss = [round(p) for p in ps]
@@ -349,22 +356,22 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
 
     fout = open(datafolder + '/' + 'p_distribution_data_' + title + '_' + str(jind) + '.dat', 'w')
-
     for i in range(len(xp)):
         fout.write( str(xp[i]) + '\t' + str(pp[i]) + '\n')
     fout.close()
 
     fout = open(datafolder + '/' + 'p_distribution_binned_' + title + '_' + str(jind) + '.dat', 'w')
-
     for i in range(len(bxp)):
         fout.write( str(bxp[i]) + '\t' + str(bpp[i]) + '\n')
     fout.close()
 
 
-
-
-
-
+    
+    fout = open(datafolder + '/' + 'p_values_of_users_' + title + '_' + str(jind) + '.dat', 'w')
+    for imdb, ppp in imdbid_p.items():
+        for pppp in ppp:
+            fout.write(imdb + '\t' + str(pppp) + '\n')
+    fout.close()
 
 
 
@@ -744,11 +751,11 @@ if __name__ == '__main__':
 
 
 
-     #   id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
-     #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
+        id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+   #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
       #  get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
-      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
-        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
+        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+  #      bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
 
 
