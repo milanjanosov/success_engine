@@ -362,16 +362,47 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
     fout = open(datafolder + '/' + 'p_distribution_binned_' + title + '_' + str(jind) + '.dat', 'w')
     for i in range(len(bxp)):
+
         fout.write( str(bxp[i]) + '\t' + str(bpp[i]) + '\n')
     fout.close()
 
 
     
     fout = open(datafolder + '/' + 'p_values_of_users_' + title + '_' + str(jind) + '.dat', 'w')
+
+    pppall = []
+
     for imdb, ppp in imdbid_p.items():
-        for pppp in ppp:
-            fout.write(imdb + '\t' + str(pppp) + '\n')
+
+        if len(ppp) > 100:
+
+            X, Y = getDistribution(ppp)
+            Y = [1 - yy for yy in np.cumsum(Y)]
+            mm = max(Y)
+            Y = [yy/mm for yy in Y]
+            X = ';'.join([str(x) for x in X])
+            Y = ';'.join([str(y) for y in Y])
+       
+            fout.write(imdb + '\t' + X + '\t' + Y + '\n')
+
+        pppall += ppp
+
+
+    X, Y = getDistribution(pppall)
+    Y = [1 - yy for yy in np.cumsum(Y)]
+    mm = max(Y)
+    Y = [yy/mm for yy in Y]
+    X = ';'.join([str(x) for x in X])
+    Y = ';'.join([str(y) for y in Y])
+
+    fout.write('everybody' + '\t' + X + '\t' + Y + '\n')
+
     fout.close()
+
+
+
+
+
 
 
 
