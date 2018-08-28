@@ -374,7 +374,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
     for imdb, ppp in imdbid_p.items():
 
-        if len(ppp) > 100:
+        if len(ppp) > 50:
 
             X, Y = getDistribution(ppp)
             Y = [1 - yy for yy in np.cumsum(Y)]
@@ -395,7 +395,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     X = ';'.join([str(x) for x in X])
     Y = ';'.join([str(y) for y in Y])
 
-    fout.write('everybody' + '\t' + X + '\t' + Y + '\n')
+    fout.write('    ' + '\t' + X + '\t' + Y + '\n')
 
     fout.close()
 
@@ -514,6 +514,9 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
         NsS.append(len(career))
         Impacts_S += career
 
+
+    print 'LEN  ', len(careers)
+
         
     for i in range(25):        
 
@@ -618,6 +621,9 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
+
+    print len(Ns)
+
     fout = open(datafolder + '4_RQModel_data_' + title + '.dat', 'w')
     for i in range(len(Ns)):
         fout.write( str(Ns[i]) + '\t' + str(Istars[i])  + '\n' )
@@ -672,15 +678,41 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
+def get_luck_skill_data(label, field):
+
+
+    files   = os.listdir('pQData')
+    qoutdata = []
+    poutdata = []
+
+    for fn in files:
+
+        if 'Q' in fn:
+            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData/' + fn) ]
+            qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
+            print 'q', len(qdata)
+
+        else:
+            pdata = [float(line.strip()) for line in open('pQData/' + fn) ]
+            poutdata.append( (fn, np.mean(pdata), np.std(pdata), len(pdata) ))
+            print 'p', len(pdata)
 
 
 
+    folout = 'DataToPlot/' + '5_LuckSkill'
+    if not os.path.exists(folout):
+        os.makedirs(folout)
+    fout = open(folout + '/p_avg_std.dat', 'w')
+    for dd in poutdata:
+        fout.write(dd[0] + '\t' + str(dd[1]) + '\t' + str(dd[2]) + '\t' + str(dd[3]) + '\n')
+    fout.close()
 
+    fout = open(folout + '/Q_avg_std.dat', 'w')
+    for dd in qoutdata:
+        fout.write(dd[0] + '\t' + str(dd[1]) + '\t' + str(dd[2]) + '\t' + str(dd[3]) + '\n')
+    fout.close()
 
-
-
-
-
+    
 
 
 def process_Qs_paralel(resfile):
@@ -782,12 +814,14 @@ if __name__ == '__main__':
 
 
 
-        id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+   #     id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
    #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
       #  get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
-  #      bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
+  #      get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+   #     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
+
+        get_luck_skill_data(label, field)
 
 
 
