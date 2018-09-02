@@ -207,7 +207,7 @@ for fn, lim in fields.items():
 
         print fn, '\t', lim, '\t', tipus
         #(fn + '-' + lim, ax[0,0], 'steelblue', 'Q', 10) 
-        p = Process(target = process_Qs_paralel, args=(fn + '-' + lim, ax[0,0], 'steelblue', tipus, 10, ))
+        p = Process(target = do_p_Q_plots, args=(fn + '-' + lim, ax[0,0], 'steelblue', tipus, 10, ))
         Pros.append(p)
         p.start()
 
