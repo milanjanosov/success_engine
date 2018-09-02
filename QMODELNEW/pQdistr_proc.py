@@ -191,7 +191,9 @@ for fn, lim in fields.items():
   
     f, ax = plt.subplots(2,3, figsize = (15,8,))
 
+    print fn, '\t', lim, '\t', 'Q'
     do_p_Q_plots(fn + '-' + lim, ax[0,0], 'steelblue', 'Q', 10) 
+    print fn, '\t', lim, '\t', 'p'
     do_p_Q_plots(fn + '-' + lim, ax[1,0], 'steelblue', 'p', 10)
 
 
