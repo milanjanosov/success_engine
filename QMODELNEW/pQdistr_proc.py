@@ -9,7 +9,8 @@ import math
 from scipy import stats
 import pandas as pd
 import seaborn as sn
-
+import pandas as pd
+from multiprocessing import Process
 
 
 
@@ -185,17 +186,49 @@ fields = {  'director'     : '10',
             'authors'      : '50' }
 
 
-    
+
+
+
+    for resfile in resfiles:
+            p = Process(target = process_Qs_paralel, args=(resfile, ))
+            Pros.append(p)
+            p.start()
+           
+        for t in Pros:
+            t.join()
+ 
+
+
+
+
+Pros = []   
 
 for fn, lim in fields.items():
   
     f, ax = plt.subplots(2,3, figsize = (15,8,))
 
-    print fn, '\t', lim, '\t', 'Q'
-    do_p_Q_plots(fn + '-' + lim, ax[0,0], 'steelblue', 'Q', 10) 
-    print fn, '\t', lim, '\t', 'p'
-    do_p_Q_plots(fn + '-' + lim, ax[1,0], 'steelblue', 'p', 10)
+
+    for tipus in ['Q', 'p']:
+
+
+        print fn, '\t', lim, '\t', tipus
+        #(fn + '-' + lim, ax[0,0], 'steelblue', 'Q', 10) 
+        p = Process(target = process_Qs_paralel, args=(fn + '-' + lim, ax[0,0], 'steelblue', tipus, 10, ))
+        Pros.append(p)
+        p.start()
+
+
+        #print fn, '\t', lim, '\t', 'p'
+        #do_p_Q_plots(fn + '-' + lim, ax[1,0], 'steelblue', 'p', 10)
 
 
     plt.tight_layout()
     plt.close()
+
+
+     for t in Pros:
+            t.join()
+
+
+
+
