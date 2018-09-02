@@ -764,7 +764,7 @@ def process_Qs_paralel(resfile):
 
         
       #  bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
-        get_luck_skill_data(label, field)
+        get_luck_skill_data(fields[field], field)
 
 
 
