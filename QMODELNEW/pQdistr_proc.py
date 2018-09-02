@@ -220,8 +220,8 @@ for fn, lim in fields.items():
     plt.close()
 
 
-     for t in Pros:
-            t.join()
+for t in Pros:
+    t.join()
 
 
 
