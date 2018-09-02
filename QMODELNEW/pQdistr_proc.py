@@ -11,7 +11,8 @@ import pandas as pd
 import seaborn as sn
 import pandas as pd
 from multiprocessing import Process
-
+import warnings
+warnings.filterwarnings("ignore")
 
 
 
