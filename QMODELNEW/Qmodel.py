@@ -708,17 +708,24 @@ def get_luck_skill_data(label, field):
     qoutdata = []
     poutdata = []
 
+    print label, field
+
     for fn in files:
 
+       
+
         if 'Q' in fn:
-            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData/' + fn) ]
-            qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
-            print 'q', len(qdata)
+            try:
+                qdata = [float(line.strip().split('\t')[1]) for line in open('pQData/' + fn) ]
+                qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
+            except:
+                pass
+
 
         else:
             pdata = [float(line.strip()) for line in open('pQData/' + fn) ]
             poutdata.append( (fn, np.mean(pdata), np.std(pdata), len(pdata) ))
-            print 'p', len(pdata)
+
 
 
 
