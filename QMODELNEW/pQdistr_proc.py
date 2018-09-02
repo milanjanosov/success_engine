@@ -1,6 +1,8 @@
 import os
 import gzip
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import powerlaw
 import random
@@ -8,7 +10,7 @@ import math
 from scipy import stats
 import pandas as pd
 import seaborn as sn
-matplotlib.use('Agg')
+
 
 
 
