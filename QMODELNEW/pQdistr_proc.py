@@ -172,7 +172,7 @@ def do_p_Q_plots(field, bx, color, tipus, nbins):
 
 
 fields = {  'director'     : '10', 
-            'art-director' : '20', 
+            'art_director' : '20', 
             'producer'     : '10', 
             'writer'       : '10', 
             'composer'     : '10', 
