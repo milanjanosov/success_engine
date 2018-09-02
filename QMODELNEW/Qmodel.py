@@ -194,32 +194,49 @@ def get_impact_distribution(id_data, nbins, fileout, title):
 
 def get_N_star_N(id_data, bins, fileout, title):
 
+    import random
+
     N_star_N   = []
     N_star_N_r = []
 
     for ind, (imdbid, data) in enumerate(id_data.items()):
         
 
-        data.sort(key=lambda tup: tup[1]) 
-        
-        
-        titles, times, impacts = zip(*data)
-                  
-        #if ind == 100: break
 
-        N      = len(impacts)
-        Istar  = max(impacts)    
-        Nstars = [i for i, j in enumerate(impacts) if j == Istar]  
-        
-        for Nstar in Nstars: 
-            N_star_N.append(float(Nstar)/N)
+        if len(data) < 100:
+
+            data.sort(key=lambda tup: tup[1]) 
+            
+            
+            titles, times, impacts = zip(*data)
+                      
+            #if ind == 100: break
+
+            N      = float(len(impacts))
+            Istar  = max(impacts)    
+            Nstars = [i for i, j in enumerate(impacts) if j == Istar]  
+
+            
+            for Nstar in Nstars: 
+                N_star_N.append(float(Nstar)/N)
+
+
+            impacts = list( impacts ) 
+            random.shuffle(impacts)
+
+            Nstars = [i for i, j in enumerate(impacts) if j == Istar]  
+
+            
+            for Nstar in Nstars: 
+                N_star_N_r.append(float(Nstar)/N)
+
 
             
 
     f, ax = plt.subplots(1,1, figsize = (7, 6))
 
     x = np.arange(0,1, 0.1)
-    ax.hist(N_star_N, bins = 100, cumulative = True, normed = True, alpha = 0.5)
+    ax.hist(N_star_N, bins = 1000, cumulative = True, normed = True, alpha = 0.5)
     ax.plot(x,x, color ='r', linewidth = 4)
     ax.set_title(title, fontsize = 17)
 
@@ -230,8 +247,14 @@ def get_N_star_N(id_data, bins, fileout, title):
         os.makedirs(datafolder)
 
     fout = open(datafolder + '2_N_Nstar' + title + '.dat', 'w')
-    fout.write('\n'.join([str(n) for n in N_star_N]))
+    fout.write('\n'.join([str(n) for n in N_star_N if n > 0]))
     fout.close()
+
+    fout = open(datafolder + '2_N_Nstar_R' + title + '.dat', 'w')
+    fout.write('\n'.join([str(n) for n in N_star_N_r if n > 0]))
+    fout.close()
+
+
 
 
 
@@ -303,7 +326,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
 
     Qs = [round(q) for q in imdbid_Q.values() if not np.isnan(q)]
-    xQ, pQ = getDistribution(Qs)
+    xQ, pQ = getDistribution(Qs, normalized = True)
 
     bxQ, bpQ, err = getLogBinnedDistribution(xQ, pQ, nbins)
 
@@ -329,7 +352,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
 
     pss = [round(p) for p in ps]
-    xp, pp = getDistribution(pss)
+    xp, pp = getDistribution(pss, normalized = True)
     bxp, bpp, err = getLogBinnedDistribution(xp, pp, nbins)
 
 
@@ -734,13 +757,14 @@ def process_Qs_paralel(resfile):
 
 
 
-        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+      #  id_data = read_data(infolder, folderout3, field + '-' + str(limit))
      #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
      #   get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
+      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
 
+        
       #  bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
-
+        get_luck_skill_data(label, field)
 
 
 
@@ -814,14 +838,14 @@ if __name__ == '__main__':
 
 
 
-   #     id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+        id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
    #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
-      #  get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
+        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
   #      get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
    #     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
 
-        get_luck_skill_data(label, field)
+    #    get_luck_skill_data(label, field)
 
 
 
