@@ -189,13 +189,7 @@ fields = {  'director'     : '10',
 
 
 
-    for resfile in resfiles:
-            p = Process(target = process_Qs_paralel, args=(resfile, ))
-            Pros.append(p)
-            p.start()
-           
-        for t in Pros:
-            t.join()
+
  
 
 
