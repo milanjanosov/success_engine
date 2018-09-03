@@ -38,9 +38,9 @@ careers    =  ['director-10', 'art_director-20', 'composer-10', 'writer-10', 'pr
 users = {}
 
 
-for career in careers[0:1]:
+for career in careers[1:2]:
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
-        users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat')) if ind < 100]
+        users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
 
 
 folderout = 'UsersTimeData'
