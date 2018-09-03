@@ -43,19 +43,32 @@ for career in careers[0:1]:
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat')) if ind < 100]
 
 
+folderout = 'UsersTimeData'
+if not os.path.exists(folderout):
+    os.makedirs(folderout)
+
+
 
 for career, users in users.items():    
     
+    fout = open(folderout + '/' + career + '_time_data.dat', 'w')
+
     for user in users:
         years = []
         print user
         for line in gzip.open(input_fields2[career.split('-')[0]] + '/' + user + '_' + career.split('-')[0] + '_simple_career.gz'):
             if 'year' not in line:
-                year = float(line.strip().split('\t')[1])
-                years.append(year)
+                try:
+                    year = float(line.strip().split('\t')[1])
+                    years.append(year)
+                except:
+                    pass
 
 
-        print user, min(years), max(years) - min(years)
+        fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\n')
+
+    fout.close()
+
 
 
 
