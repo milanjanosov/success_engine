@@ -60,7 +60,7 @@ for ind, (career, users) in enumerate(users.items()):
         if ind % 1000 == 0:
             print career, ind
 
-        for line in gzip.open(input_fields2[career.split('-')[0] ] + '/' + user + '_' + career.split('-')[0] + '_simple_career.gz'):
+        for line in gzip.open(input_fields2[career.split('-')[0] ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.gz'):
             if 'year' not in line:
                 try:
                     year = float(line.strip().split('\t')[1])
