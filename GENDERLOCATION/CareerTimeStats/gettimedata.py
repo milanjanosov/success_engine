@@ -49,13 +49,17 @@ if not os.path.exists(folderout):
 
 
 
-for career, users in users.items():    
+for ind, (career, users) in enumerate(users.items()):    
     
     fout = open(folderout + '/' + career + '_time_data.dat', 'w')
 
+ 
     for user in users:
         years = []
-        print user
+
+        if ind % 1000 == 0:
+            print career, ind
+
         for line in gzip.open(input_fields2[career.split('-')[0]] + '/' + user + '_' + career.split('-')[0] + '_simple_career.gz'):
             if 'year' not in line:
                 try:
