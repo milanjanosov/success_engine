@@ -48,13 +48,14 @@ for career, users in users.items():
     
     for user in users:
         years = []
+        print user
         for line in gzip.open(input_fields2[career.split('-')[0]] + '/' + user + '_' + career.split('-')[0] + '_simple_career.gz'):
             if 'year' not in line:
                 year = float(line.strip().split('\t')[0])
                 years.append(year)
 
 
-            print user, min(years), max(years) - min(years)
+        print user, min(years), max(years) - min(years)
 
 
 
