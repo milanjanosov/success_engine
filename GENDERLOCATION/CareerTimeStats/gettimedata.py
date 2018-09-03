@@ -51,7 +51,7 @@ for career, users in users.items():
         print user
         for line in gzip.open(input_fields2[career.split('-')[0]] + '/' + user + '_' + career.split('-')[0] + '_simple_career.gz'):
             if 'year' not in line:
-                year = float(line.strip().split('\t')[0])
+                year = float(line.strip().split('\t')[1])
                 years.append(year)
 
 
