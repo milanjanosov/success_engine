@@ -41,10 +41,8 @@ users = {}
 
 
 for career in careers:
-
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
-
 
 
 
@@ -115,8 +113,6 @@ for line in open('../Music/artist_ids_discogs_rock.dat'):
 
 
 
-
-
 for ind, (career, users) in enumerate(users.items()):    
     
 
@@ -129,11 +125,15 @@ for ind, (career, users) in enumerate(users.items()):
         years = []
 
 
-        print career, ind
+        #print career, ind
+    
 
-        try:
+        if 2 == 2:
+        #try:
 
             for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.gz'):
+
+                print line
                 if 'year' not in line:
                     try:
                         year = float(line.strip().split('\t')[1])
@@ -144,8 +144,8 @@ for ind, (career, users) in enumerate(users.items()):
 
             fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\n')
 
-        except:
-            pass
+        #except:
+        #    pass
 
     fout.close()
 
