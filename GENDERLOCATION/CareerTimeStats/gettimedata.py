@@ -34,7 +34,7 @@ rootfolder =  '../../QMODELNEW/pQData'
 careers    =  ['director-10', 'art_director-20', 'composer-10', 'writer-10', 'producer-10'] + ['electro-80', 'rock-80', 'pop-80', 'jazz-80', 'classical-80', 'funk-80', 'folk-80', 'hiphop-80']+  ['authors-50']
 
 
-careers    =  [ 'funk-80']
+#careers    =  [ 'funk-80']
 
 
 users = {}
@@ -131,18 +131,33 @@ for ind, (career, users) in enumerate(users.items()):
         if 2 == 2:
         #try:
 
-            for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
+            productivity = 0
 
-                print line
-                if 'year' not in line:
-                    try:
-                        year = float(line.strip().split('\t')[1])
-                        years.append(year)
-                    except:
-                        pass
+            try:
+
+                for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
+                    if 'year' not in line:
+                        productivity += 1
+                        try:
+                            year = float(line.strip().split('\t')[1])
+                            years.append(year)
+                        except:
+                            pass
+
+            except:
+
+                for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
+                    if 'year' not in line:
+                        productivity += 1
+                        try:
+                            year = float(line.strip().split('\t')[1])
+                            years.append(year)
+                        except:
+                            pass
 
 
-            fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\n')
+
+            fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\n')
 
         #except:
         #    pass
