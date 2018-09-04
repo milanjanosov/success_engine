@@ -60,32 +60,32 @@ if not os.path.exists(folderout):
 
 
 classical = {}
-for line in open('Music/artist_ids_discogs_classical.dat'):
+for line in open('../Music/artist_ids_discogs_classical.dat'):
     idd, name = line.strip().split('\t')
     classical[name] = str(idd)
 
 jazz = {}
-for line in open('Music/artist_ids_discogs_jazz.dat'):
+for line in open('../Music/artist_ids_discogs_jazz.dat'):
     idd, name = line.strip().split('\t')
     jazz[name] = str(idd)
 
 hiphop = {}
-for line in open('Music/artist_ids_discogs_hiphop.dat'):
+for line in open('../Music/artist_ids_discogs_hiphop.dat'):
     idd, name = line.strip().split('\t')
     hiphop[name] = str(idd)
 
 funk = {}
-for line in open('Music/artist_ids_discogs_funk.dat'):
+for line in open('../Music/artist_ids_discogs_funk.dat'):
     idd, name = line.strip().split('\t')
     funk[name] = str(idd)
 
 folk = {}
-for line in open('Music/artist_ids_discogs_folk.dat'):
+for line in open('../Music/artist_ids_discogs_folk.dat'):
     idd, name = line.strip().split('\t')
     folk[name] = str(idd)
 
 rock= {}
-for line in open('Music/artist_ids_discogs_rock.dat'):
+for line in open('../Music/artist_ids_discogs_rock.dat'):
     if len(line.strip().split('\t')) == 2:
         idd, name = line.strip().split('\t')
         rock[name] = str(idd)
