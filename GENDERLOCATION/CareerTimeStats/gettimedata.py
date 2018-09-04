@@ -180,18 +180,22 @@ for ind, (career, users) in enumerate(users.items()):
 
 
 
-            if career.split('-')[0].replace('_', '-') in music_names:
+            try:
 
-                print user    
-                user = music_names[career.split('-')[0].replace('_', '-')][user]
-                print user
+                if career.split('-')[0].replace('_', '-') in music_names:
+
+                    print user    
+                    user = music_names[career.split('-')[0].replace('_', '-')][user]
+                    print user
 
 
 
-            fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\n')
+                fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\n')
 
-        #except:
-        #    pass
+            except:
+                pass
+
+
 
     fout.close()
 
