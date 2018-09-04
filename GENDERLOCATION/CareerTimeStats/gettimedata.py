@@ -135,7 +135,7 @@ for ind, (career, users) in enumerate(users.items()):
 
             try:
 
-                for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
+                for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.gz'):
                     if 'year' not in line:
                         productivity += 1
                         try:
