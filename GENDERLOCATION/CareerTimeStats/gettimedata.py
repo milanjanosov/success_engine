@@ -34,7 +34,7 @@ rootfolder =  '../../QMODELNEW/pQData'
 careers    =  ['authors-50'] + ['director-10', 'art_director-20', 'composer-10', 'writer-10', 'producer-10'] + ['electro-80', 'rock-80', 'pop-80', 'jazz-80', 'classical-80', 'funk-80', 'folk-80', 'hiphop-80']
 
 
-#careers    =  [ 'funk-80']
+careers    =  [ 'jazz-80' ]
 
 
 users = {}
@@ -93,7 +93,14 @@ for line in open('../Music/artist_ids_discogs_rock.dat'):
 
 
 
-
+music_names = {
+    'classical' : classical, 
+    'jazz'      : jazz, 
+    'hiphop'    : hiphop, 
+    'funk'      : funk, 
+    'folk'      : folk, 
+    'rock'      : rock
+    }
 
 
 
@@ -173,6 +180,11 @@ for ind, (career, users) in enumerate(users.items()):
 
 
 
+            if career.split('-')[0].replace('_', '-') in music_names:
+
+                print user    
+                user = music_names[career.split('-')[0].replace('_', '-')][user]
+                print user
 
 
 
