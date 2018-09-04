@@ -5,20 +5,20 @@ import gzip
 
 
 data_folder  = '../../Data'     
-input_fields = [(data_folder + '/Film/film-art-director-simple-careers',   'film',       'art-director'),   
-                (data_folder + '/Music/music-pop-simple-careers',          'music',      'pop'),
-                (data_folder + '/Music/music-electro-simple-careers',      'music',      'electro'),
-                (data_folder + '/Music/music-classical-simple-careers',    'music',      'classical'),
-                (data_folder + '/Music/music-folk-simple-careers',         'music',      'folk'),
-                (data_folder + '/Music/music-funk-simple-careers',         'music',      'funk'),
-                (data_folder + '/Music/music-jazz-simple-careers',         'music',      'jazz'),
-                (data_folder + '/Music/music-hiphop-simple-careers',       'music',      'hiphop'),                   		
-                (data_folder + '/Music/music-rock-simple-careers',         'music',      'rock'),  
-                (data_folder + '/Film/film-director-simple-careers',       'film',       'director'),
-                (data_folder + '/Film/film-producer-simple-careers',       'film',       'producer'),   
-                (data_folder + '/Film/film-writer-simple-careers',         'film',       'writer'),   
-                (data_folder + '/Film/film-composer-simple-careers',       'film',       'composer'),   
-                (data_folder + '/Book/book-authors-simple-careers',        'book',       'authors') ]
+input_fields = [#(data_folder + '/Film/film-art-director-simple-careers',   'film',       'art-director'),   
+              #  (data_folder + '/Music/music-pop-simple-careers',          'music',      'pop'),
+              #  (data_folder + '/Music/music-electro-simple-careers',      'music',      'electro'),
+              #  (data_folder + '/Music/music-classical-simple-careers',    'music',      'classical'),
+                (data_folder + '/Music/music-folk-simple-careers',         'music',      'folk')]#,
+              #  (data_folder + '/Music/music-funk-simple-careers',         'music',      'funk'),
+             #  (data_folder + '/Music/music-jazz-simple-careers',         'music',      'jazz'),
+              #  (data_folder + '/Music/music-hiphop-simple-careers',       'music',      'hiphop'),                   		
+             #   (data_folder + '/Music/music-rock-simple-careers',         'music',      'rock'),  
+             #   (data_folder + '/Film/film-director-simple-careers',       'film',       'director'),
+             #   (data_folder + '/Film/film-producer-simple-careers',       'film',       'producer'),   
+              #  (data_folder + '/Film/film-writer-simple-careers',         'film',       'writer'),   
+              #  (data_folder + '/Film/film-composer-simple-careers',       'film',       'composer'),   
+             #   (data_folder + '/Book/book-authors-simple-careers',        'book',       'authors') ]
 
 
 
@@ -49,6 +49,68 @@ for career in careers:
 folderout = 'UsersTimeData'
 if not os.path.exists(folderout):
     os.makedirs(folderout)
+
+
+
+
+''' =========================================================== '''
+'''                  map musician names to ids                  '''
+
+classical = {}
+for line in open('Music/artist_ids_discogs_classical.dat'):
+    idd, name = line.strip().split('\t')
+    classical[name] = str(idd)
+
+jazz = {}
+for line in open('Music/artist_ids_discogs_jazz.dat'):
+    idd, name = line.strip().split('\t')
+    jazz[name] = str(idd)
+
+hiphop = {}
+for line in open('Music/artist_ids_discogs_hiphop.dat'):
+    idd, name = line.strip().split('\t')
+    hiphop[name] = str(idd)
+
+funk = {}
+for line in open('Music/artist_ids_discogs_funk.dat'):
+    idd, name = line.strip().split('\t')
+    funk[name] = str(idd)
+
+folk = {}
+for line in open('Music/artist_ids_discogs_folk.dat'):
+    idd, name = line.strip().split('\t')
+    folk[name] = str(idd)
+
+rock= {}
+for line in open('Music/artist_ids_discogs_rock.dat'):
+    if len(line.strip().split('\t')) == 2:
+        idd, name = line.strip().split('\t')
+        rock[name] = str(idd)
+
+
+''' =========================================================== '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
