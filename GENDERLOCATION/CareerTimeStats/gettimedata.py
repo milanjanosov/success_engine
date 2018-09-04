@@ -146,14 +146,33 @@ for ind, (career, users) in enumerate(users.items()):
 
             except:
 
-                for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
-                    if 'year' not in line:
-                        productivity += 1
-                        try:
-                            year = float(line.strip().split('\t')[1])
-                            years.append(year)
-                        except:
-                            pass
+
+                try:
+
+                    for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.dat.gz'):
+                        if 'year' not in line:
+                            productivity += 1
+                            try:
+                                year = float(line.strip().split('\t')[1])
+                                years.append(year)
+                            except:
+                                pass
+
+                except:
+                    
+          
+
+                    for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_simple_career.dat.gz'):
+                        if 'year' not in line:
+                            productivity += 1
+                            try:
+                                year = float(line.strip().split('\t')[1])
+                                years.append(year)
+                            except:
+                                pass
+
+
+
 
 
 
