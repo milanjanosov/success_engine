@@ -289,7 +289,7 @@ def get_N_star_N(id_data, bins, fileout, title):
     print bins
 
 
-    fout = open(datafolder + '/' + title.split('-')[0] + '_RNNstar_data.dat', 'w')
+    fout = open(datafolder + '/' + title + '_RNNstar_data.dat', 'w')
 
 
 
