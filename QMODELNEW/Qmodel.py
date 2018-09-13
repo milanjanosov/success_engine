@@ -99,6 +99,8 @@ def read_data(infolder, outfolder, title):
         if ind % 500 == 0:
             print infolder, '\t', ind, '/', nnn
 
+
+
         imdbid = fn.split('/')[-1].split('_')[0].replace('.dat','')
         data   = []
 
@@ -250,8 +252,55 @@ def get_N_star_N(id_data, bins, fileout, title):
     fout.write('\n'.join([str(n) for n in N_star_N if n > 0]))
     fout.close()
 
-    fout = open(datafolder + '2_N_Nstar_R' + title + '.dat', 'w')
-    fout.write('\n'.join([str(n) for n in N_star_N_r if n > 0]))
+
+
+    nnbbins = 14
+
+    counts, bins, bars = ax.hist(N_star_N_r, normed = True, bins = np.linspace(0,1, nnbbins), alpha=0.0, cumulative=1)
+   
+    
+
+
+    errors_bins = {}
+
+
+
+
+
+
+
+
+    for r in sorted(N_star_N_r):
+
+        for i in range(nnbbins-1):
+
+            if r < bins[i+1] and r > bins[i]:
+
+                if i not in errors_bins:
+                    errors_bins[i] = []
+                errors_bins[i].append(r)
+
+         
+
+
+
+    bins = (bins[1:]+bins[:1]/2)
+
+    print bins
+
+
+    fout = open(datafolder + '/' + title.split('-')[0] + '_RNNstar_data.dat', 'w')
+
+
+
+
+
+    for i in range(nnbbins-1):
+        fout.write( str(bins[i]) + '\t' + str(1.0-counts[i]) + '\t' + str(np.std(errors_bins[i])) + '\n')
+        
+
+
+    #fout.write('\n'.join([str(n) for n in N_star_N_r if n > 0]))
     fout.close()
 
 
@@ -322,10 +371,20 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     imdbid_p = {}
 
     for ind, (imdbid, data) in enumerate(id_data.items()):
-        imdbid_Q[imdbid] = get_Q([d[2] for d in data], Qfitparams)
 
 
-    Qs = [round(q) for q in imdbid_Q.values() if not np.isnan(q)]
+
+        #print [d[2] for d in data]
+        get_Q_data =  get_Q([d[2] for d in data], Qfitparams)
+
+        if imdbid == '6197':
+            print math.exp(np.mean([np.log(d[2]) for d in data if d[2] > 0]) - Qfitparams[1])
+            print '\n', get_Q_data
+
+        imdbid_Q[imdbid] = get_Q_data
+
+
+    '''Qs = [round(q) for q in imdbid_Q.values() if not np.isnan(q)]
     xQ, pQ = getDistribution(Qs, normalized = True)
 
     bxQ, bpQ, err = getLogBinnedDistribution(xQ, pQ, nbins)
@@ -471,7 +530,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     #plt.savefig(fileout)
     plt.close()
 
-
+    '''
 
     return imdbid_Q, ps
 
@@ -582,7 +641,8 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
         psQ = [p for p in ps]
 
-#        psQ = random.reshuffle(psQ)
+
+        psQ = random.reshuffle(psQ)
 
         for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
 
@@ -764,9 +824,9 @@ def process_Qs_paralel(resfile):
 
 
 
-      #  id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
      #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-     #   get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+        get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
       #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
 
         
@@ -848,7 +908,7 @@ if __name__ == '__main__':
         id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
    #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
         get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
-  #      get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
    #     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
 
