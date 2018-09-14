@@ -107,8 +107,7 @@ music_names = {
     'hiphop'    : hiphop, 
     'funk'      : funk, 
     'folk'      : folk, 
-    'rock'      : rock,
-    'pop'       : pop
+    'rock'      : rock
     }
 
 
