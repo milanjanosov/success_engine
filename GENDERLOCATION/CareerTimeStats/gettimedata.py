@@ -158,7 +158,7 @@ for ind, (career, users) in enumerate(users.items()):
                             year   = float(line.strip().split('\t')[1])
                             years.append(year)
                             
-                            print line
+                            print 'ELSOO'
 
                             impact = float(line.strip().split('\t')[3])                           
                             if impact > maxx:
@@ -182,7 +182,7 @@ for ind, (career, users) in enumerate(users.items()):
                                 years.append(year)
 
 
-                                print career
+                                print 'MAASODIK
 
                                 impact = float(line.strip().split('\t')[2])                           
                                 if impact > maxx:
@@ -201,7 +201,7 @@ for ind, (career, users) in enumerate(users.items()):
                             try:
                                 year = float(line.strip().split('\t')[1])
                                 years.append(year)
-                                print line
+                                print 'HARMADDIIK'
                                 impact = float(line.strip().split('\t')[2])                           
                                 if impact > maxx:
                                     maxx = impact
@@ -215,16 +215,15 @@ for ind, (career, users) in enumerate(users.items()):
 
                 if career.split('-')[0].replace('_', '-') in music_names:
 
-                    print user    
+
                     user = music_names[career.split('-')[0].replace('_', '-')][user]
-                    print user
+
 
 
 
                 fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\t' + str(maxx) + '\n')
 
             except:
-                print 'UUU   ', user
                 pass
 
 
