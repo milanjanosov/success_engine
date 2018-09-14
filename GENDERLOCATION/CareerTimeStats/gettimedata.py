@@ -182,7 +182,7 @@ for ind, (career, users) in enumerate(users.items()):
                                 years.append(year)
 
 
-                                print 'MAASODIK
+                                print 'MAASODIK'
 
                                 impact = float(line.strip().split('\t')[2])                           
                                 if impact > maxx:
