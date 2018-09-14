@@ -43,7 +43,8 @@ users = {}
 
 
 
-for career in ['electro-80',  'pop-80']:
+#for career in ['electro-80',  'pop-80']:
+for career in ['pop-80']:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
@@ -92,11 +93,6 @@ for line in open('../Music/artist_ids_discogs_rock.dat'):
         idd, name = line.strip().split('\t')
         rock[name] = str(idd)
 
-pop= {}
-for line in open('../Music/artist_ids_discogs_pop.dat'):
-    if len(line.strip().split('\t')) == 2:
-        idd, name = line.strip().split('\t')
-        pop[name] = str(idd)
 
 
 
@@ -229,6 +225,7 @@ for ind, (career, users) in enumerate(users.items()):
                 fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\t' + str(maxx) + '\n')
 
             except:
+                print 'UUU   ', user
                 pass
 
 
