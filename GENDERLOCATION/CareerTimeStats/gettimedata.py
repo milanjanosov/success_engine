@@ -43,7 +43,7 @@ users = {}
 
 
 
-for career in ['electro-80', 'rock-80', 'pop-80', 'jazz-80', 'classical-80', 'funk-80', 'folk-80']:
+for career in ['electro-80',  'pop-80']:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
@@ -92,6 +92,14 @@ for line in open('../Music/artist_ids_discogs_rock.dat'):
         idd, name = line.strip().split('\t')
         rock[name] = str(idd)
 
+pop= {}
+for line in open('../Music/artist_ids_discogs_pop.dat'):
+    if len(line.strip().split('\t')) == 2:
+        idd, name = line.strip().split('\t')
+        pop[name] = str(idd)
+
+
+
 
 ''' =========================================================== '''
 
@@ -103,7 +111,8 @@ music_names = {
     'hiphop'    : hiphop, 
     'funk'      : funk, 
     'folk'      : folk, 
-    'rock'      : rock
+    'rock'      : rock,
+    'pop'       : pop
     }
 
 
