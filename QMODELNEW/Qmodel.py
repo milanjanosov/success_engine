@@ -88,10 +88,12 @@ def divideUnequal(list1, list2):
 
 def read_data(infolder, outfolder, title):
 
-    print 'Reading the data... '
-
-    files   = [infolder + '/' + fn for fn in  os.listdir(infolder)]
+#    print 'Reading the data... '
     id_data = {}
+    files   = [infolder + '/' + fn for fn in  os.listdir(infolder)]
+
+ 
+
     nnn     = len(files)
 
     for ind, fn in enumerate(files):
@@ -126,8 +128,7 @@ def read_data(infolder, outfolder, title):
         fout.write(name + '\t' + str(len(career)) + '\n')
     fout.close()
 
-
-
+ 
     return id_data
    
 
@@ -365,6 +366,51 @@ def get_p(career, Q):
 
 
 
+
+
+def get_users_ps(id_data, Qfitparams, fileout, folder2, jind, title):
+
+    imdbid_Q = {}
+    imdbid_p = {}
+
+    for ind, (imdbid, data) in enumerate(id_data.items()):
+        get_Q_data =  get_Q([d[2] for d in data], Qfitparams)
+        imdbid_Q[imdbid] = get_Q_data
+
+
+
+
+
+    ps  = []
+    nnn = len(imdbid_Q)
+
+
+
+    fout = open('DataToPlot/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
+
+    fout.write('id\tQ\tmean_p\tmedian_p\n')
+
+
+    for ind, (imdb, Q) in enumerate(imdbid_Q.items()):
+
+        #print ind, imdb, Q
+
+        #if ind == 10: break
+
+        if ind % 500 == 0:
+            print title, '\t', ind, '/', nnn
+
+        career   = [d[2] for d in id_data[imdb]]
+        career_p = get_p(career, Q)
+
+
+        fout.write( imdb + '\t' + str(Q)  + '\t' +  str(np.mean(career_p))  + '\t' +  str(np.median(career_p)) + '\n')
+
+
+
+    fout.close()
+
+
 def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
     imdbid_Q = {}
@@ -377,14 +423,14 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
         #print [d[2] for d in data]
         get_Q_data =  get_Q([d[2] for d in data], Qfitparams)
 
-        if imdbid == '6197':
-            print math.exp(np.mean([np.log(d[2]) for d in data if d[2] > 0]) - Qfitparams[1])
-            print '\n', get_Q_data
+       
 
         imdbid_Q[imdbid] = get_Q_data
 
 
-    '''Qs = [round(q) for q in imdbid_Q.values() if not np.isnan(q)]
+
+
+    Qs = [round(q) for q in imdbid_Q.values() if not np.isnan(q)]
     xQ, pQ = getDistribution(Qs, normalized = True)
 
     bxQ, bpQ, err = getLogBinnedDistribution(xQ, pQ, nbins)
@@ -530,8 +576,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     #plt.savefig(fileout)
     plt.close()
 
-    '''
-
+  
     return imdbid_Q, ps
 
 
@@ -825,8 +870,10 @@ def process_Qs_paralel(resfile):
 
 
         id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+
+        get_users_ps(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)
      #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-        get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+      #  get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
       #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
 
         
@@ -906,8 +953,11 @@ if __name__ == '__main__':
 
 
         id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+
+        get_users_ps(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	
+
    #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
-        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
+    #    get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
       #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
    #     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
         
