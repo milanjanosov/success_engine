@@ -40,7 +40,10 @@ careers    =  ['art_director-20' ] + ['authors-50'] + ['director-10', 'composer-
 users = {}
 
 
-for career in careers:
+
+
+
+for career in careers[6:]:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
@@ -169,11 +172,13 @@ for ind, (career, users) in enumerate(users.items()):
                         if 'year' not in line:
                             productivity += 1
                             try:
-                                year = float(line.strip().split('\t')[1])
+                                year = float(line.strip().split('\t')[2])
                                 years.append(year)
 
 
-                                impact = float(line.strip().split('\t')[3])                           
+                                print career
+
+                                impact = float(line.strip().split('\t')[2])                           
                                 if impact > maxx:
                                     maxx = impact
 
@@ -190,8 +195,8 @@ for ind, (career, users) in enumerate(users.items()):
                             try:
                                 year = float(line.strip().split('\t')[1])
                                 years.append(year)
-
-                                impact = float(line.strip().split('\t')[3])                           
+                                print line
+                                impact = float(line.strip().split('\t')[2])                           
                                 if impact > maxx:
                                     maxx = impact
 
