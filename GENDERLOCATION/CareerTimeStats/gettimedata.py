@@ -40,7 +40,8 @@ careers    =  ['art_director-20' ] + ['authors-50'] + ['director-10', 'composer-
 users = {}
 
 
-for career in careers[0:4]:
+for career in careers:
+    print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
 
