@@ -154,6 +154,8 @@ for ind, (career, users) in enumerate(users.items()):
                             year   = float(line.strip().split('\t')[1])
                             years.append(year)
                             
+                            print line
+
                             impact = float(line.strip().split('\t')[3])                           
                             if impact > maxx:
                                 maxx = impact
