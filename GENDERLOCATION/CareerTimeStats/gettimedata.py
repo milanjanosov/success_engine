@@ -31,7 +31,7 @@ for (folder, field, label)  in input_fields:
 
 
 rootfolder =  '../../QMODELNEW/pQData'
-careers    =  ['authors-50'] + ['director-10', 'art_director-20', 'composer-10', 'writer-10', 'producer-10'] + ['electro-80', 'rock-80', 'pop-80', 'jazz-80', 'classical-80', 'funk-80', 'folk-80', 'hiphop-80']
+careers    =  ['art_director-20' ] + ['authors-50'] + ['director-10', 'composer-10', 'writer-10', 'producer-10'] + ['electro-80', 'rock-80', 'pop-80', 'jazz-80', 'classical-80', 'funk-80', 'folk-80', 'hiphop-80']
 
 
 #careers    =  [ 'jazz-80' ]
@@ -40,7 +40,7 @@ careers    =  ['authors-50'] + ['director-10', 'art_director-20', 'composer-10',
 users = {}
 
 
-for career in careers:
+for career in careers[0:4]:
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
 
@@ -130,7 +130,7 @@ for ind, (career, users) in enumerate(users.items()):
 
     for user in users:
         years = []
-
+        maxx  = 0
 
         #print career, ind
     
@@ -143,13 +143,21 @@ for ind, (career, users) in enumerate(users.items()):
             try:
 
                 for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.gz'):
+
                     if 'year' not in line:
                         productivity += 1
                         try:
-                            year = float(line.strip().split('\t')[1])
+                            year   = float(line.strip().split('\t')[1])
                             years.append(year)
+                            
+                            impact = float(line.strip().split('\t')[3])                           
+                            if impact > maxx:
+                                maxx = impact
+
+
                         except:
                             pass
+
 
             except:
 
@@ -162,6 +170,12 @@ for ind, (career, users) in enumerate(users.items()):
                             try:
                                 year = float(line.strip().split('\t')[1])
                                 years.append(year)
+
+
+                                impact = float(line.strip().split('\t')[3])                           
+                                if impact > maxx:
+                                    maxx = impact
+
                             except:
                                 pass
 
@@ -175,6 +189,11 @@ for ind, (career, users) in enumerate(users.items()):
                             try:
                                 year = float(line.strip().split('\t')[1])
                                 years.append(year)
+
+                                impact = float(line.strip().split('\t')[3])                           
+                                if impact > maxx:
+                                    maxx = impact
+
                             except:
                                 pass
 
@@ -190,7 +209,7 @@ for ind, (career, users) in enumerate(users.items()):
 
 
 
-                fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\n')
+                fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\t' + str(maxx) + '\n')
 
             except:
                 pass
