@@ -43,7 +43,7 @@ users = {}
 
 
 
-for career in careers[6:]:
+for career in ['hiphop']:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
