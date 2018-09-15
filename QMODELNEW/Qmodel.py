@@ -368,7 +368,52 @@ def get_p(career, Q):
 
 
 
-def get_users_ps(id_data, Qfitparams, fileout, folder2, jind, title):
+def parse_id_names():
+
+    classical = {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_classical.dat'):
+        idd, name = line.strip().split('\t')
+        classical[name] = str(idd)
+
+    jazz = {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_jazz.dat'):
+        idd, name = line.strip().split('\t')
+        jazz[name] = str(idd)
+
+    hiphop = {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_hiphop.dat'):
+        idd, name = line.strip().split('\t')
+        hiphop[name] = str(idd)
+
+    funk = {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_funk.dat'):
+        idd, name = line.strip().split('\t')
+        funk[name] = str(idd)
+
+    folk = {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_folk.dat'):
+        idd, name = line.strip().split('\t')
+        folk[name] = str(idd)
+
+    rock= {}
+    for line in open('../GENDERLOCATION/Music/artist_ids_discogs_rock.dat'):
+        if len(line.strip().split('\t')) == 2:
+            idd, name = line.strip().split('\t')
+            rock[name] = str(idd)
+
+
+    nameids = { 'rock'      : rock,
+                'folk'      : folk,
+                'classical' : classical,
+                'hiphop'    : hiphop,
+                'funk'      : funk,
+                'jazz'      : jazz}
+
+
+    return nameids
+
+
+def get_users_ps(nameids, id_data, Qfitparams, fileout, folder2, jind, title):
 
     imdbid_Q = {}
     imdbid_p = {}
@@ -383,13 +428,21 @@ def get_users_ps(id_data, Qfitparams, fileout, folder2, jind, title):
 
     ps  = []
     nnn = len(imdbid_Q)
+    err = 0
+
+    music   = False
+    namesid = {}
+    if title.split('-')[0] in ['rock', 'electro', 'pop', 'funk', 'folk', 'jazz', 'hiphop', 'classical']:
+        music = True
+        namesid = nameids[title.split('-')[0]]
 
 
-
+    
     fout = open('DataToPlot/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
 
     fout.write('id\tQ\tmean_p\tmedian_p\n')
 
+    print title
 
     for ind, (imdb, Q) in enumerate(imdbid_Q.items()):
 
@@ -402,13 +455,25 @@ def get_users_ps(id_data, Qfitparams, fileout, folder2, jind, title):
 
         career   = [d[2] for d in id_data[imdb]]
         career_p = get_p(career, Q)
+        
 
+        if music:
+            
+            try:
 
-        fout.write( imdb + '\t' + str(Q)  + '\t' +  str(np.mean(career_p))  + '\t' +  str(np.median(career_p)) + '\n')
+                fout.write( namesid[imdb] + '\t' + str(Q)  + '\t' +  str(np.mean(career_p))  + '\t' +  str(np.median(career_p)) + '\n')
+            except:
+                err += 1
+                pass        
+                
+        else:
+            fout.write( imdb + '\t' + str(Q)  + '\t' +  str(np.mean(career_p))  + '\t' +  str(np.median(career_p)) + '\n')
+        
 
-
+    print title, err
 
     fout.close()
+
 
 
 def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
@@ -868,7 +933,7 @@ def process_Qs_paralel(resfile):
         Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
 
 
-
+        nameids = parse_id_names()
         id_data = read_data(infolder, folderout3, field + '-' + str(limit))
 
         get_users_ps(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)
@@ -892,7 +957,7 @@ if __name__ == '__main__':
                 'writer'       : 'film', 
                 'composer'     : 'film', 
                 'electro'      : 'music', 
-                'rock'        : 'music', 
+                'rock'         : 'music', 
                 'pop'          : 'music', 
                 'funk'         : 'music', 
                 'folk'         : 'music', 
@@ -954,7 +1019,10 @@ if __name__ == '__main__':
 
         id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
 
-        get_users_ps(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	
+
+        nameids = parse_id_names()
+
+        get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	
 
    #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
     #    get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
