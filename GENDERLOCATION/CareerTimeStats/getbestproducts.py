@@ -39,7 +39,7 @@ careers    =  ['art_director-20' ] + ['authors-50'] + ['director-10', 'composer-
 
 
 
-
+careers    =  ['art_director-20' ] + ['director-10', 'composer-10', 'writer-10', 'producer-10'] 
 
 users = {}
 
@@ -48,7 +48,7 @@ users = {}
 
 
 for career in careers:
-#for career in ['pop-80']:
+#for career in ['director-10']:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
         users[career] = [line.strip().split('\t')[0] for ind, line in enumerate(open(rootfolder + '/Q_distribution_' + career + '_0.dat'))]
@@ -148,9 +148,7 @@ for ind, (career, users) in enumerate(users.items()):
         maxx  = 0
         best  = ''
 
-        #print career, ind
-    
-
+ 
         if 2 == 2:
         #try:
 
@@ -160,15 +158,21 @@ for ind, (career, users) in enumerate(users.items()):
 
                 for line in gzip.open(input_fields2[career.split('-')[0].replace('_', '-') ] + '/' + user + '_' + career.split('-')[0].replace('-', '_') + '_simple_career.gz'):
 
+                    print line
+
                     if 'year' not in line:
                         productivity += 1
                         try:
                             year   = float(line.strip().split('\t')[1])
                             years.append(year)
                             
+
                             print 'ELSOO'
 
-                            impact = float(line.strip().split('\t')[2])                           
+
+                            ''' FOR MOVIES THE INDEX IS 3 OTHERWISE ITS 3 '''
+
+                            impact = float(line.strip().split('\t')[3])                           
                             if impact > maxx:
                                 maxx = impact
                                 best = line
@@ -233,7 +237,7 @@ for ind, (career, users) in enumerate(users.items()):
 
 
                 fout.write(user + '\t' + str(min(years)) + '\t' +  str(max(years) - min(years)) + '\t' + str(productivity) + '\t' + str(maxx) + '\n')
-                gout.write(user + '\t' + line)
+                gout.write(user + '\t' + best)
 
             except:
                 pass
