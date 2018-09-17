@@ -47,7 +47,7 @@ users = {}
 
 
 
-for career in ['art_director-20' ]:
+for career in careers:
 #for career in ['pop-80']:
     print career
     for line in open(rootfolder + '/Q_distribution_' + career + '_0.dat'):
