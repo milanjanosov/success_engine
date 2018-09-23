@@ -13,6 +13,8 @@ def run_randomizer_thread(r, careerfolder, all_names):
     if not os.path.exists(folderout):
         os.makedirs(folderout)
 
+    random.shuffle(all_names)
+
 
     for ind, fn in enumerate(files):
 
@@ -28,16 +30,19 @@ def run_randomizer_thread(r, careerfolder, all_names):
             rand_names = all_names[0:len(names)]
             all_names  = all_names[len(names):]
 
+            print names
+            print rand_names, '\n'
+
             fileout.write(movie + '\t' + year + '\t' + impact + '\t' + ','.join(rand_names) + '\n')
 
-
+        fileout.close()
 
 
 
 
 field        = 'film'
 profession   = 'director'
-R            = 50
+R            = 10
 collabroot   = 'collab-careers'
 careerfolder = collabroot + '/' + field + '-' + profession + '-collab-careers-QQ'
 files        = os.listdir(careerfolder)
