@@ -2,7 +2,7 @@ import os
 import gzip
 
 
-types     = ['producer-10', 'director-10', 'composer-10', 'art-director-20', 'writer-10']
+types     = ['producer-10', 'director-10', 'composer-10', 'art_director-20', 'writer-10']
 allQnames = []
 field     = 'film'
 hout      = open('users_types/Q_' + field + '_EVERYONE_namelist.dat'        , 'w')
