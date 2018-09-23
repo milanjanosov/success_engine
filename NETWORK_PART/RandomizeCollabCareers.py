@@ -30,8 +30,8 @@ def run_randomizer_thread(r, careerfolder, all_names):
             rand_names = all_names[0:len(names)]
             all_names  = all_names[len(names):]
 
-            print names
-            print rand_names, '\n'
+         #   print names
+         #   print rand_names, '\n'
 
             fileout.write(movie + '\t' + year + '\t' + impact + '\t' + ','.join(rand_names) + '\n')
 
