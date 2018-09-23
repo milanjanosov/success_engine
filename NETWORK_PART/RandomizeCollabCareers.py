@@ -59,17 +59,15 @@ random.shuffle(all_names)
 
 
 num_threads = R
-for r in range(R):
-
-    Pros = []
-                    
-    for i in range(0,num_threads):  
-        p = Process(target = run_randomizer_thread, args=(r, careerfolder, all_names, ))
-        Pros.append(p)
-        p.start()
-         
-    for t in Pros:
-        t.join()
+Pros        = []
+                
+for r in range(0,num_threads):  
+    p = Process(target = run_randomizer_thread, args=(r, careerfolder, all_names, ))
+    Pros.append(p)
+    p.start()
+     
+for t in Pros:
+    t.join()
 
     
         
