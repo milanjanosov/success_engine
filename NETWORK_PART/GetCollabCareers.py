@@ -1,5 +1,6 @@
 import os
 import gzip
+import sys
 
 
 # get the movie casts
@@ -18,7 +19,7 @@ for line in open('ALL_movies_casts.dat'):
 
 # add the casts to the careers
 
-ctype       = 'producer'
+ctype       = sys.argv[1]
 field       = 'film'
 individuals = [line.strip() for line in open('users_types/Q_film_' + ctype + '_namelist.dat')]
 nnn         = len(individuals)
