@@ -15,78 +15,18 @@ import gzip
 
 
 
-''' ================================================= '''
-'''       GET STATS ABOUT THE NUMBER OF USERS         '''
-''' ================================================= '''
+''' ==================    TODO    ----------------- 
 
-def get_users_numbers_stats():
-
-
-    files = os.listdir('users_types')
-    outf  = 'results/'
-
-    if not os.path.exists(outf): os.makedirs(outf)
-    
-    fout = open(outf + 'user_numbers_stats.dat', 'w')
-    fout.write('========================\nNumber of users with Q params\n')
+    - randomized collab network, and the after-filtered ones also randomized
+    - see the size of the 
+    - % of nodes and edges using the DF and NC backboning on the 2017 network
+    - do the same backboning and see how many of nodes get dropped randomly, in the sense that the backboning keeps the node their in round1, 2, 3, 4 but drops in 5, gets back in 6, 7...
+        --- a plot on the % of nodes that coma and go, or the distribution of the number of 'moves' - 1 is to drop out, 1 is to come back, comparing to the non-backboned case
+    - create slides about how i make these networks, add stats
 
 
-    for fn in files:
-        with open('users_types/' + fn) as mf:
-            fout.write( fn.split('_')[0] + '\t' + str(len(mf.read().strip().split('\n'))) + '\n')
 
-
-    fout.write('\n\n========================\nAll the users\n')
-    for fn in [fff for fff in os.listdir('simple-careers') if 'simple-careers' in fff]:
-        fout.write(fn.split('-')[1] + '\t' + str(len(os.listdir('simple-careers/' + fn))) + '\n')
-
-
-    fout.close()
-
-
-def get_merged_user_lists():
-
-
-    # PUT EVERYONE WITH Q INTO THIS FILE '''
-    # QEVERYone gets created
-
-    Qusers = []
-    files  = os.listdir('users_types')   
-    outf   = 'results/'
-
-    for fn in files:
-        Qusers += [line.strip() for line in open('users_types/' + fn)]
-        
-    Qusers = set(Qusers)
-
-    fout = open('users_types/QEVERYone', 'w')
-    for q in Qusers:
-        fout.write(q + '\n')
-    fout.close()
-
-
-    # EVERY USER INTO THIS LIST '''
-    all_users = []
-    for fn in [fff for fff in os.listdir('simple-careers') if 'simple-careers' in fff]:
-        all_users += [u.split('_')[0] for u in os.listdir('simple-careers/' + fn)]
-
-    all_users = set(all_users)
-
-    fout = open('users_types/EVERYone', 'w')
-
-    for a in all_users:
-        fout.write(a + '\n')
-    fout.close()
-    
-    
-    gout = open(outf + 'user_numbers_stats.dat', 'a')
-    gout.write('\n\n========================\nCombined numbers\n')
-    gout.write('QEVERYone\t' + str(len(Qusers)) + '\n')
-    gout.write('\n\n========================\nCombined numbers\n')
-    gout.write('EVERYone\t'  + str(len(all_users)) + '\n')
-    gout.close()
-
-
+ -----------------------======================== '''
 
 
 
@@ -101,9 +41,10 @@ def get_everyones_first():
 
 
     ctype  = 'director'
+    field  = 'film'
 
-    Qdir   = set([line.strip() for line in open('users_types/Q' + ctype + '_namelist.dat')])
-    QEVER  = set([line.strip() for line in open('users_types/QEVERYone')])
+    Qdir  = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
+    QEVER = set([line.strip() for line in open('users_types/Q_' + field + '_EVERYONE_namelist.dat')])
 
 
     names_first_years = {}
@@ -239,6 +180,7 @@ def get_sample():
 def remapping_collab_careers(sample):
 
     ctype  = 'director'
+    field  = 'film'
 
     sam = ''
     if sample: sam = '_sample'
@@ -249,18 +191,16 @@ def remapping_collab_careers(sample):
     file_Qdir_Qdir   = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers-QQ' + sam + '/'      
 
 
-
-
     if not os.path.exists(file_Qdir_EVER): os.makedirs(file_Qdir_EVER)
     if not os.path.exists(file_Qdir_QEVER): os.makedirs(file_Qdir_QEVER)
     if not os.path.exists(file_Qdir_Qdir) : os.makedirs(file_Qdir_Qdir)
 
 
-    Qdir  = set([line.strip() for line in open('users_types/Q' + ctype + '_namelist.dat')])
-    QEVER = set([line.strip() for line in open('users_types/QEVERYone')])
+    Qdir  = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
+    QEVER = set([line.strip() for line in open('users_types/Q_' + field + '_EVERYONE_namelist.dat')])
 
-    print len(Qdir), len(QEVER)
-
+    print 'Q' + ctype + ': ', len(Qdir)
+    print 'Qeveryone: '     , len(QEVER)
 
     if len( os.listdir(file_Qdir_EVER)) == 0:
         get_sample()
@@ -268,14 +208,17 @@ def remapping_collab_careers(sample):
 
     ffiles = os.listdir(file_Qdir_EVER)
     nnn    = len(ffiles)
+    
+    print nnn   
 
     for ind, fn in enumerate(ffiles):
         
     
         if ind % 1000 == 0:
             print 'Remap collab nws\t', ind, '/', nnn
-       # if ind == 100: break
+        #if ind == 100: break
 
+    
 
         director = fn.split('_')[0]
 
@@ -284,13 +227,14 @@ def remapping_collab_careers(sample):
         if director in Qdir:  fQQout = open(file_Qdir_Qdir  + fn.replace('.dat', '') + '_QQ.dat',  'w')
         
 
-
         for line in open(file_Qdir_EVER + fn):
             fields = line.strip().split('\t')
 
-            if len(fields) == 4:
+   
+            if len(fields) > 3:
 
-                cast    = fields[3].split(',')
+                cast    = fields[3:]
+
                 cast_QE = ''
                 cast_QQ = ''
 
@@ -299,8 +243,6 @@ def remapping_collab_careers(sample):
 
                 if director in Qdir:
                     cast_QQ = ','.join([ccc for ccc in cast if ccc in Qdir  and ccc != director])
-
-    
 
                 if len(cast_QE) > 0:
                     fQEout.write(fields[0] + '\t' + fields[1] + '\t' + fields[2] + '\t' + cast_QE + '\n')
@@ -311,7 +253,7 @@ def remapping_collab_careers(sample):
      
         if director in QEVER: fQEout.close()
         if director in Qdir: fQQout.close()
-    
+        
         
 
 
@@ -777,15 +719,7 @@ if __name__ == '__main__':
     sample = False
       
 
-    if sys.argv[1] == 'basic_stat':
-        get_users_numbers_stats()
-    
-
-    elif sys.argv[1] == 'merge_users':
-        get_merged_user_lists()     
-     
-
-    elif sys.argv[1] == 'remap_collab_careers':
+    if sys.argv[1] == 'remap_collab_careers':
         if sys.argv[2] == 'sample':
             sample = True  
         remapping_collab_careers(sample)

@@ -1,56 +1,57 @@
 import os
 import gzip
-root  = 'simple-careers/'
-types = ['producer', 'director', 'composer', 'art-director', 'writer']
+
+
+types     = ['producer-10', 'director-10', 'composer-10', 'art-director-20', 'writer-10']
+allQnames = []
+field     = 'film'
+hout      = open('users_types/Q_' + field + '_EVERYONE_namelist.dat'        , 'w')
+outf      = 'results/'
+files     = os.listdir('users_types')
+
+
 
 for ctype in types:
-    
-
+   
     if not os.path.exists('users_types'):
         os.makedirs('users_types')
 
+    fout   = open('users_types/Q_'   + field + '_' + ctype.rsplit('-', 1)[0] + '_namelist.dat' , 'w')
+    gout   = open('users_types/ALL_' + field + '_' + ctype.rsplit('-', 1)[0] + '_namelist.dat' , 'w')
+    Qnames = [line.strip().split('\t')[0] for line in open('../QMODELNEW/pQData/Q_distribution_' + ctype + '_0.dat')]
 
-    fout = open('users_types/Q' + ctype + '_namelist.dat', 'w')
+    fout.write('\n'.join(Qnames))
+    fout.close()
+
+
+    for ind, fn in enumerate(os.listdir('simple-careers/' + field + '-' + ctype.rsplit('-', 1)[0] + '-simple-careers')):
+        gout.write( fn.split('_')[0] + '\n')
+
+    gout.close()    
     
-    files = os.listdir(root + 'film-' + ctype + '-simple-careers')
-    n = len(files)
+    allQnames += Qnames
+
+
+hout.write('\n'.join(allQnames))
+hout.close()
 
 
 
-    for ind, fn in enumerate(files):
 
-        #if ind == 10: break
+if not os.path.exists(outf): os.makedirs(outf)
 
-        print ind, '/', n
-        with gzip.open(root + 'film-' + ctype + '-simple-careers/' + fn) as myf:
+fout = open(outf + 'user_numbers_stats.dat', 'w')
+fout.write('========================\nNumber of users with Q params\n\n')
 
+for fn in files:
+    if 'ALL' not in fn:
+        with open('users_types/' + fn) as mf:
+            fout.write( 'Q_' + fn.split('_')[2] + '\t' + str(len(mf.read().strip().split('\n'))) + '\n')
 
-            #length= len([ll for ll in myf.read().strip().split('\n') if 'movie_id' not in ll])
-            #length = len([ll for ll in myf.read().strip().split('\n') if ('movie_id' not in ll and float(ll.strip().split('\t')[3]) > 0.0)])
+fout.write('\n\n========================\nAll the users\n\n')
+for fn in files:
+    if 'ALL' in fn:
+        with open('users_types/' + fn) as mf:
+            fout.write( 'ALL_' + fn.split('_')[2] + '\t' + str(len(mf.read().strip().split('\n'))) + '\n')
 
-            length = 0
-
-            for ll in myf.read().strip().split('\n'):
-
-                if 'movie_id' not in ll:
-    
-                    rating = 0.0
-
-                    try:
-                        rating = float(ll.strip().split('\t')[3]) 
-
-                    except:
-                        pass
-
-            
-                    if rating > 0.0:
-                        length += 1
-
-            
-       
- 
-        if length > 4:
-            fout.write(fn.split('_')[0]+'\n')
-            
-    fout.close()    
-   
+fout.close()
