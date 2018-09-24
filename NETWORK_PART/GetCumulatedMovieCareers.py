@@ -32,32 +32,32 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
 
         name = fn.split('_')[0]
 
-        if 'nm0296144' == name:
+        #if 'nm0296144' == name:
 
             print ind, '/', nnn, name in Qdir
     
             if name in Qdir:
 
-                print name
-        
-                for line in open(careerfolder + '/' + fn):
-                
-                    fields = line.strip().split('\t',3)      
+            #print name
+    
+            for line in open(careerfolder + '/' + fn):
+            
+                fields = line.strip().split('\t',3)      
 
-                    if len(fields) == 4:
+                if len(fields) == 4:
 
-                        movie, year, impact, cast = fields
-                     
-                        #year = year + random.random()/10.0
-                        cast = cast.split('\t') + [name]
-                        for c in cast:
+                    movie, year, impact, cast = fields
+                 
+                    #year = year + random.random()/10.0
+                    cast = cast.split('\t') + [name]
+                    for c in cast:
 
-                            if c in Qdir:
+                        if c in Qdir:
 
-                                if c not in names_movies:
-                                    names_movies[c] = [(year, movie)]
-                                else:
-                                    names_movies[c].append((year, movie))
+                            if c not in names_movies:
+                                names_movies[c] = [(year, movie)]
+                            else:
+                                names_movies[c].append((year, movie))
 
 
 print names_movies['nm0296144']
@@ -73,21 +73,21 @@ for ind, (name, movies) in enumerate(names_movies.items()):
 
    # print ind, '/', nnn
 
-    if 'nm0296144' == name:
+   # if 'nm0296144' == name:
 
-        movies                 = sorted(movies, key=lambda tup: tup[0])
-        current_movies         = []
-        names_cum_movies[name] = {}
+    movies                 = sorted(movies, key=lambda tup: tup[0])
+    current_movies         = []
+    names_cum_movies[name] = {}
 
-        print movies
+    #print movies
 
-        for year, movie in movies: 
-            current_movies.append(movie)
-            cccc = current_movies
-            movies_years[movie] = year
-            names_cum_movies[name][movie] = deepcopy(cccc)
+    for year, movie in movies: 
+        current_movies.append(movie)
+        cccc = current_movies
+        movies_years[movie] = year
+        names_cum_movies[name][movie] = deepcopy(cccc)
 
-            print name, year, movie, len(cccc)
+        #print name, year, movie, len(cccc)
 
 
 
