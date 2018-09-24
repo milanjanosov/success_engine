@@ -18,7 +18,6 @@ for line in open('ALL_movies_casts.dat'):
 
 
 # add the casts to the careers
-
 ctype       = sys.argv[1]
 field       = 'film'
 individuals = [line.strip() for line in open('users_types/Q_film_' + ctype + '_namelist.dat')]
@@ -36,7 +35,7 @@ for ind, individual in enumerate(individuals):
 
     fout = open(folderout + individual + '_collab_career.dat', 'w')
 
-    for line in gzip.open('simple-careers/film-' + ctype + '-simple-careers/' + individual + '_' + ctype + '_simple_career.gz'):
+    for line in gzip.open('simple-careers/film-' + ctype + '-simple-careers/' + individual + '_' + ctype.replace('art-', 'art_') + '_simple_career.gz'):
 
         if 'movie_id' not in line:
 
