@@ -45,9 +45,12 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
 
 
 names_cum_movies = {}
-movies_years = {}
+movies_years     = {}
+nnn              = len(names_movies)
 
-for name, movies in names_movies.items():
+for ind, (name, movies) in enumerate(names_movies.items()):
+
+    print ind, '/', nnn
 
     movies                 = sorted(movies, key=lambda tup: tup[0])
     current_movies         = []
