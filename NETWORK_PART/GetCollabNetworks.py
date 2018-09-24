@@ -395,12 +395,12 @@ def process_yearly_nw(args):
               
                
                                                 if edge not in edges_cnt:
-                                                    edges_cnt[edge]  = 1     
+                                                    edges_cnt[edge]  = set()     
                                                 else:
-                                                    edges_cnt[edge] += 1
+                                                    edges_cnt[edge].add(movie)
                                 
                                   
-                                                print c1, c2, edges_jacc[edge], edges_aa[edge], edges_cnt[edge]
+                                                print c1, c2, edges_cnt[edge], edges_jacc[edge], edges_aa[edge]
 
 
 
@@ -408,7 +408,7 @@ def process_yearly_nw(args):
 
         hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
-            hout.write(e + '\t' + str(edges_cnt[e]) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')              
+            hout.write(e + '\t' + str(len(edges_cnt[e])) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')              
 
       
 
