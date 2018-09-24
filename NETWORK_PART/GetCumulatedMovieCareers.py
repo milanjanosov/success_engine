@@ -22,7 +22,7 @@ names_movies = {}
 for profession in ['art-director', 'director', 'producer', 'writer', 'composer']:
 
 
-    careerfolder = collabroot + '/' + field + '-' + profession + '-collab-careers'
+    careerfolder = collabroot + '/' + field + '-' + profession + '-ALL-collab-careers'
     files        = os.listdir(careerfolder)
     nnn          = len(files)
 
@@ -30,24 +30,28 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
         
         print ind, '/', nnn
 
-        for line in open(careerfolder + '/' + fn):
+        name = fn.split('_')[0]
+
+    
+        if name in Qdir:
+    
+            for line in open(careerfolder + '/' + fn):
             
-            fields = line.strip().split('\t',3)      
+                fields = line.strip().split('\t',3)      
 
-            if len(fields) == 4:
+                if len(fields) == 4:
 
-                movie, year, impact, cast = fields
-                cast = cast.split('\t')
-                for c in cast:
+                    movie, year, impact, cast = fields
+                    cast = cast.split('\t')
+                    for c in cast:
 
-                    if c in Qdir:
+                        if c in Qdir:
 
-                        if c not in names_movies:
-                            names_movies[c] = [(year, movie)]
-                        else:
-                            names_movies[c].append((year, movie))
-
-
+                            if c not in names_movies:
+                                names_movies[c] = [(year, movie)]
+                            else:
+                                names_movies[c].append((year, movie))
+        
 
 names_cum_movies = {}
 movies_years     = {}
@@ -78,3 +82,5 @@ for name, cummovies in names_cum_movies.items():
         fout.write(movie + '\t' + movies_years[movie] + '\t' + ','.join(prevmovies) + '\n')
 
     fout.close()
+
+
