@@ -34,11 +34,11 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
 
         #if 'nm0296144' == name:
 
-            print ind, '/', nnn, name in Qdir
-    
-            if name in Qdir:
+        print ind, '/', nnn, name in Qdir
 
-            #print name
+        if name in Qdir:
+
+        #print name
     
             for line in open(careerfolder + '/' + fn):
             
