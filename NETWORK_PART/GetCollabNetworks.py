@@ -423,7 +423,7 @@ def process_yearly_nw(args):
 
         hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
         for e, v in edges_cnt.items():
-            hout.write(e + '\t' + str(v) + '\t' + edges_jacc[edge] + '\t' + edges_aa[edge] + '\n')              
+            hout.write(e + '\t' + str(v) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')              
 
       
 
