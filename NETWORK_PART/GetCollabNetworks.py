@@ -385,30 +385,14 @@ def process_yearly_nw(args):
 
          
 
-                                            #try:
-
-                                           # print c1, '\t', c2 ,'\t', movie
                                             if c2 in Qdir:
-
-                                                #print 'NOOO   ', c2, set([c2]).intersection(Qdir)
-
 
                                                 movies1 = set(individuals_movie_seq[c1][movie])
                                                 movies2 = set(individuals_movie_seq[c2][movie])
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-
-
-
-                                                #except:
-                                                #    edges_jacc[edge] = '0'
-                                                    #edges_aa[edge]   = '0'
-                                                 #   print 'ugh'
-                                                 #   pass
-           
-
-                                                print c1, c2, edges_jacc[edge], edges_aa[edge]
-
+  
+              
                
                                                 if edge not in edges_cnt:
                                                     edges_cnt[edge]  = 1     
@@ -417,13 +401,15 @@ def process_yearly_nw(args):
                                                     edges_cnt[edge] += 1
                                 
                                   
-    
+                                                print c1, c2, edges_jacc[edge], edges_aa[edge], edges_cnt[edge]
+
+
 
 
 
         hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
-        for e, v in edges_cnt.items():
-            hout.write(e + '\t' + str(v) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')              
+        for e in edges_jacc.keys():
+            hout.write(e + '\t' + str(edges_cnt[e]) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')              
 
       
 
