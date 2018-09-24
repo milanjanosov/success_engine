@@ -396,7 +396,6 @@ def process_yearly_nw(args):
                
                                                 if edge not in edges_cnt:
                                                     edges_cnt[edge]  = 1     
-
                                                 else:
                                                     edges_cnt[edge] += 1
                                 
@@ -514,7 +513,7 @@ def create_full_nws(sample):
 
 
 
-        yearLIMITs = range(1990, 2000)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
         num_threads = 5
