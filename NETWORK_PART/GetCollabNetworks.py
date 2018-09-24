@@ -11,7 +11,7 @@ import random
 from igraph import Graph
 from shutil import copyfile
 import gzip
-
+import math
 
 
 
@@ -172,6 +172,9 @@ def get_sample():
     roots = 'collab-careers_sample/film-director-collab-careers_sample/'
     if not os.path.exists(roots): os.makedirs(roots)
 
+
+
+
     for fn in files[0:100]:
         copyfile(root + fn[0], roots + fn[0])
 
@@ -271,6 +274,21 @@ def remapping_collab_careers(sample):
 
 #source /opt/virtualenv-python2.7/bin/activate
 
+
+def jaccard(a, b):
+    c = a.intersection(b)
+    return float(len(c)) / (len(a) + len(b) - len(c))
+
+
+def adamic_adar(a, b):
+    c = a.intersection(b)  
+
+    if len(c) > 1:
+        return 1.0 / (math.log(len(c))) 
+    else:
+        return 0    
+
+
 def process_yearly_nw(args):
 
 
@@ -280,9 +298,10 @@ def process_yearly_nw(args):
     sam         = args[3] 
     ctype       = args[4]
     tipus       = args[5]
+    root        = args[6]
+    files       = args[7]
 
-
-
+    individuals_movie_seq = args[8]
 
 
     ''' parse year stuff, only for QQ right now '''
@@ -297,25 +316,23 @@ def process_yearly_nw(args):
         user_first[fields[0]] = float(fields[1]) 
     
 
+    Qdir  = set([line.strip() for line in open('users_types/Q_' + 'film' + '_' + ctype + '_namelist.dat')])
+
+    edges_cnt = {}
 
     for yearLIMIT in yearLIMITs:
 
-        edges     = {}
-        edge_dist = {}
-        nodes     = set()
 
-
-        outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
-   
+        nodes      = set()
+        outfolder  = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT)
+        edges_jacc = {}
+        edges_aa   = {}
 
 
         if not os.path.exists(outfolder): os.makedirs(outfolder)
 
+        print tipus
 
-        root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
-        files = os.listdir(root)
-        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_'  + str(yearLIMIT) + '.dat', 'a')
-        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
         n     = len(files)
         nodes = set()
 
@@ -342,17 +359,16 @@ def process_yearly_nw(args):
                         if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':# and year is not None:
           
             
-                            year = float(year)
+                            year   = float(year)
                             rating = float(rating)                        
-
+    
 
                             if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
                                 # casts need to be handled as full graphs 
         
-                                cast =  [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
-            
-                                
+                                cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
+                    
 
                                 for c1 in cast:
 
@@ -367,49 +383,51 @@ def process_yearly_nw(args):
                                             nodes.add(c1)
                                             nodes.add(c2)
 
-                                            if edge not in edges:
-                                                edges[edge]     = 1
-                                                edge_dist[edge] = [rating, [movie]]
-                                            else:
-                                                edges[edge]        += 1
-                                                edge_dist[edge][0] += rating
-                                                edge_dist[edge][1].append(movie)
+         
+
+                                            #try:
+
+                                           # print c1, '\t', c2 ,'\t', movie
+                                            if c2 in Qdir:
+
+                                                #print 'NOOO   ', c2, set([c2]).intersection(Qdir)
 
 
-                                            
-
-                                      
-
-                        #except:
-                        #    pass
-
-                
-
-        dataout   = open('networks' + sam  + '/networks_statistics' + tipus + '.dat', 'a') 
-        dataout.write(ctype + tipus + '\t' + str(yearLIMIT) + '\t'  + str(len(nodes)) + '\t' + str(len(edges)) + '\n')
-        dataout.close()
-
-        f = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_edges' + str(yearLIMIT) + '.dat', 'w')
-        f.write('Source'+'\t'+'Target'+'\t'+'Weight'+'\t'+'Type'+'\n')      
-
-        for e, v in edges.items():
-            gout.write(e + '\t' + str(edge_dist[e][0]) + '\t' + '--'.join(edge_dist[e][1]) + '\n')
-            hout.write(e + '\t' + str(v)            + '\n')              
+                                                movies1 = set(individuals_movie_seq[c1][movie])
+                                                movies2 = set(individuals_movie_seq[c2][movie])
+                                                edges_jacc[edge] = str(jaccard(movies1, movies2))
+                                                edges_aa[edge]   = str(adamic_adar(movies1, movies2))
 
 
-        f.close()
+
+                                                #except:
+                                                #    edges_jacc[edge] = '0'
+                                                    #edges_aa[edge]   = '0'
+                                                 #   print 'ugh'
+                                                 #   pass
+           
+
+                                                print c1, c2, edges_jacc[edge], edges_aa[edge]
+
+               
+                                                if edge not in edges_cnt:
+                                                    edges_cnt[edge]  = 1     
+
+                                                else:
+                                                    edges_cnt[edge] += 1
+                                
+                                  
+    
+
+
+
+        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
+        for e, v in edges_cnt.items():
+            hout.write(e + '\t' + str(v) + '\t' + edges_jacc[edge] + '\t' + edges_aa[edge] + '\n')              
+
+      
+
         
-
-        ''' PROB ADDING THE DICT OF BEST PRODUCTS HERE AND WRITE THEM AS NODE ATTRIBUTES '''
-        #g = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_gephi_nodes.dat', 'w')
-        #g.write('ID' + '\t' + 'Label' +'\t'+ 'House'+ '\n')    
-        #for n, h in list(nodes):
-        #    g.write(n + '\t' + n + '\t' + h + '\n')
-        #g.close()
-
-
-
-        gout.close()
         hout.close()
 
 
@@ -446,10 +464,15 @@ def create_full_nws(sample):
 
 
     ctype     = 'director'
+    field     = 'film'
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
+
+
+
+
+    tipusok   = ['-QQ']#, '-QE', '']
 
 
     if sample: sam = '_sample'
@@ -461,27 +484,60 @@ def create_full_nws(sample):
 
 
 
-
-
     for tipus in tipusok: 
 
-
-        dataout   = open('networks' + sam + '/networks_statistics_' + tipus + '.dat', 'w') 
-        dataout.write('network\tyear\tnodes\tedges\n')
-        dataout.close()
+        if len(sam) > get_sample():
+            get_sample()
 
 
+        root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-QQ/'
+        root2  = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-QQ'  
 
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+
+        files2 = os.listdir(root2)  
+        files  = os.listdir(root)
+        nnn    = len(files)
+
+
+
+
+
+
+        individuals_movie_seq = {}
+        for ind, fn in enumerate(files2):
+            
+            if ind % 100 == 0: print ind, '/', nnn
+
+            name = fn.split('_')[0]    
+            individuals_movie_seq[name] = {} 
+
+
+            for line in open(root2 + '/' + fn):
+
+                movie, year, prevmovs = line.strip().split('\t')
+                prevmovs = prevmovs.split(',')
+
+                individuals_movie_seq[name][movie] = prevmovs
+
+
+        #for name, career in individuals_movie_seq.items():
+        #    for move, prevmovs in career.items():
+        #        print name, move, prevmovs
+
+
+
+
+
+        yearLIMITs = range(1990, 2000)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
-        num_threads = 40
+        num_threads = 5
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
             
         for i in range(0,num_threads):  
-            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus], ))
+            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq], ))
             Pros.append(p)
             p.start()
            
@@ -489,10 +545,13 @@ def create_full_nws(sample):
            
         for t in Pros:
             t.join()
+        
+        
+        
 
-     
 
-
+  
+            
 
 
 
@@ -520,7 +579,7 @@ def yearly_graph_data(args):
         nodes = set()
 
 
-        outfolder = 'networks' + sam + '/' + ctype + tipus + '_' + str(yearLIMIT)
+        outfolder = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT)
 
 
         #if ind % 1000 == 0:
