@@ -6,9 +6,11 @@ from multiprocessing import Process
 from copy import deepcopy
 
 field        = 'film'
+ctype        = 'director'
 R            = 10
 collabroot   = 'collab-careers'
 outfolder    = 'collab-cumulative-careers/' + field + '-collab-cumulative-careers-QQ'
+Qdir         = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
 if not os.path.exists(outfolder):
     os.makedirs(outfolder)
 
@@ -37,16 +39,20 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
                 movie, year, impact, cast = fields
                 cast = cast.split('\t')
                 for c in cast:
-                    if c not in names_movies:
-                        names_movies[c] = [(year, movie)]
-                    else:
-                        names_movies[c].append((year, movie))
+
+                    if c in Qdir:
+
+                        if c not in names_movies:
+                            names_movies[c] = [(year, movie)]
+                        else:
+                            names_movies[c].append((year, movie))
 
 
 
 names_cum_movies = {}
 movies_years     = {}
 nnn              = len(names_movies)
+
 
 for ind, (name, movies) in enumerate(names_movies.items()):
 
