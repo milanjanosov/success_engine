@@ -400,7 +400,7 @@ def process_yearly_nw(args):
                                                     edges_cnt[edge].add(movie)
                                 
                                   
-                                                print c1, c2, edges_cnt[edge], edges_jacc[edge], edges_aa[edge]
+                                                print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
 
 
 
