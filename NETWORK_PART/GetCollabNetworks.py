@@ -417,6 +417,12 @@ def process_yearly_nw(args):
             iout.write(e + '\t' + edges_aa[e] + '\n')               
         iout.close()
 
+        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
+        iout.write('Source\tTarget\tWeight\tType\n')
+        for e in edges_jacc.keys():
+            iout.write(e + '\t' + edges_aa[e] + '\tundirected\n')               
+        iout.close()
+
 
 
 
@@ -541,6 +547,82 @@ def create_full_nws(sample):
 ''' ======================================================== '''
 
 
+
+def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = None):
+
+
+
+    t1 = time.time()
+    degree  = G.degree(  )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'degree,         ',          weighttype,   round(time.time() - t1,2), ' seconds'
+
+    t1 = time.time()
+    strength  = G.strength( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'strength,       ',        weighttype,   round(time.time() - t1,2), ' seconds'
+
+
+    t1 = time.time()
+    betweenness  = G.betweenness( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses,  ',  weighttype,  round(time.time() - t1,2), ' seconds'
+
+
+    t1 = time.time()
+    closenesses    = G.closeness( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'closeness,      ',    weighttype,  round(time.time() - t1,2), ' seconds'
+
+
+    t1 = time.time()
+    clustering     = G.transitivity_local_undirected( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
+
+
+    t1 = time.time()
+    pagerank      = G.pagerank( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank,       ',     weighttype,  round(time.time() - t1,2), ' seconds'
+
+
+    t1 = time.time()
+    eigenvector   = G.eigenvector_centrality( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector,    ',  weighttype,  round(time.time() - t1,2), ' seconds'
+    
+
+    t1 = time.time()
+    constraint   = G.constraint( weights = iweight )
+    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'constraint,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
+    
+
+    node_centralities = {}
+    
+
+    for i in range(len(G.vs)):
+
+        node = G.vs[i]['name']
+
+        node_centralities[node] = { 'degree'        : degree[i],
+                                    'strength'      : strength[i], 
+                                    'betweenness'   : betweenness[i], 
+                                    'closeness'     : closenesses[i],
+                                    'clustering'    : clustering[i],
+                                    'pagerank'      : pagerank[i], 
+                                    'eigenvector'   : eigenvector[i],
+                                    'constraint'    : constraint[i]
+                                   }
+ 
+
+
+
+
+    if iweight is None:
+        isweighted = 'unweighted'
+    else:
+        isweighted = 'weighted'
+
+    df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
+    df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + '_' + tipus + '_NODE_CENTRALITIES_' + weighttype + '_' + str(yearLIMIT) + '_' + isweighted + '.dat', sep = '\t', index = True)
+
+
+
+
 def yearly_graph_data(args):
 
     yearLIMITs  = args[0]
@@ -558,147 +640,39 @@ def yearly_graph_data(args):
         edges = {}
         nodes = set()
 
-
-        outfolder = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT)
-
-
-        #if ind % 1000 == 0:
-        #    print thread_id, '/', num_threads, '\t igraph.... \t', yearLIMIT
-
-        if not os.path.exists(outfolder): os.makedirs(outfolder)
+        root     = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
+        files    = os.listdir(root)
+        infolder = 'networks' + sam + '/' + ctype + '/' + ctype +  tipus + '_' + str(yearLIMIT)
 
 
-        root  = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
-        files = os.listdir(root)
+        outfolder_jacc = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_jacc' 
+        outfolder_aa   = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_aa' 
+        outfolder_cnt  = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_cnt' 
 
-        #filename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_'      + str(yearLIMIT) + '.lgl'
-        gilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_rating_' + str(yearLIMIT) + '.dat'
-        hilename = outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'   + str(yearLIMIT) + '.dat'
+        if not os.path.exists(outfolder_jacc): os.makedirs(outfolder_jacc)
+        if not os.path.exists(outfolder_aa)  : os.makedirs(outfolder_aa)
+        if not os.path.exists(outfolder_cnt) : os.makedirs(outfolder_cnt)
 
-        G        = Graph.Read_Ncol(hilename, weights = True, directed = False) 
+        filename_jacc = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_' + str(yearLIMIT) + '.dat'       
+        filename_aa   = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'      + str(yearLIMIT) + '.dat'       
+        filename_cnt  = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'     + str(yearLIMIT) + '.dat'       
+ 
 
-        '''edge_ratings = {}
+        G_jacc = Graph.Read_Ncol(filename_jacc, weights = True, directed = False)
+        G_aa   = Graph.Read_Ncol(filename_aa,   weights = True, directed = False)
+        G_cnt  = Graph.Read_Ncol(filename_cnt,  weights = True, directed = False)
+ 
 
-        for line in open(gilename):
-            source, target, rating, movies = line.strip().split('\t')
+        #get_network_measures(G_jacc, outfolder_jacc, 'jaccard', thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = None)
+        get_network_measures(G_jacc, outfolder_jacc, 'jaccard', thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = 'weight')
 
-            rating = float(rating)
-            edge   =  '\t'.join([source, target])
+        #get_network_measures(G_aa,   outfolder_aa,   'aa',      thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = None)
+        #get_network_measures(G_aa,   outfolder_aa,   'aa',      thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = 'weight')
 
-            edge_ratings[edge] = rating
+        #get_network_measures(G_cnt,  outfolder_cnt,  'cnt',     thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = None)
+        #get_network_measures(G_cnt,  outfolder_cnt,  'cnt',     thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = 'weight')
 
-
-        ratings = []
-
-        for ind, g in enumerate(G.es()):
-
-            target = G.vs[g.target]['name']
-            source = G.vs[g.source]['name']
-            edge   = '\t'.join(sorted([source, target]))
-            
-            ratings.append( edge_ratings[edge])
-
-
-        G.es['ratings'] = ratings
-
-
-        for g in G.es():
-            target = G.vs[g.target]['name']
-            source = G.vs[g.source]['name']
-           
-        '''
-
-
-        '''t1 = time.time()
-        degree  = G.strength(                   weights=None)
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'degree   ', time.time() - t1
-
-
-        t1 = time.time()
-        strength     = G.strength(                      weights='weight')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'strengthes   ', time.time() - t1
-
-
-        t1 = time.time()
-        ratings     = G.strength(                      weights='ratings')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'ratings   ', time.time() - t1
-
-
-        t1 = time.time()
-        betweenness  = G.betweenness(                   weights= None)
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses   ', time.time() - t1
-
-
-        t1 = time.time()
-        betweenness_w  = G.betweenness(                   weights='weight')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses_w   ', time.time() - t1
-
-
-        t1 = time.time()
-        clustering_w    = G.transitivity_local_undirected( weights='weight')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering_w   ', time.time() - t1
-
-
-
-        t1 = time.time()
-        clustering    = G.transitivity_local_undirected( weights=None)
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'clustering   ', time.time() - t1
-
-
-
-        t1 = time.time()
-        pagerank      = G.pagerank(                      weights=None)
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank   ', time.time() - t1
-
-
-
-        t1 = time.time()
-        pagerank_w      = G.pagerank(                      weights='weight')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank_w  ', time.time() - t1
-
-
-        t1 = time.time()
-        eigenvector   = G.eigenvector_centrality(        weights=None)
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector   ', time.time() - t1
-        
-
-
-        t1 = time.time()
-        eigenvector_w   = G.eigenvector_centrality(        weights='weight')
-        print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector_w  ', time.time() - t1
-        
-
-
-
-        node_centralities = {}
-        
-
-        for i in range(len(G.vs)):
-
-            node = G.vs[i]['name']
-
-
-            node_centralities[node] = { 'degree'        : degree[i],
-                                        'strength'      : strength[i], 
-                                        'ratings'       : ratings[i], 
-                                        'betweenness_w' : betweenness_w[i], 
-                                        'betweenness'   : betweenness[i], 
-                                        'clustering'    : clustering[i],
-                                        'clustering_w'  : clustering_w[i],
-                                        'pagerank_w'    : pagerank_w[i], 
-                                        'pagerank'      : pagerank[i], 
-                                        'eigenvector'   : eigenvector[i],
-                                        'eigenvector_w' : eigenvector_w[i]
-                                       }
-
-
-
-        df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
-        df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_NODE_CENTRALITIES_' + str(yearLIMIT) + '.dat', sep = '\t', index = True)
-
-        '''
-
-
+ 
 
 
 
@@ -713,16 +687,15 @@ def create_igraphnw(sample):
     ctype     = 'director'
     sam       = ''
     neighbrs  = {}
-
     tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
 
-    print tipusok
+ 
 
     if sample: sam = '_sample'
 
     for tipus in tipusok: 
 
-        yearLIMITs = range(2010, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(2016, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
 
