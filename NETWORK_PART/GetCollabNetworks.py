@@ -471,7 +471,7 @@ def create_full_nws(sample):
     sam       = ''
     neighbrs  = {}
     tipusok   = ['-QQ']#, '-QE', '']
-    ids_names {}
+    ids_names = {}
 
  
     for line in open('../../../IMDb/IMDB_NAMES_IDs'):
