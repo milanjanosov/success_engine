@@ -283,10 +283,8 @@ def jaccard(a, b):
 def adamic_adar(a, b):
     c = a.intersection(b)  
 
-    if len(c) > 1:
-        return 1.0 / (math.log(len(c))) 
-    else:
-        return 0    
+    if len(c) > 1: return 1.0 / (math.log(len(c))) 
+    else: return 0    
 
 
 def process_yearly_nw(args):
@@ -343,11 +341,10 @@ def process_yearly_nw(args):
             director = fn.split('_')[0]
 
 
+            #  TEST Pa	ROS: nm0160614	nm0580726
+            #  if 'nm7646927' == director:   
+            #  if ind == 1000: break
 
-#TEST Pa	ROS: nm0160614	nm0580726
-          #  if 'nm7646927' == director:
-               
-                #if ind == 1000: break
 
             if ind % 1000 == 0: 
                 print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
@@ -385,42 +382,42 @@ def process_yearly_nw(args):
 
                                             edge = '\t'.join(sorted([c1, c2]))
 
+                                            #if 'nm0160614\tnm0580726' == edge:
+    
+                                            nodes.add(c1)
+                                            nodes.add(c2)
 
-                                            if 'nm0160614\tnm0580726' == edge:
-                
+                                            if c2 in Qdir:
 
-                                                nodes.add(c1)
-                                                nodes.add(c2)
-
-             
-
-                                                if c2 in Qdir:
-
-                                                    movies1 = set(individuals_movie_seq[c1][movie])
-                                                    movies2 = set(individuals_movie_seq[c2][movie])
-                                                    edges_jacc[edge] = str(jaccard(movies1, movies2))
-                                                    edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-                  
-                   
-                                                    if edge not in edges_cnt:
-                                                        edges_cnt[edge]  = set()     
-                                                    else:
-                                                        edges_cnt[edge].add(movie)                            
+                                                movies1 = set(individuals_movie_seq[c1][movie])
+                                                movies2 = set(individuals_movie_seq[c2][movie])
+                                                edges_jacc[edge] = str(jaccard(movies1, movies2))
+                                                edges_aa[edge]   = str(adamic_adar(movies1, movies2))
+                     
+                                                if edge not in edges_cnt:
+                                                    edges_cnt[edge]  = set()     
+                                                else:
+                                                    edges_cnt[edge].add(movie)                            
                                       
-                                                    #print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
-
-                                                    print c1, movies1
-                                                    print c2, movies2, '\n'
-
-                    
+     
 
 
-
-        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
+        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
-            hout.write(e + '\t' + str(len(edges_cnt[e])) + '\t' + edges_jacc[e] + '\t' + edges_aa[e] + '\n')               
+            hout.write(e + '\t' + str(len(edges_cnt[e])) + '\n')               
         hout.close()
       
+        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_'    + str(yearLIMIT) + '.dat', 'w')
+        for e in edges_jacc.keys():
+            gout.write(e + '\t' + edges_jacc[e] + '\n')               
+        gout.close()
+
+        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'    + str(yearLIMIT) + '.dat', 'w')
+        for e in edges_jacc.keys():
+            iout.write(e + '\t' + edges_aa[e] + '\n')               
+        iout.close()
+
+
 
 
   
@@ -580,7 +577,7 @@ def yearly_graph_data(args):
 
         G        = Graph.Read_Ncol(hilename, weights = True, directed = False) 
 
-        edge_ratings = {}
+        '''edge_ratings = {}
 
         for line in open(gilename):
             source, target, rating, movies = line.strip().split('\t')
@@ -609,10 +606,10 @@ def yearly_graph_data(args):
             target = G.vs[g.target]['name']
             source = G.vs[g.source]['name']
            
+        '''
 
 
-
-        t1 = time.time()
+        '''t1 = time.time()
         degree  = G.strength(                   weights=None)
         print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'degree   ', time.time() - t1
 
@@ -699,7 +696,7 @@ def yearly_graph_data(args):
         df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
         df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_NODE_CENTRALITIES_' + str(yearLIMIT) + '.dat', sep = '\t', index = True)
 
-
+        '''
 
 
 
@@ -717,7 +714,7 @@ def create_igraphnw(sample):
     sam       = ''
     neighbrs  = {}
 
-    tipusok   = ['-QE']#['-QQ']#, '-QE', '']
+    tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
 
     print tipusok
 
@@ -725,7 +722,7 @@ def create_igraphnw(sample):
 
     for tipus in tipusok: 
 
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(2010, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
 
