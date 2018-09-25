@@ -396,16 +396,14 @@ def process_yearly_nw(args):
                                                 movies2 = set(individuals_movie_seq[c2][movie])
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-  
               
                
                                                 if edge not in edges_cnt:
                                                     edges_cnt[edge]  = set()     
                                                 else:
-                                                    edges_cnt[edge].add(movie)
-                                
+                                                    edges_cnt[edge].add(movie)                            
                                   
-                                                print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
+                                                #print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
 
                     
 
@@ -509,9 +507,9 @@ def create_full_nws(sample):
 
 
         yearLIMITs = range(1980, 2018)#[1990, 2000, 2010, 2020]
-    #    random.shuffle(yearLIMITs)
+        random.shuffle(yearLIMITs)
 
-        num_threads = 2
+        num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
@@ -520,9 +518,7 @@ def create_full_nws(sample):
             p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq], ))
             Pros.append(p)
             p.start()
-           
-
-           
+                 
         for t in Pros:
             t.join()
         
