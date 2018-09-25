@@ -292,14 +292,12 @@ def create_full_nws(sample):
             for line in open(root2 + '/' + fn):
 
 
-                try:
+           
+                movie, year, prevmovs = line.strip().split('\t')
+                prevmovs = prevmovs.split(',')
 
-                    movie, year, prevmovs = line.strip().split('\t')
-                    prevmovs = prevmovs.split(',')
-
-                    individuals_movie_seq[name][movie] = prevmovs
-                except:
-                    pass
+                individuals_movie_seq[name][movie] = prevmovs
+        
 
 
 
