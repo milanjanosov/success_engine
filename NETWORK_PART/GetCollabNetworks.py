@@ -318,7 +318,7 @@ def process_yearly_nw(args):
 
     Qdir  = set([line.strip() for line in open('users_types/Q_' + 'film' + '_' + ctype + '_namelist.dat')])
 
-    edges_cnt = {}
+
 
     for yearLIMIT in yearLIMITs:
 
@@ -327,11 +327,13 @@ def process_yearly_nw(args):
         outfolder  = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT)
         edges_jacc = {}
         edges_aa   = {}
+        edges_cnt  = {}
 
+        print  thread_id, yearLIMIT
 
         if not os.path.exists(outfolder): os.makedirs(outfolder)
 
-        print tipus
+  
 
         n     = len(files)
         nodes = set()
@@ -339,8 +341,13 @@ def process_yearly_nw(args):
         for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
+
+
+
+#TEST Pa	ROS: nm0160614	nm0580726
+          #  if 'nm7646927' == director:
                
-            #if ind == 1000: break
+                #if ind == 1000: break
 
             if ind % 1000 == 0: 
                 print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
@@ -350,6 +357,7 @@ def process_yearly_nw(args):
                 fields = line.strip().split('\t') 
        
                 if len(fields) == 4:
+
 
                     movie, year, rating, cast = fields
                     if len(year) > 0:
@@ -371,9 +379,6 @@ def process_yearly_nw(args):
                     
 
                                 for c1 in cast:
-
-                                    if c1 not in nodes:
-                                        nodes.add(c1)
 
                                     for c2 in cast:
                                         if c1 != c2:
@@ -402,9 +407,9 @@ def process_yearly_nw(args):
                                   
                                                 print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
 
+                    
 
-
-
+s
 
         hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
@@ -414,7 +419,7 @@ def process_yearly_nw(args):
 
         
         hout.close()
-
+      
 
 
   
@@ -493,6 +498,7 @@ def create_full_nws(sample):
             
             if ind % 100 == 0: print ind, '/', nnn
 
+            #if ind == 500: break
             name = fn.split('_')[0]    
             individuals_movie_seq[name] = {} 
 
@@ -505,18 +511,11 @@ def create_full_nws(sample):
                 individuals_movie_seq[name][movie] = prevmovs
 
 
-        #for name, career in individuals_movie_seq.items():
-        #    for move, prevmovs in career.items():
-        #        print name, move, prevmovs
 
+        yearLIMITs = range(1980, 2018)#[1990, 2000, 2010, 2020]
+    #    random.shuffle(yearLIMITs)
 
-
-
-
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
-        random.shuffle(yearLIMITs)
-
-        num_threads = 5
+        num_threads = 2
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
@@ -531,8 +530,8 @@ def create_full_nws(sample):
         for t in Pros:
             t.join()
         
-        
-        
+      
+       
 
 
   
