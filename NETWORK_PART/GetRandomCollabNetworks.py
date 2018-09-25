@@ -268,7 +268,7 @@ def create_full_nws(sample):
     for tipus in tipusok: 
 
 
-        root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-QQ_R_nullmodels/' + str(1)   
+        root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-QQ_R_nullmodels/' + str(1) + '/'   
         root2  = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-QQ'  
 
 
