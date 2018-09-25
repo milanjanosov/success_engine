@@ -300,6 +300,7 @@ def process_yearly_nw(args):
     files       = args[7]
 
     individuals_movie_seq = args[8]
+    ids_names             = args[9]
 
 
     ''' parse year stuff, only for QQ right now '''
@@ -424,6 +425,14 @@ def process_yearly_nw(args):
         iout.close()
 
 
+        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_node_list_gephi' + str(yearLIMIT) + '.dat', 'w')
+        iout.write('ID\tLabel\n')
+        for n in list(nodes):
+            iout.write(n + '\t' + ids_names[n] + '\n')               
+        iout.close()
+
+
+
 
 
   
@@ -461,12 +470,13 @@ def create_full_nws(sample):
     field     = 'film'
     sam       = ''
     neighbrs  = {}
-
-
-
-
-
     tipusok   = ['-QQ']#, '-QE', '']
+    ids_names {}
+
+ 
+    for line in open('../../../IMDb/IMDB_NAMES_IDs'):
+        fields = line.strip().split('\t')
+        ids_names[fields[0]] = fields[1]
 
 
     if sample: sam = '_sample'
@@ -525,7 +535,7 @@ def create_full_nws(sample):
                     
             
         for i in range(0,num_threads):  
-            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq], ))
+            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq, ids_names], ))
             Pros.append(p)
             p.start()
                  
@@ -645,9 +655,9 @@ def yearly_graph_data(args):
         infolder = 'networks' + sam + '/' + ctype + '/' + ctype +  tipus + '_' + str(yearLIMIT)
 
 
-        outfolder_jacc = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_jacc' 
-        outfolder_aa   = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_aa' 
-        outfolder_cnt  = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_cnt' 
+        outfolder_jacc = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_jacc' 
+        outfolder_aa   = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_aa' 
+        outfolder_cnt  = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_cnt' 
 
         if not os.path.exists(outfolder_jacc): os.makedirs(outfolder_jacc)
         if not os.path.exists(outfolder_aa)  : os.makedirs(outfolder_aa)
@@ -689,7 +699,6 @@ def create_igraphnw(sample):
     neighbrs  = {}
     tipusok   = ['-QQ']#['-QQ']#, '-QE', '']
 
- 
 
     if sample: sam = '_sample'
 
