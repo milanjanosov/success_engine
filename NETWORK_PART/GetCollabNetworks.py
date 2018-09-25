@@ -474,7 +474,7 @@ def create_full_nws(sample):
     ids_names = {}
 
  
-    for line in open('../../../IMDb/IMDB_NAMES_IDs'):
+    for line in open('../../../IMDb/IMDB_NAMES_IDs.dat'):
         fields = line.strip().split('\t')
         ids_names[fields[0]] = fields[1]
 
