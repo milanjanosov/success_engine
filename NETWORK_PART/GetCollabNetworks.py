@@ -421,7 +421,7 @@ def process_yearly_nw(args):
         iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('Source\tTarget\tWeight\tType\n')
         for e in edges_jacc.keys():
-            iout.write(e + '\t' + edges_aa[e] + '\tundirected\n')               
+            iout.write(e + '\t' + edges_jacc[e] + '\tundirected\n')               
         iout.close()
 
 
