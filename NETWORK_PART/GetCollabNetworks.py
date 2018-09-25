@@ -341,69 +341,76 @@ def process_yearly_nw(args):
                   
             director = fn.split('_')[0]
 
+            
 
             #  TEST Pa	ROS: nm0160614	nm0580726
-            #  if 'nm7646927' == director:   
+            if 'nm0000184' == director :#and yearLIMIT == 2017:   
             #  if ind == 1000: break
 
 
-            if ind % 1000 == 0: 
-                print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+                if ind % 1000 == 0: 
+                    print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
-            for line in open(root + fn):
+                for line in open(root + fn):
 
-                fields = line.strip().split('\t') 
-       
-                if len(fields) == 4:
+                    #print line
+
+                    fields = line.strip().split('\t') 
+           
+                    if len(fields) == 4:
 
 
-                    movie, year, rating, cast = fields
-                    if len(year) > 0:
-                        year = str(int(min([float(y) for y in year.split('-')])))
+                        movie, year, rating, cast = fields
+                        if len(year) > 0:
+                            year = str(int(min([float(y) for y in year.split('-')])))
 
-            
-                        if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':# and year is not None:
-          
-            
-                            year   = float(year)
-                            rating = float(rating)                        
-    
-
-                            if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
-
-                                # casts need to be handled as full graphs 
+                
+                            if  year is not None and year != 'None' and len(str(int(year))) == 4 and rating != 'None':# and year is not None:
+              
+                
+                                year   = float(year)
+                                rating = float(rating)                        
         
-                                cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
-                    
 
-                                for c1 in cast:
+                                if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
 
-                                    for c2 in cast:
-                                        if c1 != c2:
+                                    # casts need to be handled as full graphs 
+            
+                                    cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
+                        
 
-                                            edge = '\t'.join(sorted([c1, c2]))
+                                    for c1 in cast:
 
-                                            #if 'nm0160614\tnm0580726' == edge:
-    
-                                            nodes.add(c1)
-                                            nodes.add(c2)
+                                        for c2 in cast:
+                                            if c1 != c2:
 
-                                            if c2 in Qdir:
 
-                                                movies1 = set(individuals_movie_seq[c1][movie])
-                                                movies2 = set(individuals_movie_seq[c2][movie])
-                                                edges_jacc[edge] = str(jaccard(movies1, movies2))
-                                                edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-                     
-                                                if edge not in edges_cnt:
-                                                    edges_cnt[edge]  = set()     
-                                                else:
-                                                    edges_cnt[edge].add(movie)                            
-                                      
+                                                print c1, c2
+
+
+                                                edge = '\t'.join(sorted([c1, c2]))
+
+                                                #if 'nm0160614\tnm0580726' == edge:
+        
+                                                nodes.add(c1)
+                                                nodes.add(c2)
+
+                                                if c2 in Qdir:
+
+                                                    movies1 = set(individuals_movie_seq[c1][movie])
+                                                    movies2 = set(individuals_movie_seq[c2][movie])
+                                                    edges_jacc[edge] = str(jaccard(movies1, movies2))
+                                                    edges_aa[edge]   = str(adamic_adar(movies1, movies2))
+                         
+                                                    if edge not in edges_cnt:
+                                                        edges_cnt[edge]  = set()     
+                                                    else:
+                                                        edges_cnt[edge].add(movie)                            
+                                          
      
 
 
-        hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
+        '''hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
             hout.write(e + '\t' + str(len(edges_cnt[e])) + '\n')               
         hout.close()
@@ -440,7 +447,7 @@ def process_yearly_nw(args):
             iout.write(n + '\t' + ids_names[n] + '\n')               
         iout.close()
 
-
+        '''
 
 
 
@@ -528,10 +535,15 @@ def create_full_nws(sample):
 
             for line in open(root2 + '/' + fn):
 
-                movie, year, prevmovs = line.strip().split('\t')
-                prevmovs = prevmovs.split(',')
 
-                individuals_movie_seq[name][movie] = prevmovs
+                try:
+
+                    movie, year, prevmovs = line.strip().split('\t')
+                    prevmovs = prevmovs.split(',')
+
+                    individuals_movie_seq[name][movie] = prevmovs
+                except:
+                    pass
 
 
 
@@ -713,11 +725,11 @@ def create_igraphnw(sample):
 
     for tipus in tipusok: 
 
-        yearLIMITs = range(2016, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
 
-        num_threads = 1
+        num_threads = 40
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
@@ -759,13 +771,13 @@ if __name__ == '__main__':
         get_everyones_first()
 
 
-    elif sys.argv[1] == 'get_full_network':
+    elif sys.argv[1] == 'get_nws':
         if sys.argv[2] == 'sample':
             sample = True  
         create_full_nws(sample)
     
         
-    elif sys.argv[1] == 'create_igraphnw':
+    elif sys.argv[1] == 'get_centr':
         if sys.argv[2] == 'sample':
             sample = True          
         create_igraphnw(sample)
