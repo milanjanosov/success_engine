@@ -385,25 +385,32 @@ def process_yearly_nw(args):
 
                                             edge = '\t'.join(sorted([c1, c2]))
 
-                                            nodes.add(c1)
-                                            nodes.add(c2)
 
-         
+                                            if 'nm0160614\tnm0580726' == edge:
+                
 
-                                            if c2 in Qdir:
+                                                nodes.add(c1)
+                                                nodes.add(c2)
 
-                                                movies1 = set(individuals_movie_seq[c1][movie])
-                                                movies2 = set(individuals_movie_seq[c2][movie])
-                                                edges_jacc[edge] = str(jaccard(movies1, movies2))
-                                                edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-              
-               
-                                                if edge not in edges_cnt:
-                                                    edges_cnt[edge]  = set()     
-                                                else:
-                                                    edges_cnt[edge].add(movie)                            
-                                  
-                                                #print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
+             
+
+                                                if c2 in Qdir:
+
+                                                    movies1 = set(individuals_movie_seq[c1][movie])
+                                                    movies2 = set(individuals_movie_seq[c2][movie])
+                                                    edges_jacc[edge] = str(jaccard(movies1, movies2))
+                                                    edges_aa[edge]   = str(adamic_adar(movies1, movies2))
+                  
+                   
+                                                    if edge not in edges_cnt:
+                                                        edges_cnt[edge]  = set()     
+                                                    else:
+                                                        edges_cnt[edge].add(movie)                            
+                                      
+                                                    #print c1, c2, len(edges_cnt[edge]), edges_jacc[edge], edges_aa[edge]
+
+                                                    print c1, movies1
+                                                    print c2, movies2, '\n'
 
                     
 
@@ -506,10 +513,10 @@ def create_full_nws(sample):
 
 
 
-        yearLIMITs = range(1980, 2018)#[1990, 2000, 2010, 2020]
+        yearLIMITs = range(2016, 2018)#[1990, 2000, 2010, 2020]
         random.shuffle(yearLIMITs)
 
-        num_threads = 40
+        num_threads = 1
         files_chunks = chunkIt(yearLIMITs, num_threads)
         Pros = []
                     
