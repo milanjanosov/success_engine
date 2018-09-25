@@ -421,8 +421,17 @@ def process_yearly_nw(args):
         iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('Source\tTarget\tWeight\tType\n')
         for e in edges_jacc.keys():
-            iout.write(e + '\t' + edges_jacc[e] + '\tundirected\n')               
+            if edges_jacc[e] > 0:
+                iout.write(e + '\t' + edges_jacc[e] + '\tundirected\n')               
         iout.close()
+
+        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_gephi' + str(yearLIMIT) + '.dat', 'w')
+        iout.write('Source\tTarget\tWeight\tType\n')
+        for e in edges_jacc.keys():
+            if edges_aa[e] > 0:
+                iout.write(e + '\t' + edges_aa[e] + '\tundirected\n')               
+        iout.close()
+
 
 
         iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_node_list_gephi' + str(yearLIMIT) + '.dat', 'w')
