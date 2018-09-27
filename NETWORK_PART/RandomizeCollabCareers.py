@@ -24,6 +24,8 @@ def run_randomizer_thread(r, careerfolder, all_names):
 
         for line in open(careerfolder + '/' + fn):
 
+            print line
+
             movie, year, impact, names = line.strip().split('\t')
             
             names      = names.split(',')
@@ -44,7 +46,8 @@ field        = 'film'
 profession   = 'director'
 R            = 10
 collabroot   = 'collab-careers'
-careerfolder = collabroot + '/' + field + '-' + profession + '-collab-careers-QQ'
+#careerfolder = collabroot + '/' + field + '-' + profession + '-collab-careers-QQ'  
+careerfolder = collabroot + '/' + field + '-' + profession + '-ALL-collab-careers'
 files        = os.listdir(careerfolder)
 all_names    = []
 nnn          = len(files)
@@ -57,7 +60,9 @@ for ind, fn in enumerate(files):
     if ind % 1000 == 0: print ind, '/', nnn
 
     for line in open(careerfolder + '/' + fn):
-        all_names += line.strip().split('\t')[3].split(',')
+
+        if len(line.strip().split('\t')) > 3:
+            all_names += line.strip().split('\t')[3].split(',')
  
 random.shuffle(all_names)
 
