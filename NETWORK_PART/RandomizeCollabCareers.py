@@ -26,9 +26,15 @@ def run_randomizer_thread(r, careerfolder, all_names):
 
             print line
 
-            movie, year, impact, names = line.strip().split('\t')
+            fields = line.strip().split('\t')
+            movie  = fields[0]
+            year   = fields[1]
+            impact = fields[2] 
+            names  = fields[3:]
+
+            #movie, year, impact, names = line.strip().split('\t')
             
-            names      = names.split(',')
+            #names      = names.split(',')
             rand_names = all_names[0:len(names)]
             all_names  = all_names[len(names):]
 
