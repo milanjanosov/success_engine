@@ -24,7 +24,6 @@ def run_randomizer_thread(r, careerfolder, all_names):
 
         for line in open(careerfolder + '/' + fn):
 
-            print line
 
             fields = line.strip().split('\t')
             movie  = fields[0]
