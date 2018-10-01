@@ -337,10 +337,8 @@ if __name__ == "__main__":
     features = ['', 'location', 'Q', 'gender', 'first year', 'total span', 'productivity', 'best', 'mean_p']
     results  = {}
     R        = int(sys.argv[1])
+    Pros     = []   
 
-    Pros    = []   
-
-    fields = ['director', 'art_director']
 
     for field in fields: 
         p = Process(target = do_predictions, args=(features_prizes, field, R, features, ))
