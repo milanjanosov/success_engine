@@ -338,7 +338,7 @@ if __name__ == "__main__":
     fields   = features_prizes.keys()
     features = ['', 'location', 'Q', 'gender', 'first year', 'total span', 'productivity', 'best', 'mean_p']
     results  = {}
-    R        = 2
+    R        = int(sys.argv[1])
 
     Pros    = []   
 
