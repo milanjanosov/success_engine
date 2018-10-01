@@ -159,7 +159,7 @@ def get_all_prizes():
 
 def merge_features_and_prizes(merged_dfs, professions_prizes):
 
-    features_prizes = {}
+    features_prizes = []
 
     for (prof, prize, prize_names) in professions_prizes:
         
@@ -181,7 +181,7 @@ def merge_features_and_prizes(merged_dfs, professions_prizes):
         df_prize = df_prize.drop(columns = ['id'])  
 
         df = df.merge(df_prize, left_index = True, right_index = True)
-        features_prizes[prof] = df  
+        features_prizes.append((prof, prize, df))  
 
 
     return features_prizes
@@ -275,15 +275,16 @@ def xgb_model_params_importance(X, y, max_depth_, learning_rate_, subsample_, n_
 
 ''' do the predictions '''
 
-def do_predictions(features_prizes, field, prize, names, R, features, folderout) :
+def do_predictions(features_prizes, field, prize, R, features, folderout) :
 
 
    
+    print folderout + '/' + field + '_pred_results_' + prize + '_R=' + str(R) + '.dat'
 
     fout  = open(folderout + '/' + field + '_pred_results_' + prize + '_R=' + str(R) + '.dat', 'w')
 
     fout.write('feature\tbest_acc\terror\tmax_depth\tlearning_rate\tsubsample_size\n')
-    get_data_stats(features_prizes[field],  field)
+    get_data_stats(features_prizes,  field)
 
     nnn = len(features)
 
@@ -298,8 +299,8 @@ def do_predictions(features_prizes, field, prize, names, R, features, folderout)
                     accuracies = []
 
                     for i in range(R):
-                                    
-                        X, y = get_sample_data(features_prizes[field], 'prizewinner', feature)
+                                           
+                        X, y = get_sample_data(features_prizes, 'prizewinner', feature)
                         accuracies += xgb_model_params_importance(X, y, max_depth_, learningrate_, subsample_, 1)
         
                     params =  str(max_depth_) + '_' + str(learningrate_) + '_' +  str(subsample_)
@@ -314,9 +315,9 @@ def do_predictions(features_prizes, field, prize, names, R, features, folderout)
         if feature == '': feature = 'all'
 
         fout.write( feature +  '\t' + str(round(best_acc,5)) + '\t' + str(round(best_error, 5)) + '\t' + best_params + '\n')
-
+       
     fout.close()
-
+    
 
 
 if __name__ == "__main__":
@@ -335,11 +336,10 @@ if __name__ == "__main__":
 
 
 
-
     print round(time.time()-t1), ' seconds to parse the data'
     t1 = time.time()
 
-    fields   = features_prizes.keys()
+
     features = ['', 'location', 'Q', 'gender', 'first year', 'total span', 'productivity', 'best', 'mean_p']
     results  = {}
     R        = int(sys.argv[1])
@@ -352,9 +352,9 @@ if __name__ == "__main__":
 
 
     
-    for (field, prize, names) in professions_prizes:
+    for (field, prize, df) in features_prizes:
 
-        p = Process(target = do_predictions, args=(features_prizes, field, prize, names, R, features, folderout, ))
+        p = Process(target = do_predictions, args=(df, field, prize, R, features, folderout, ))
         Pros.append(p)
         p.start()
 
@@ -365,7 +365,7 @@ if __name__ == "__main__":
 
 
     print round(time.time()-t1), ' to do the prediction with ' + str(R) + ' randomizations'
-
+    
 
 
 
