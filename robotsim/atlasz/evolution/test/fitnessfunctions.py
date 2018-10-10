@@ -369,7 +369,7 @@ def liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, s
 
 
 #######################################################################################################################################
-def fitness_mathematics(pvalues):
+def fitness_sci_mathematics(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../Data/Science/science-mathematics-simple-careers/'
@@ -387,7 +387,7 @@ def fitness_mathematics(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        fitnesses[i] = {"mathematics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+        fitnesses[i] = {"sci_mathematics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 
