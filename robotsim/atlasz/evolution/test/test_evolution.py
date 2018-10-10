@@ -58,7 +58,7 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
         choices=["mlesuccess_dir", "mlesuccess_art", "mlesuccess_prod", "mlesuccess_wr", "mlesuccess_comp", 
                  "mlesuccess_rock", "mlesuccess_pop", "mlesuccess_electro", "mlesuccess_folk", "mlesuccess_funk", "mlesuccess_jazz", "mlesuccess_class", "mlesuccess_hiphop", 
                  "mlesuccess_books",
-                 "mathematics"
+                 "sci_mathematics"
 
                 ])
 
@@ -81,7 +81,7 @@ runs = 20
 
 
 
-for run in range(0, runs):
+for run in range(20, 100):
 
     # parse evolution parameters to be used
     eparams = importlib.import_module("evolutionparams")
