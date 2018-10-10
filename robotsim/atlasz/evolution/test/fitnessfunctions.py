@@ -367,7 +367,10 @@ def liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, s
 
 
 
-
+#######################################################################################################################################
+#########################                                                                                     #########################
+######                                                    S C I E N C E                                                          ######
+#########################                                                                                     #########################
 #######################################################################################################################################
 def fitness_sci_mathematics(pvalues):
 
@@ -395,8 +398,398 @@ def fitness_sci_mathematics(pvalues):
 
 
 
+#######################################################################################################################################
+def fitness_sci_theoretical_computer_science(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-theoretical_computer_science-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_theoretical_computer_science": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
 
 
+
+
+
+#######################################################################################################################################
+def fitness_sci_applied_physics(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-applied_physics-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_applied_physics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_health_science(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-health_science-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_health_science": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_psychology(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-psychology-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_psychology": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_space_science_or_astronomy(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-space_science_or_astronomy-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_space_science_or_astronomy": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_geology(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-geology-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_geology": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_biology(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-biology-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_biology": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_political_science(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-political_science-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_political_science": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_environmental_science(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-environmental_science-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_environmental_science": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_engineering(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-engineering-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_engineering": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_zoology(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-zoology-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_zoology": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_agronomy(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-agronomy-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_agronomy": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_chemistry(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-chemistry-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_chemistry": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+#######################################################################################################################################
+def fitness_sci_physics(pvalues):
+
+    fitnesses = {}
+    careerf   = '../../../../Data/Science/science-physics-simple-careers/'
+    sumI, N   = get_sumI_science(careerf) 
+
+    for i in xrange(len(pvalues)):
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
+        
+        fitnesses[i] = {"sci_physics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######################################################################################################################################
+#########################                                                                                     #########################
+######                                                     M O V I E S                                                           ######
+#########################                                                                                     #########################
 #######################################################################################################################################
 def fitness_mlesuccess_dir(pvalues):
 
@@ -519,7 +912,10 @@ def fitness_mlesuccess_wr(pvalues):
 
 
 
-
+#######################################################################################################################################
+#########################                                                                                     #########################
+######                                                      M U S I C                                                            ######
+#########################                                                                                     #########################
 #######################################################################################################################################
 def fitness_mlesuccess_rock(pvalues):
 
@@ -724,6 +1120,12 @@ def fitness_mlesuccess_class(pvalues):
     return fitnesses
 
 
+
+
+#######################################################################################################################################
+#########################                                                                                     #########################
+######                                                      B O O K S                                                            ######
+#########################                                                                                     #########################
 #######################################################################################################################################
 def fitness_mlesuccess_books(pvalues):
 

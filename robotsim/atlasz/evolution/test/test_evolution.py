@@ -58,8 +58,10 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
         choices=["mlesuccess_dir", "mlesuccess_art", "mlesuccess_prod", "mlesuccess_wr", "mlesuccess_comp", 
                  "mlesuccess_rock", "mlesuccess_pop", "mlesuccess_electro", "mlesuccess_folk", "mlesuccess_funk", "mlesuccess_jazz", "mlesuccess_class", "mlesuccess_hiphop", 
                  "mlesuccess_books",
-                 "sci_mathematics"
-
+                 "sci_mathematics",       "sci_theoretical_computer_science",    "sci_applied_physics", "sci_health_science", 
+                 "sci_psychology",        "sci_space_science_or_astronomy",      "sci_geology",         "sci_biology", 
+                 "sci_political_science", "sci_environmental_science",           "sci_engineering",     "sci_zoology", 
+                 "sci_agronomy",          "sci_chemistry", "sci_physics"
                 ])
 
 
@@ -76,12 +78,12 @@ else:
 
 
 
-runs = 20
+runs = 100
 
 
 
 
-for run in range(20, 100):
+for run in range(0, runs):
 
     # parse evolution parameters to be used
     eparams = importlib.import_module("evolutionparams")
