@@ -64,10 +64,8 @@ argparser.add_argument("-m", "--model", required=True, dest ="model", help="The 
                  "sci_agronomy",          "sci_chemistry", "sci_physics"
                 ])
 
-
-
-
-
+argparser.add_argument("-min",  type=int, required=True, dest ="min")
+argparser.add_argument("-max",  type=int, required=True, dest ="max")
 
 # if arguments are passed to main(argv), parse them
 if argv:
@@ -78,12 +76,11 @@ else:
 
 
 
-runs = 100
+runmin = options.min
+runmax = options.max
 
 
-
-
-for run in range(0, runs):
+for run in range(runmin, runmax):
 
     # parse evolution parameters to be used
     eparams = importlib.import_module("evolutionparams")
@@ -165,7 +162,57 @@ for run in range(0, runs):
     fitness_threshold = mins + 0.8 * (maxs - mins)
     best_solution = pvalues[evolution.selection.elite(sfitnesses, 1)[0]]
 
+
+
 ## source /opt/virtualenv-python2.7/bin/activate
+
+
+
+
+
+
+
+
+# screen -S evol_mathematics
+# screen -S evol_physics
+# screen -S evol_theoretical_computer_science
+# screen -S evol_applied_physics
+# screen -S evol_health_science
+# screen -S evol_psychology
+# screen -S evol_space_science_or_astronomy
+# screen -S evol_geology
+# screen -S evol_biology
+# screen -S evol_political_science
+# screen -S evol_environmental_science
+# screen -S evol_engineering
+# screen -S evol_zoology
+# screen -S evol_agronomy
+# screen -S evol_chemistry
+
+
+
+# source /opt/virtualenv-python2.7/bin/activate
+
+
+
+# python2.7 test_evolution.py -m sci_mathematics
+# python2.7 test_evolution.py -m sci_physics
+# python2.7 test_evolution.py -m sci_theoretical_computer_science
+# python2.7 test_evolution.py -m sci_applied_physics
+# python2.7 test_evolution.py -m sci_health_science
+# python2.7 test_evolution.py -m sci_psychology
+# python2.7 test_evolution.py -m sci_space_science_or_astronomy
+# python2.7 test_evolution.py -m sci_geology
+# python2.7 test_evolution.py -m sci_biology
+# python2.7 test_evolution.py -m sci_political_science
+# python2.7 test_evolution.py -m sci_environmental_science
+# python2.7 test_evolution.py -m sci_engineering
+
+# python2.7 test_evolution.py -m sci_zoology
+# python2.7 test_evolution.py -m sci_agronomy
+# python2.7 test_evolution.py -m sci_chemistry
+
+
 
 
 
