@@ -252,7 +252,7 @@ def get_sample_data(artists_prizes, prize, feature = ''):
     
     
     if 'gender' in X.keys():    encode_cats(X, 'gender')
-    if 'location' in X.keys():  encode_cats(X, 'location')
+    if 'location' in X.keys():  X = pd.get_dummies(X,dummy_na=True)  
     
     return X, y
 
@@ -279,7 +279,6 @@ def do_predictions(features_prizes, field, prize, R, features, folderout) :
 
 
    
-    print folderout + '/' + field + '_pred_results_' + prize + '_R=' + str(R) + '.dat'
 
     fout  = open(folderout + '/' + field + '_pred_results_' + prize + '_R=' + str(R) + '.dat', 'w')
 
