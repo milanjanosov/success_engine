@@ -37,8 +37,8 @@ for folder in folders:
 
     runs = [folder + '/' + run for run in os.listdir(folder) if '.dat' not in run]
 
-
-    if os.path.exists('opt_status_report.dat'):
+    if PREVSTAT:
+    #if os.path.exists('opt_status_report.dat'):
         diff = len(runs) - PREVSTAT['RAW'][folder.replace('sci_', '')]
         print 'RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff)
     else:
@@ -113,7 +113,7 @@ for fn in files:
 
 
 
-    if os.path.exists('opt_status_report.dat'):
+    if PREVSTAT:
         diff = counter - PREVSTAT['CLEAN'][fieldname]
         print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff))
     else:
