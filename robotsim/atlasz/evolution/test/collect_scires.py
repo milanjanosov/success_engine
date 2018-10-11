@@ -6,6 +6,22 @@ folders = [fff for fff in os.listdir('./') if 'sci_' in fff and 'all' not in fff
 
 
 
+if os.path.exists('opt_status_report.dat'):
+
+    PREVSTAT          = {}
+    PREVSTAT['RAW']   = {}
+    PREVSTAT['CLEAN'] = {}
+
+    for line in open('opt_status_report.dat'):
+        fields = line.strip().split('\t')
+        PREVSTAT[fields[0]][fields[1]] = int(fields[2].replace('.0', ''))
+
+
+  
+STSOUT = open('opt_status_report.dat', 'w')
+
+
+
 outfolder = 'MLESUCCESS_RES'
 if not os.path.exists(outfolder):
     os.makedirs(outfolder)
@@ -21,7 +37,14 @@ for folder in folders:
 
     runs = [folder + '/' + run for run in os.listdir(folder) if '.dat' not in run]
 
-    print 'RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs)
+
+    if os.path.exists('opt_status_report.dat'):
+        diff = len(runs) - PREVSTAT['RAW'][folder.replace('sci_', '')]
+        print 'RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff)
+    else:
+        print 'RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t', 
+
+    STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
     if len(runs) > 0:
 
@@ -89,10 +112,18 @@ for fn in files:
     fout.close()
 
 
-    print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter)
+
+    if os.path.exists('opt_status_report.dat'):
+        diff = counter - PREVSTAT['CLEAN'][fieldname]
+        print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff))
+    else:
+        print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter)
 
 
+    STSOUT.write('CLEAN\t' + fieldname + '\t' + str(counter) + '\n')
 
+
+STSOUT.close()
 
 
 
