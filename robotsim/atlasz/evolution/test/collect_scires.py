@@ -115,7 +115,9 @@ for fn in files:
 
     if PREVSTAT:
         diff = counter - PREVSTAT['CLEAN'][fieldname]
-        print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff))
+
+        if diff < 4:
+            print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff))
     else:
         print 'CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter)
 
