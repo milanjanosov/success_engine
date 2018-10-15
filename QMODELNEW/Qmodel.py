@@ -10,7 +10,8 @@ import math
 import sys
 import pandas as pd
 from multiprocessing import Process
-
+import warnings
+warnings.filterwarnings('ignore')
 
 
 
@@ -107,10 +108,10 @@ def read_data(infolder, outfolder, title):
         data   = []
 
         for line in open(fn):
-
-            fields = line.strip().split('\t')
-
-            data.append(  (fields[0], float(fields[1]), float(fields[2]) )  )
+    
+            if 'paper_id' not in line: 
+                fields = line.strip().split('\t')
+                data.append(  (fields[0], float(fields[1]), float(fields[2]) )  )
 
         id_data[imdbid] = data
 
@@ -509,7 +510,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
 
         if ind % 500 == 0:
-            print title, '\t', ind, '/', nnn
+            print 'FASZ', title, '\t', ind, '/', nnn
 
         career   = [d[2] for d in id_data[imdb]]
         career_p = get_p(career, Q)
@@ -527,6 +528,9 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
 
     title = title.replace('art-', 'art_')
+
+
+    print folder2 + '/' + 'Q_distribution_' + title + '_' + str(jind) + '.dat'
 
     fout = open(folder2 + '/' + 'p_distribution_' + title + '_' + str(jind) + '.dat', 'w')
     fout.write('\n'.join([str(f) for f in ps]))
@@ -752,7 +756,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
         psQ = [p for p in ps]
 
 
-        psQ = random.reshuffle(psQ)
+      ##  psQ = random.reshuffle(psQ)
 
         for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
 
@@ -917,7 +921,6 @@ def get_luck_skill_data(label, field):
 
 def process_Qs_paralel(resfile):
 
-
     field_o    = resfile.split('_', 1)[1]
     limit      = field_o.split('-')[1]
     field      = field_o.split('-')[0].replace('_','-')
@@ -932,18 +935,48 @@ def process_Qs_paralel(resfile):
         
         Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
 
-
         nameids = parse_id_names()
         id_data = read_data(infolder, folderout3, field + '-' + str(limit))
 
         get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)
      #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-      #  get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
-      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
-
-        
-      #  bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
+     #   get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
+     #   get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
+     #   bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
         get_luck_skill_data(fields[field], field)
+
+
+
+
+def process_Qs_paralel_sci(resfile):
+
+
+    field      = resfile.split('-10_qmodel')[0].split('/sci_')[1]
+    limit      = 10
+    infolder   = '../Data/Science/science-' + field + '-simple-careers'
+    Qfitparams = []
+
+
+    for ind, line in enumerate(open('Qparamfit/sci_' + field +  '-' + str(limit) + '_qmodel_params.dat')):
+
+        if ind == 3: break
+
+        mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+        Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+
+
+        nameids = parse_id_names()
+        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
+
+        get_users_ps(nameids,   id_data, Qfitparams, folderout + '3_p_and_Q_distr_'       + field + '_' + str(ind) + '.png', folderout2, ind, field)
+        get_impact_distribution(id_data, nbins,      folderout + '1_impact_distribution_' + field + '.png', field) 
+        get_N_star_N(           id_data, nbins,      folderout + '2_N_star_N_'            + field + '.png', field)
+        get_Q_model_stats(      id_data, Qfitparams, folderout + '3_p_and_Q_distr_'       + field + '_' + str(ind) + '.png', folderout2, ind, field)	   
+    #    bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field + '-' + str(limit) + '_' + str(ind))
+        #get_luck_skill_data(fields[field], field)
+
+
 
 
 
@@ -967,12 +1000,13 @@ if __name__ == '__main__':
                 'authors'      : 'book' }
 
 
-    nbins      = 10
-    resfolder  = 'Optimize/atlasz/evolution/test/Results/'
-    resfiles   = [resfolder + res for res in os.listdir(resfolder)]
-    folderout  = 'ResultFigs/' 
-    folderout2 = 'pQData/' 
-    folderout3 = 'IdData/' 
+    nbins         = 10
+    resfolder     = 'Optimize/atlasz/evolution/test/Results/'
+    resfiles_art  = [resfolder + res for res in os.listdir(resfolder) if 'sci_' not in res]
+    resfiles_sci  = ['Qparamfit/' + res for res in os.listdir('Qparamfit') if 'sci_'     in res]
+    folderout     = 'ResultFigs/' 
+    folderout2    = 'pQData/' 
+    folderout3    = 'IdData/' 
 
 
     if not os.path.exists(folderout):  os.makedirs(folderout)
@@ -980,11 +1014,11 @@ if __name__ == '__main__':
     if not os.path.exists(folderout3): os.makedirs(folderout3)
 
 
-    if sys.argv[1] == 'auto':
+    if sys.argv[1] == 'art-auto':
 
         Pros = []
    
-        for resfile in resfiles:
+        for resfile in resfiles_art:
             p = Process(target = process_Qs_paralel, args=(resfile, ))
             Pros.append(p)
             p.start()
@@ -993,19 +1027,33 @@ if __name__ == '__main__':
             t.join()
 
 
+    if sys.argv[1] == 'sci-auto':
+
+        Pros = []
+
+        resfiles_sci = [r for r in resfiles_sci if  len([line for line in open(r)]) > 0]
+
+        for f in resfiles_sci:
+            print f
 
 
+        '''for resfile in resfiles_sci:
+            p = Process(target = process_Qs_paralel_sci, args=(resfile, ))
+            Pros.append(p)
+            p.start()
+           
+        for t in Pros:
+            t.join()
+        
+        '''
 
 
-
-
-
-
-    elif sys.argv[1] == 'manual':
+    elif sys.argv[1] == 'art-manual':
 
         label    = sys.argv[2]
         field    = sys.argv[3]  
         LIMIT    = int(sys.argv[4])
+
         infolder = 'Data/' + field + '/' + fields[field] + '-' + field + '-simple-careers-limit-' + str(LIMIT)
 
         for ind, line in enumerate(open('Qparamfit/' + field.replace('-', '_') +  '-' + str(LIMIT) + '_qmodel_params.dat')):
@@ -1014,23 +1062,58 @@ if __name__ == '__main__':
                 mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
             
         Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+    #    id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
+    #    nameids = parse_id_names()
+    #    get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	
+    #    get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
+    #    get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
+    #    get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+    #    bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
+    #    get_luck_skill_data(label, field)
 
+
+
+
+
+
+    elif sys.argv[1] == 'sci-manual':
+
+        label    = sys.argv[2]
+        field    = sys.argv[3]  
+        LIMIT    = 10
+
+        infolder = '../Data/Science/science-' + field + '-simple-careers'
+
+        for ind, line in enumerate(open('Qparamfit/sci_' + field.replace('-', '_') +  '-10_qmodel_params.dat')):
+
+            if ind ==0:
+                mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+            
+        Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+
+        print Qfitparams
 
 
         id_data = read_data(infolder, folderout3, field + '-' + str(LIMIT))
-
-
         nameids = parse_id_names()
-
         get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	
+        get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
+        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
+        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
+        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
+        #get_luck_skill_data(label, field)
 
-   #     get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  field + '-' + str(LIMIT) + '.png',  field + '-' + str(LIMIT)) 
-    #    get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  field + '-' + str(LIMIT)  + '.png',  field + '-' + str(LIMIT) )  
-      #  get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field   + '-' + str(LIMIT) + '.png', folderout2, 0, field + '-' + str(LIMIT))	  
-   #     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(LIMIT) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(LIMIT) + '_0')
-        
 
-    #    get_luck_skill_data(label, field)
+
+
+
+
+
+
+
+
+
 
 
 
