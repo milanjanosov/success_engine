@@ -28,6 +28,8 @@ for ind, field in enumerate(fields):
     
     N = str(Ns[ind])
 
+    print field, '\t', ind, '/', len(fields)
+
     ps = [float(line.strip().split('\t')[-1]) for line in open('pQData/p_distribution_'+field+'-'+N+'_0.dat')]
     Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData/Q_distribution_'+field+'-'+N+'_0.dat')]
     
@@ -48,8 +50,11 @@ fields = ['mathematics', 'physics', 'health_science', 'zoology', 'agronomy', 'ps
           'political_science', 'biology', 'geology']
 
 
-for field in fields:
+for ind, field in enumerate(fields):
     
+
+    print field, '\t', ind, '/', len(fields)
+
     Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData/Q_distribution_'+field+'_0.dat')]
     ps = [float(line.strip().split('\t')[-1]) for line in open('pQData/p_distribution_'+field+'_0.dat')]
    
