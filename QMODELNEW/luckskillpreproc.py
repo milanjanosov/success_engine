@@ -19,7 +19,7 @@ logps_fields = {}
 logQs_fields = {}
 
 
-fields = ['authors', 'art-director' , 'writer', 'director', 'composer', 'producer', 'pop', 'rock', 'classical', 'jazz', 'electro', 'funk', 'folk', 'hiphop']
+fields = ['authors', 'art_director' , 'writer', 'director', 'composer', 'producer', 'pop', 'rock', 'classical', 'jazz', 'electro', 'funk', 'folk', 'hiphop']
 Ns     = [50,  20, 10, 10, 10, 10, 80, 80, 80, 80, 80, 80, 80 ,80]
 
 skillz = {}
