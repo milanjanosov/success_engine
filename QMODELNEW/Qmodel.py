@@ -1037,7 +1037,7 @@ if __name__ == '__main__':
             print f
 
 
-        '''for resfile in resfiles_sci:
+        for resfile in resfiles_sci:
             p = Process(target = process_Qs_paralel_sci, args=(resfile, ))
             Pros.append(p)
             p.start()
@@ -1045,7 +1045,7 @@ if __name__ == '__main__':
         for t in Pros:
             t.join()
         
-        '''
+        
 
 
     elif sys.argv[1] == 'art-manual':
