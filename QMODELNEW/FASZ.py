@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from scipy.stats import spearmanr, kendalltau, pearsonr
 import random
-from sklearn.metrics import r2_score
 import math
 from scipy import stats
 from matplotlib import gridspec
