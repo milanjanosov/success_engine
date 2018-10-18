@@ -16,7 +16,7 @@ from matplotlib import gridspec
 import pandas as pd
 import seaborn as sns
 import scipy   
-%matplotlib inline
+
 import warnings
 warnings.filterwarnings('ignore')
 
