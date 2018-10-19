@@ -1,14 +1,12 @@
-
 import os
 import gzip
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from matplotlib import rcParams
 from scipy.stats import spearmanr, kendalltau, pearsonr
 import random
+
 import math
 from scipy import stats
 from matplotlib import gridspec
@@ -87,8 +85,6 @@ field_title = { 'director':      'Movie directors',
 
 
 
-
-
 def get_luck_curves_data(fields, title, ax, color, lim, mmin, labelfont = 17, titlefont = 20, legendfont = 12):
     
   
@@ -97,26 +93,25 @@ def get_luck_curves_data(fields, title, ax, color, lim, mmin, labelfont = 17, ti
     ax.set_xlim(lim)    
     ax.set_ylim([-0.01, 1.05])        
 
-    ps = []
     
     for field in fields:
-
-        print field
         
+        ps = []
+                  
         field = field + '_0'
         ps  +=  [float(line.strip()) for line in 
                   open('pQData/p_distribution_' + field + '.dat')]
 
     
-    X, Y = getDistribution(ps)
-    
-    X = [float(x) for x in X]
-    Y = [float(y) for y in Y]
-    Y = [1 - yy for yy in np.cumsum(Y)]
-    mm = max(Y)
-    Y = [yy/mm for yy in Y]
-    
-    ax.plot(X, Y, linewidth = 1.5, alpha = 0.9, color = color, label = 'Aggregated data')  
+        X, Y = getDistribution(ps)
+
+        X = [float(x) for x in X]
+        Y = [float(y) for y in Y]
+        Y = [1 - yy for yy in np.cumsum(Y)]
+        mm = max(Y)
+        Y = [yy/mm for yy in Y]
+
+        ax.plot(X, Y, linewidth = 1.5, alpha = 0.9, color = color)#, label = 'Aggregated data')  
         
      
     ax.set_ylabel('P(> $p_{i,\\alpha}$)', fontsize = labelfont)
@@ -126,7 +121,7 @@ def get_luck_curves_data(fields, title, ax, color, lim, mmin, labelfont = 17, ti
 
 
 
-fig, ax    = plt.subplots(1,4, figsize = (15,4))
+fig, ax    = plt.subplots(1,1, figsize = (12,8))
 
 sci_fields = ['mathematics', 'psychology', 'physics', 'health_science', 'zoology', 'agronomy', 'environmental_science', 
           'engineering', 'theoretical_computer_science', 'applied_physics', 'space_science_or_astronomy', 'chemistry', 
@@ -137,21 +132,15 @@ music  = [a + '-80' for a in ['electro', 'pop', 'rock', 'folk', 'funk', 'jazz', 
 movies = ['director-10', 'producer-10','art-director-20', 'composer-10', 'writer-10']    
     
     
-get_luck_curves_data(movies , 'Film',  ax[0], 'steelblue', [0.01,   200], 50, labelfont = 13, titlefont = 14, legendfont = 8)
-get_luck_curves_data(movies , 'Music',  ax[1], 'darkred', [0.01,   200], 50, labelfont = 13, titlefont = 14, legendfont = 8)
-get_luck_curves_data(sci_fields , 'Science',  ax[2], 'darkorange', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
-get_luck_curves_data(sci_fields+movies+music , 'All',  ax[3], 'black', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
+
+
+get_luck_curves_data(movies, 'All',  ax, 'steelblue', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
+get_luck_curves_data(music , 'All',  ax, 'darkred', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
+get_luck_curves_data(['authors-50'], 'All',  ax, 'darkgreen', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
+
+get_luck_curves_data(sci_fields , 'All',  ax, 'darkorange', [0.02,   150], 50, labelfont = 13, titlefont = 14, legendfont = 8)
 
    
 plt.tight_layout()
 
-plt.savefig('luckfull_complete.png')
-
-
-
-
-
-
-
-
-
+plt.savefig('luckfull_2.png')
