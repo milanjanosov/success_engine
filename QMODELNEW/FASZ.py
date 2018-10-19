@@ -96,6 +96,8 @@ def get_luck_curves_data(fields, title, ax, color, lim, mmin, labelfont = 17, ti
     
     for field in fields:
         
+        print field
+
         ps = []
                   
         field = field + '_0'
