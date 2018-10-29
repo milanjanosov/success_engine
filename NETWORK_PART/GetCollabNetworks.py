@@ -305,6 +305,8 @@ def process_yearly_nw(args):
 
 
 
+    print files
+    print 'LEEEN   ', len(files)
 
 
 
@@ -331,7 +333,7 @@ def process_yearly_nw(args):
 
 
 
-    for yearLIMIT in yearLIMITs:
+    '''for yearLIMIT in yearLIMITs:
 
 
         nodes      = set()
@@ -340,7 +342,7 @@ def process_yearly_nw(args):
         #edges_aa   = {}
         #edges_cnt  = {}
 
-        print  thread_id, yearLIMIT
+        #print  thread_id, yearLIMIT
 
         if not os.path.exists(outfolder): os.makedirs(outfolder)
 
@@ -363,8 +365,8 @@ def process_yearly_nw(args):
                 #if ind == 10000: break
 
 
-                if ind % 100 == 0: 
-                    print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+               # if ind % 100 == 0: 
+                #    print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
 
                 for line in open(root + fn):
@@ -469,9 +471,9 @@ def process_yearly_nw(args):
         for n in list(nodes):
             iout.write(n + '\t' + ids_names[n] + '\n')               
         iout.close()
-
     
-
+    
+    '''
 
 
   
@@ -543,9 +545,11 @@ def create_full_nws(sample):
     nnnn   = len(files2)
 
 
+    
+
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2):
+    for ind, fn in enumerate(files2[0:10000]):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
@@ -584,7 +588,7 @@ def create_full_nws(sample):
     for t in Pros:
         t.join()
     
-   
+    
        
     
 
