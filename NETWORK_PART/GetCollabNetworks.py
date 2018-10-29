@@ -663,7 +663,7 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
                                     'betweenness'   : betweenness[i], 
                                     'closeness'     : closenesses[i],
                                     'clustering'    : clustering[i],
-                                    'pagerank'      : pagerank[i] 
+                                    'pagerank'      : pagerank[i] ,
                                     'eigenvector'   : eigenvector[i],
                                     'constraint'    : constraint[i]
                                    }
