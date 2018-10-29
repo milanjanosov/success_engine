@@ -331,7 +331,7 @@ def process_yearly_nw(args):
 
 
 
-    for yearLIMIT in yearLIMITs:
+    '''for yearLIMIT in yearLIMITs:
 
 
         nodes      = set()
@@ -349,7 +349,7 @@ def process_yearly_nw(args):
         n     = len(files)
         nodes = set()
 
-        '''for ind, fn in enumerate(files):
+        for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
 
@@ -459,7 +459,7 @@ def process_yearly_nw(args):
             iout.write(n + '\t' + ids_names[n] + '\n')               
         iout.close()
 
-        '''  
+    '''  
 
 
 
