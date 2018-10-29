@@ -305,11 +305,6 @@ def process_yearly_nw(args):
 
 
 
-    print files
-    print 'LEEEN   ', len(files)
-
-
-
     '''    ---------------------------------------    '''
     '''   FirstYears_QEVERdirector  CLEANING NEEDED   '''
     '''    ---------------------------------------    '''
@@ -333,7 +328,7 @@ def process_yearly_nw(args):
 
 
 
-    '''for yearLIMIT in yearLIMITs:
+    for yearLIMIT in yearLIMITs:
 
 
         nodes      = set()
@@ -375,6 +370,7 @@ def process_yearly_nw(args):
 
                     fields = line.strip().split('\t') 
            
+                    print 'FFF   ', field, '\n'
                  
 
                     if len(fields) == 4:
@@ -473,7 +469,7 @@ def process_yearly_nw(args):
         iout.close()
     
     
-    '''
+    
 
 
   
@@ -571,10 +567,10 @@ def create_full_nws(sample):
 
 
 
-    yearLIMITs = range(1960, 2000)#[1990, 2000, 2010, 2020]
+    yearLIMITs = range(1999, 2000)#[1990, 2000, 2010, 2020]
     random.shuffle(yearLIMITs)
 
-    num_threads = 40
+    num_threads = 1
     files_chunks = chunkIt(yearLIMITs, num_threads)
     Pros = []
                 
