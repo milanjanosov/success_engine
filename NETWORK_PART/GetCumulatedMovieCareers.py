@@ -9,6 +9,24 @@ from copy import deepcopy
 
 
 
+def chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+        
+
+
+
+
+
+
+
 field        = 'film'
 ctype        = 'director'
 collabroot   = 'collab-careers'
@@ -28,7 +46,7 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
     files        = os.listdir(careerfolder)
     nnn          = len(files)
 
-    for ind, fn in enumerate(files):
+    for ind, fn in enumerate(files[0:10]):
         
 
 
@@ -63,44 +81,90 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
 
 
 
-print len(names_movies['nm0160614'])
+#print len(names_movies['nm0160614'])
 
             
 
-names_cum_movies = {}
-movies_years     = {}
-nnn              = len(names_movies)
+
+def process_name_stuff(args):
 
 
-for ind, (name, movies) in enumerate(names_movies.items()):
-
-    print 'PART 2   -  ',  ind, '/', nnn
-
-    #if 'nm0160614' == name:
-
-    movies                 = sorted(movies, key=lambda tup: tup[0])
-    current_movies         = []
-    names_cum_movies[name] = {}
-
-    #print movies
-
-    for year, movie in movies: 
-        current_movies.append(movie)
-        cccc = current_movies
-        movies_years[movie] = year
-        names_cum_movies[name][movie] = deepcopy(cccc)
-
-        #print name, year, movie, len(cccc)
+    names        = args[0]
+    names_movies = args[1]
+    outfolder    = args[2] 
+    thread_id    = args[3]  
+    num_thread   = args[4]  
 
 
+    names_cum_movies = {}
+    movies_years     = {}
+    nnn              = len(names)
 
 
-for name, cummovies in names_cum_movies.items():
-    
-    fout = open(outfolder + '/' + name + '_cumulative_movies_career.dat', 'w')
-    for movie, prevmovies in cummovies.items():
-        fout.write(movie + '\t' + movies_years[movie] + '\t' + ','.join(prevmovies) + '\n')
+    for ind, name in enumerate(names):
 
-    fout.close()
+        movies = names_movies[name]
 
+        print 'PART 2   -  ',  ind, '/', nnn, '\t', thread_id, '/', num_thread
+
+        #if 'nm0160614' == name:
+
+        movies                 = sorted(movies, key=lambda tup: tup[0])
+        current_movies         = []
+        names_cum_movies[name] = {}
+
+        #print movies
+
+        for year, movie in movies: 
+            current_movies.append(movie)
+            cccc = current_movies
+            movies_years[movie] = year
+            names_cum_movies[name][movie] = deepcopy(cccc)
+
+            #print name, year, movie, len(cccc)
+
+
+
+
+    for name, cummovies in names_cum_movies.items():
+        
+        fout = open(outfolder + '/' + name + '_cumulative_movies_career.dat', 'w')
+        for movie, prevmovies in cummovies.items():
+            fout.write(movie + '\t' + movies_years[movie] + '\t' + ','.join(prevmovies) + '\n')
+
+        fout.close()
+
+
+
+
+
+
+
+
+all_names   = names_movies.keys()
+num_threads = 40 
+name_chunks = chunkIt(all_names, num_threads)
+
+Pros = []
+
+for i in range(0,num_threads):  
+    p = Process(target = process_name_stuff, args=([name_chunks[i], names_movies, outfolder, i+1, num_threads], ))
+    Pros.append(p)
+    p.start()
+   
+for t in Pros:
+    t.join()
+
+
+
+
+
+
+
+
+
+
+#  9.05 - 21000
+
+#  7270 file  216.6kb
 
