@@ -353,6 +353,8 @@ def process_yearly_nw(args):
                   
             director = fn.split('_')[0]
 
+            print director
+
             
 
             #  TEST Pa	ROS: nm0160614	nm0580726
