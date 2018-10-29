@@ -349,7 +349,7 @@ def process_yearly_nw(args):
         n     = len(files)
         nodes = set()
 
-        for ind, fn in enumerate(files[0:1000]):
+        for ind, fn in enumerate(files[0:100]):
                   
             director = fn.split('_')[0]
 
@@ -369,6 +369,9 @@ def process_yearly_nw(args):
 
                     fields = line.strip().split('\t') 
            
+                    print 'fields   ', fields
+
+
                     if len(fields) == 4:
 
 
@@ -383,6 +386,7 @@ def process_yearly_nw(args):
                                 year   = float(year)
                                 rating = float(rating)                        
         
+                                print 'YR   ', year, rating
 
                                 if year <= yearLIMIT and rating > 0.0: # and year >= user_first[director]:                        
 
@@ -537,7 +541,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2[0:10000]):
+    for ind, fn in enumerate(files2[0:1000]):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
