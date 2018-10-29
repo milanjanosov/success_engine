@@ -700,9 +700,9 @@ def yearly_graph_data(args):
         edges = {}
         nodes = set()
 
-        root     = 'collab-careers' + sam + '/film-' + ctype + '-collab-careers' + tipus + sam + '/'
-        files    = os.listdir(root)
-        infolder = 'networks' + sam + '/' + ctype + '/' + ctype +  tipus + '_' + str(yearLIMIT)
+        root     = 'collab-careers' + sam + '/film-' + ctype + '-ALL-collab-careers' + tipus + sam + '/'
+        files    = os.listdir(root)[0:100]
+        infolder = 'networks' + sam + '/' + ctype + '/' + ctype +  tipus + 'ALL_' + str(yearLIMIT)
 
 
         outfolder_jacc = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_jacc' 
@@ -713,7 +713,7 @@ def yearly_graph_data(args):
         #if not os.path.exists(outfolder_aa)  : os.makedirs(outfolder_aa)
         #if not os.path.exists(outfolder_cnt) : os.makedirs(outfolder_cnt)
 
-        filename_jacc = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_' + str(yearLIMIT) + '.dat'       
+        filename_jacc = infolder + '/ALL' + ctype + '_' + ctype + 'ALL' + tipus + '_edges_list_jaccard_' + str(yearLIMIT) + '.dat'       
         #filename_aa   = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'      + str(yearLIMIT) + '.dat'       
         #filename_cnt  = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'     + str(yearLIMIT) + '.dat'       
  
@@ -758,13 +758,13 @@ def create_igraphnw(sample):
     random.shuffle(yearLIMITs)
 
 
-    num_threads = 40
+    num_threads = 2
     files_chunks = chunkIt(yearLIMITs, num_threads)
     Pros = []
                 
         
     for i in range(0,num_threads):  
-        p = Process(target = yearly_graph_data, args=([files_chunks[i], i+1, num_threads, sam, ctype, 'ALL', sample], ))
+        p = Process(target = yearly_graph_data, args=([files_chunks[i], i+1, num_threads, sam, ctype, '', sample], ))
         Pros.append(p)
         p.start()
        
