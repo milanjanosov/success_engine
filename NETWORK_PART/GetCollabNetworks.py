@@ -360,7 +360,7 @@ def process_yearly_nw(args):
             #if 'nm0000184' == director :#and yearLIMIT == 2017:   
             if 2 == 2:
 
-                if ind == 10000: break
+                #if ind == 10000: break
 
 
                 if ind % 100 == 0: 
@@ -420,7 +420,7 @@ def process_yearly_nw(args):
                                                 movies1 = set(individuals_movie_seq[c1][movie])
                                                 movies2 = set(individuals_movie_seq[c2][movie])
 
-                                                print 'EE    ', edge
+                                                print 'EE    ', edge, jaccard(movies1, movies2)
 
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 #edges_aa[edge]   = str(adamic_adar(movies1, movies2))
@@ -545,7 +545,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2[0:1000]):
+    for ind, fn in enumerate(files2):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
@@ -567,7 +567,7 @@ def create_full_nws(sample):
 
 
 
-    yearLIMITs = range(1960, 1970)#[1990, 2000, 2010, 2020]
+    yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
     random.shuffle(yearLIMITs)
 
     num_threads = 40
