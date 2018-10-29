@@ -532,10 +532,10 @@ def create_full_nws(sample):
 
 
 
+    print 'NAAA'
 
 
-
-    individuals_movie_seq = {}
+    '''individuals_movie_seq = {}
     for ind, fn in enumerate(files2):
         
         if ind % 100 == 0: print ind, '/', nnn
@@ -577,7 +577,7 @@ def create_full_nws(sample):
     
   
        
-
+    '''
 
   
             
