@@ -360,7 +360,7 @@ def process_yearly_nw(args):
             #  if ind == 1000: break
 
 
-                if ind % 1000 == 0: 
+                if ind % 100 == 0: 
                     print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
 
                 for line in open(root + fn):
@@ -411,6 +411,9 @@ def process_yearly_nw(args):
 
                                                 movies1 = set(individuals_movie_seq[c1][movie])
                                                 movies2 = set(individuals_movie_seq[c2][movie])
+
+                                                print c1, c2, '\t', jaccard(movies1, movies2)
+
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 #edges_aa[edge]   = str(adamic_adar(movies1, movies2))
                      
@@ -534,7 +537,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2):
+    for ind, fn in enumerate(files2[0:10000]):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
@@ -602,14 +605,14 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
     print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'strength,       ',        weighttype,   round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    betweenness  = G.betweenness( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses,  ',  weighttype,  round(time.time() - t1,2), ' seconds'
+  #  t1 = time.time()
+  #  betweenness  = G.betweenness( weights = iweight )
+  #  print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses,  ',  weighttype,  round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    closenesses    = G.closeness( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'closeness,      ',    weighttype,  round(time.time() - t1,2), ' seconds'
+  #  t1 = time.time()
+  #  closenesses    = G.closeness( weights = iweight )
+  #  print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'closeness,      ',    weighttype,  round(time.time() - t1,2), ' seconds'
 
 
     t1 = time.time()
@@ -622,14 +625,14 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
     print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank,       ',     weighttype,  round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    eigenvector   = G.eigenvector_centrality( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector,    ',  weighttype,  round(time.time() - t1,2), ' seconds'
+   # t1 = time.time()
+   # eigenvector   = G.eigenvector_centrality( weights = iweight )
+   # print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector,    ',  weighttype,  round(time.time() - t1,2), ' seconds'
     
 
-    t1 = time.time()
-    constraint   = G.constraint( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'constraint,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
+   # t1 = time.time()
+   # constraint   = G.constraint( weights = iweight )
+   # print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'constraint,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
     
 
     node_centralities = {}
@@ -641,12 +644,12 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
 
         node_centralities[node] = { 'degree'        : degree[i],
                                     'strength'      : strength[i], 
-                                    'betweenness'   : betweenness[i], 
-                                    'closeness'     : closenesses[i],
+                                   # 'betweenness'   : betweenness[i], 
+                                   # 'closeness'     : closenesses[i],
                                     'clustering'    : clustering[i],
-                                    'pagerank'      : pagerank[i], 
-                                    'eigenvector'   : eigenvector[i],
-                                    'constraint'    : constraint[i]
+                                    'pagerank'      : pagerank[i] 
+                                   # 'eigenvector'   : eigenvector[i],
+                                   # 'constraint'    : constraint[i]
                                    }
  
 
@@ -659,7 +662,7 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
         isweighted = 'weighted'
 
     df_centr = pd.DataFrame.from_dict(node_centralities, orient = 'index')
-    df_centr.to_csv(outfolder + '/Q' + ctype + '_' + ctype + '_' + tipus + '_NODE_CENTRALITIES_' + weighttype + '_' + str(yearLIMIT) + '_' + isweighted + '.dat', sep = '\t', index = True)
+    df_centr.to_csv(outfolder + '/ALL' + ctype + '_' + ctype + '_' + tipus + '_NODE_CENTRALITIES_' + weighttype + '_' + str(yearLIMIT) + '_' + isweighted + '.dat', sep = '\t', index = True)
 
 
 
@@ -687,21 +690,21 @@ def yearly_graph_data(args):
 
 
         outfolder_jacc = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_jacc' 
-        outfolder_aa   = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_aa' 
-        outfolder_cnt  = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_cnt' 
+        #outfolder_aa   = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_aa' 
+        #outfolder_cnt  = infolder + '/' + ctype + tipus + '_' + str(yearLIMIT) + '_cnt' 
 
         if not os.path.exists(outfolder_jacc): os.makedirs(outfolder_jacc)
-        if not os.path.exists(outfolder_aa)  : os.makedirs(outfolder_aa)
-        if not os.path.exists(outfolder_cnt) : os.makedirs(outfolder_cnt)
+        #if not os.path.exists(outfolder_aa)  : os.makedirs(outfolder_aa)
+        #if not os.path.exists(outfolder_cnt) : os.makedirs(outfolder_cnt)
 
         filename_jacc = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_' + str(yearLIMIT) + '.dat'       
-        filename_aa   = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'      + str(yearLIMIT) + '.dat'       
-        filename_cnt  = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'     + str(yearLIMIT) + '.dat'       
+        #filename_aa   = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'      + str(yearLIMIT) + '.dat'       
+        #filename_cnt  = infolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'     + str(yearLIMIT) + '.dat'       
  
 
         G_jacc = Graph.Read_Ncol(filename_jacc, weights = True, directed = False)
-        G_aa   = Graph.Read_Ncol(filename_aa,   weights = True, directed = False)
-        G_cnt  = Graph.Read_Ncol(filename_cnt,  weights = True, directed = False)
+        #G_aa   = Graph.Read_Ncol(filename_aa,   weights = True, directed = False)
+        #G_cnt  = Graph.Read_Ncol(filename_cnt,  weights = True, directed = False)
  
 
         #get_network_measures(G_jacc, outfolder_jacc, 'jaccard', thread_id, ctype, tipus, num_threads, yearLIMIT, iweight = None)
@@ -733,24 +736,24 @@ def create_igraphnw(sample):
 
     if sample: sam = '_sample'
 
-    for tipus in tipusok: 
+    #for tipus in tipusok: 
 
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
-        random.shuffle(yearLIMITs)
+    yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+    random.shuffle(yearLIMITs)
 
 
-        num_threads = 40
-        files_chunks = chunkIt(yearLIMITs, num_threads)
-        Pros = []
-                    
-            
-        for i in range(0,num_threads):  
-            p = Process(target = yearly_graph_data, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, sample], ))
-            Pros.append(p)
-            p.start()
-           
-        for t in Pros:
-            t.join()
+    num_threads = 40
+    files_chunks = chunkIt(yearLIMITs, num_threads)
+    Pros = []
+                
+        
+    for i in range(0,num_threads):  
+        p = Process(target = yearly_graph_data, args=([files_chunks[i], i+1, num_threads, sam, ctype, 'ALL', sample], ))
+        Pros.append(p)
+        p.start()
+       
+    for t in Pros:
+        t.join()
 
 
 
