@@ -362,6 +362,7 @@ def process_yearly_nw(args):
 
                 if ind % 100 == 0: 
                     print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
+                    print root + fn
 
                 for line in open(root + fn):
 
