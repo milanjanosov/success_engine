@@ -349,7 +349,7 @@ def process_yearly_nw(args):
         n     = len(files)
         nodes = set()
 
-        for ind, fn in enumerate(files):
+        '''for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
 
@@ -459,7 +459,7 @@ def process_yearly_nw(args):
             iout.write(n + '\t' + ids_names[n] + '\n')               
         iout.close()
 
-      
+        '''  
 
 
 
@@ -535,7 +535,7 @@ def create_full_nws(sample):
     print 'NAAA'
 
 
-    '''individuals_movie_seq = {}
+    individuals_movie_seq = {}
     for ind, fn in enumerate(files2):
         
         if ind % 100 == 0: print ind, '/', nnn
@@ -577,7 +577,7 @@ def create_full_nws(sample):
     
   
        
-    '''
+    
 
   
             
