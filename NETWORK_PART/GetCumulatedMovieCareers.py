@@ -46,7 +46,7 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
     files        = os.listdir(careerfolder)
     nnn          = len(files)
 
-    for ind, fn in enumerate(files[0:10]):
+    for ind, fn in enumerate(files):
         
 
 
