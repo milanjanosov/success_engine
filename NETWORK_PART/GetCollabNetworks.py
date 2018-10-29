@@ -359,7 +359,9 @@ def process_yearly_nw(args):
 
             #  TEST Pa	ROS: nm0160614	nm0580726
             #if 'nm0000184' == director :#and yearLIMIT == 2017:   
-              if ind == 1000: break
+            if 2 == 2:
+
+                if ind == 1000: break
 
 
                 if ind % 100 == 0: 
