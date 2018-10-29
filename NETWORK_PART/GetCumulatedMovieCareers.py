@@ -5,15 +5,17 @@ import numpy as np
 from multiprocessing import Process
 from copy import deepcopy
 
+
+
+
+
 field        = 'film'
 ctype        = 'director'
-R            = 10
 collabroot   = 'collab-careers'
-outfolder    = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-QQ'
+outfolder    = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-ALL'
 Qdir         = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
 if not os.path.exists(outfolder):
     os.makedirs(outfolder)
-
 
 
 names_movies = {}
@@ -32,14 +34,14 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
 
         name = fn.split('_')[0]
 
-        #if 'nm0296144' == name:
+        #if 'nm0160614' == name:
 
-        print ind, '/', nnn, name in Qdir
+            print ind, '/', nnn, name in Qdir
 
-        if name in Qdir:
+            #if name in Qdir:
 
-        #print name
-    
+            #print name
+        
             for line in open(careerfolder + '/' + fn):
             
                 fields = line.strip().split('\t',3)      
@@ -60,7 +62,8 @@ for profession in ['art-director', 'director', 'producer', 'writer', 'composer']
                                 names_movies[c].append((year, movie))
 
 
-print names_movies['nm0296144']
+
+print len(names_movies['nm0160614'])
 
             
 
@@ -73,21 +76,21 @@ for ind, (name, movies) in enumerate(names_movies.items()):
 
    # print ind, '/', nnn
 
-   # if 'nm0296144' == name:
+    if 'nm0160614' == name:
 
-    movies                 = sorted(movies, key=lambda tup: tup[0])
-    current_movies         = []
-    names_cum_movies[name] = {}
+        movies                 = sorted(movies, key=lambda tup: tup[0])
+        current_movies         = []
+        names_cum_movies[name] = {}
 
-    #print movies
+        #print movies
 
-    for year, movie in movies: 
-        current_movies.append(movie)
-        cccc = current_movies
-        movies_years[movie] = year
-        names_cum_movies[name][movie] = deepcopy(cccc)
+        for year, movie in movies: 
+            current_movies.append(movie)
+            cccc = current_movies
+            movies_years[movie] = year
+            names_cum_movies[name][movie] = deepcopy(cccc)
 
-        #print name, year, movie, len(cccc)
+            #print name, year, movie, len(cccc)
 
 
 
