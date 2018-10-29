@@ -529,6 +529,7 @@ def create_full_nws(sample):
     files2 = os.listdir(root2)  
     files  = os.listdir(root)
     nnn    = len(files)
+    nnnn   = len(files2)
 
 
 
@@ -536,9 +537,9 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2[0:100000]):
+    for ind, fn in enumerate(files2):
         
-        if ind % 100 == 0: print ind, '/', nnn
+        if ind % 100 == 0: print ind, '/', nnnn
 
         #if ind == 500: break
         name = fn.split('_')[0]    
