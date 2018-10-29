@@ -522,7 +522,7 @@ def create_full_nws(sample):
         get_sample()
 
 
-    root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-ALL/'
+    root   = 'collab-careers/' + field + '-' + ctype + 'ALL-collab-careers/'
     root2  = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-ALL'  
 
 
