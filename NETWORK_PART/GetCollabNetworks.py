@@ -545,7 +545,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2):
+    for ind, fn in enumerate(files2[0:10000]):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
@@ -567,7 +567,7 @@ def create_full_nws(sample):
 
 
 
-    yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+    yearLIMITs = range(1960, 2000)#[1990, 2000, 2010, 2020]
     random.shuffle(yearLIMITs)
 
     num_threads = 40
