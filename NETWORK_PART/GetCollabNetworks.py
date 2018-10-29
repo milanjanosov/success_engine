@@ -425,8 +425,8 @@ def process_yearly_nw(args):
         #hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
         #for e in edges_jacc.keys():
         #    hout.write(e + '\t' + str(len(edges_cnt[e])) + '\n')               
-        hout.close()
-      #
+        #hout.close()
+      
         gout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
             gout.write(e + '\t' + edges_jacc[e] + '\n')               
@@ -537,7 +537,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2):
+    for ind, fn in enumerate(files2[0:10000]):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
