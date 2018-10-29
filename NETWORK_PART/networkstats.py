@@ -28,5 +28,7 @@ for f in folders:
 data.sort(key=lambda tup: tup[0])
 
 
+fout = open('networks/' + ctype + '_temporal_network_stats.dat', 'w')
 for (y, n, e) in data:
-    print y, '\t', n, '\t', e
+    fout.write( str(y) + '\t' + str(n) + '\t' + str(e) + '\n')
+fout.close()
