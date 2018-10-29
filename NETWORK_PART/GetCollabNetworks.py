@@ -370,7 +370,7 @@ def process_yearly_nw(args):
 
                     fields = line.strip().split('\t') 
            
-                    print 'FFF   ', field, '\n'
+                    print 'FFF   ', fields, '\n'
                  
 
                     if len(fields) == 4:
