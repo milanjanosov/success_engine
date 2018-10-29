@@ -349,7 +349,7 @@ def process_yearly_nw(args):
         n     = len(files)
         nodes = set()
 
-        for ind, fn in enumerate(files[0:100]):
+        for ind, fn in enumerate(files):
                   
             director = fn.split('_')[0]
 
@@ -358,8 +358,8 @@ def process_yearly_nw(args):
             
 
             #  TEST Pa	ROS: nm0160614	nm0580726
-            if 'nm0000184' == director :#and yearLIMIT == 2017:   
-            #  if ind == 1000: break
+            #if 'nm0000184' == director :#and yearLIMIT == 2017:   
+              if ind == 1000: break
 
 
                 if ind % 100 == 0: 
