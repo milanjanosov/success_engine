@@ -349,7 +349,7 @@ def process_yearly_nw(args):
         n     = len(files)
         nodes = set()
 
-        for ind, fn in enumerate(files):
+        for ind, fn in enumerate(files[0:1000]):
                   
             director = fn.split('_')[0]
 
@@ -531,9 +531,6 @@ def create_full_nws(sample):
     nnn    = len(files)
     nnnn   = len(files2)
 
-
-
-    print 'NAAA'
 
 
     individuals_movie_seq = {}
