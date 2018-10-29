@@ -353,8 +353,7 @@ def process_yearly_nw(args):
                   
             director = fn.split('_')[0]
 
-            print director
-
+       
             
 
             #  TEST Pa	ROS: nm0160614	nm0580726
@@ -366,7 +365,7 @@ def process_yearly_nw(args):
 
                 if ind % 100 == 0: 
                     print thread_id, '/', num_threads, '\t', yearLIMIT, '\t', ind, '/', n
-                    print root + fn
+
 
                 for line in open(root + fn):
 
@@ -374,8 +373,7 @@ def process_yearly_nw(args):
 
                     fields = line.strip().split('\t') 
            
-                    print 'fields   ', fields
-
+                 
 
                     if len(fields) == 4:
 
