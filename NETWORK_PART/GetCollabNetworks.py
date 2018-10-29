@@ -536,7 +536,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2):
+    for ind, fn in enumerate(files2[0:100000]):
         
         if ind % 100 == 0: print ind, '/', nnn
 
