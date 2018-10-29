@@ -567,7 +567,7 @@ def create_full_nws(sample):
                 
     tipus = 'ALL'        
 
-    '''for i in range(0,num_threads):  
+    for i in range(0,num_threads):  
         p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq, ids_names], ))
         Pros.append(p)
         p.start()
@@ -575,7 +575,7 @@ def create_full_nws(sample):
     for t in Pros:
         t.join()
     
-    '''
+   
        
     
 
