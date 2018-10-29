@@ -55,7 +55,7 @@ def get_everyones_first():
     ffiles = ['simple-careers/film-' + ctype + '-simple-careers/' + fn for fn in   os.listdir('simple-careers/film-' + ctype + '-simple-careers')]
     nnn    = len(ffiles)
 
-    fout   = open('users_types/FirstYears_Q' + ctype + '.dat', 'w')
+    fout   = open('users_types/FirstYears_ALL' + ctype + '.dat', 'w')
 
 
     for ind, fn in enumerate(ffiles):
@@ -303,6 +303,18 @@ def process_yearly_nw(args):
     ids_names             = args[9]
 
 
+
+
+
+
+
+    '''    ---------------------------------------    '''
+    '''   FirstYears_QEVERdirector  CLEANING NEEDED   '''
+    '''    ---------------------------------------    '''
+
+
+
+
     ''' parse year stuff, only for QQ right now '''
     user_first = {}  
     #for line in open('users_types/FirstYears_Qdirector.dat'):
@@ -310,12 +322,12 @@ def process_yearly_nw(args):
     #    user_first[fields[0]] = float(fields[1]) 
     
     '''NOW QE <---- parse year stuff, only for QQ right now '''
-    for line in open('users_types/FirstYears_QEVERdirector.dat'):
-        fields = line.strip().split('\t')
-        user_first[fields[0]] = float(fields[1]) 
+   # for line in open('users_types/FirstYears_QEVERdirector.dat'):
+   #     fields = line.strip().split('\t')
+   #     user_first[fields[0]] = float(fields[1]) 
     
 
-    Qdir  = set([line.strip() for line in open('users_types/Q_' + 'film' + '_' + ctype + '_namelist.dat')])
+    #Qdir  = set([line.strip() for line in open('users_types/Q_' + 'film' + '_' + ctype + '_namelist.dat')])
 
 
 
@@ -325,8 +337,8 @@ def process_yearly_nw(args):
         nodes      = set()
         outfolder  = 'networks' + sam + '/' + ctype + '/' + ctype + tipus + '_' + str(yearLIMIT)
         edges_jacc = {}
-        edges_aa   = {}
-        edges_cnt  = {}
+        #edges_aa   = {}
+        #edges_cnt  = {}
 
         print  thread_id, yearLIMIT
 
@@ -372,11 +384,11 @@ def process_yearly_nw(args):
                                 rating = float(rating)                        
         
 
-                                if year <= yearLIMIT and rating > 0.0 and year >= user_first[director]:                        
+                                if year <= yearLIMIT and rating > 0.0: # and year >= user_first[director]:                        
 
                                     # casts need to be handled as full graphs 
             
-                                    cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc and user_first[ccc] <= year]
+                                    cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc] # and user_first[ccc] <= year]
                         
 
                                     for c1 in cast:
@@ -385,7 +397,7 @@ def process_yearly_nw(args):
                                             if c1 != c2:
 
 
-                                                print c1, c2
+                                                #print c1, c2
 
 
                                                 edge = '\t'.join(sorted([c1, c2]))
@@ -395,59 +407,59 @@ def process_yearly_nw(args):
                                                 nodes.add(c1)
                                                 nodes.add(c2)
 
-                                                if c2 in Qdir:
+                                                #if c2 in Qdir:
 
-                                                    movies1 = set(individuals_movie_seq[c1][movie])
-                                                    movies2 = set(individuals_movie_seq[c2][movie])
-                                                    edges_jacc[edge] = str(jaccard(movies1, movies2))
-                                                    edges_aa[edge]   = str(adamic_adar(movies1, movies2))
-                         
-                                                    if edge not in edges_cnt:
-                                                        edges_cnt[edge]  = set()     
-                                                    else:
-                                                        edges_cnt[edge].add(movie)                            
+                                                movies1 = set(individuals_movie_seq[c1][movie])
+                                                movies2 = set(individuals_movie_seq[c2][movie])
+                                                edges_jacc[edge] = str(jaccard(movies1, movies2))
+                                                #edges_aa[edge]   = str(adamic_adar(movies1, movies2))
+                     
+                                                #if edge not in edges_cnt:
+                                                #    edges_cnt[edge]  = set()     
+                                                #else:
+                                                #    edges_cnt[edge].add(movie)                            
                                           
      
 
 
-        '''hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
-        for e in edges_jacc.keys():
-            hout.write(e + '\t' + str(len(edges_cnt[e])) + '\n')               
+        #hout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_cnt_'    + str(yearLIMIT) + '.dat', 'w')
+        #for e in edges_jacc.keys():
+        #    hout.write(e + '\t' + str(len(edges_cnt[e])) + '\n')               
         hout.close()
-      
-        gout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_'    + str(yearLIMIT) + '.dat', 'w')
+      #
+        gout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_'    + str(yearLIMIT) + '.dat', 'w')
         for e in edges_jacc.keys():
             gout.write(e + '\t' + edges_jacc[e] + '\n')               
         gout.close()
 
-        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'    + str(yearLIMIT) + '.dat', 'w')
-        for e in edges_jacc.keys():
-            iout.write(e + '\t' + edges_aa[e] + '\n')               
-        iout.close()
+        #iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_'    + str(yearLIMIT) + '.dat', 'w')
+        #for e in edges_jacc.keys():
+        #    iout.write(e + '\t' + edges_aa[e] + '\n')               
+        #iout.close()
 
-        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
+        iout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('Source\tTarget\tWeight\tType\n')
         for e in edges_jacc.keys():
             if edges_jacc[e] > 0:
                 iout.write(e + '\t' + edges_jacc[e] + '\tundirected\n')               
         iout.close()
 
-        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_gephi' + str(yearLIMIT) + '.dat', 'w')
-        iout.write('Source\tTarget\tWeight\tType\n')
-        for e in edges_jacc.keys():
-            if edges_aa[e] > 0:
-                iout.write(e + '\t' + edges_aa[e] + '\tundirected\n')               
-        iout.close()
+        #iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_gephi' + str(yearLIMIT) + '.dat', 'w')
+        #iout.write('Source\tTarget\tWeight\tType\n')
+        #for e in edges_jacc.keys():
+        #    if edges_aa[e] > 0:
+        #        iout.write(e + '\t' + edges_aa[e] + '\tundirected\n')               
+        ##iout.close()
 
 
 
-        iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_node_list_gephi' + str(yearLIMIT) + '.dat', 'w')
+        iout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_node_list_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('ID\tLabel\n')
         for n in list(nodes):
             iout.write(n + '\t' + ids_names[n] + '\n')               
         iout.close()
 
-        '''
+      
 
 
 
@@ -486,7 +498,7 @@ def create_full_nws(sample):
     field     = 'film'
     sam       = ''
     neighbrs  = {}
-    tipusok   = ['-QQ']#, '-QE', '']
+    tipusok   = ['-ALL']#, '-QE', '']
     ids_names = {}
 
  
@@ -504,66 +516,65 @@ def create_full_nws(sample):
 
 
 
-    for tipus in tipusok: 
+    #for tipus in tipusok: 
 
-        if len(sam) > get_sample():
-            get_sample()
-
-
-        root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-QQ/'
-        root2  = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-QQ'  
+    if len(sam) > get_sample():
+        get_sample()
 
 
-        files2 = os.listdir(root2)  
-        files  = os.listdir(root)
-        nnn    = len(files)
+    root   = 'collab-careers/' + field + '-' + ctype + '-collab-careers-ALL/'
+    root2  = 'collab-cumulative-careers/' + field + '_' + ctype + '-collab-cumulative-careers-ALL'  
 
 
+    files2 = os.listdir(root2)  
+    files  = os.listdir(root)
+    nnn    = len(files)
 
 
 
 
-        individuals_movie_seq = {}
-        for ind, fn in enumerate(files2):
-            
-            if ind % 100 == 0: print ind, '/', nnn
-
-            #if ind == 500: break
-            name = fn.split('_')[0]    
-            individuals_movie_seq[name] = {} 
 
 
-            for line in open(root2 + '/' + fn):
-
-
-                try:
-
-                    movie, year, prevmovs = line.strip().split('\t')
-                    prevmovs = prevmovs.split(',')
-
-                    individuals_movie_seq[name][movie] = prevmovs
-                except:
-                    pass
-
-
-
-        yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
-        random.shuffle(yearLIMITs)
-
-        num_threads = 40
-        files_chunks = chunkIt(yearLIMITs, num_threads)
-        Pros = []
-                    
-            
-        for i in range(0,num_threads):  
-            p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq, ids_names], ))
-            Pros.append(p)
-            p.start()
-                 
-        for t in Pros:
-            t.join()
+    individuals_movie_seq = {}
+    for ind, fn in enumerate(files2):
         
-      
+        if ind % 100 == 0: print ind, '/', nnn
+
+        #if ind == 500: break
+        name = fn.split('_')[0]    
+        individuals_movie_seq[name] = {} 
+
+
+        for line in open(root2 + '/' + fn):
+
+
+            try:
+                movie, year, prevmovs = line.strip().split('\t')
+                prevmovs = prevmovs.split(',')
+
+                individuals_movie_seq[name][movie] = prevmovs
+            except:
+                pass
+
+
+
+    yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
+    random.shuffle(yearLIMITs)
+
+    num_threads = 40
+    files_chunks = chunkIt(yearLIMITs, num_threads)
+    Pros = []
+                
+        
+    for i in range(0,num_threads):  
+        p = Process(target = process_yearly_nw, args=([files_chunks[i], i+1, num_threads, sam, ctype, tipus, root, files, individuals_movie_seq, ids_names], ))
+        Pros.append(p)
+        p.start()
+             
+    for t in Pros:
+        t.join()
+    
+  
        
 
 
