@@ -360,7 +360,7 @@ def process_yearly_nw(args):
             #if 'nm0000184' == director :#and yearLIMIT == 2017:   
             if 2 == 2:
 
-                if ind == 1000: break
+                if ind == 10000: break
 
 
                 if ind % 100 == 0: 
@@ -395,8 +395,7 @@ def process_yearly_nw(args):
                                     # casts need to be handled as full graphs 
             
 
-                                    print 'FASZ'
-
+                                  
                                     cast = [ccc for ccc in list(set(cast.split(',') + [director])) if 'cast' not in ccc] # and user_first[ccc] <= year]
                         
 
@@ -421,7 +420,7 @@ def process_yearly_nw(args):
                                                 movies1 = set(individuals_movie_seq[c1][movie])
                                                 movies2 = set(individuals_movie_seq[c2][movie])
 
-                                                print c1, c2, '\t', jaccard(movies1, movies2)
+                                                print 'EE    ', edge
 
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 #edges_aa[edge]   = str(adamic_adar(movies1, movies2))
