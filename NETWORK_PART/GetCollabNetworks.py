@@ -370,13 +370,19 @@ def process_yearly_nw(args):
 
                     fields = line.strip().split('\t') 
            
-                    print 'FFF   ', fields, '\n'
-                 
+                
 
-                    if len(fields) == 4:
+                    if len(fields) > 3:
 
 
-                        movie, year, rating, cast = fields
+                        movie  = fields[0]
+                        year   = fields[1]
+                        rating = fields[2]
+                        cast   = fields[3]
+
+
+
+
                         if len(year) > 0:
                             year = str(int(min([float(y) for y in year.split('-')])))
 
@@ -418,8 +424,7 @@ def process_yearly_nw(args):
                                                 movies1 = set(individuals_movie_seq[c1][movie])
                                                 movies2 = set(individuals_movie_seq[c2][movie])
 
-                                                print 'EE    ', edge, jaccard(movies1, movies2)
-
+                                              
                                                 edges_jacc[edge] = str(jaccard(movies1, movies2))
                                                 #edges_aa[edge]   = str(adamic_adar(movies1, movies2))
                      
@@ -448,9 +453,9 @@ def process_yearly_nw(args):
 
         iout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_edges_list_jaccard_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('Source\tTarget\tWeight\tType\n')
-        for e in edges_jacc.keys():
-            if edges_jacc[e] > 0:
-                iout.write(e + '\t' + edges_jacc[e] + '\tundirected\n')               
+        for e, ww in edges_jacc.items():
+            if ww > 0.0:
+                iout.write(e + '\t' + ww + '\tundirected\n')               
         iout.close()
 
         #iout  = open(outfolder + '/Q' + ctype + '_' + ctype + tipus + '_edges_list_aa_gephi' + str(yearLIMIT) + '.dat', 'w')
@@ -465,7 +470,10 @@ def process_yearly_nw(args):
         iout  = open(outfolder + '/ALL' + ctype + '_' + ctype + tipus + '_node_list_gephi' + str(yearLIMIT) + '.dat', 'w')
         iout.write('ID\tLabel\n')
         for n in list(nodes):
-            iout.write(n + '\t' + ids_names[n] + '\n')               
+            try:
+                iout.write(n + '\t' + ids_names[n] + '\n')               
+            except:
+                pass       
         iout.close()
     
     
@@ -545,7 +553,7 @@ def create_full_nws(sample):
 
 
     individuals_movie_seq = {}
-    for ind, fn in enumerate(files2[0:10000]):
+    for ind, fn in enumerate(files2):
         
         if ind % 100 == 0: print ind, '/', nnnn
 
@@ -567,10 +575,10 @@ def create_full_nws(sample):
 
 
 
-    yearLIMITs = range(1999, 2000)#[1990, 2000, 2010, 2020]
+    yearLIMITs = range(1900, 2018)#[1990, 2000, 2010, 2020]
     random.shuffle(yearLIMITs)
 
-    num_threads = 1
+    num_threads = 40
     files_chunks = chunkIt(yearLIMITs, num_threads)
     Pros = []
                 
