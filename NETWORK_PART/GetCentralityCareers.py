@@ -94,11 +94,33 @@ def get_centrality_careers():
 
                 print name, year, impact, movie
 
-                #try:
-                strength    = str(strengths[name][year])
-                clustering  = str(clusterings[name][year])
-                degree      = str(degrees[name][year])
-                pagerank    = str(pageranks[name][year])
+       
+                if year in strengths[name]:
+                    strength = str(strengths[name][year])
+                else:
+                    strength = '0'
+
+
+                if year in clusterings[name]:
+                    clustering  = str(clusterings[name][year])
+                else:
+                    clustering = '0'
+
+
+                if year in degrees[name]:
+                    degree = str(degrees[name][year])
+                else:
+                    degree = '0'
+
+
+                if year in pageranks[name]:
+                    pagerank = str(pageranks[name][year])
+                else:
+                    pagerank = '0'
+
+
+
+
 
                 fout.write(name + '\t' + movie + '\t' + year + '\t' + impact + '\t' + strength + '\t' + clustering + '\t' + degree + '\t' + pagerank + '\n')
                 #except: 
