@@ -13,7 +13,7 @@ def get_centrality_careers():
     field    = 'film'
     ctype    = 'director'
     tipus    = 'ALL'
-    infolder = 'collab-careers/film-director-ALL-collab-careers' #+ field + '-' + ctype + '-collab-careers-' + tipus 
+    infolder = '../QMODELNEW/Data/director/film-director-simple-careers-limit-10/' #+ field + '-' + ctype + '-collab-careers-' + tipus 
     weight   = 'jaccard'
     Qdir     = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
 
@@ -95,9 +95,9 @@ def get_centrality_careers():
             print fn
 
             for line in open(infolder + '/' + fn):      
-                movie, year, impact, cast = line.strip().split('\t')
+                movie, year, impact = line.strip().split('\t')
 
-                print name, year, impact, movie
+                print movie, year, impact
 
       
                 if year in strengths[name]:
