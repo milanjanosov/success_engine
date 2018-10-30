@@ -98,7 +98,7 @@ def get_centrality_careers():
                 degree      = str(degrees[name][year])
                 pagerank    = str(pageranks[name][year])
 
-                fout.write(name + '\t' + movie + '\t' + year + '\t' + impact + '\t' + strengths + '\t' + clustering + '\t' + degree + '\t' + pagerank + '\n')
+                fout.write(name + '\t' + movie + '\t' + year + '\t' + impact + '\t' + strength + '\t' + clustering + '\t' + degree + '\t' + pagerank + '\n')
                 #except: 
                 #    pass
 
