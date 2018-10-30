@@ -32,6 +32,9 @@ def get_centrality_careers():
     for centr in centralityfiles:
         
         year      = centr.split('_')[1]
+
+        print year
+
         datafile  = 'networks/director/' + centr + '/director_' + year + '_jacc/ALLdirector_director__NODE_CENTRALITIES_jaccard_' + year + '_weighted.dat'
         dataframe = pd.read_csv(datafile, sep = '\t', index_col=0)
  
