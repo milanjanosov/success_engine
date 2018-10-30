@@ -79,9 +79,10 @@ def get_centrality_careers():
     for ind, fn in enumerate(files):
 
         #print ind, '/', nnn
+        print fn
 
+        name = fn.split('.')[0]#.split('_')[0]
 
-        name = fn.split('_')[0]
 
 #        if name in Qdir:
 
