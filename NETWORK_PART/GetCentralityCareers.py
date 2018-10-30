@@ -92,7 +92,7 @@ def get_centrality_careers():
             fout = open(outfolder + '/' + name + '_centrality_careers.dat', 'w')
 
             
-
+            print fn
 
             for line in open(infolder + '/' + fn):      
                 movie, year, impact, cast = line.strip().split('\t')
