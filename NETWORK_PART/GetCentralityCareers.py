@@ -78,7 +78,7 @@ def get_centrality_careers():
 
     for ind, fn in enumerate(files):
 
-        print ind, '/', nnn
+        #print ind, '/', nnn
 
 
         name = fn.split('_')[0]
