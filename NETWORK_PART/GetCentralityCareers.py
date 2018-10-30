@@ -70,7 +70,7 @@ def get_centrality_careers():
     files     = os.listdir(infolder)
     outfolder = 'centrality-careers/centrality_careers_directors_ALL'
     nnn       = len(files)
-    Qnames    = degree.keys()
+
 
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
