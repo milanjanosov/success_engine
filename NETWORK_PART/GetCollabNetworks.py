@@ -621,14 +621,14 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
     print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'strength,       ',        weighttype,   round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    betweenness  = G.betweenness( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses,  ',  weighttype,  round(time.time() - t1,2), ' seconds'
+  #  t1 = time.time()
+  #  betweenness  = G.betweenness( weights = iweight )
+  #  print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'betweennesses,  ',  weighttype,  round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    closenesses    = G.closeness( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'closeness,      ',    weighttype,  round(time.time() - t1,2), ' seconds'
+  #  t1 = time.time()
+  #  closenesses    = G.closeness( weights = iweight )
+  #  print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'closeness,      ',    weighttype,  round(time.time() - t1,2), ' seconds'
 
 
     t1 = time.time()
@@ -641,14 +641,14 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
     print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'pagerank,       ',     weighttype,  round(time.time() - t1,2), ' seconds'
 
 
-    t1 = time.time()
-    eigenvector   = G.eigenvector_centrality( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector,    ',  weighttype,  round(time.time() - t1,2), ' seconds'
+   # t1 = time.time()
+   # eigenvector   = G.eigenvector_centrality( weights = iweight )
+   # print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'eigenvector,    ',  weighttype,  round(time.time() - t1,2), ' seconds'
     
 
-    t1 = time.time()
-    constraint   = G.constraint( weights = iweight )
-    print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'constraint,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
+   # t1 = time.time()
+   # constraint   = G.constraint( weights = iweight )
+   # print thread_id, '/', num_threads, '   ', yearLIMIT,  '\t', 'constraint,     ',   weighttype,  round(time.time() - t1,2), ' seconds'
     
 
     node_centralities = {}
@@ -660,12 +660,12 @@ def get_network_measures(G, outfolder, weighttype, thread_id, ctype, tipus, num_
 
         node_centralities[node] = { 'degree'        : degree[i],
                                     'strength'      : strength[i], 
-                                    'betweenness'   : betweenness[i], 
-                                    'closeness'     : closenesses[i],
+                                   # 'betweenness'   : betweenness[i], 
+                                   # 'closeness'     : closenesses[i],
                                     'clustering'    : clustering[i],
-                                    'pagerank'      : pagerank[i] ,
-                                    'eigenvector'   : eigenvector[i],
-                                    'constraint'    : constraint[i]
+                                    'pagerank'      : pagerank[i] 
+                                   # 'eigenvector'   : eigenvector[i],
+                                   # 'constraint'    : constraint[i]
                                    }
  
 
