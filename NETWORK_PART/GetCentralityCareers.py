@@ -12,7 +12,7 @@ def get_centrality_careers():
 
     field    = 'film'
     ctype    = 'director'
-    tipus    = 'QQ'
+    tipus    = 'ALL'
     infolder = 'collab-careers/' + field + '-' + ctype + '-collab-careers-' + tipus
     weight   = 'jaccard'
     Qdir     = set([line.strip() for line in open('users_types/Q_' + field + '_' + ctype + '_namelist.dat')])
