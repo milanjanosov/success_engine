@@ -92,6 +92,8 @@ def get_centrality_careers():
             for line in open(infolder + '/' + fn):      
                 movie, year, impact, cast = line.strip().split('\t')
 
+                print name, year, impact, movie
+
                 #try:
                 strength    = str(strengths[name][year])
                 clustering  = str(clusterings[name][year])
