@@ -90,10 +90,10 @@ def get_centrality_careers():
                 movie, year, impact, cast = line.strip().split('\t')
 
                 #try:
-                strength    = strengths[name][year]
-                clustering  = clusterings[name][year]
-                degree      = degrees[name][year]
-                pagerank    = pageranks[name][year]
+                strength    = str(strengths[name][year])
+                clustering  = str(clusterings[name][year])
+                degree      = str(degrees[name][year])
+                pagerank    = str(pageranks[name][year])
 
                 fout.write(name + '\t' + movie + '\t' + year + '\t' + impact + '\t' + strengths + '\t' + clustering + '\t' + degree + '\t' + pagerank + '\n')
                 #except: 
