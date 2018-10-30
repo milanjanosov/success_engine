@@ -29,7 +29,7 @@ def get_centrality_careers():
     strengths       = {}
 
 
-    for centr in centralityfiles:
+    '''for centr in centralityfiles:
         
         year      = centr.split('_')[1]
 
@@ -60,7 +60,7 @@ def get_centrality_careers():
                     clusterings[name][year]  = clustering[name]
                     pageranks[name][year]    = pagerank[name]
 
-
+    '''
   
 
 
@@ -100,7 +100,7 @@ def get_centrality_careers():
                 print movie, year, impact
 
       
-                if year in strengths[name]:
+                '''if year in strengths[name]:
                     strength = str(strengths[name][year])
                 else:
                     strength = '0'
@@ -131,7 +131,7 @@ def get_centrality_careers():
                 #except: 
                 #    pass
 
-
+                '''
             fout.close()
    
     
