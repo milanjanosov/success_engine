@@ -33,30 +33,32 @@ def get_centrality_careers():
         
         year      = centr.split('_')[1]
 
-        print year
+        if int(year) > 2000:
 
-        datafile  = 'networks/director/' + centr + '/director_' + year + '_jacc/ALLdirector_director__NODE_CENTRALITIES_jaccard_' + year + '_weighted.dat'
-        dataframe = pd.read_csv(datafile, sep = '\t', index_col=0)
- 
-        degree     = dict(dataframe.degree)
-        strength   = dict(dataframe.strength)
-        clustering = dict(dataframe.clustering)
-        pagerank   = dict(dataframe.pagerank)
+            print year
+
+            datafile  = 'networks/director/' + centr + '/director_' + year + '_jacc/ALLdirector_director__NODE_CENTRALITIES_jaccard_' + year + '_weighted.dat'
+            dataframe = pd.read_csv(datafile, sep = '\t', index_col=0)
+     
+            degree     = dict(dataframe.degree)
+            strength   = dict(dataframe.strength)
+            clustering = dict(dataframe.clustering)
+            pagerank   = dict(dataframe.pagerank)
 
 
-        for name in degree.keys():
+            for name in degree.keys():
 
-            if name in Qdir:
+                if name in Qdir:
 
-                if name not in degrees:     degrees[name]     = {}
-                if name not in strengths:   strengths[name]   = {}
-                if name not in clusterings: clusterings[name] = {}
-                if name not in pageranks:   pageranks[name]   = {}
+                    if name not in degrees:     degrees[name]     = {}
+                    if name not in strengths:   strengths[name]   = {}
+                    if name not in clusterings: clusterings[name] = {}
+                    if name not in pageranks:   pageranks[name]   = {}
 
-                degrees[name][year]      = degree[name]
-                strengths[name][year]    = strength[name]
-                clusterings[name][year]  = clustering[name]
-                pageranks[name][year]    = pagerank[name]
+                    degrees[name][year]      = degree[name]
+                    strengths[name][year]    = strength[name]
+                    clusterings[name][year]  = clustering[name]
+                    pageranks[name][year]    = pagerank[name]
 
 
   
@@ -81,7 +83,10 @@ def get_centrality_careers():
 
         name = fn.split('_')[0]
 
-        if name in Qdir:
+#        if name in Qdir:
+
+        if name == 'nm0996502':
+    
 
 
             fout = open(outfolder + '/' + name + '_centrality_careers.dat', 'w')
@@ -94,7 +99,7 @@ def get_centrality_careers():
 
                 print name, year, impact, movie
 
-       
+      
                 if year in strengths[name]:
                     strength = str(strengths[name][year])
                 else:
