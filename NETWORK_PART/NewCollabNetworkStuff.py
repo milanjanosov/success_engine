@@ -437,14 +437,20 @@ def get_centralities(compare):
         os.makedirs(folderout)
        
 
+    time_nx = []
+    time_ig = []
+    ftimes  = open(folderout + 'compare_comp_time.dat', 'w')
 
-    for nc in params[0:1]:
+    ftimes.write('nc\tt_nx\tt_ig\n')
+
+    for nc in params[0:4]:
 
       
 
         ''' NETWORKX '''
 
         edges_nx = []
+        t1       = time.time()
 
         print 'Parse edges'
         for ind, line in enumerate(open('networks/backboning/nc_backboned_' + str(nc))):
@@ -458,25 +464,25 @@ def get_centralities(compare):
         GC_nx = [c for c in sorted(nx.connected_components(G_nx), key=len, reverse=True)][0]
 
 
-        print 'Get degrees'
+        print nc, '\tGet NC degrees'
         degrees_nx = add_df_meas(nx.degree_centrality(G_nx), 'degree_nx')
 
-        print 'Get clustering'
+        print nc, '\tGet NC clustering'
         clusterings_nx = add_df_meas(nx.clustering(G_nx), 'clustering_nx')
 
-        print 'Get pageranks'
+        print nc, '\tGet NC pageranks'
         pageranks_nx   = add_df_meas(nx.pagerank(G_nx), 'pagerank_nx')
 
-        print 'Get betweenness'
+        print nc, '\tGet NC betweenness'
         betweennesses_nx   = add_df_meas(nx.betweenness_centrality(G_nx), 'betweenness_nx')
   
-        print 'Get closeness'
+        print nc, '\tGet NC closeness'
         closenesses_nx   = add_df_meas(nx.closeness_centrality(G_nx), 'closeness_nx')
 
         #print 'Get eigenvector'
         #eigenvectors_nx   = add_df_meas(nx.eigenvector_centrality(G_nx), 'eigenvector_mx')
 
-        print 'Get constraint'
+        print nc, '\tGet NC constraint'
         constraints_nx   = add_df_meas(nx.constraint(G_nx), 'constraint_nx')
         
         df_nx = degrees_nx.merge(clusterings_nx, left_index=True,  right_index=True)
@@ -485,12 +491,18 @@ def get_centralities(compare):
         df_nx = df_nx.merge(closenesses_nx,      left_index=True,  right_index=True)
         df_nx = df_nx.merge(constraints_nx,      left_index=True,  right_index=True)
 
-    
+        t2   = time.time()
+        t_nx = t2-t1
+        time_nx.append(t_nx)
+
+        print 'Time for NX:  ', round(t_nx , 2   ), ' s'
+
 
 
         ''' IGRAPH '''
 
         # get the igraph network
+        t1       = time.time()
         ftempname = 'tempfile_nc_backboned' + str(nc)
         ftemp = open(ftempname, 'w')
         for line in open('networks/backboning/nc_backboned_' + str(nc)):
@@ -504,6 +516,7 @@ def get_centralities(compare):
         # get degree thats matching
         # nw computes degree centrality, which is the k/(N-1), while ig computes k  
         # https://networkx.github.io/documentation/networkx-1.9/reference/generated/networkx.algorithms.centrality.degree_centrality.html
+        print '\n', nc, '\tGet IG degrees'
         degrees_ig = {}
         G_ig.vs['degree_ig'] =  G_ig.degree()
         N = len(G_ig.vs['degree_ig'])
@@ -513,6 +526,7 @@ def get_centralities(compare):
 
         # get the matching clustering
         # when nw gives 0 for clustering, ig gives nan
+        print nc, '\tGet IG clustering'
         clusterings_ig = {}
         G_ig.vs['clustering_ig'] = G_ig.transitivity_local_undirected( weights = None)
         for v in G_ig.vs():
@@ -524,6 +538,7 @@ def get_centralities(compare):
         # match betweenness
         # nx gives the normalzed betweenness, while igraph gives the raw value. normalization vactor is
         # Bnorm = =  (n*n-3*n+2) / 2.0                      http://igraph.org/r/doc/betweenness.html    
+        print nc, '\tGet IG betweenness'
         G_ig.vs['betweenness_ig']  = G_ig.betweenness( weights = None)
         betweennesses_ig = {}
         n = len(G_ig.vs())
@@ -537,7 +552,7 @@ def get_centralities(compare):
         #    https://networkx.github.io/documentation/networkx-1.10/reference/generated/networkx.algorithms.centrality.closeness_centrality.html
         # IG: If the graph is not connected, and there is no path between two vertices, the number of vertices is used instead the length of the geodesic. This is always longer than the longest possible geodesic.
         # http://igraph.org/python/doc/igraph.GraphBase-class.html#closeness
-
+        print nc, '\tGet IG closeness'
         closenesses_ig = {}
         G_ig.vs['closeness_ig']  = G_ig.closeness( weights = None, normalized = False )
         for v in G_ig.vs():
@@ -546,6 +561,7 @@ def get_centralities(compare):
   
         # get matching pagerank values
         # they match, besides some numerical things
+        print nc, '\tGet IG pageranks'
         pageranks_ig = {}
         G_ig.vs['pagerank_ig'] = G_ig.pagerank( weights = None)
         for v in G_ig.vs():
@@ -553,6 +569,7 @@ def get_centralities(compare):
         
                 
         # constrains match well
+        print nc, '\tGet IG constraint'
         constraints_ig = {}
         G_ig.vs['constraint_ig']  = G_ig.constraint( weights = None )
         for v in G_ig.vs():
@@ -576,6 +593,13 @@ def get_centralities(compare):
         df_ig = df_ig.merge(closenesses_ig,      left_index=True,  right_index=True)
         df_ig = df_ig.merge(constraints_ig,      left_index=True,  right_index=True)
 
+        t2   = time.time()
+        t_ig = t2 - t1
+        time_nx.append(t_ig)
+
+        print 'Time for IG:  ', round( t_ig , 2  ), ' s\n\n'
+
+
 
         df_nx.to_csv(folderout + 'nc_backboned_centralities_NX_' + str(nc), na_rep='nan')
         df_ig.to_csv(folderout + 'nc_backboned_centralities_IG_' + str(nc), na_rep='nan')
@@ -590,7 +614,9 @@ def get_centralities(compare):
             compare('constraint',  dict(constraints_nx.constraint_nx),    constraints_ig,   GC_nx)
 
 
-
+        
+        ftimes.write(str(nc) + '\t' + str(t_nx) + '\t' + str(t_ig) + '\n')
+    ftimes.close()
 
 
 
