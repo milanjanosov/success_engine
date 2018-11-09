@@ -411,9 +411,9 @@ def get_network_centralities():
 
 
 
-#get_career_start()
-#get_directors_all_contributed_movies()
-#create_cumulative_careers()
+get_career_start()
+get_directors_all_contributed_movies()
+create_cumulative_careers()
 
 get_networks()
 #get_network_centralities()
