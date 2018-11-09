@@ -1,7 +1,7 @@
 import os
 import sys
 import gzip
-
+from igraph import Graph
 
 
 
@@ -232,7 +232,7 @@ def get_networks():
         year    = get_year(movies_years[movie])
 
 
-        print jind, '/703216'
+        print jind+1, '/703216'
    
 
 
@@ -258,7 +258,7 @@ def get_networks():
                     movies2  = director_movies[director2][year]
                     jaccardv = jaccard(movies1, movies2)
                     count    = len(movies1.intersection(movies2))
-                    edge     = '--'.join(sorted([director1, director2]))
+                    edge     = '\t'.join(sorted([director1, director2]))
 
                     for yyyy in range(year,2018):
 
@@ -307,11 +307,30 @@ def get_networks():
 
 
 
+
+''' COMPUTE NETWORK CENTRALITIES '''
+
+def get_centralities():
+
+    years = [1986]
+
+    for year in years:
+
+        fname = 'NEWTemporal/3_edgelists/' + str(year) + '/edge_list_jaccard.dat'
+
+        G_ig = Graph.Read_Ncol(fname, weights = True, directed=False)
+
+        for e in G_ig.es():
+            print e
+
+
+
 #get_career_start()
 #get_directors_all_contributed_movies()
 #create_cumulative_careers()
 
-get_networks()
+#get_networks()
+get_centralities()
 
 
 
