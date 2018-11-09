@@ -201,7 +201,7 @@ def get_networks():
 
     mmm = len(directors)
 
-    dirrrrs = ['nm0000184', 'nm0000245']
+   # dirrrrs = ['nm0000184', 'nm0000245']
 
     for ind, dddd in enumerate(directors):
 
@@ -232,43 +232,44 @@ def get_networks():
         year    = get_year(movies_years[movie])
 
 
-        #print jind, '\t703216\t', len(cast_s) 
+        print jind, '/703216'
    
 
 
         for ind, director1 in enumerate(cast_l):
 
-            if director1 in dirrrrs:
+            #if director1 in dirrrrs:
 
-                start1 = start_years[director1]
+            start1 = start_years[director1]
 
-                for director2 in cast_l[ind+1:]:
+            for director2 in cast_l[ind+1:]:
 
-                    #if director2 in dirrrrs:
+                #if director2 in dirrrrs:
 
-                    start2 = start_years[director2]
+                start2 = start_years[director2]
 
-                    if year >= start1 and year >= start2:
+                if year >= start1 and year >= start2:
 
-                        if year not in edges_cnt:  edges_cnt[year]  = {}
-                        if year not in edges_jacc: edges_jacc[year] = {}
+                    if year not in edges_cnt:  edges_cnt[year]  = {}
+                    if year not in edges_jacc: edges_jacc[year] = {}
 
-        
+    
 
-                        movies1  = director_movies[director1][year]
-                        movies2  = director_movies[director2][year]
-                        jaccardv = jaccard(movies1, movies2)
-                        count    = len(movies1.intersection(movies2))
-                        edge     = '--'.join(sorted([director1, director2]))
+                    movies1  = director_movies[director1][year]
+                    movies2  = director_movies[director2][year]
+                    jaccardv = jaccard(movies1, movies2)
+                    count    = len(movies1.intersection(movies2))
+                    edge     = '--'.join(sorted([director1, director2]))
 
-                        edges_cnt[year][edge]  = count
-                        edges_jacc[year][edge] = jaccardv
+                    edges_cnt[year][edge]  = count
+                    edges_jacc[year][edge] = jaccardv
 
-                        print edge, year, count, jaccardv
+                    #print edge, year, count, jaccardv
 
 
 
     folderout = 'NEWTemporal/3_edgelists/'
+    if not os.path.exists(folderout): os.makedirs(folderout)
 
     gout = open('NEWTemporal/3_edgelists/networks_size_over_time.dat', 'w')
     
