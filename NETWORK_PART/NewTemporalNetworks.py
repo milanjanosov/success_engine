@@ -357,9 +357,9 @@ def get_centraliti_Values(G_ig, year, fileout):
 
         Bnormalizer =  (N*N-3*N+2) / 2.0
         if np.isnan(v['clustering_ig']):
-            v['clustering_ig'] = 0
+            v['clustering_ig'] = 0.0
 
-        degrees_ig[v['name']]       = v['degree_ig']/float(N-1)
+        degrees_ig[v['name']]       = v['degree_ig']#/float(N-1)
         pageranks_ig[v['name']]     = v['pagerank_ig'] 
         constraints_ig[v['name']]   = v['constraint_ig']
         closenesses_ig[v['name']]   = v['closeness_ig']
@@ -438,7 +438,84 @@ def get_network_centralities():
      
 
     
-    
+
+
+''' THE NETWORK POSITIONS OVER TIME '''
+ 
+def get_centrality_careers(top_directors):
+
+    edgefolder    = 'NEWTemporal/3_edgelists/'
+    years         = sorted([y for y in os.listdir(edgefolder) if '.d' not in y])
+    directors_nw  = {}  
+
+
+    #years    = ['1927', '1928', '1929', '1930']
+
+    topnames = set(top_directors.keys())
+
+
+    for year in years:
+
+        print year
+
+        for ind, line in enumerate(open(edgefolder + year + '/' + year + '_centralities_jaccard.dat')):
+            if ind == 3: break
+
+            if 'degree_' not in line:
+
+                name,degree_ig,clustering_ig,pagerank_ig,betweennesse_ig,closenesse_ig,constraint_ig = line.strip().split(',')
+
+                if name in topnames:
+
+
+                    measures = [degree_ig,clustering_ig,pagerank_ig,betweennesse_ig,closenesse_ig,constraint_ig]
+                    names    = ['degree', 'clustering', 'pagerank', 'betweenness', 'closeness', 'constraint']
+                    measures = [float(m) for m in measures]
+
+
+                    if name not in directors_nw: directors_nw[name] = {}
+                    if year not in directors_nw: directors_nw[name][year] = {}
+
+                    for jind, meas in enumerate(measures):
+                        directors_nw[name][year][names[jind]] = meas
+                    
+
+    folderout = 'NEWTemporal/4_directors_centralities/'
+    if not os.path.exists(folderout): os.makedirs(folderout)
+
+    for director, yearly_centralities in directors_nw.items():
+
+        fout = open(folderout + director + '.dat', 'w')
+
+        for year in years:
+            
+            centralities = yearly_centralities[year]
+            fout.write( year + '\t' + '\t'.join([str(centralities[name]) for name in names]) + '\n')
+        
+        fout.close()
+
+
+
+
+
+
+top_directors = {   'nm0000184' : 'Lucas',
+                    'nm0000233' : ' Tarantino',
+                    'nm0000229' : ' Spielberg',
+                    'nm0000040' : ' Kubrick',
+                    'nm0634240' : ' Nolan',
+                    'nm0000033' : ' Hitchcock',
+                    'nm0000122' : ' Charlie Chaplin',
+                    'nm0000631' : ' Ridley Scott',
+                    'nm0001053' : ' E Coen',
+                    'nm0000142' : ' Eastwood',
+                    'nm0001392' : ' P Jackson',
+                    'nm0000591' : ' Polanski',
+                    'nm0000154' : ' Gibson',
+                    'nm0001232' : ' Forman',
+                    'nm0001628' : ' Pollack'}
+
+
 
 
 
@@ -449,35 +526,16 @@ get_directors_all_contributed_movies()
 create_cumulative_careers()
 
 get_networks()
-'''
 get_network_centralities()
-
+'''
+#
+get_centrality_careers(top_directors)
 
 ##   source /opt/virtualenv-python2.7/bin/activate
 
 
 
-''' Example careers:
 
-
-nm0000184 Lucas
-nm0000233 Tarantino
-nm0000229 Spielberg
-nm0000040 Kubrick
-nm0634240 Nolan
-nm0000033 Hitchcock
-nm0000122 Charlie Chaplin
-nm0000631 Ridley Scott
-nm0001053 E Coen
-nm0000142 Eastwood
-nm0001392 P Jackson
-nm0000591 Polanski
-nm0000154 Gibson
-nm0001232 Forman
-nm0001628 Pollack
-
-
-'''
 
 
 
