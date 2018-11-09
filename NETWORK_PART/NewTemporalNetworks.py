@@ -122,11 +122,14 @@ def create_cumulative_careers():
     folderin  = 'NEWTemporal/1_directors_movies_years/' 
     folderout = 'NEWTemporal/2_directors_cumulative_careers/'   
     files     = os.listdir(folderin)
+    nnn       = len(files)
 
     if not os.path.exists(folderout): os.makedirs(folderout)
 
 
-    for fn in files:
+    for ind, fn in enumerate(files):
+
+        print ind, '/', nnn
 
         director      = fn.replace('.dat', '')
         yearly_movies = {}        
