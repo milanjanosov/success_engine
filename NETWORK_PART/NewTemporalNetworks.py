@@ -329,8 +329,8 @@ def get_centralities():
 #get_directors_all_contributed_movies()
 #create_cumulative_careers()
 
-#get_networks()
-get_centralities()
+get_networks()
+#get_centralities()
 
 
 
