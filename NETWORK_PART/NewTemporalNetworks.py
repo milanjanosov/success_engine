@@ -102,7 +102,7 @@ def get_directors_all_contributed_movies():
     
 
 
-    folderout = 'NEWTemporal/directors_movies_years/'
+    folderout = 'NEWTemporal/1_directors_movies_years/'
     if not os.path.exists(folderout):
         os.makedirs(folderout)
 
@@ -117,8 +117,55 @@ def get_directors_all_contributed_movies():
 
     
 
+def create_cumulative_careers():
+
+    folderin  = 'NEWTemporal/1_directors_movies_years/' 
+    folderout = 'NEWTemporal/2_directors_cumulative_careers/'   
+    files     = os.listdir(folderin)
+
+    if not os.path.exists(folderout): os.makedirs(folderout)
+
+
+    for fn in files:
+
+        director      = fn.replace('.dat', '')
+        yearly_movies = {}        
+
+        for line in open(folderin + fn):
+
+            year, movie = line.strip().split('\t')
+            year        = int(year)
+
+            if year not in yearly_movies:
+                yearly_movies[year] = set([movie])
+            else:       
+                yearly_movies[year].add(movie)
+
+        years = yearly_movies.keys()
+
+
+   
+        for year in range(min(years)+1, max(years)+1):
+
+            if year in yearly_movies:
+                yearly_movies[year] = yearly_movies[year].union(yearly_movies[year-1])
+            else:
+                yearly_movies[year] = yearly_movies[year-1] 
+
+
+        fout = open(folderout + fn, 'w')
+
+        for year in range(min(years), max(years)+1):
+            fout.write( str(year) + '\t' + '\t'.join(list(yearly_movies[year])) + '\n')
+
+        fout.close()
+
+
+
+
+
 
 
 #get_career_start()
-get_directors_all_contributed_movies()
-
+#get_directors_all_contributed_movies()
+create_cumulative_careers()
