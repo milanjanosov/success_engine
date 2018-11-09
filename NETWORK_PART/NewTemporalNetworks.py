@@ -250,8 +250,7 @@ def get_networks():
 
                 if year >= start1 and year >= start2:
 
-                    if year not in edges_cnt:  edges_cnt[year]  = {}
-                    if year not in edges_jacc: edges_jacc[year] = {}
+                    
 
     
 
@@ -263,8 +262,13 @@ def get_networks():
 
                     for yyyy in range(year,2018):
 
-                        edges_cnt[yyyy][edge]  = count
-                        edges_jacc[yyyy][edge] = jaccardv
+                        if count > 1:
+
+                            if yyyy not in edges_cnt:  edges_cnt[yyyy]  = {}
+                            if yyyy not in edges_jacc: edges_jacc[yyyy] = {}
+
+                            edges_cnt[yyyy][edge]  = count
+                            edges_jacc[yyyy][edge] = jaccardv
 
                     #print edge, year, count, jaccardv
 
