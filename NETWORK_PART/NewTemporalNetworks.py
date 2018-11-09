@@ -415,25 +415,33 @@ def calc_centr(years):
 def get_network_centralities():
 
     edgefolder = 'NEWTemporal/3_edgelists/'
-    years      = [y for y in os.listdir(edgefolder) if '.d' not in y]
-    nthreads   = 40
+    years      = sorted([int(y) for y in os.listdir(edgefolder) if '.d' not in y])
+    nthreads   = 3
     years_seg  = chunkIt(years, nthreads)
     Pros       = []
 
+   
+    for a in years_seg: 
+        if len(a) == 30: a.append(1927)
 
+    years_segments = []
+    for i in range(len(years_seg[0])):
+#        years_segments.append([years_seg[]])
+        years_segments.append( [years_seg[0][i], years_seg[1][::-1][i], years_seg[2][i]] )
 
+    for years in years_segments: 
 
-    for years in years_seg:            
-        p = Process(target = calc_centr, args=(years, ))
-        Pros.append(p)
-        p.start()
+        print years           
+    #    p = Process(target = calc_centr, args=(years, ))
+    #    Pros.append(p)
+    #    p.start()
          
-    for t in Pros:
-        t.join()
+    #for t in Pros:
+   #     t.join()
      
 
     
-
+    
 
 
 
@@ -450,6 +458,29 @@ get_network_centralities()
 
 ##   source /opt/virtualenv-python2.7/bin/activate
 
+
+
+''' Example careers:
+
+
+nm0000184 Lucas
+nm0000233 Tarantino
+nm0000229 Spielberg
+nm0000040 Kubrick
+nm0634240 Nolan
+nm0000033 Hitchcock
+nm0000122 Charlie Chaplin
+nm0000631 Ridley Scott
+nm0001053 E Coen
+nm0000142 Eastwood
+nm0001392 P Jackson
+nm0000591 Polanski
+nm0000154 Gibson
+nm0001232 Forman
+nm0001628 Pollack
+
+
+'''
 
 
 
