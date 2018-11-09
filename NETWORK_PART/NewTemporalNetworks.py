@@ -192,20 +192,21 @@ def get_networks():
         start_years[name] = int(year)
 
     directors_s = directors.intersection(set(start_years.keys()))
-    directors   = list(directors.intersection(set(start_years.keys())))
+    directors   = list(directors.intersection(set( [f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers/') ]  )))
     edges_cnt   = {}
     edges_jacc  = {}
 
 
     director_movies = {}
 
+    mmm = len(directors)
 
     dirrrrs = ['nm0000184', 'nm0000245']
 
     for ind, dddd in enumerate(directors):
 
         #if dddd in dirrrrs:
-        print 'Parse careers   ', ind
+        print 'Parse careers   ', ind, '/', mmm
 
         for line in open('NEWTemporal/2_directors_cumulative_careers/' + dddd + '.dat'):
             
