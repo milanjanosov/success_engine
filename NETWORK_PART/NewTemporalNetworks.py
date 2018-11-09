@@ -4,7 +4,7 @@ import gzip
 from igraph import Graph
 import numpy as np
 import pandas as pd
-
+from multiprocessing import Process
 
 
 '''     GET THE DIRECTORS CUMULATIVE CAREERS    '''
@@ -85,7 +85,7 @@ def get_directors_all_contributed_movies():
         cast_d  = set(cast_s.intersection(directors_s))
         year    = get_year(movies_years[movie])
 
-        print jind, '\t703216\t', len(cast_s) 
+        print 'Read movies     ', jind, '\t703216\t', len(cast_s) 
 
         if len(cast_d) > 0:
 
@@ -130,7 +130,7 @@ def create_cumulative_careers():
 
     for ind, fn in enumerate(files):
 
-        print ind, '/', nnn
+        print 'Create cumulative careers     ', ind, '/', nnn
 
         director      = fn.replace('.dat', '')
         yearly_movies = {}        
@@ -207,7 +207,7 @@ def get_networks():
     for ind, dddd in enumerate(directors):
 
         #if dddd in dirrrrs:
-        print 'Parse careers   ', ind, '/', mmm
+        print 'Parse careers     ', ind, '/', mmm
 
         for line in open('NEWTemporal/2_directors_cumulative_careers/' + dddd + '.dat'):
             
@@ -233,7 +233,7 @@ def get_networks():
         year    = get_year(movies_years[movie])
 
 
-        print jind+1, '/703216'
+        print  'Create edgelists     ', jind+1, '/703216'
    
 
 
@@ -387,36 +387,65 @@ def get_centraliti_Values(G_ig, year, fileout):
 
 
 
+def chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
 
-def get_network_centralities():
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
 
-    years = [1930]
+    return out
+        
+
+
+def calc_centr(years):
 
     for year in years:
-
     
-        # read network
         infile  = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'_edge_list_jaccard.dat'
         G_ig    = Graph.Read_Ncol(infile, weights = True, directed=False)
         outfile = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'_centralities_jaccard.dat'
        
-
         get_centraliti_Values(G_ig, year, outfile)
 
 
 
+def get_network_centralities():
+
+    edgefolder = 'NEWTemporal/3_edgelists/'
+    years      = [y for y in os.listdir(edgefolder) if '.d' not in y]
+    nthreads   = 40
+    years_seg  = chunkIt(years, nthreads)
+    Pros       = []
+
+
+
+
+    for years in years_seg:            
+        p = Process(target = calc_centr, args=(years, ))
+        Pros.append(p)
+        p.start()
+         
+    for t in Pros:
+        t.join()
+     
+
+    
 
 
 
 
 
-
+'''
 get_career_start()
 get_directors_all_contributed_movies()
 create_cumulative_careers()
 
 get_networks()
-#get_network_centralities()
+'''
+get_network_centralities()
 
 
 ##   source /opt/virtualenv-python2.7/bin/activate
