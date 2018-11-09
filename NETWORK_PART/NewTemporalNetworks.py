@@ -286,7 +286,7 @@ def get_networks():
         edgefolder = folderout + str(year) + '/'
         if not os.path.exists(edgefolder): os.makedirs(edgefolder)
 
-        fout = open(edgefolder + 'edge_list_jaccard.dat', 'w')
+        fout = open(edgefolder + '/'+str(year)+'edge_list_jaccard.dat', 'w')
         for edge, weight in edges.items():
             fout.write(edge + '\t' + str(weight) + '\n')
         fout.close()
@@ -299,7 +299,7 @@ def get_networks():
         edgefolder = folderout + str(year) + '/'
         if not os.path.exists(edgefolder): os.makedirs(edgefolder)
 
-        fout = open(edgefolder + 'edge_list_count.dat', 'w')
+        fout = open(edgefolder + '/'+str(year)+'edge_list_count.dat', 'w')
         for edge, weight in edges.items():
             fout.write(edge + '\t' + str(weight) + '\n')
         fout.close()
@@ -316,9 +316,8 @@ def get_centralities():
 
     for year in years:
 
-        fname = 'NEWTemporal/3_edgelists/' + str(year) + '/edge_list_jaccard.dat'
-
-        G_ig = Graph.Read_Ncol(fname, weights = True, directed=False)
+        fname = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'/edge_list_jaccard.dat'
+        G_ig  = Graph.Read_Ncol(fname, weights = True, directed=False)
 
         for e in G_ig.es():
             print e
@@ -333,7 +332,7 @@ get_networks()
 #get_centralities()
 
 
-
+##   source /opt/virtualenv-python2.7/bin/activate
 
 
 
