@@ -2,7 +2,8 @@ import os
 import sys
 import gzip
 from igraph import Graph
-
+import numpy as np
+import pandas as pd
 
 
 
@@ -286,7 +287,7 @@ def get_networks():
         edgefolder = folderout + str(year) + '/'
         if not os.path.exists(edgefolder): os.makedirs(edgefolder)
 
-        fout = open(edgefolder + '/'+str(year)+'edge_list_jaccard.dat', 'w')
+        fout = open(edgefolder + '/'+str(year)+'_edge_list_jaccard.dat', 'w')
         for edge, weight in edges.items():
             fout.write(edge + '\t' + str(weight) + '\n')
         fout.close()
@@ -299,7 +300,7 @@ def get_networks():
         edgefolder = folderout + str(year) + '/'
         if not os.path.exists(edgefolder): os.makedirs(edgefolder)
 
-        fout = open(edgefolder + '/'+str(year)+'edge_list_count.dat', 'w')
+        fout = open(edgefolder + '/'+str(year)+'_edge_list_count.dat', 'w')
         for edge, weight in edges.items():
             fout.write(edge + '\t' + str(weight) + '\n')
         fout.close()
@@ -310,17 +311,103 @@ def get_networks():
 
 ''' COMPUTE NETWORK CENTRALITIES '''
 
-def get_centralities():
 
-    years = [1986]
+def add_df_meas(meas, tipus):
+
+    df = pd.DataFrame(meas.items(), columns = ['name', tipus])
+    df.index = df.name
+    df = df.drop(columns = ['name'])    
+    
+    return df
+
+
+def get_centraliti_Values(G_ig, year, fileout):
+
+
+    N = len(G_ig.vs)
+
+    print '\n', year, '\tGet IG degrees...'
+    G_ig.vs['degree_ig'] =  G_ig.degree()
+
+    print year, '\tGet IG clustering...'
+    G_ig.vs['clustering_ig'] = G_ig.transitivity_local_undirected( weights = None)
+       
+    print year, '\tGet IG betweenness...'
+    G_ig.vs['betweenness_ig']  = G_ig.betweenness( weights = None)
+
+    print year, '\tGet IG closeness...'
+    G_ig.vs['closeness_ig']  = G_ig.closeness( weights = None, normalized = False )
+
+    print year, '\tGet IG pageranks...'
+    G_ig.vs['pagerank_ig'] = G_ig.pagerank( weights = None)   
+            
+    print year, '\tGet IG constraint...'
+    G_ig.vs['constraint_ig']  = G_ig.constraint( weights = None )
+
+
+    degrees_ig       = {}
+    clusterings_ig   = {}
+    closenesses_ig   = {}
+    pageranks_ig     = {}
+    constraints_ig   = {}
+    betweennesses_ig = {}
+
+
+    for v in G_ig.vs():
+
+        Bnormalizer =  (N*N-3*N+2) / 2.0
+        if np.isnan(v['clustering_ig']):
+            v['clustering_ig'] = 0
+
+        degrees_ig[v['name']]       = v['degree_ig']/float(N-1)
+        pageranks_ig[v['name']]     = v['pagerank_ig'] 
+        constraints_ig[v['name']]   = v['constraint_ig']
+        closenesses_ig[v['name']]   = v['closeness_ig']
+        betweennesses_ig[v['name']] = v['betweenness_ig']/Bnormalizer
+        clusterings_ig[v['name']]   = v['clustering_ig']
+
+
+    degrees_ig       = add_df_meas(degrees_ig,       'degree_ig')
+    clusterings_ig   = add_df_meas(clusterings_ig,   'clustering_ig')
+    betweennesses_ig = add_df_meas(betweennesses_ig, 'betweennesse_ig')
+    pageranks_ig     = add_df_meas(pageranks_ig,     'pagerank_ig')
+    constraints_ig   = add_df_meas(constraints_ig,   'constraint_ig')
+    closenesses_ig   = add_df_meas(closenesses_ig,   'closenesse_ig')
+
+
+    df_ig = degrees_ig.merge(clusterings_ig, left_index=True,  right_index=True)
+    df_ig = df_ig.merge(pageranks_ig,        left_index=True,  right_index=True)
+    df_ig = df_ig.merge(betweennesses_ig,    left_index=True,  right_index=True)
+    df_ig = df_ig.merge(closenesses_ig,      left_index=True,  right_index=True)
+    df_ig = df_ig.merge(constraints_ig,      left_index=True,  right_index=True)
+
+
+    df_ig.to_csv(fileout, na_rep='nan')
+
+
+
+
+
+def get_network_centralities():
+
+    years = [1930]
 
     for year in years:
 
-        fname = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'/edge_list_jaccard.dat'
-        G_ig  = Graph.Read_Ncol(fname, weights = True, directed=False)
+    
+        # read network
+        infile  = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'_edge_list_jaccard.dat'
+        G_ig    = Graph.Read_Ncol(infile, weights = True, directed=False)
+        outfile = 'NEWTemporal/3_edgelists/' + str(year) + '/'+str(year)+'_centralities_jaccard.dat'
+       
 
-        for e in G_ig.es():
-            print e
+        get_centraliti_Values(G_ig, year, outfile)
+
+
+
+
+
+
 
 
 
@@ -328,8 +415,8 @@ def get_centralities():
 #get_directors_all_contributed_movies()
 #create_cumulative_careers()
 
-get_networks()
-#get_centralities()
+#get_networks()
+get_network_centralities()
 
 
 ##   source /opt/virtualenv-python2.7/bin/activate
