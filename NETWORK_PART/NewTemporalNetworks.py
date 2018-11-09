@@ -426,18 +426,15 @@ def get_network_centralities():
 
     years_segments = []
     for i in range(len(years_seg[0])):
-#        years_segments.append([years_seg[]])
         years_segments.append( [years_seg[0][i], years_seg[1][::-1][i], years_seg[2][i]] )
 
     for years in years_segments: 
-
-        print years           
-    #    p = Process(target = calc_centr, args=(years, ))
-    #    Pros.append(p)
-    #    p.start()
+        p = Process(target = calc_centr, args=(years, ))
+        Pros.append(p)
+        p.start()
          
-    #for t in Pros:
-   #     t.join()
+    for t in Pros:
+        t.join()
      
 
     
