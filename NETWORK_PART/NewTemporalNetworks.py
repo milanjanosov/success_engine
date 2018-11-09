@@ -488,9 +488,11 @@ def get_centrality_careers(top_directors):
         fout = open(folderout + director + '.dat', 'w')
 
         for year in years:
+
+            if year in yearly_centralities:
             
-            centralities = yearly_centralities[year]
-            fout.write( year + '\t' + '\t'.join([str(centralities[name]) for name in names]) + '\n')
+                centralities = yearly_centralities[year]
+                fout.write( year + '\t' + '\t'.join([str(centralities[name]) for name in names]) + '\n')
         
         fout.close()
 
