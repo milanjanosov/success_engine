@@ -261,8 +261,10 @@ def get_networks():
                     count    = len(movies1.intersection(movies2))
                     edge     = '--'.join(sorted([director1, director2]))
 
-                    edges_cnt[year][edge]  = count
-                    edges_jacc[year][edge] = jaccardv
+                    for yyyy in range(year,2018):
+
+                        edges_cnt[yyyy][edge]  = count
+                        edges_jacc[yyyy][edge] = jaccardv
 
                     #print edge, year, count, jaccardv
 
