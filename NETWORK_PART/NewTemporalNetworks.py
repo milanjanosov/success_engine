@@ -10,6 +10,22 @@ import gzip
 ''' including all the movies they contriuted to '''
 
 
+'''
+
+types:
+    - they directed
+    - they occurred on the cast somewhere
+    - only Q director ties considered
+    - all the director ties considered
+
+
+
+    - NOW: all the occurrances, and all the directors because this has the most amount of info 
+           and is still computationally feasible
+
+'''
+
+
 def get_year(year):
 
     if len(year) == 4: return int(year)
@@ -40,32 +56,50 @@ def get_career_start():
 def get_directors_all_contributed_movies():
 
 
-    directors    = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
-    movies_years = {} 
-
-    for line in open('ALL_movies_years.dat'):
-
-        year, movie  = line.strip().split('\t')
-        movies_years[movie] = year   
-        
-
+    directors        = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
+    movies_years     = {} 
+    start_years      = {}
     directors_movies = {}
 
+    for line in open('ALL_movies_years.dat'):
+        year, movie  = line.strip().split('\t')
+        movies_years[movie] = year   
+
+    for line in open('ALL_directors_starting_year.dat'):
+        name, year = line.strip().split('\t')
+        start_years[name] = int(year)
+
+    directors_s = directors.intersection(set(start_years.keys()))
+    directors   = list(directors.intersection(set(start_years.keys())))
+
+
     for jind, line in enumerate(open('ALL_movies_casts.dat')):
-
-        fields = line.strip().split('\t')
-        movie  = fields[0]
-        cast   = sorted(fields[1:])
-        cast_s = set(cast)
-
-        director = 'nm0000184'
-
-        if director in cast_s:
-
-            if director not in directors_movies:
-                directors_movies[director] = []
     
-            directors_movies[director].append((movie, get_year(movies_years[movie])))
+       # if jind == 1000: break
+  
+        fields  = line.strip().split('\t')
+        movie   = fields[0]
+        cast    = sorted(fields[1:])
+        cast_s  = set(cast)
+        cast_d  = set(cast_s.intersection(directors_s))
+        year    = get_year(movies_years[movie])
+
+        print jind, '\t703216\t', len(cast_s) 
+
+        if len(cast_d) > 0:
+
+            cast_dl = list(cast_d)
+
+            for director in cast_dl:
+    
+                if director not in directors_movies:
+                    directors_movies[director] = []
+        
+                if year >= start_years[director]:
+
+                    directors_movies[director].append((movie, year))
+        
+    
 
 
     folderout = 'NEWTemporal/directors_movies_years/'
@@ -81,10 +115,10 @@ def get_directors_all_contributed_movies():
         for movie, year in movies:
             fout.write( str(year) + '\t' + movie + '\n')
 
+    
 
 
 
-
-get_career_start()
-#get_directors_all_contributed_movies()
+#get_career_start()
+get_directors_all_contributed_movies()
 
