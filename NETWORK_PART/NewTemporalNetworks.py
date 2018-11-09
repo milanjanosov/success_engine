@@ -143,22 +143,22 @@ def create_cumulative_careers():
 
         years = yearly_movies.keys()
 
+        if len(years) > 0:
+       
+            for year in range(min(years)+1, max(years)+1):
 
-   
-        for year in range(min(years)+1, max(years)+1):
-
-            if year in yearly_movies:
-                yearly_movies[year] = yearly_movies[year].union(yearly_movies[year-1])
-            else:
-                yearly_movies[year] = yearly_movies[year-1] 
+                if year in yearly_movies:
+                    yearly_movies[year] = yearly_movies[year].union(yearly_movies[year-1])
+                else:
+                    yearly_movies[year] = yearly_movies[year-1] 
 
 
-        fout = open(folderout + fn, 'w')
+            fout = open(folderout + fn, 'w')
 
-        for year in range(min(years), max(years)+1):
-            fout.write( str(year) + '\t' + '\t'.join(list(yearly_movies[year])) + '\n')
+            for year in range(min(years), max(years)+1):
+                fout.write( str(year) + '\t' + '\t'.join(list(yearly_movies[year])) + '\n')
 
-        fout.close()
+            fout.close()
 
 
 
