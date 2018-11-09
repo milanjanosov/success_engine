@@ -459,7 +459,7 @@ def get_centrality_careers(top_directors):
         print year
 
         for ind, line in enumerate(open(edgefolder + year + '/' + year + '_centralities_jaccard.dat')):
-            if ind == 3: break
+            #if ind == 3: break
 
             if 'degree_' not in line:
 
