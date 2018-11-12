@@ -188,12 +188,7 @@ def get_networks():
         year, movie  = line.strip().split('\t')
         movies_years[movie] = year   
 
-    for line in open('ALL_directors_starting_year.dat'):
-        name, year = line.strip().split('\t')
-        start_years[name] = int(year)
-
-    directors_s = directors.intersection(set(start_years.keys()))
-    directors   = list(directors.intersection(set( [f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers/') ]  )))
+  
     edges_cnt   = {}
     edges_jacc  = {}
 
@@ -451,7 +446,18 @@ def get_centrality_careers(top_directors):
 
     #years    = ['1927', '1928', '1929', '1930']
 
-    topnames = set(top_directors.keys())
+    #topnames = set(top_directors.keys())
+
+    directors        = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
+    for line in open('ALL_directors_starting_year.dat'):
+        name, year = line.strip().split('\t')
+        start_years[name] = int(year)
+
+    directors_s = directors.intersection(set(start_years.keys()))
+    directors   = set(list(directors.intersection(set( [f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers/') ]  ))))
+
+
+
 
 
     for year in years:
@@ -465,7 +471,7 @@ def get_centrality_careers(top_directors):
 
                 name,degree_ig,clustering_ig,pagerank_ig,betweennesse_ig,closenesse_ig,constraint_ig = line.strip().split(',')
 
-                if name in topnames:
+                if name in directors:
 
 
                     measures = [degree_ig,clustering_ig,pagerank_ig,betweennesse_ig,closenesse_ig,constraint_ig]
