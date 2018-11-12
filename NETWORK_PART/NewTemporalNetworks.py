@@ -442,7 +442,7 @@ def get_centrality_careers(top_directors):
     edgefolder    = 'NEWTemporal/3_edgelists/'
     years         = sorted([y for y in os.listdir(edgefolder) if '.d' not in y])
     directors_nw  = {}  
-
+    start_years   = {}
 
     #years    = ['1927', '1928', '1929', '1930']
 
