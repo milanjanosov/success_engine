@@ -8,7 +8,7 @@ for ind, fn in enumerate(files):
     length = 0
     for line in gzip.open('simple-careers/film-director-simple-careers/' + fn):
         try:
-            fields = 
+
             i = float(line.strip().split('\t')[3])
             length += 1
         except:
