@@ -322,7 +322,7 @@ def get_backbonestats():
     fstatout.close()
 
 
-3,558,343
+#3,558,343
 # 10000   nodes:  176054          edges:  834096          density:  5e-05                 time:  92.0 
 # 5000    nodes:  183855          edges:  1192226                 density:  7e-05                 time:  98.0 
 # 2000    nodes:  189915          edges:  1877286                 density:  0.0001                time:  99.0 
