@@ -255,7 +255,9 @@ def get_backboned_edgelists():
     df = 0.0
 
     #for nc in [-20, -10, -5, -4, -3, -2, -1, 0.9, 0.8, 0.5, 0.4, 0.3, 0.2, 0.1,  0, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
-    for nc in [50000, 20000, 10000, 5000, 2000, 1000, 500, 100]:
+    #for nc in [50000, 20000, 10000, 5000, 2000, 1000, 500, 100]:
+    for nc in [100000, ]:
+
 
         t1        = time.time()
         table_nc  = backboning.noise_corrected(real_table,   undirected = True)
@@ -309,6 +311,7 @@ def get_backbonestats():
             nodes.add(trg)
             param = fn.split('_')[2]
 
+        print param, len(nodes), ind
         fstatout.write( param + '\t'  + str(len(nodes)) + '\t' + str(ind) + '\n')
 
 
@@ -316,8 +319,17 @@ def get_backbonestats():
 
 
 
+# 10000   nodes:  176054          edges:  834096          density:  5e-05                 time:  92.0 
+# 5000    nodes:  183855          edges:  1192226                 density:  7e-05                 time:  98.0 
+# 2000    nodes:  189915          edges:  1877286                 density:  0.0001                time:  99.0 
+# 1000    nodes:  191774          edges:  2603996                 density:  0.00014               time:  104.0 
+# 500     nodes:  192393          edges:  3558343                 density:  0.00019               time:  106.0 Calculating NC score...
+# 100     nodes:  192661          edges:  7236950                 density:  0.00039               time:  121.0 
 
-    fstatout = open('networks/backboning/backboned_size_stats_df.dat', 'w')
+
+
+
+    '''fstatout = open('networks/backboning/backboned_size_stats_df.dat', 'w')
 
     for fn in files_df:
 
@@ -335,7 +347,7 @@ def get_backbonestats():
 
     fstatout.close()
     
-
+    '''
 
 
 def add_df_meas(meas, tipus):
