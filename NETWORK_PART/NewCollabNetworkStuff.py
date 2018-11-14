@@ -304,7 +304,7 @@ def get_backbonestats():
 
         param = fn.split('_')[2]
 
-        if float(param) > 0:
+        if 'stats' not in fn and float(param) > 50:
 
             nodes = set()
 
