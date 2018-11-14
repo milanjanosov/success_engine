@@ -13,6 +13,17 @@ import math
 
 
 
+def getDistribution(keys, normalized = True):
+    
+    uniq_keys = np.unique(keys)
+    bins = uniq_keys.searchsorted(keys)
+    distr = np.bincount(bins) 
+
+    if normalized == 1: distr = distr/float(np.sum(distr)) 
+    
+    return np.asarray(uniq_keys.tolist()), np.asarray(distr.tolist())
+
+
 
 
 def get_impact_values(folder):
