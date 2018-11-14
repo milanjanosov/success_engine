@@ -217,7 +217,7 @@ def get_nodes(table):
 def get_backboned_edgelists():
 
 
-    edgefile   = 'networks/FULL_GRAPH_edges_directors_1.dat'
+    edgefile   = 'networks/FULL_GRAPH_edges_directors_0.dat'
     folderout  = 'networks/backboning/'
 
     if not os.path.exists(folderout): os.makedirs(folderout)
@@ -254,7 +254,8 @@ def get_backboned_edgelists():
     nc = 1
     df = 0.0
 
-    for nc in [-20, -10, -5, -4, -3, -2, -1, 0.9, 0.8, 0.5, 0.4, 0.3, 0.2, 0.1,  0, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
+    #for nc in [-20, -10, -5, -4, -3, -2, -1, 0.9, 0.8, 0.5, 0.4, 0.3, 0.2, 0.1,  0, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
+    for nc in [50000, 20000, 10000, 5000, 2000, 1000, 500, 100]:
 
         t1        = time.time()
         table_nc  = backboning.noise_corrected(real_table,   undirected = True)
@@ -268,7 +269,7 @@ def get_backboned_edgelists():
         print nc, '\tnodes: ', nodes_nc, '\t\tedges: ', edges_nc, '\t\tdensity: ', round(2*float(edges_nc)/(nodes_nc*(nodes_nc-1)),5), '\t\ttime: ', round(time.time()-t1), '\n'
 
 
-    for df in [round(k,4) for k in list(np.arange(0,1,0.05))]:
+    '''for df in [round(k,4) for k in list(np.arange(0,1,0.05))]:
 
         t1            = time.time()
         table_df      = backboning.disparity_filter(real_table,  undirected = True)
@@ -280,7 +281,7 @@ def get_backboned_edgelists():
         fstatout.write('df      \t' + str(df) + '\t' + str( nodes_df ) + '\t' + str( edges_df ) + '\n' )
 
         print 'nodes: ', nodes_df, '\t\tedges: ', edges_df, '\ttime: ', round(time.time()-t1), '\n'
-
+    '''
 
     # for nc_threshold in [5000, 2000, 1000, 500, 100]:
     fstatout.close()
