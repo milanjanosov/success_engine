@@ -8,7 +8,7 @@ from multiprocessing import Process
 import time
 import pandas as pd
 import random
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from shutil import copyfile
 import gzip
 import math
@@ -19,6 +19,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import pearsonr 
 import numpy as np
+from multiprocessing import Process
 sys.path.append("./backboning")
 import backboning
 
@@ -56,13 +57,6 @@ def get_network_edge_list():
                 nodes.add(c1)
                 nodes.add(c2)
 
-                '''if edge not in edges:
-                    edges[edge] = 1
-                else:
-                    edges[edge] += 1
-                '''
-
-
 
         if jind % 100 == 0: 
 
@@ -84,13 +78,11 @@ def get_network_edge_list():
             for e, w in edges.items():
                 fout.write(e + '\t' + str(w) + '\n')
             fout.close()
-
-            
+     
 
             nodes = set()
             edges = {}
             gen  += 1
-
 
 
 
@@ -149,9 +141,9 @@ def get_network_edge_list_directors():
     ne = 0
     fout = open('networks/FULL_GRAPH_edges_directors_1.dat', 'w')
     for e, w in edges.items():
-        if w > 1.0:
-            fout.write(e + '\t' + str(w) + '\n')
-            ne += 1
+        #if w > 1.0:
+        fout.write(e + '\t' + str(w) + '\n')
+        ne += 1
     fout.close()
 
 
@@ -220,6 +212,7 @@ def merge_nodes_and_edges():
 def get_nodes(table):
     
     return len(set(list(table.src) + list(table.trg)))
+
 
 def get_backboned_edgelists():
 
@@ -302,10 +295,6 @@ def get_backbonestats():
     files    = os.listdir('networks/backboning')
     files_df = [f for f in files if 'df' in f]
     files_nc = [f for f in files if 'nc' in f]
-
-
-
-
     fstatout = open('networks/backboning/backboned_size_stats_nc.dat', 'w')
 
     for fn in files_nc:
@@ -348,41 +337,6 @@ def get_backbonestats():
 
 
 
-
-def rescale(vector):
-    v = StandardScaler().fit_transform(np.asarray(vector).reshape(-1, 1) ) 
-    return preprocessing.quantile_transform(v, output_distribution = 'normal')
-
-
-def get_reg_stuff(impact, network, title):
-
-    impact, network = zip(*[(impact[i], network[i]) for i in range(len(network)) if not np.isnan(network[i])  ])
-
-    impact  = rescale(impact)
-    network = rescale(network)
-
-    print title
-    reg = LinearRegression().fit(impact, network)
-    print reg.score(impact, network)
-    print reg.coef_, '\n'
-
-
-def get_impact_nw(directors_best, network):
-    
-    impact = []
-    nwmeas = []
-
-    for d, Imax in directors_best.items():
-        if d in network:
-            impact.append(Imax)
-            nwmeas.append(network[d])
-
-    return impact, nwmeas
-
-
-
-
-
 def add_df_meas(meas, tipus):
 
     df = pd.DataFrame(meas.items(), columns = ['name', tipus])
@@ -390,6 +344,7 @@ def add_df_meas(meas, tipus):
     df = df.drop(columns = ['name'])    
     
     return df
+
 
 
 def compare(measname, meas_nx, meas_ig, GC):
@@ -443,7 +398,7 @@ def get_centralities(compare):
 
     ftimes.write('nc\tt_nx\tt_ig\n')
 
-    for nc in params[0:4]:
+    for nc in params:
 
       
 
@@ -620,45 +575,151 @@ def get_centralities(compare):
 
 
 
-def do_analysis():
-
-
-    print 'Creating NX Graph'
-
-
-   
 
 
 
 
-    ''' SAVE CENTRALITIES AS INDIVIDUAL FEATUREs, CSV '''
+
+def get_network_params_igraph(args):
+
+
+    nc        = args[0]
+    folderout = args[1]
+
+
+
+    # get the igraph network
+    t1       = time.time()
+    ftempname = 'tempfile_nc_backboned' + str(nc)
+    ftemp = open(ftempname, 'w')
+    for line in open('networks/backboning/nc_backboned_' + str(nc)):
+        if 'src' not in line:
+            ftemp.write('\t'.join(line.strip().split('\t')[0:3]) + '\n' ) 
+    ftemp.close()
+    G_ig = Graph.Read_Ncol(ftempname, weights = True, directed=False)
+    os.remove(ftempname)
+    
+
+    N = len(G_ig.vs)
+
+
+    print '\n', nc, '\tGet IG degrees'
+    G_ig.vs['degree_ig'] =  G_ig.degree()
+
+    print nc, '\tGet IG clustering'
+    G_ig.vs['clustering_ig'] = G_ig.transitivity_local_undirected( weights = None)
+       
+    print nc, '\tGet IG betweenness'
+    G_ig.vs['betweenness_ig']  = G_ig.betweenness( weights = None)
+
+    print nc, '\tGet IG closeness'
+    G_ig.vs['closeness_ig']  = G_ig.closeness( weights = None, normalized = False )
+
+    print nc, '\tGet IG pageranks'
+    G_ig.vs['pagerank_ig'] = G_ig.pagerank( weights = None)   
+            
+    print nc, '\tGet IG constraint'
+    G_ig.vs['constraint_ig']  = G_ig.constraint( weights = None )
+
+
+
+
+    degrees_ig       = {}
+    clusterings_ig   = {}
+    closenesses_ig   = {}
+    pageranks_ig     = {}
+    constraints_ig   = {}
+    betweennesses_ig = {}
+
+
+    for v in G_ig.vs():
+
+        Bnormalizer =  (N*N-3*N+2) / 2.0
+        if np.isnan(v['clustering_ig']):
+            v['clustering_ig'] = 0
+
+        degrees_ig[v['name']]      = v['degree_ig']/float(N-1)
+        pageranks_ig[v['name']]     = v['pagerank_ig'] 
+        constraints_ig[v['name']]   = v['constraint_ig']
+        closenesses_ig[v['name']]   = v['closeness_ig']
+        betweennesses_ig[v['name']] = v['betweenness_ig']/Bnormalizer
+        clusterings_ig[v['name']]   = v['clustering_ig']
+
+
+    degrees_ig       = add_df_meas(degrees_ig,       'degree_ig')
+    clusterings_ig   = add_df_meas(clusterings_ig,   'clustering_ig')
+    betweennesses_ig = add_df_meas(betweennesses_ig, 'betweennesse_ig')
+    pageranks_ig     = add_df_meas(pageranks_ig,     'pagerank_ig')
+    constraints_ig   = add_df_meas(constraints_ig,   'constraint_ig')
+    closenesses_ig   = add_df_meas(closenesses_ig,   'closenesse_ig')
+
+
+    df_ig = degrees_ig.merge(clusterings_ig, left_index=True,  right_index=True)
+    df_ig = df_ig.merge(pageranks_ig,        left_index=True,  right_index=True)
+    df_ig = df_ig.merge(betweennesses_ig,    left_index=True,  right_index=True)
+    df_ig = df_ig.merge(closenesses_ig,      left_index=True,  right_index=True)
+    df_ig = df_ig.merge(constraints_ig,      left_index=True,  right_index=True)
+
+    t2   = time.time()
+    t_ig = t2 - t1
+
+    print 'Time for IG:  ', nc ,'\t', round( t_ig , 2  ), ' s\n\n'
+
+    df_ig.to_csv(folderout + 'nc_backboned_centralities_IG_' + str(nc), na_rep='nan')
+
+
+    ftimes = open( folderout + 'compare_comp_time.dat', 'a')
+    ftimes.write(str(nc) + '\t' + str(t_ig) + '\n')
+    ftimes.close()
+
+
+
+
+def get_centralities_igraph():
+
+
+
+    T0        = time.time()
+    Pros      = []
+    params   = [5000, 2000, 1000, 500, 100, 50, 40, 30, 20, 10, 5, 4, 3, 2, 1, 0]
+    #params    = [10000]
+    folderout = 'networks/backboning_centralities/'
+
+    if not os.path.exists(folderout):  os.makedirs(folderout)
+       
+    ftimes  = open(folderout + 'compare_comp_time.dat', 'w')
+    ftimes.write('nc\tt_ig\n')
+    ftimes.close()
+
+
+
+                    
+    for nc in params:  
+        p = Process(target = get_network_params_igraph, args=([nc,folderout], ))
+        Pros.append(p)
+        p.start()
+         
+    for t in Pros:
+        t.join()
+
+
+
+    print 'PPTOTAL TIME:  ', round(time.time() - T0, 2)
+    
+
+
+
+
+
+
 
 
 
 
   
 
-    
-    directors, best = zip(*[line.strip().split('\t') for line in open('directors_Imax.dat')])
-    directors_best  = {directors[i] : float(best[i]) for i in range(len(best))}
 
 
-    impact, nwmeasD  = get_impact_nw(directors_best, degrees)
-    get_reg_stuff(impact, nwmeasD, 'degree')
-
-
-    impact, nwmeasC  = get_impact_nw(directors_best, clusterings)
-    get_reg_stuff(impact, nwmeasC, 'clustering')
-
-
-    impact, nwmeasP  = get_impact_nw(directors_best, pageranks)
-    get_reg_stuff(impact, nwmeasP, 'pagerank')
-
-
-
-#get_reg_stuff(Is,Cs, 'clustering')
-#get_reg_stuff(Is,Ss, 'strength')
-#get_reg_stuff(Is,Ps, 'pagerank')
 
 
 if sys.argv[1] == 'edges':
@@ -669,20 +730,19 @@ elif sys.argv[1] == 'backbone':
     get_backboned_edgelists()
 elif sys.argv[1] == 'backbonestats':
     get_backbonestats()
-elif sys.argv[1] == 'results':
-    do_analysis()
 elif sys.argv[1] == 'directors':
     get_network_edge_list_directors()
 elif sys.argv[1] == 'centralities':
     get_centralities(compare = False)
+elif sys.argv[1] == 'igraph':
+    get_centralities_igraph()
 
 
 
 
 
 
-
-
+##   source /opt/virtualenv-python2.7/bin/activate
 
 
  
