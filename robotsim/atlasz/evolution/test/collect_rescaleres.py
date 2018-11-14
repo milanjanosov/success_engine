@@ -16,7 +16,7 @@ def collect():
         PREVSTAT['RAW']   = {}
         PREVSTAT['CLEAN'] = {}
 
-        for line in open('opt_status_report.dat'):
+        for line in open('opt_status_report_rescaled.dat'):
             fields = line.strip().split('\t')
         
             print(fields)   
