@@ -54,6 +54,7 @@ def collect():
             print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
         else:
             print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t')
+            print (folder, '\n')
 
         STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
