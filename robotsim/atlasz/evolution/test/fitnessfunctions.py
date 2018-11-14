@@ -231,6 +231,9 @@ def get_sumI(careerf):
 
 
 
+
+
+
 def get_sumI_music(careerf):
 
 
@@ -255,6 +258,30 @@ def get_sumI_music(careerf):
     return sumI, N
 
 
+
+
+def get_sumI_new(careerf):
+
+
+    I = []
+    N = []
+    sumI = []
+
+
+    files = os.listdir(careerf)      
+    for filename in files:
+
+        c_i = [float(line.strip().split('\t')[2]) for line in open(careerf + '/' + filename) if 'year' not in line and  len(line.strip().split('\t')) > 2 and line.strip().split('\t')[2] != 'None'  and   line.strip().split('\t')[2]  != 'unknown' and float(line.strip().split('\t')[2]) > 0]
+#        print c_i
+        if len(c_i) > 4:
+            N.append(len(c_i))
+            for c in c_i:   
+                I.append(math.log(c))
+
+            sumI.append(sum([math.log(c) for c in c_i]))        
+
+
+    return sumI, N
 
 
 
@@ -375,7 +402,12 @@ def liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, s
 def fitness_sci_mathematics(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-mathematics-simple-careers/'
+    #careerf   = '../../../../Data/Science/science-mathematics-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_rescaled/science-mathematics-simple-careers/'
+
+
+
+
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -483,7 +515,10 @@ def fitness_sci_health_science(pvalues):
 def fitness_sci_psychology(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-psychology-simple-careers/'
+    #careerf   = '../../../../Data/Science/science-psychology-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_rescaled/science-psychology-simple-careers/'
+
+
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -795,8 +830,13 @@ def fitness_mlesuccess_dir(pvalues):
 
     fitnesses = {}
 #    careerf   = '../../../../DataSample/Film/film-director-simple-careers/'
-    careerf   = '../../../../Data/Film/film-director-simple-careers/'
-    sumI, N   = get_sumI(careerf) 
+  #  careerf   = '../../../../Data/Film/film-director-simple-careers/'
+
+    careerf   = '../../../../QMODELNEW/Data_rescaled/film-director-simple-careers/'
+
+
+
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1075,7 +1115,8 @@ def fitness_mlesuccess_funk(pvalues):
 def fitness_mlesuccess_jazz(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-jazz-simple-careers/'
+    #careerf   = '../../../../Data/Music/music-jazz-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_rescaled/music-jazz-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):

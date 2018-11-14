@@ -94,8 +94,8 @@ for run in range(runmin, runmax):
 
 
 
-    if not os.path.exists(  options.model ):
-        os.makedirs( options.model ) 
+    if not os.path.exists( 'Results_rescaled/' + options.model ):
+        os.makedirs( 'Results_rescaled/' + options.model ) 
 
 
 
@@ -105,7 +105,7 @@ for run in range(runmin, runmax):
 
 
 
-    outfolder = options.model + '/run_' + str(run) 
+    outfolder = 'Results_rescaled/' + options.model + '/run_' + str(run) 
 
     if not os.path.exists( outfolder ):
         os.makedirs( outfolder ) 
@@ -172,22 +172,32 @@ for run in range(runmin, runmax):
 
 
 
+# source /opt/virtualenv-python2.7/bin/activate
 
-# screen -S evol_mathematics
-# screen -S evol_physics
-# screen -S evol_theoretical_computer_science
-# screen -S evol_applied_physics
-# screen -S evol_health_science
-# screen -S evol_psychology
-# screen -S evol_space_science_or_astronomy
-# screen -S evol_geology
-# screen -S evol_biology
-# screen -S evol_political_science
-# screen -S evol_environmental_science
-# screen -S evol_engineering
+## screen -S evol_mathematics  -min 100 -max 150
+## screen -S evol_psychology  -min 100 -max 150
+
+## screen -S mlesuccess_dir  -min 100 -max 150
+## screen -S mlesuccess_jazz  -min 100 -max 150
+
+
+
+
+
+## screen -S evol3_physics
+## screen -S evol2_theoretical_computer_science
+## screen -S evol4_applied_physics
+## screen -S evol13_health_science
+## screen -S evol_psychology
+## screen -S evol2_space_science_or_astronomy
+## screen -S evol2_geology
+## screen -S evol2_political_science
+## screen -S evol2_biology
+# screen -S evol2_environmental_science
+# screen -S evol12_engineering
 # screen -S evol_zoology
 # screen -S evol_agronomy
-# screen -S evol_chemistry
+# screen -S evol12_chemistry
 
 
 
@@ -196,22 +206,24 @@ for run in range(runmin, runmax):
 
 
 # python2.7 test_evolution.py -m sci_mathematics
-# python2.7 test_evolution.py -m sci_physics
-# python2.7 test_evolution.py -m sci_theoretical_computer_science
-# python2.7 test_evolution.py -m sci_applied_physics
-# python2.7 test_evolution.py -m sci_health_science
+# python2.7 test_evolution.py -m sci_physics -min 100 -max 150
+# python2.7 test_evolution.py -m sci_theoretical_computer_science -min 100 -max 200
+# python2.7 test_evolution.py -m sci_applied_physics -min 230 -max 260
+
+
+
+# python2.7 test_evolution.py -m sci_health_science -min 250 -max 260
 # python2.7 test_evolution.py -m sci_psychology
-# python2.7 test_evolution.py -m sci_space_science_or_astronomy
-# python2.7 test_evolution.py -m sci_geology
-# python2.7 test_evolution.py -m sci_biology
-# python2.7 test_evolution.py -m sci_political_science
-# python2.7 test_evolution.py -m sci_environmental_science
-# python2.7 test_evolution.py -m sci_engineering
+# python2.7 test_evolution.py -m sci_space_science_or_astronomy -min 100 -max 200
+# python2.7 test_evolution.py -m sci_geology -min 100 -max 200
+# python2.7 test_evolution.py -m sci_biology -min 100 -max 130
+# python2.7 test_evolution.py -m sci_political_science -min 100 -max 200
+# python2.7 test_evolution.py -m sci_environmental_science -min 100 -max 150
+# python2.7 test_evolu+tion.py -m sci_engineering -min 190 -max 210
 
 # python2.7 test_evolution.py -m sci_zoology
 # python2.7 test_evolution.py -m sci_agronomy
-# python2.7 test_evolution.py -m sci_chemistry
-
+# python2.7 test_evolution.py -m sci_chemistry -min 270 -max 280
 
 
 
