@@ -255,8 +255,8 @@ def get_backboned_edgelists():
     df = 0.0
 
     #for nc in [-20, -10, -5, -4, -3, -2, -1, 0.9, 0.8, 0.5, 0.4, 0.3, 0.2, 0.1,  0, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
-    #for nc in [50000, 20000, 10000, 5000, 2000, 1000, 500, 100]:
-    for nc in [100000, ]:
+    #   for nc in [50000, 20000, 10000, 5000, 2000, 1000, 500, 100]:
+    for nc in [300000, 150000, 100000, 35000, 14000]:
 
 
         t1        = time.time()
@@ -304,7 +304,7 @@ def get_backbonestats():
 
         param = fn.split('_')[2]
 
-        if 'stats' not in fn and float(param) > 50:
+        if 'stats' not in fn and float(param) > 1:
 
             nodes = set()
 
@@ -322,7 +322,7 @@ def get_backbonestats():
     fstatout.close()
 
 
-
+3,558,343
 # 10000   nodes:  176054          edges:  834096          density:  5e-05                 time:  92.0 
 # 5000    nodes:  183855          edges:  1192226                 density:  7e-05                 time:  98.0 
 # 2000    nodes:  189915          edges:  1877286                 density:  0.0001                time:  99.0 
