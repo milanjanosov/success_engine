@@ -19,9 +19,9 @@ def collect():
         for line in open('opt_status_report_rescaled.dat'):
             fields = line.strip().split('\t')
         
-            print(fields)   
+            fieldname = fields[1], fields[1].split('_')[-1]
 
-            PREVSTAT[fields[0]][fields[1]] = int(fields[2].replace('.0', ''))
+            PREVSTAT[fields[0]][fieldname] = int(fields[2].replace('.0', ''))
 
 
       
@@ -36,7 +36,7 @@ def collect():
     for folder in folders:
 
 
-        outfile = open(outfolder + '/Genetic_results_all' + folder.split('_', 1)[-1] + '.dat', 'w')
+        outfile = open(outfolder + '/Genetic_results_' + folder.split('_', 1)[-1] + '.dat', 'w')
 
 
         outfile.write('\t'.join(['maxfitness', 'mu_N', 'mu_p', 'mu_Q', 'sigma_N', 'sigma_Q', 'sigma_p', 'sigma_pQ', 'sigma_pN', 'sigma_QN']) + '\n')
@@ -44,11 +44,13 @@ def collect():
 
         runs = [folder + '/' + run for run in os.listdir(folder) if '.dat' not in run]
 
-        
-        if len(PREVSTAT['RAW']) > 0:
-        #if os.path.exists('opt_status_report.dat'):
+        fieldname = folder.replace('sci_', '')
+
+    
+        if fieldname in PREVSTAT['RAW']:
+            #if os.path.exists('opt_status_report.dat'):
             print (folder)
-            diff = len(runs) - PREVSTAT['RAW'][folder.replace('sci_', '')]
+            diff = len(runs) - PREVSTAT['RAW'][fieldname]
             print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
         else:
             print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t')
@@ -84,7 +86,7 @@ def collect():
 
 
 
-    files = [f for f in os.listdir('MLESUCCESS_RES_RESCALED') if 'sci_' in f]
+    files = [f for f in os.listdir('MLESUCCESS_RES_RESCALED') ]
 
 
 
@@ -93,7 +95,7 @@ def collect():
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
 
-
+   
     for fn in files:
 
         counter = 0.0
@@ -103,6 +105,7 @@ def collect():
 
             if 'max' not in line:
                 fields = [float(fff) for fff in line.strip().split('\t')]
+
 
                 maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = fields
 
@@ -117,12 +120,12 @@ def collect():
                     counter += 1 
         
 
-        fieldname = fn.split('_sci_')[1].replace('.dat', '')
+        fieldname = fn.split('_')[-1].replace('.dat', '')
         fout.close()
 
 
 
-        if len(PREVSTAT['RAW']) > 0:
+        if fieldname in PREVSTAT['RAW']:
             diff = counter - PREVSTAT['CLEAN'][fieldname]
             if counter < 4:
                 print ('CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff)))
