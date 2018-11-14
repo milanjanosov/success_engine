@@ -302,17 +302,21 @@ def get_backbonestats():
 
     for fn in files_nc:
 
-        nodes = set()
+        param = fn.split('_')[2]
 
-        for ind, line in enumerate(open('networks/backboning/' + fn)):
-            
-            src, trg, nij, score = line.strip().split('\t')
-            nodes.add(src)
-            nodes.add(trg)
-            param = fn.split('_')[2]
+        if float(param) > 0:
 
-        print param, len(nodes), ind
-        fstatout.write( param + '\t'  + str(len(nodes)) + '\t' + str(ind) + '\n')
+            nodes = set()
+
+            for ind, line in enumerate(open('networks/backboning/' + fn)):
+                
+                src, trg, nij, score = line.strip().split('\t')
+                nodes.add(src)
+                nodes.add(trg)
+
+
+            print param, len(nodes), ind
+            fstatout.write( param + '\t'  + str(len(nodes)) + '\t' + str(ind) + '\n')
 
 
     fstatout.close()
