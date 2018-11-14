@@ -115,7 +115,7 @@ def collect():
                 maxsigma  = max([abs(sigma_pQ), abs(sigma_pN), abs(sigma_QN)])
 
 
-                if minmu > 0 and minsigma > 0.001 and abs(prodsigma) > 0.0 and maxsigma < 0.15:
+                if minmu > 0 and minsigma > 0.001 and abs(prodsigma) > 0.0 and maxsigma < 0.10:
                     fout.write(line)
                     counter += 1 
         
