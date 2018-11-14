@@ -35,14 +35,14 @@ def collect():
 
     for folder in folders:
 
-        folder = 'Results_rescaled/' + folder
+
 
         outfile = open(outfolder + '/Genetic_results_' + folder.split('_', 1)[-1] + '.dat', 'w')
 
 
         outfile.write('\t'.join(['maxfitness', 'mu_N', 'mu_p', 'mu_Q', 'sigma_N', 'sigma_Q', 'sigma_p', 'sigma_pQ', 'sigma_pN', 'sigma_QN']) + '\n')
 
-
+        folder = 'Results_rescaled/' + folder
         runs = [folder + '/' + run for run in os.listdir(folder) if '.dat' not in run]
 
         fieldname = folder.replace('sci_', '')
