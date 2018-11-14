@@ -131,57 +131,56 @@ f, ax = plt.subplots(1,2,figsize = (15,5))
 
 for field, folder in fields:
 
-    if 'direct' in field:
+
+    impacts_genre   = []
+    impacts_genre_o = []
+ 
+    folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_rescaled')
     
-        impacts_genre   = []
-        impacts_genre_o = []
-     
-        folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_rescaled')
+    folderout = folderout.replace(field + '/', '', 1)
+    
+    if not os.path.exists(folderout):
+        os.makedirs(folderout)
+    
+    
+    MINMAX = GENRE_MINMAX[field]
+    miny, maxy  = MINMAX
+    files = os.listdir(folder)
+    
+    print field, len(files)
+    
+    for fn in files:
         
-        folderout = folderout.replace(field + '/', '', 1)
+    
+
+        fileout = open(folderout + '/' + fn, 'w')
         
-        if not os.path.exists(folderout):
-            os.makedirs(folderout)
-        
-        
-        MINMAX = GENRE_MINMAX[field]
-        miny, maxy  = MINMAX
-        files = os.listdir(folder)
-        
-        print field, len(files)
-        
-        for fn in files:
+        for line in open(folder+fn):
             
-        
-
-            fileout = open(folderout + '/' + fn, 'w')
+            cat = ''
             
-            for line in open(folder+fn):
-                
-                cat = ''
-                
-                if 'year' not in line:
-                    if 'science' in folder:
-                        paper_id, year, c10, cat = line.strip().split('\t')
-                        c10 = float(c10)
-                    else:
-                        paper_id, year, c10 = line.strip().split('\t')
-                        c10 = float(c10)
+            if 'year' not in line:
+                if 'science' in folder:
+                    paper_id, year, c10, cat = line.strip().split('\t')
+                    c10 = float(c10)
+                else:
+                    paper_id, year, c10 = line.strip().split('\t')
+                    c10 = float(c10)
 
-                    if c10 == 0: c10 = 1 
-                    impacts_genre_o.append(c10)
-                    c10 = rescale(c10, GLOBALMAX, MINMAX)
-                    impacts_genre.append(c10)
+                if c10 == 0: c10 = 1 
+                impacts_genre_o.append(c10)
+                c10 = rescale(c10, GLOBALMAX, MINMAX)
+                impacts_genre.append(c10)
+                
+                if len(cat) > 0:          
+                    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
+                else:
+                    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\n')
+    
                     
-                    if len(cat) > 0:          
-                        fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
-                    else:
-                        fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\n')
-        
-                        
 
-            fileout.close()        
-                    
+        fileout.close()        
+                
         
     Xy, Yy = get_impact(impacts_genre)
     ax[1].plot(Xy,Yy, 'o-', label = field)
