@@ -139,7 +139,7 @@ def get_network_edge_list_directors():
 
     print 'Writing edges...'
     ne = 0
-    fout = open('networks/FULL_GRAPH_edges_directors_1.dat', 'w')
+    fout = open('networks/FULL_GRAPH_edges_directors_0.dat', 'w')
     for e, w in edges.items():
         #if w > 1.0:
         fout.write(e + '\t' + str(w) + '\n')
