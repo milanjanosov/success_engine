@@ -275,6 +275,7 @@ def get_backboned_edgelists():
 
     for df in [round(k,4) for k in list(np.arange(0,1,0.05))]:
 
+        print df, '\t', 
         t1            = time.time()
         table_df      = backboning.disparity_filter(real_table,  undirected = True)
         bb_vespignani = backboning.thresholding(table_df, df)
