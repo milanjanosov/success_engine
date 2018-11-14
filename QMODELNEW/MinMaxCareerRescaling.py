@@ -96,7 +96,7 @@ def get_impact(impacts):
 fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
           ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
           ('jazz'       , 'Data/jazz/music-'+'jazz'+'-simple-careers-limit-80/')   ,
-          ('director'       , 'Data/art-director/film-director-simple-careers-limit-10/') 
+          ('director'       , 'Data/director/film-director-simple-careers-limit-10/') 
          ]
 
 GLOBALMAX    = 0
