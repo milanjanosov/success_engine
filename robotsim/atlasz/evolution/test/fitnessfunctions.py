@@ -1117,7 +1117,7 @@ def fitness_mlesuccess_jazz(pvalues):
     fitnesses = {}
     #careerf   = '../../../../Data/Music/music-jazz-simple-careers/'
     careerf   = '../../../../QMODELNEW/Data_rescaled/music-jazz-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
