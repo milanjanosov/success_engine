@@ -35,6 +35,7 @@ def collect():
 
     for folder in folders:
 
+        folder = 'Results_rescaled/' + folder
 
         outfile = open(outfolder + '/Genetic_results_' + folder.split('_', 1)[-1] + '.dat', 'w')
 
@@ -47,9 +48,14 @@ def collect():
         fieldname = folder.replace('sci_', '')
 
     
-        print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t')
-        
+        if fieldname in PREVSTAT['RAW']:
+            #if os.path.exists('opt_status_report.dat'):
 
+            diff = len(runs) - PREVSTAT['RAW'][fieldname]
+            print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
+        else:
+            print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t')
+            
         STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
         if len(runs) > 0:
