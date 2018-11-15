@@ -258,7 +258,7 @@ def get_networks():
 
                     for yyyy in range(year,2018):
 
-                        if count > 1:
+                        if count > 0:
 
                             if yyyy not in edges_cnt:  edges_cnt[yyyy]  = {}
                             if yyyy not in edges_jacc: edges_jacc[yyyy] = {}
