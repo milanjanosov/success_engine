@@ -236,7 +236,7 @@ ax[0].set_title('Original', fontsize = 17)
 ax[1].legend(loc = 'best')
 ax[1].set_xscale('log')
 ax[1].set_yscale('log')
-ax[1].set_title('Original', fontsize = 17)    
+ax[1].set_title('Linear Rescale', fontsize = 17)    
     
 ax[2].legend(loc = 'best')
 ax[2].set_xscale('log')
