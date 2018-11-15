@@ -541,8 +541,8 @@ top_directors = {   'nm0000184' : 'Lucas',
 #get_directors_all_contributed_movies()
 #create_cumulative_careers()
 
-get_networks()
-#get_network_centralities()
+#get_networks()
+get_network_centralities()
 
 #
 #get_centrality_careers(top_directors)
