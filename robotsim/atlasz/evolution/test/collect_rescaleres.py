@@ -149,6 +149,7 @@ def export():
 
     outfolder = 'MLESUCCESS_RES_RESCALED_FINAL'
 
+    if not os.path.exists('../../../../QMODELNEW/Qparamfit_rescaled/'): os.makedirs('../../../../QMODELNEW/Qparamfit_rescaled/')
 
 
     final_files = os.listdir(outfolder)
@@ -172,13 +173,14 @@ def export():
 
         data.sort(key=lambda tup: tup[0], reverse = True)   
 
-        fieldname = field.split('_sci_')[1].replace('.dat', '')#, d[0])
+#        print field.split('_')[-1].replace('.dat'), '\n\n'
+        fieldname = field.split('_')[-1].replace('.dat', '')#, d[0])
 
 
         for d in data:
            
 
-            fout = open('../../../../QMODELNEW/Qparamfit_rescaled/sci_' + fieldname + '-10_qmodel_params.dat', 'w')
+            fout = open('../../../../QMODELNEW/Qparamfit_rescaled/' + fieldname + '-qmodel_params.dat', 'w')
 
             for d in data:
                 fout.write('\t'.join(str(aaa) for aaa in d) + '\n')
