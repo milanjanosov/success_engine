@@ -179,7 +179,7 @@ def jaccard(a, b):
 def get_networks():
 
 
-    directors        = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
+    directors        = set([f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers/')])
     movies_years     = {} 
     start_years      = {}
     directors_movies = {}
@@ -513,7 +513,7 @@ top_directors = {   'nm0000184' : 'Lucas',
                     'nm0000040' : ' Kubrick',
                     'nm0634240' : ' Nolan',
                     'nm0000033' : ' Hitchcock',
-                    'nm0000122' : ' Charlie Chaplin',
+                    'n0000122' : ' Charlie Chaplin',
                     'nm0000631' : ' Ridley Scott',
                     'nm0001053' : ' E Coen',
                     'nm0000142' : ' Eastwood',
