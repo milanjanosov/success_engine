@@ -147,7 +147,7 @@ def collect():
 def export():
 
 
-    outfolder = 'MLESUCCESS_RES_FINAL'
+    outfolder = 'MLESUCCESS_RES_RESCALED_FINAL'
 
 
 
@@ -178,7 +178,7 @@ def export():
         for d in data:
            
 
-            fout = open('../../../../QMODELNEW/Qparamfit/sci_' + fieldname + '-10_qmodel_params.dat', 'w')
+            fout = open('../../../../QMODELNEW/Qparamfit_rescaled/sci_' + fieldname + '-10_qmodel_params.dat', 'w')
 
             for d in data:
                 fout.write('\t'.join(str(aaa) for aaa in d) + '\n')
