@@ -223,8 +223,8 @@ def get_networks():
         movie   = fields[0]
         cast    = sorted(fields[1:])
         cast_s  = set(cast)
-        cast_d  = set(cast_s.intersection(directors_s))
-        cast_l  = list(set(cast_s.intersection(directors_s)))
+        cast_d  = set(cast_s.intersection(directors))
+        cast_l  = list(set(cast_s.intersection(directors)))
         year    = get_year(movies_years[movie])
 
 
