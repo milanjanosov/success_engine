@@ -895,7 +895,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 def get_luck_skill_data(label, field):
 
 
-    files   = os.listdir('pQData')
+    files   = os.listdir('pQData_rescaled')
     qoutdata = []
     poutdata = []
 
@@ -906,15 +906,15 @@ def get_luck_skill_data(label, field):
        
 
         if 'Q' in fn:
-            try:
-                qdata = [float(line.strip().split('\t')[1]) for line in open('pQData/' + fn) ]
-                qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
-            except:
-                pass
+            #try:
+            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData_rescaled/' + fn) ]
+            qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
+           # except:
+           #     pass
 
 
         else:
-            pdata = [float(line.strip()) for line in open('pQData/' + fn) ]
+            pdata = [float(line.strip()) for line in open('pQData_rescaled/' + fn) ]
             poutdata.append( (fn, np.mean(pdata), np.std(pdata), len(pdata) ))
 
 
@@ -1097,6 +1097,7 @@ if __name__ == '__main__':
         get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
         get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
         bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+        
         get_luck_skill_data(label, field)
 
 

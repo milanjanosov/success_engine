@@ -22,6 +22,10 @@ logQs_fields = {}
 fields = ['authors', 'art_director' , 'writer', 'director', 'composer', 'producer', 'pop', 'rock', 'classical', 'jazz', 'electro', 'funk', 'folk', 'hiphop']
 Ns     = [50,  20, 10, 10, 10, 10, 80, 80, 80, 80, 80, 80, 80 ,80]
 
+
+fields = ['director','jazz']
+
+
 skillz = {}
 
 for ind, field in enumerate(fields):
@@ -30,9 +34,14 @@ for ind, field in enumerate(fields):
 
     print field, '\t', ind, '/', len(fields)
 
-    ps = [float(line.strip().split('\t')[-1]) for line in open('pQData/p_distribution_'+field+'-'+N+'_0.dat')]
-    Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData/Q_distribution_'+field+'-'+N+'_0.dat')]
+    #ps = [float(line.strip().split('\t')[-1]) for line in open('pQData/p_distribution_'+field+'-'+N+'_0.dat')]
+    #Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData/Q_distribution_'+field+'-'+N+'_0.dat')]
     
+    ps = [float(line.strip().split('\t')[-1]) for line in open('pQData_rescaled/p_distribution_'+field + '_0.dat')]
+    Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData_rescaled/Q_distribution_'+field + '_0.dat')]
+   
+
+
     ps_fields[field] = ps
     Qs_fields[field] = Qs
     
@@ -50,13 +59,18 @@ fields = ['mathematics', 'physics', 'health_science', 'zoology', 'agronomy', 'ps
           'political_science', 'biology', 'geology']
 
 
+fields = ['mathematics', 'psychology']
+
+
+
+
 for ind, field in enumerate(fields):
     
 
     print field, '\t', ind, '/', len(fields)
 
-    Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData/Q_distribution_'+field+'_0.dat')]
-    ps = [float(line.strip().split('\t')[-1]) for line in open('pQData/p_distribution_'+field+'_0.dat')]
+    Qs = [float(line.strip().split('\t')[-1]) for line in open('pQData_rescaled/Q_distribution_'+field+'_0.dat')]
+    ps = [float(line.strip().split('\t')[-1]) for line in open('pQData_rescaled/p_distribution_'+field+'_0.dat')]
    
     ps_fields[field] = ps
     Qs_fields[field] = Qs
@@ -68,7 +82,7 @@ for ind, field in enumerate(fields):
 
 
 
-skillfile = open('DataToPlot/5_LuckSkill/art_sci_vars.dat', 'w')
+skillfile = open('DataToPlot_rescaled/5_LuckSkill/art_sci_vars.dat', 'w')
 skillfile.write( 'field\tp_var\tp_mean\tQ_var\tQ_mean\tlogp_var\tlogp_mean\tlogQ_var\tlogQ_mean\n')
 
 
