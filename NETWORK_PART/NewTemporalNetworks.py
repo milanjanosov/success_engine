@@ -179,7 +179,7 @@ def jaccard(a, b):
 def get_networks():
 
 
-    directors        = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
+    directors        = set([f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers')])
     movies_years     = {} 
     start_years      = {}
     directors_movies = {}
