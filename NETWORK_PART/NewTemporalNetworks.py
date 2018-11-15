@@ -179,7 +179,7 @@ def jaccard(a, b):
 def get_networks():
 
 
-    directors        = set([f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers/')])
+    directors        = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
     movies_years     = {} 
     start_years      = {}
     directors_movies = {}
@@ -187,6 +187,14 @@ def get_networks():
     for line in open('ALL_movies_years.dat'):
         year, movie  = line.strip().split('\t')
         movies_years[movie] = year   
+
+
+    for line in open('ALL_directors_starting_year.dat'):
+        name, year = line.strip().split('\t')
+        start_years[name] = int(year)
+
+    directors_s = directors.intersection(set(start_years.keys()))
+    directors   = list(directors.intersection(set(start_years.keys())))
 
   
     edges_cnt   = {}
@@ -223,8 +231,8 @@ def get_networks():
         movie   = fields[0]
         cast    = sorted(fields[1:])
         cast_s  = set(cast)
-        cast_d  = set(cast_s.intersection(directors))
-        cast_l  = list(set(cast_s.intersection(directors)))
+        cast_d  = set(cast_s.intersection(directors_s))
+        cast_l  = list(set(cast_s.intersection(directors_s)))
         year    = get_year(movies_years[movie])
 
 
@@ -513,7 +521,7 @@ top_directors = {   'nm0000184' : 'Lucas',
                     'nm0000040' : ' Kubrick',
                     'nm0634240' : ' Nolan',
                     'nm0000033' : ' Hitchcock',
-                    'n0000122' : ' Charlie Chaplin',
+                    'nm0000122' : ' Charlie Chaplin',
                     'nm0000631' : ' Ridley Scott',
                     'nm0001053' : ' E Coen',
                     'nm0000142' : ' Eastwood',
