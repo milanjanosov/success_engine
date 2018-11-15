@@ -336,7 +336,7 @@ def get_backbonestats():
 
 
 
-    '''fstatout = open('networks/backboning/backboned_size_stats_df.dat', 'w')
+    fstatout = open('networks/backboning/backboned_size_stats_df.dat', 'w')
 
     for fn in files_df:
 
@@ -354,7 +354,7 @@ def get_backbonestats():
 
     fstatout.close()
     
-    '''
+    
 
 
 def add_df_meas(meas, tipus):
