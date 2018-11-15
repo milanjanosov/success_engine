@@ -104,6 +104,13 @@ def get_impact(impacts):
 
 
 
+
+
+
+
+
+
+
 fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
           ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
           ('jazz'       , 'Data/jazz/music-'+'jazz'+'-simple-careers-limit-80/')   ,
@@ -138,13 +145,27 @@ def rescale(impact, GLOBALMAX, MINMAX):
     return newimpact
 
 
-f, ax = plt.subplots(1,2,figsize = (15,5))
+def linrescale(impact, GLOBALMAX, MINMAX):   
+    miny, maxy = MINMAX
+    impact = impact
+    miny   = miny
+    maxy   = maxy
+    maxG   = GLOBALMAX
+
+    newimpact = (impact - miny) / (maxy - miny) * (maxG)  
+    
+    return newimpact
+
+
+
+
+f, ax = plt.subplots(1,3,figsize = (15,4))
 
 for field, folder in fields:
-
-
-    impacts_genre   = []
-    impacts_genre_o = []
+    
+    impacts_genre     = []
+    impacts_genre_o   = []
+    impacts_genre_lin = []
  
     folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_rescaled')
     
@@ -162,8 +183,7 @@ for field, folder in fields:
     
     for fn in files:
         
-    
-
+   
         fileout = open(folderout + '/' + fn, 'w')
         
         for line in open(folder+fn):
@@ -180,8 +200,10 @@ for field, folder in fields:
 
                 if c10 == 0: c10 = 1 
                 impacts_genre_o.append(c10)
+                c11 = linrescale(c10, GLOBALMAX, MINMAX)    
                 c10 = rescale(c10, GLOBALMAX, MINMAX)
-                impacts_genre.append(c10)
+                impacts_genre.append(c10)                      
+                impacts_genre_lin.append(c11)
                 
                 if len(cat) > 0:          
                     fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
@@ -194,11 +216,17 @@ for field, folder in fields:
                 
         
     Xy, Yy = get_impact(impacts_genre)
-    ax[1].plot(Xy,Yy, 'o-', label = field)
+    ax[2].plot(Xy,Yy, 'o-', label = field)
     
     Xy, Yy = get_impact(impacts_genre_o)
     ax[0].plot(Xy,Yy, 'o-', label = field)    
-     
+          
+    Xy, Yy = get_impact(impacts_genre_lin)
+    ax[1].plot(Xy,Yy, 'o-', label = field) 
+
+
+
+   
     
 ax[0].legend(loc = 'best')
 ax[0].set_xscale('log')
@@ -208,18 +236,15 @@ ax[0].set_title('Original', fontsize = 17)
 ax[1].legend(loc = 'best')
 ax[1].set_xscale('log')
 ax[1].set_yscale('log')
-ax[1].set_title('Rescaled', fontsize = 17)
+ax[1].set_title('Original', fontsize = 17)    
+    
+ax[2].legend(loc = 'best')
+ax[2].set_xscale('log')
+ax[2].set_yscale('log')
+ax[2].set_title('Rescaled', fontsize = 17)
 
 
 plt.savefig('20181113_4_demo_impact_distr_rescaled.png')
-
-
-
-
-
-
-
-
 
 
 
