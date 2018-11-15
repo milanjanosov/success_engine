@@ -545,7 +545,7 @@ top_directors = {   'nm0000184' : 'Lucas',
 get_network_centralities()
 
 #
-#get_centrality_careers(top_directors)
+get_centrality_careers(top_directors)
 
 ##   source /opt/virtualenv-python2.7/bin/activate
 
