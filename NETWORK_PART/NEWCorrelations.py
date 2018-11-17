@@ -186,11 +186,11 @@ def get_centralities(dirid, measures, column = 1):
     return centralities, measures[column-1]
 
 
-
+#_QEVER
 
 fout = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
 gout = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
-fout.write('directorid\tc_random\tc_original\tc_shifted\tc_dtw\n')
+fout.write('directorid\tcareer_length\tc_random\tc_original\tc_shifted\tc_dtw\n')
 
 directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
 
@@ -207,7 +207,7 @@ for ind, directorid in enumerate(directors):
         x_s, y_s, c_s, shiftm = shifted_correl(x,y)
         x_d, y_d, cdtw = dtw_timeserires(x,y)
 
-        fout.write(directorid + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(c_s) + '\t' + str(cdtw) + '\n')
+        fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(c_s) + '\t' + str(cdtw) + '\n')
         gout.write( str(shiftm) + '\n')
 
 
