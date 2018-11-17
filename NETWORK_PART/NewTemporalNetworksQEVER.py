@@ -71,7 +71,7 @@ def get_networks():
             year   = int(fields[0])
             movies = set(fields[1:])
     
-            if dddd in directors:
+            if dddd in directors_s:
 
                 if dddd not in director_movies: director_movies[dddd] = {}
                 director_movies[dddd][year] = movies
