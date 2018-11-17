@@ -21,7 +21,6 @@ def get_year(year):
     if len(year) == 4: return int(year)
     else: return int(year.split('-')[0])
 
-
 def jaccard(a, b):
     c = a.intersection(b)
     return float(len(c)) / (len(a) + len(b) - len(c))
@@ -71,7 +70,7 @@ def get_networks():
             year   = int(fields[0])
             movies = set(fields[1:])
     
-            if dddd in directors_s:
+            if dddd in directors:
 
                 if dddd not in director_movies: director_movies[dddd] = {}
                 director_movies[dddd][year] = movies
@@ -403,11 +402,11 @@ top_directors = {   'nm0000184' : 'Lucas',
 #get_directors_all_contributed_movies()
 #create_cumulative_careers()
 
-get_networks()
-##get_network_centralities()
+##get_networks()
+get_network_centralities()
 
 #
-##get_centrality_careers(top_directors)
+get_centrality_careers(top_directors)
 
 ##   source /opt/virtualenv-python2.7/bin/activate
 
