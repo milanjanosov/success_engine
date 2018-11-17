@@ -22,7 +22,7 @@ def jaccard(a, b):
 def get_networks():
 
 
-    QEVER = set([line.strip() for line in open('users_types/Q_' + field + '_EVERYONE_namelist.dat')])
+    QEVER = set([line.strip() for line in open('users_types/Q_film_director_namelist.dat')])
     directors        = set([f.split('.')[0] for f in os.listdir('NEWTemporal/2_directors_cumulative_careers')])
     movies_years     = {} 
     start_years      = {}
@@ -300,7 +300,7 @@ def get_centrality_careers(top_directors):
     #years    = ['1927', '1928', '1929', '1930']
 
     #topnames = set(top_directors.keys())
-    QEVER      = set([line.strip() for line in open('users_types/Q_' + field + '_EVERYONE_namelist.dat')])
+    QEVER      = set([line.strip() for line in open('users_types/Q_film_director_namelist.dat')])
     directors  = set([f.split('_')[0] for f in os.listdir('simple-careers/film-director-simple-careers')])
     for line in open('ALL_directors_starting_year.dat'):
         name, year = line.strip().split('\t')
