@@ -14,6 +14,14 @@ from multiprocessing import Process
 '''     GET THE DIRECTORS COLLABORATION CAREERS    '''
 
 
+
+
+def get_year(year):
+
+    if len(year) == 4: return int(year)
+    else: return int(year.split('-')[0])
+
+
 def jaccard(a, b):
     c = a.intersection(b)
     return float(len(c)) / (len(a) + len(b) - len(c))
@@ -63,8 +71,10 @@ def get_networks():
             year   = int(fields[0])
             movies = set(fields[1:])
     
-            if dddd not in director_movies: director_movies[dddd] = {}
-            director_movies[dddd][year] = movies
+            if dddd in directors:
+
+                if dddd not in director_movies: director_movies[dddd] = {}
+                director_movies[dddd][year] = movies
 
 
 
