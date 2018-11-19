@@ -102,7 +102,7 @@ def shifted_correl(ts1,ts2):
     y        = []
     shiftm   = 0
     
-    
+
     for shift in range(int(0.5*len(ts2))):
        
         ts1_s = []
@@ -115,13 +115,34 @@ def shifted_correl(ts1,ts2):
          
         c = spearmanr(ts1_s, ts2_s)[0]
         
-        if abs(c) > cmaxabs:
+        if c > cmaxabs:
             cmaxabs = abs(c)
             cmax = c
             x =  list(ts1_s)
             y =  list(ts2_s)
             shiftm = shift
-            
+                
+                
+    for shift in range(-int(0.5*len(ts2)), 0):
+
+        ts1_s = []
+        ts2_s = []
+        
+        for i in range(len(ts1) + shift):
+
+            ts1_s.append(ts1[i])
+            ts2_s.append(ts2[i-shift])
+         
+        c = spearmanr(ts1_s, ts2_s)[0]
+        
+        if c > cmaxabs:
+            cmaxabs = abs(c)
+            cmax = c
+            x = list(ts1_s)
+            y = list(ts2_s)           
+            shiftm = shift
+               
+    return x, y, cmax, shiftm
 
 
             
@@ -199,7 +220,7 @@ for ind, directorid in enumerate(directors):
     centralities, meas  = get_centralities(directorid, measures, column = 1)
 
     print ind
-    results = get_plot_correl(centralities, directorid, '', meas, logimpact = True)
+    results = get_plot_correl(centralities, directorid, '', meas, logimpact = False)
 
     if results:
  
