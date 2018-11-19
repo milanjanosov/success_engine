@@ -199,6 +199,7 @@ def get_centralities(dirid, measures, column = 1):
     centralities = {}
 
     for line in open('NEWTemporal/4_directors_centralities/' +dirid+'.dat'):
+    #for line in open('NEWTemporal/4_directors_centralities_QEVER/' +dirid+'.dat'):
         
         fields = line.strip().split('\t')
         fields = [float(f) for f in fields]
@@ -209,11 +210,28 @@ def get_centralities(dirid, measures, column = 1):
 
 #_QEVER
 
-fout = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
-gout = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
+
+'''
+fout      = open('NEWTemporal/1_career_centrality_correlations_QEVER.dat', 'w')
+gout      = open('NEWTemporal/2_shiftwindow_sizes_QEVER.dat', 'w')
+jout      = open('NEWTemporal/3_corr_shift_QEVER.dat', 'w')
+directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]
+'''
+
+
+fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
+gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
+jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
+directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
+
+
+
+
+
+
 fout.write('directorid\tcareer_length\tc_random\tc_original\tc_shifted\tc_dtw\n')
 
-directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
+
 
 for ind, directorid in enumerate(directors):
 
@@ -230,11 +248,12 @@ for ind, directorid in enumerate(directors):
 
         fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(c_s) + '\t' + str(cdtw) + '\n')
         gout.write( str(shiftm) + '\n')
+        jout.write(directorid + '\t' + str(shiftm) + '\t' + str(c_s) + '\n' )
 
 
 fout.close()
 gout.close()
-
+jout.close()
 
 
 
