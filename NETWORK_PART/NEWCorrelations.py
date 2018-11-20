@@ -37,6 +37,8 @@ def get_year(year):
 
 
 
+
+
 def get_plot_correl(centralities, dirid, name, meas, logimpact = False):
     
     x = []
@@ -70,21 +72,13 @@ def get_plot_correl(centralities, dirid, name, meas, logimpact = False):
                     
     if len(y) > 1:
 
-     
         y, z, x = zip(*sorted([ (y[ijk], z[ijk], x[ijk]) for ijk in range(len(x)) ], key=lambda tup: tup[2]))    
+        zavg    = np.mean(z)
 
-        zavg = np.mean(z)
-
-
-
-        z = [zz/zavg for zz in z]
+        z    = [zz/zavg for zz in z]
         yavg = np.mean(y)
-
-        y = [yy/yavg for yy in y]
-
-
-
-        a = list(y)
+        y    = [yy/yavg for yy in y]
+        a    = list(y)
         random.shuffle(a)
 
         
@@ -94,89 +88,52 @@ def get_plot_correl(centralities, dirid, name, meas, logimpact = False):
 
 
 
-def shifted_correl(ts1,ts2):
+
+
+def shift_time_series(x, y, tau):
     
-    cmaxabs  = 0
-    cmax     = 1111.1    
-    x        = []
-    y        = []
-    shiftm   = 0
     
-
-    for shift in range(int(0.5*len(ts2))):
-       
-        ts1_s = []
-        ts2_s = []
+    x2 = []
+    y2 = []
     
-        for i in range(len(ts1) - shift):
+    if tau >= 0:
+        for i in range(tau, len(x)):
+            x2.append(x[i])
 
-            ts1_s.append(ts1[i])
-            ts2_s.append(ts2[i-shift])
-         
-        c = spearmanr(ts1_s, ts2_s)[0]
-        
-        if c > cmaxabs:
-            cmaxabs = abs(c)
-            cmax = c
-            x =  list(ts1_s)
-            y =  list(ts2_s)
-            shiftm = shift
-                
-                
-    for shift in range(-int(0.5*len(ts2)), 0):
+        for i in range(len(y)-tau):
+            y2.append(y[i])        
+    
+    else:
+        for i in range(len(x)+tau):
+            x2.append(x[i])        
+        for i in range(-tau, len(y)):
+            y2.append(y[i])  
 
-        ts1_s = []
-        ts2_s = []
-        
-        for i in range(len(ts1) + shift):
-
-            ts1_s.append(ts1[i])
-            ts2_s.append(ts2[i-shift])
-         
-        c = spearmanr(ts1_s, ts2_s)[0]
-        
-        if c > cmaxabs:
-            cmaxabs = abs(c)
-            cmax = c
-            x = list(ts1_s)
-            y = list(ts2_s)           
-            shiftm = shift
-               
-    return x, y, cmax, shiftm
+    
+    return x2, y2, spearmanr(x2, y2)[0]
 
 
+
+def get_tau_star(x,y):
+    
+    n       = len(x)/2
+    maxc    = -10
+    taustar = -1000000000
+    
+    for tau in range(-n, n):
+        xx, yy, corr = shift_time_series(x, y, tau)  
+        if corr > maxc:
+            taustar = tau  
+            maxc = corr
+          
+    xstar, ystar, corrstar = shift_time_series(x, y, taustar)      
             
-
-    for shift in range(-int(0.5*len(ts2)), 0):
-
-        ts1_s = []
-        ts2_s = []
-        
-        for i in range(len(ts1) + shift):
-
-            ts1_s.append(ts1[i])
-            ts2_s.append(ts2[i-shift])
-         
-        c = spearmanr(ts1_s, ts2_s)[0]
-        
-        if abs(c) > cmaxabs:
-            cmaxabs = abs(c)
-            cmax = c
-            x = list(ts1_s)
-            y = list(ts2_s)           
-            shiftm = shift
+    return taustar, xstar, ystar, corrstar
             
-  
-        
-     
-        
-    return x, y, cmax, shiftm
-
+   
 
 
 def dtw_timeserires(x, y):
-
-
     
     x_dtw = np.array(x).reshape(-1, 1)
     y_dtw = np.array(y).reshape(-1, 1)
@@ -188,8 +145,6 @@ def dtw_timeserires(x, y):
 
     cdtw = spearmanr(xnew, ynew)
     return xnew, ynew, cdtw[0]
-
-
 
 
 
@@ -216,9 +171,9 @@ fout      = open('NEWTemporal/1_career_centrality_correlations_QEVER.dat', 'w')
 gout      = open('NEWTemporal/2_shiftwindow_sizes_QEVER.dat', 'w')
 jout      = open('NEWTemporal/3_corr_shift_QEVER.dat', 'w')
 directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]
+
+
 '''
-
-
 fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
 gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
 jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
@@ -243,12 +198,15 @@ for ind, directorid in enumerate(directors):
     if results:
  
         x,   y,   c0, c_rand  = results
-        x_s, y_s, c_s, shiftm = shifted_correl(x,y)
+        taustar, xstar, ystar, corrstar = get_tau_star(x,y)
         x_d, y_d, cdtw = dtw_timeserires(x,y)
 
-        fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(c_s) + '\t' + str(cdtw) + '\n')
-        gout.write( str(shiftm) + '\n')
-        jout.write(directorid + '\t' + str(shiftm) + '\t' + str(c_s) + '\n' )
+
+        if taustar !=  -1000000000:
+
+            fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(corrstar) + '\t' + str(cdtw) + '\n')
+            gout.write( str(taustar) + '\n')
+            jout.write(directorid + '\t' + str(taustar) + '\t' + str(corrstar) + '\t' + str(len(x)) + '\n' )
 
 
 fout.close()
