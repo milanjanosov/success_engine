@@ -94,8 +94,8 @@ for run in range(runmin, runmax):
 
 
 
-    if not os.path.exists( 'Results_rescaled/' + options.model ):
-        os.makedirs( 'Results_rescaled/' + options.model ) 
+    if not os.path.exists( 'Results_linrescaled/' + options.model ):
+        os.makedirs( 'Results_linrescaled/' + options.model ) 
 
 
 
@@ -105,7 +105,7 @@ for run in range(runmin, runmax):
 
 
 
-    outfolder = 'Results_rescaled/' + options.model + '/run_' + str(run) 
+    outfolder = 'Results_linrescaled/' + options.model + '/run_' + str(run) 
 
     if not os.path.exists( outfolder ):
         os.makedirs( outfolder ) 
@@ -171,29 +171,28 @@ for run in range(runmin, runmax):
 
 
 
-# screen -S evol10_mathematics 
+# screen -S evol15_mathematics 
+# source /opt/virtualenv-python2.7/bin/activate  
+# python2.7 test_evolution.py -m sci_mathematics -min 340 -max 330
+
+
+
+
+
+# screen -S evol15_psychology 
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m sci_mathematics -min 140 -max 160
+# python2.7 test_evolution.py -m sci_psychology -min 300 -max 330
 
 
-
-
-
-# screen -S evol10_psychology 
+# screen -S evol11_director
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m sci_psychology -min 180 -max 200
+# python2.7 test_evolution.py -m mlesuccess_dir  -min 240 -max 260
 
 
-# screen -S evol8_director
+
+# screen -S  evol4_jazz
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_dir  -min 175 -max 200
-
-
-
-# screen -S  evol9_jazz
-# source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_jazz  -min 160 -max 180
-
+# python2.7 test_evolution.py -m mlesuccess_jazz  -min 300 -max 350
 
 
 ## screen -S evol3_physics

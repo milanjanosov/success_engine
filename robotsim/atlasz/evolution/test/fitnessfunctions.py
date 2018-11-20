@@ -403,12 +403,14 @@ def fitness_sci_mathematics(pvalues):
 
     fitnesses = {}
     #careerf   = '../../../../Data/Science/science-mathematics-simple-careers/'
-    careerf   = '../../../../QMODELNEW/Data_rescaled/science-mathematics-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-mathematics-simple-careers/'
 
 
 
 
     sumI, N   = get_sumI_science(careerf) 
+
+
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -516,7 +518,7 @@ def fitness_sci_psychology(pvalues):
 
     fitnesses = {}
     #careerf   = '../../../../Data/Science/science-psychology-simple-careers/'
-    careerf   = '../../../../QMODELNEW/Data_rescaled/science-psychology-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-psychology-simple-careers/'
 
 
     sumI, N   = get_sumI_science(careerf) 
@@ -832,7 +834,7 @@ def fitness_mlesuccess_dir(pvalues):
 #    careerf   = '../../../../DataSample/Film/film-director-simple-careers/'
   #  careerf   = '../../../../Data/Film/film-director-simple-careers/'
 
-    careerf   = '../../../../QMODELNEW/Data_rescaled/film-director-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-director-simple-careers/'
 
 
 
@@ -1116,7 +1118,7 @@ def fitness_mlesuccess_jazz(pvalues):
 
     fitnesses = {}
     #careerf   = '../../../../Data/Music/music-jazz-simple-careers/'
-    careerf   = '../../../../QMODELNEW/Data_rescaled/music-jazz-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-jazz-simple-careers/'
     sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):

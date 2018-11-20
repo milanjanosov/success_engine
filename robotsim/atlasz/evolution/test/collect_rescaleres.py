@@ -6,17 +6,17 @@ import sys
 def collect():
 
 
-    folders = [fff for fff in os.listdir('Results_rescaled')]
+    folders = [fff for fff in os.listdir('Results_linrescaled')]
 
 
 
-    if os.path.exists('opt_status_report_rescaled.dat'):
+    if os.path.exists('opt_status_report_linrescaled.dat'):
 
         PREVSTAT          = {}
         PREVSTAT['RAW']   = {}
         PREVSTAT['CLEAN'] = {}
 
-        for line in open('opt_status_report_rescaled.dat'):
+        for line in open('opt_status_report_linrescaled.dat'):
             fields = line.strip().split('\t')
         
             fieldname = fields[1], fields[1].split('_')[-1]
@@ -25,11 +25,11 @@ def collect():
 
 
       
-    STSOUT = open('opt_status_report_rescaled.dat', 'w')
+    STSOUT = open('opt_status_report_linrescaled.dat', 'w')
 
 
 
-    outfolder = 'MLESUCCESS_RES_RESCALED'
+    outfolder = 'MLESUCCESS_RES_linrescaled'
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
 
@@ -42,7 +42,7 @@ def collect():
 
         outfile.write('\t'.join(['maxfitness', 'mu_N', 'mu_p', 'mu_Q', 'sigma_N', 'sigma_Q', 'sigma_p', 'sigma_pQ', 'sigma_pN', 'sigma_QN']) + '\n')
 
-        folder = 'Results_rescaled/' + folder
+        folder = 'Results_linrescaled/' + folder
         runs = [folder + '/' + run for run in os.listdir(folder) if '.dat' not in run]
 
         fieldname = folder.replace('sci_', '')
@@ -87,12 +87,12 @@ def collect():
 
 
 
-    files = [f for f in os.listdir('MLESUCCESS_RES_RESCALED') ]
+    files = [f for f in os.listdir('MLESUCCESS_RES_linrescaled') ]
 
 
 
 
-    outfolder = 'MLESUCCESS_RES_RESCALED_FINAL'
+    outfolder = 'MLESUCCESS_RES_linrescaled_FINAL'
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
 
@@ -102,7 +102,7 @@ def collect():
         counter = 0.0
         fout    = open(outfolder + '/' + fn.replace('sci_', 'final_sci_'), 'w')
 
-        for line in open('MLESUCCESS_RES_RESCALED/' + fn):
+        for line in open('MLESUCCESS_RES_linrescaled/' + fn):
 
             if 'max' not in line:
                 fields = [float(fff) for fff in line.strip().split('\t')]
@@ -147,9 +147,9 @@ def collect():
 def export():
 
 
-    outfolder = 'MLESUCCESS_RES_RESCALED_FINAL'
+    outfolder = 'MLESUCCESS_RES_linrescaled_FINAL'
 
-    if not os.path.exists('../../../../QMODELNEW/Qparamfit_rescaled/'): os.makedirs('../../../../QMODELNEW/Qparamfit_rescaled/')
+    if not os.path.exists('../../../../QMODELNEW/Qparamfit_linrescaled/'): os.makedirs('../../../../QMODELNEW/Qparamfit_linrescaled/')
 
 
     final_files = os.listdir(outfolder)
@@ -180,7 +180,7 @@ def export():
         for d in data:
            
 
-            fout = open('../../../../QMODELNEW/Qparamfit_rescaled/' + fieldname + '-qmodel_params.dat', 'w')
+            fout = open('../../../../QMODELNEW/Qparamfit_linrescaled/' + fieldname + '-qmodel_params.dat', 'w')
 
             for d in data:
                 fout.write('\t'.join(str(aaa) for aaa in d) + '\n')
