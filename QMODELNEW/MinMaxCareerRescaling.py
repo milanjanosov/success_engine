@@ -133,7 +133,7 @@ for field, folder in fields:
 
 
 # https://stats.stackexchange.com/questions/281162/scale-a-number-between-a-range
-def rescale(impact, GLOBALMAX, MINMAX):   
+'''def rescale(impact, GLOBALMAX, MINMAX):   
     miny, maxy = MINMAX
     impact = math.log(impact)
     miny   = math.log(miny)
@@ -143,6 +143,8 @@ def rescale(impact, GLOBALMAX, MINMAX):
     newimpact = math.exp(  (impact - miny) / (maxy - miny) * (maxG)  )
     
     return newimpact
+'''
+
 
 
 def linrescale(impact, GLOBALMAX, MINMAX):   
@@ -161,13 +163,15 @@ def linrescale(impact, GLOBALMAX, MINMAX):
 
 f, ax = plt.subplots(1,3,figsize = (15,4))
 
+print 'STAAART'
+
 for field, folder in fields:
     
     impacts_genre     = []
     impacts_genre_o   = []
     impacts_genre_lin = []
  
-    folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_rescaled')
+    folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_linrescaled')
     
     folderout = folderout.replace(field + '/', '', 1)
     
@@ -179,11 +183,14 @@ for field, folder in fields:
     miny, maxy  = MINMAX
     files = os.listdir(folder)
     
+    nnn = len(files)
+
     print field, len(files)
     
-    for fn in files:
+    for ind, fn in enumerate(files):
         
-   
+        print ind, '/', nnn   
+
         fileout = open(folderout + '/' + fn, 'w')
         
         for line in open(folder+fn):
@@ -200,10 +207,10 @@ for field, folder in fields:
 
                 if c10 == 0: c10 = 1 
                 impacts_genre_o.append(c10)
-                c11 = linrescale(c10, GLOBALMAX, MINMAX)    
-                c10 = rescale(c10, GLOBALMAX, MINMAX)
-                impacts_genre.append(c10)                      
-                impacts_genre_lin.append(c11)
+                c10 = linrescale(c10, GLOBALMAX, MINMAX)    
+                #c10 = rescale(c10, GLOBALMAX, MINMAX)
+                #impacts_genre.append(c10)                      
+                impacts_genre_lin.append(c10)
                 
                 if len(cat) > 0:          
                     fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
@@ -215,7 +222,7 @@ for field, folder in fields:
         fileout.close()        
                 
         
-    Xy, Yy = get_impact(impacts_genre)
+    '''Xy, Yy = get_impact(impacts_genre)
     ax[2].plot(Xy,Yy, 'o-', label = field)
     
     Xy, Yy = get_impact(impacts_genre_o)
@@ -223,11 +230,11 @@ for field, folder in fields:
           
     Xy, Yy = get_impact(impacts_genre_lin)
     ax[1].plot(Xy,Yy, 'o-', label = field) 
-
+    '''
 
 
    
-    
+'''    
 ax[0].legend(loc = 'best')
 ax[0].set_xscale('log')
 ax[0].set_yscale('log')
@@ -245,7 +252,7 @@ ax[2].set_title('Rescaled', fontsize = 17)
 
 
 plt.savefig('20181113_4_demo_impact_distr_rescaled.png')
-
+'''
 
 
 
