@@ -166,6 +166,8 @@ print 'STAAART'
 
 for field, folder in fields:
     
+   # if 'math' in field:
+
     impacts_genre_log = []
     impacts_genre_o   = []
     impacts_genre_lin = []
@@ -204,13 +206,23 @@ for field, folder in fields:
                     paper_id, year, c10 = line.strip().split('\t')
                     c10 = float(c10)
 
-                c100 = c10
-                if c100 == 0: c100 = 1 
-                impacts_genre_o.append(c10)
-                c10 = linrescale(c10, GLOBALMAX, MINMAX)    
-                c12 = logrescale(c100, GLOBALMAX, MINMAX)
-                impacts_genre_log.append(c12)                      
+
+                if c10 == 0: c10 = 1 
+                c100 = float(c10)
+
+                c10 = linrescale(c10, GLOBALMAX, MINMAX)           
                 impacts_genre_lin.append(c10)
+
+
+
+
+
+                impacts_genre_o.append(c10)
+
+                c12 = logrescale(c100, GLOBALMAX, MINMAX)
+                impacts_genre_log.append(c12)               
+
+
                 
                 if len(cat) > 0:          
                     fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
@@ -221,15 +233,23 @@ for field, folder in fields:
 
         fileout.close()        
                 
+
+
         
-    Xy, Yy = get_impact(impacts_genre_log)
-    ax[2].plot(Xy,Yy, 'o-', label = field)
+
     
     Xy, Yy = get_impact(impacts_genre_o)
     ax[0].plot(Xy,Yy, 'o-', label = field)    
           
     Xy, Yy = get_impact(impacts_genre_lin)
     ax[1].plot(Xy,Yy, 'o-', label = field) 
+
+   # print set(impacts_genre_lin)
+
+    Xy, Yy = get_impact(impacts_genre_log)
+    ax[2].plot(Xy,Yy, 'o-', label = field)
+
+
     
 
 
