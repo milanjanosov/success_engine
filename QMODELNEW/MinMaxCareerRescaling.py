@@ -133,7 +133,7 @@ for field, folder in fields:
 
 
 # https://stats.stackexchange.com/questions/281162/scale-a-number-between-a-range
-'''def rescale(impact, GLOBALMAX, MINMAX):   
+def logrescale(impact, GLOBALMAX, MINMAX):   
     miny, maxy = MINMAX
     impact = math.log(impact)
     miny   = math.log(miny)
@@ -143,7 +143,6 @@ for field, folder in fields:
     newimpact = math.exp(  (impact - miny) / (maxy - miny) * (maxG)  )
     
     return newimpact
-'''
 
 
 
@@ -167,7 +166,7 @@ print 'STAAART'
 
 for field, folder in fields:
     
-    impacts_genre     = []
+    impacts_genre_log = []
     impacts_genre_o   = []
     impacts_genre_lin = []
  
@@ -205,11 +204,12 @@ for field, folder in fields:
                     paper_id, year, c10 = line.strip().split('\t')
                     c10 = float(c10)
 
-                if c10 == 0: c10 = 1 
+                c100 = c10
+                if c100 == 0: c100 = 1 
                 impacts_genre_o.append(c10)
                 c10 = linrescale(c10, GLOBALMAX, MINMAX)    
-                #c10 = rescale(c10, GLOBALMAX, MINMAX)
-                #impacts_genre.append(c10)                      
+                c12 = logrescale(c100, GLOBALMAX, MINMAX)
+                impacts_genre_log.append(c12)                      
                 impacts_genre_lin.append(c10)
                 
                 if len(cat) > 0:          
@@ -222,7 +222,7 @@ for field, folder in fields:
         fileout.close()        
                 
         
-    '''Xy, Yy = get_impact(impacts_genre)
+    Xy, Yy = get_impact(impacts_genre_log)
     ax[2].plot(Xy,Yy, 'o-', label = field)
     
     Xy, Yy = get_impact(impacts_genre_o)
@@ -230,11 +230,10 @@ for field, folder in fields:
           
     Xy, Yy = get_impact(impacts_genre_lin)
     ax[1].plot(Xy,Yy, 'o-', label = field) 
-    '''
+    
 
 
-   
-'''    
+  
 ax[0].legend(loc = 'best')
 ax[0].set_xscale('log')
 ax[0].set_yscale('log')
@@ -243,17 +242,14 @@ ax[0].set_title('Original', fontsize = 17)
 ax[1].legend(loc = 'best')
 ax[1].set_xscale('log')
 ax[1].set_yscale('log')
-ax[1].set_title('Linear Rescale', fontsize = 17)    
+ax[1].set_title('Lin Rescale', fontsize = 17)    
     
 ax[2].legend(loc = 'best')
 ax[2].set_xscale('log')
 ax[2].set_yscale('log')
-ax[2].set_title('Rescaled', fontsize = 17)
+ax[2].set_title('Log Rescaled', fontsize = 17)
 
 
-plt.savefig('20181113_4_demo_impact_distr_rescaled.png')
-'''
-
-
+plt.savefig('20181120_4_demo_impact_distr_rescaled.png')
 
 
