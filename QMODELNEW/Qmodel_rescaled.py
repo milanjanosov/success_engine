@@ -169,7 +169,7 @@ def get_impact_distribution(id_data, nbins, fileout, title):
 
   
 
-    datafolder = 'DataToPlot_rescaled/1_impact_distribution/'
+    datafolder = 'DataToPlot_linrescaled/1_impact_distribution/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
@@ -257,7 +257,7 @@ def get_N_star_N(id_data, bins, fileout, title):
 
 
 
-    datafolder = 'DataToPlot_rescaled/2_N_Nstar/'
+    datafolder = 'DataToPlot_linrescaled/2_N_Nstar/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
@@ -299,7 +299,6 @@ def get_N_star_N(id_data, bins, fileout, title):
 
     bins = (bins[1:]+bins[:1]/2)
 
-    print bins
 
 
     fout = open(datafolder + '/' + title + '_RNNstar_data.dat', 'w')
@@ -450,12 +449,12 @@ def get_users_ps(nameids, id_data, Qfitparams, fileout, folder2, jind, title):
 
 
 
-    if not os.path.exists('DataToPlot_rescaled/3_pQ_distributions_processed/'):
-        os.makedirs('DataToPlot_rescaled/3_pQ_distributions_processed/')
+    if not os.path.exists('DataToPlot_linrescaled/3_pQ_distributions_processed/'):
+        os.makedirs('DataToPlot_linrescaled/3_pQ_distributions_processed/')
 
 
     
-    fout = open('DataToPlot_rescaled/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
+    fout = open('DataToPlot_linrescaled/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
 
 
     fout.write('id\tQ\tmean_p\tmedian_p\n')
@@ -488,7 +487,6 @@ def get_users_ps(nameids, id_data, Qfitparams, fileout, folder2, jind, title):
             fout.write( imdb + '\t' + str(Q)  + '\t' +  str(np.mean(career_p))  + '\t' +  str(np.median(career_p)) + '\n')
         
 
-    print title, err
 
     fout.close()
 
@@ -559,7 +557,7 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     
 
 
-    datafolder = 'DataToPlot_rescaled/3_pQ_distributions/'
+    datafolder = 'DataToPlot_linrescaled/3_pQ_distributions/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
@@ -831,12 +829,11 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
-    datafolder = 'DataToPlot_rescaled/4_RQModel/'
+    datafolder = 'DataToPlot_linrescaled/4_RQModel/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
 
-    print len(Ns)
 
     fout = open(datafolder + '4_RQModel_data_' + title + '.dat', 'w')
     for i in range(len(Ns)):
@@ -895,11 +892,11 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 def get_luck_skill_data(label, field):
 
 
-    files   = os.listdir('pQData_rescaled')
+    files   = os.listdir('pQData_linrescaled')
     qoutdata = []
     poutdata = []
 
-    print label, field
+
 
     for fn in files:
 
@@ -907,20 +904,20 @@ def get_luck_skill_data(label, field):
 
         if 'Q' in fn:
             #try:
-            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData_rescaled/' + fn) ]
+            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData_linrescaled/' + fn) ]
             qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
            # except:
            #     pass
 
 
         else:
-            pdata = [float(line.strip()) for line in open('pQData_rescaled/' + fn) ]
+            pdata = [float(line.strip()) for line in open('pQData_linrescaled/' + fn) ]
             poutdata.append( (fn, np.mean(pdata), np.std(pdata), len(pdata) ))
 
 
 
 
-    folout = 'DataToPlot_rescaled/' + '5_LuckSkill'
+    folout = 'DataToPlot_linrescaled/' + '5_LuckSkill'
     if not os.path.exists(folout):
         os.makedirs(folout)
     fout = open(folout + '/p_avg_std.dat', 'w')
@@ -935,63 +932,6 @@ def get_luck_skill_data(label, field):
 
     
 
-
-def process_Qs_paralel(resfile):
-
-    field_o    = resfile.split('_', 1)[1]
-    limit      = field_o.split('-')[1]
-    field      = field_o.split('-')[0].replace('_','-')
-    infolder   = 'Data/' + field + '/' + fields[field] + '-' + field + '-simple-careers-limit-' + limit
-    Qfitparams = []
-
-    for ind, line in enumerate(open('Qparamfit/' + field.replace('-', '_') +  '-' + str(limit) + '_qmodel_params.dat')):
-
-        if ind == 3: break
-
-        mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
-        
-        Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
-
-        nameids = parse_id_names()
-        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
-
-        get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)
-     #   get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' + field_o + '.png', field_o) 
-     #   get_N_star_N(           id_data, nbins, folderout + '2_N_star_N_' + field_o + '.png', field_o)
-     #   get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + field_o + '_' + str(ind) + '.png', folderout2, ind, field_o)	   
-     #   bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field.replace('-','_') + '-' + str(limit) + '_' + str(ind))
-        get_luck_skill_data(fields[field], field)
-
-
-
-
-def process_Qs_paralel_sci(resfile):
-
-
-    field      = resfile.split('-10_qmodel')[0].split('/sci_')[1]
-    limit      = 10
-    infolder   = '../Data/Science/science-' + field + '-simple-careers'
-    Qfitparams = []
-
-
-    for ind, line in enumerate(open('Qparamfit/sci_' + field +  '-' + str(limit) + '_qmodel_params.dat')):
-
-        if ind == 3: break
-
-        mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
-        Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
-
-
-
-        nameids = parse_id_names()
-        id_data = read_data(infolder, folderout3, field + '-' + str(limit))
-
-#        get_users_ps(nameids,   id_data, Qfitparams, folderout + '3_p_and_Q_distr_'       + field + '_' + str(ind) + '.png', folderout2, ind, field)
-        get_impact_distribution(id_data, nbins,      folderout + '1_impact_distribution_' + field + '.png', field) 
-#        get_N_star_N(           id_data, nbins,      folderout + '2_N_star_N_'            + field + '.png', field)
-#        get_Q_model_stats(      id_data, Qfitparams, folderout + '3_p_and_Q_distr_'       + field + '_' + str(ind) + '.png', folderout2, ind, field)	   
-    #    bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  field + '-' + str(limit) + '.png',  folderout2, folderout3, field + '-' + str(limit) + '_' + str(ind))
-        #get_luck_skill_data(fields[field], field)
 
 
 
@@ -1020,12 +960,12 @@ if __name__ == '__main__':
     nbins         = 10
     resfolder     = 'Optimize/atlasz/evolution/test/Results/'
     resfiles_art  = [resfolder + res for res in os.listdir(resfolder) if 'sci_' not in res]
-    resfiles_sci  = ['Qparamfit_rescaled/' + res for res in os.listdir('Qparamfit') if 'sci_'     in res]
-    folderout     = 'ResultFigs_rescaled/' 
-    folderout2    = 'pQData_rescaled/' 
-    folderout3    = 'IdData_rescaled/' 
+    resfiles_sci  = ['Qparamfit_linrescaled/' + res for res in os.listdir('Qparamfit') if 'sci_'     in res]
+    folderout     = 'ResultFigs_linrescaled/' 
+    folderout2    = 'pQData_linrescaled/' 
+    folderout3    = 'IdData_linrescaled/' 
 
-    dataoutf      = 'DataToPlot_rescaled'
+    dataoutf      = 'DataToPlot_linrescaled'
 
 
     if not os.path.exists(folderout):  os.makedirs(folderout)
@@ -1077,9 +1017,9 @@ if __name__ == '__main__':
         field    = sys.argv[3]  
 
 
-        infolder = 'Data_rescaled/' + field + '-' + label +'-simple-careers'      
+        infolder = 'Data_linrescaled/' + field + '-' + label +'-simple-careers'      
 
-        for ind, line in enumerate(open('Qparamfit_rescaled/' + label +  '-qmodel_params.dat')):
+        for ind, line in enumerate(open('Qparamfit_linrescaled/' + label +  '-qmodel_params.dat')):
 
             if ind ==0:
                 mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
