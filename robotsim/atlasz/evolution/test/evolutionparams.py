@@ -19,9 +19,9 @@ params_to_evolve = [
     "f mu_N 0 5 0.1",
     "f mu_p 0 5 0.1",
     "f mu_Q 0 5 0.1",
-    "f sigma_N 0.000001 5 0.1",
-    "f sigma_Q 0.000001 5 0.1",
-    "f sigma_p 0.000001 5 0.1",
+    "f sigma_N 0.5 5 0.1",
+    "f sigma_Q 0.5 5 0.1",
+    "f sigma_p 0.5 5 0.1",
     "f sigma_pQ -0.5 0 0.1",
     "f sigma_pN -0.5 0 0.1",
     "f sigma_QN -0.5 0 0.1",
@@ -48,7 +48,7 @@ generations = 50
 
 # number of competing phenotypes/candidate solutions, i.e. population size
 # typical: 100
-phenotypes = 50
+phenotypes = 100
 
 # number of random environments in one generation used for all phenotypes
 # typical: ?????
