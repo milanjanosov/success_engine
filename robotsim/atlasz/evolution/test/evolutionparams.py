@@ -48,7 +48,7 @@ generations = 50
 
 # number of competing phenotypes/candidate solutions, i.e. population size
 # typical: 100
-phenotypes = 200
+phenotypes = 50
 
 # number of random environments in one generation used for all phenotypes
 # typical: ?????
