@@ -205,10 +205,10 @@ if justQ == 'Q':
 
 
 else:
-   # fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
-   # gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
-    gout       = open('NEWTemporal/2_shiftwindow_sizes_random.dat', 'w')
-   # jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
+    fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
+    gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
+    ggout       = open('NEWTemporal/2_shiftwindow_sizes_random.dat', 'w')
+    jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
     jjout      = open('NEWTemporal/3_corr_shift_random.dat', 'w')
     directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
 
