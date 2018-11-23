@@ -1,6 +1,6 @@
 import numpy as np
 import os
-
+import sys  
 import gzip
 import math
 import random
@@ -90,7 +90,7 @@ def get_plot_correl(centralities, dirid, name, meas, logimpact = False):
 
 
 
-def shift_time_series(x, y, tau):
+def shift_time_series(x, y, tau ):
     
     
     x2 = []
@@ -109,8 +109,10 @@ def shift_time_series(x, y, tau):
         for i in range(-tau, len(y)):
             y2.append(y[i])  
 
+    a = list(x2)
+    random.shuffle(a)
     
-    return x2, y2, spearmanr(x2, y2)[0]
+    return x2, y2, spearmanr(x2, y2)[0], spearmanr(a, y2)[0]
 
 
 
@@ -120,15 +122,27 @@ def get_tau_star(x,y):
     maxc    = -10
     taustar = -1000000000
     
+    maxcR    = -10
+    taustarR = -1000000000
+
+
+
+    #for tau in range(-n, n):
     for tau in range(-n, n):
-        xx, yy, corr = shift_time_series(x, y, tau)  
+        xx, yy, corr, rand = shift_time_series(x, y, tau)  
         if corr > maxc:
             taustar = tau  
             maxc = corr
+
+
+        if rand > maxcR:
+            taustarR = tau  
+            maxcR = rand
           
-    xstar, ystar, corrstar = shift_time_series(x, y, taustar)      
+    xstar, ystar, corrstar, aa = shift_time_series(x, y, taustar)    
+    xstar, ystar, aa, corrand  = shift_time_series(x, y, taustarR)    
             
-    return taustar, xstar, ystar, corrstar
+    return taustar, xstar, ystar, corrstar, taustarR, corrand
             
    
 
@@ -153,12 +167,20 @@ def get_centralities(dirid, measures, column = 1):
 
     centralities = {}
 
-    for line in open('NEWTemporal/4_directors_centralities/' +dirid+'.dat'):
-    #for line in open('NEWTemporal/4_directors_centralities_QEVER/' +dirid+'.dat'):
-        
-        fields = line.strip().split('\t')
-        fields = [float(f) for f in fields]
-        centralities[fields[0]] = fields[column]
+    if justQ == 'Q':
+        for line in open('NEWTemporal/4_directors_centralities_QEVER/' +dirid+'.dat'):        
+            fields = line.strip().split('\t')
+            fields = [float(f) for f in fields]
+            centralities[fields[0]] = fields[column]
+
+
+    else:
+        for line in open('NEWTemporal/4_directors_centralities/' +dirid+'.dat'):
+            fields = line.strip().split('\t')
+            fields = [float(f) for f in fields]
+            centralities[fields[0]] = fields[column]
+
+
         
     return centralities, measures[column-1]
 
@@ -166,54 +188,90 @@ def get_centralities(dirid, measures, column = 1):
 #_QEVER
 
 
-'''
-fout      = open('NEWTemporal/1_career_centrality_correlations_QEVER.dat', 'w')
-gout      = open('NEWTemporal/2_shiftwindow_sizes_QEVER.dat', 'w')
-jout      = open('NEWTemporal/3_corr_shift_QEVER.dat', 'w')
-directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]
-
-
-'''
-fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
-gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
-jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
-directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
+justQ = sys.argv[1]
 
 
 
+if justQ == 'Q':
+
+    fout      = open('NEWTemporal/1_career_centrality_correlations_QEVER.dat', 'w')
+    gout      = open('NEWTemporal/2_shiftwindow_sizes_QEVER.dat', 'w')
+    ggout     = open('NEWTemporal/2_shiftwindow_sizes_QEVER_random.dat', 'w')
+    jout      = open('NEWTemporal/3_corr_shift_QEVER.dat', 'w')
+    jjout     = open('NEWTemporal/3_corr_shift_QEVER_random.dat', 'w')
+
+   
+    directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]
+
+
+else:
+   # fout      = open('NEWTemporal/1_career_centrality_correlations.dat', 'w')
+   # gout      = open('NEWTemporal/2_shiftwindow_sizes.dat', 'w')
+    gout       = open('NEWTemporal/2_shiftwindow_sizes_random.dat', 'w')
+   # jout      = open('NEWTemporal/3_corr_shift.dat', 'w')
+    jjout      = open('NEWTemporal/3_corr_shift_random.dat', 'w')
+    directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities')]
 
 
 
-fout.write('directorid\tcareer_length\tc_random\tc_original\tc_shifted\tc_dtw\n')
 
 
 
-for ind, directorid in enumerate(directors):
+#fout.write('directorid\tcareer_length\tc_random\tc_original\tc_shifted\tc_dtw\n')
 
-    centralities, meas  = get_centralities(directorid, measures, column = 1)
-
-    print ind
-    results = get_plot_correl(centralities, directorid, '', meas, logimpact = False)
-
-    if results:
- 
-        x,   y,   c0, c_rand  = results
-        taustar, xstar, ystar, corrstar = get_tau_star(x,y)
-        x_d, y_d, cdtw = dtw_timeserires(x,y)
+nnn = len(directors)
 
 
-        if taustar !=  -1000000000:
 
-            fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(corrstar) + '\t' + str(cdtw) + '\n')
-            gout.write( str(taustar) + '\n')
-            jout.write(directorid + '\t' + str(taustar) + '\t' + str(corrstar) + '\t' + str(len(x)) + '\n' )
+for i in range(1):
+
+    for ind, directorid in enumerate(directors):
+
+        centralities, meas  = get_centralities(directorid, measures, column = 3)
+
+   #    if 'nm0000184' == directorid:
+        if 2 == 2:
+            print ind, '/', nnn
+            results = get_plot_correl(centralities, directorid, '', meas, logimpact = False)
+
+           # if ind == 1000: break
+           # print meas
+
+            if results:
+         
+                x,   y,   c0, c_rand  = results
 
 
+                #print len(x)
+                taustar, xstar, ystar, rc_tau, rtaustar, corrand = get_tau_star(x,y)
+
+
+
+      
+    
+                print  taustar, rc_tau, '\t',  rtaustar, corrand
+
+                x_d, y_d, cdtw  = dtw_timeserires(x,y)
+
+                if taustar !=  -1000000000:
+
+                    fout.write(directorid + '\t' + str(len(x)) + '\t' + str(c_rand) + '\t' + str(c0) + '\t' + str(rc_tau)+ '\t' + str(corrand) + '\t' + str(cdtw) + '\n')
+                    gout.write( str(taustar) + '\n')
+                    ggout.write( str(rtaustar) + '\n')
+                    jout.write(directorid  + '\t' + str(taustar) + '\t' + str(rc_tau) + '\t' + str(len(x)) + '\n' )
+                    jjout.write(directorid + '\t' + str(rtaustar) + '\t' + str(corrand) + '\t' + str(len(x)) + '\n' )
+
+
+
+     
 fout.close()
 gout.close()
 jout.close()
 
+ggout.close()
+jjout.close()
 
+## source /opt/virtualenv-python2.7/bin/activate
 
 
 
