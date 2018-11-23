@@ -169,29 +169,29 @@ for run in range(runmin, runmax):
 
 
 
-# screen -S evol15_mathematics 
+# screen -S evol16_mathematics 
 # source /opt/virtualenv-python2.7/bin/activate  
-# python2.7 test_evolution.py -m sci_mathematics -min 280 -max 300
+# python2.7 test_evolution.py -m sci_mathematics -min 300 -max 320
 
 
 
 
-# screen -S evol11_psychology 
+# screen -S evol18_psychology 
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m sci_psychology -min 200 -max 220
+# python2.7 test_evolution.py -m sci_psychology -min 340 -max 360
 
 
 
 
-# screen -S evol10_director
+# screen -S evol11_director
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_dir  -min 180 -max 200
+# python2.7 test_evolution.py -m mlesuccess_dir  -min 650 -max 750
 
 
 
 # screen -S  evol10_jazz
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_jazz  -min 180 -max 200
+# python2.7 test_evolution.py -m mlesuccess_jazz  -min 360 -max 200
 
 
 
