@@ -110,17 +110,11 @@ def get_impact(impacts):
 
 
 
-
-'''
 fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
           ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
           ('jazz'       , 'Data/jazz/music-'+'jazz'+'-simple-careers-limit-80/')   ,
-          ('director'       , 'Data/director/film-director-simple-careers-limit-10/') 
-         ]
-'''
-
-
-fields = [('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'), 
+          ('director'       , 'Data/director/film-director-simple-careers-limit-10/'),
+        ('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'), 
           ('classical'       , 'Data/classical/music-'+'classical'+'-simple-careers-limit-80/')   ,
           ('producer'       , 'Data/producer/film-producer-simple-careers-limit-10/') 
          ]
