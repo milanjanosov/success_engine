@@ -557,7 +557,7 @@ def fitness_sci_space_science_or_astronomy(pvalues):
 
     fitnesses = {}
     #careerf   = '../../../../Data/Science/science-space_science_or_astronomy-simple-careers/'
-    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-space_science_or_astronomy  -simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-space_science_or_astronomy-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -896,7 +896,7 @@ def fitness_mlesuccess_prod(pvalues):
     fitnesses = {}
     #careerf   = '../../../../Data/Film/film-producer-simple-careers/'
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-producer-simple-careers/'
-    sumI, N   = get_sumI(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1156,7 +1156,7 @@ def fitness_mlesuccess_class(pvalues):
     fitnesses = {}
     #careerf   = '../../../../Data/Music/music-classical-simple-careers/'
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-classical-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
