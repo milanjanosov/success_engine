@@ -556,7 +556,8 @@ def fitness_sci_psychology(pvalues):
 def fitness_sci_space_science_or_astronomy(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-space_science_or_astronomy-simple-careers/'
+    #careerf   = '../../../../Data/Science/science-space_science_or_astronomy-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-space_science_or_astronomy  -simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -893,7 +894,8 @@ def fitness_mlesuccess_art(pvalues):
 def fitness_mlesuccess_prod(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Film/film-producer-simple-careers/'
+    #careerf   = '../../../../Data/Film/film-producer-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-producer-simple-careers/'
     sumI, N   = get_sumI(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1152,7 +1154,8 @@ def fitness_mlesuccess_jazz(pvalues):
 def fitness_mlesuccess_class(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-classical-simple-careers/'
+    #careerf   = '../../../../Data/Music/music-classical-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-classical-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
