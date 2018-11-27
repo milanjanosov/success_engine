@@ -533,17 +533,23 @@ def fitness_sci_psychology(pvalues):
 
     sumI, N   = get_sumI_science(careerf) 
 
-    for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
+    mu_N =  3.379044631079117
+    sigma_N =  0.7692902776163976
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+#science-psychology-simple-careers 3.379044631079117 0.7692902776163976
+
+
+    for i in xrange(len(pvalues)):
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"sci_psychology": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
@@ -561,17 +567,24 @@ def fitness_sci_space_science_or_astronomy(pvalues):
     careerf   = '../../../../QMODELNEW/Data_linrescaled/science-space_science_or_astronomy-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
-    for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+
+    mu_N = 4.40584479686678
+    sigma_N = 0.9480363566208512
+# 4.405844796866786 0.9480363566208512
+
+
+    for i in xrange(len(pvalues)):
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"sci_space_science_or_astronomy": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
@@ -899,6 +912,10 @@ def fitness_mlesuccess_prod(pvalues):
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-producer-simple-careers/'
     sumI, N   = get_sumI_new(careerf) 
 
+
+    mu_N = 2.8798601251770504 
+    sigma_N = 0.5527481631263126
+
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
         mu_p     = pvalues[i][1]
@@ -915,6 +932,10 @@ def fitness_mlesuccess_prod(pvalues):
 
     return fitnesses
 
+
+
+# film-producer-simple-careers 2.8798601251770504 0.5527481631263126
+ 
 
 #######################################################################################################################################
 def fitness_mlesuccess_comp(pvalues):
@@ -1173,11 +1194,15 @@ def fitness_mlesuccess_class(pvalues):
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-classical-simple-careers/'
     sumI, N   = get_sumI_new(careerf) 
 
+    mu_N     = 5.059124602070851
+    sigma_N  = 0.37328069637687683
+
+
     for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
+        #mu_N     = pvalues[i][0]
         mu_p     = pvalues[i][1]
         mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
+        #sigma_N  = pvalues[i][3]
 
         sigma_Q  = pvalues[i][4]
         sigma_p  = pvalues[i][5]
@@ -1190,6 +1215,7 @@ def fitness_mlesuccess_class(pvalues):
     return fitnesses
 
 
+#music-classical-simple-careers 5.059124602070851 0.37328069637687683
 
 
 #######################################################################################################################################
