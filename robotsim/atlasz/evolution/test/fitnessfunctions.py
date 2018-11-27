@@ -916,17 +916,19 @@ def fitness_mlesuccess_prod(pvalues):
     mu_N = 2.8798601251770504 
     sigma_N = 0.5527481631263126
 
-    for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+
+    for i in xrange(len(pvalues)):
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        sigma_N  = pvalues[i][2]
+
+        #sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"mlesuccess_prod": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
@@ -1200,15 +1202,15 @@ def fitness_mlesuccess_class(pvalues):
 
     for i in xrange(len(pvalues)):
         #mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
         #sigma_N  = pvalues[i][3]
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"mlesuccess_class": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
