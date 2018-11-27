@@ -168,7 +168,7 @@ for run in range(runmin, runmax):
 
 
 
-./optimizer.sh jazz9_evol mlesuccess_jazz 900 1000
+#./optimizer.sh jazz9_evol mlesuccess_jazz 900 1000
 
 
 
@@ -193,9 +193,9 @@ for run in range(runmin, runmax):
 
 
 
-# screen -S  evol_jazz
+# screen -S  evol0_jazz
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_jazz  -min 360 -max 200
+# python2.7 test_evolution.py -m mlesuccess_jazz  -min 0 -max 1
 
 
 
