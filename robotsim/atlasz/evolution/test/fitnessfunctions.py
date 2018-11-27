@@ -419,15 +419,13 @@ def fitness_sci_mathematics(pvalues):
 
     sumI, N   = get_sumI_science(careerf) 
 
-    sigma_N = 0.7428746249357117
-    mu_N    = 3.6008146945211204
 
 
     for i in xrange(len(pvalues)):
-        #mu_N     = pvalues[i][0]
+        mu_N     = pvalues[i][0]
         mu_p     = pvalues[i][1]
         mu_Q     = pvalues[i][2]
-        #sigma_N  = pvalues[i][3]
+        sigma_N  = pvalues[i][3]
 
         sigma_Q  = pvalues[i][4]
         sigma_p  = pvalues[i][5]
@@ -435,12 +433,6 @@ def fitness_sci_mathematics(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-
-       
-
-        # science-mathematics-simple-careers 3.6008146945211204 0.7428746249357117
-
-
         fitnesses[i] = {"sci_mathematics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
@@ -859,18 +851,15 @@ def fitness_mlesuccess_dir(pvalues):
     sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
-        #mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][0]
-        mu_Q     = pvalues[i][1]
-        sigma_N  = pvalues[i][2]
-        #sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][3]
-        sigma_pQ = pvalues[i][4]
-        sigma_pN = pvalues[i][5]
-        sigma_QN = pvalues[i][6]
-
-        mu_N   =  3.0682093282360703 
-        sigma_N = 0.4784392102286117
+        mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][1]
+        mu_Q     = pvalues[i][2]
+        sigma_N  = pvalues[i][3]
+        sigma_Q  = pvalues[i][4]
+        sigma_p  = pvalues[i][5]
+        sigma_pQ = pvalues[i][6]
+        sigma_pN = pvalues[i][7]
+        sigma_QN = pvalues[i][8]
         
         fitnesses[i] = {"mlesuccess_dir": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
@@ -1144,10 +1133,10 @@ def fitness_mlesuccess_jazz(pvalues):
     sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
-        #mu_N     = pvalues[i][0]
+        mu_N     = pvalues[i][0]
         mu_p     = pvalues[i][1]
         mu_Q     = pvalues[i][2]
-        #sigma_N  = pvalues[i][3]
+        sigma_N  = pvalues[i][3]
 
         sigma_Q  = pvalues[i][4]
         sigma_p  = pvalues[i][5]
@@ -1155,12 +1144,6 @@ def fitness_mlesuccess_jazz(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        mu_N    = 4.736238353923142
-        sigma_N = 0.14421205253161953
-
-        # music-jazz-simple-careers 4.736238353923142 0.14421205253161953
-
-
         fitnesses[i] = {"mlesuccess_jazz": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
