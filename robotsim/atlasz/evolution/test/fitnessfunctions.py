@@ -1132,18 +1132,32 @@ def fitness_mlesuccess_jazz(pvalues):
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-jazz-simple-careers/'
     sumI, N   = get_sumI_new(careerf) 
 
-    for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+    mu_N    = 4.736238353923142 
+    sigma_N = 0.14421205253161953
+
+    print 'PP   ', len(pvalues[0])
+
+    for i in xrange(len(pvalues)):
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
+
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
+
+        
+
+# music-jazz-simple-careers 4.736238353923142 0.14421205253161953
+
+       # print 'FITT   ',  mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN
+
+
         fitnesses[i] = {"mlesuccess_jazz": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
