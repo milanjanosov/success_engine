@@ -415,23 +415,24 @@ def fitness_sci_mathematics(pvalues):
     careerf   = '../../../../QMODELNEW/Data_linrescaled/science-mathematics-simple-careers/'
 
 
+# science-mathematics-simple-careers 3.6008146945211204 0.7428746249357117
 
 
-    sumI, N   = get_sumI_science(careerf) 
-
-
+    sumI, N = get_sumI_science(careerf) 
+    mu_N    = 3.6008146945211204
+    sigma_N = 0.7428746249357117
 
     for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
 
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"sci_mathematics": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
