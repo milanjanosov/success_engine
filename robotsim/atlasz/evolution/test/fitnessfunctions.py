@@ -419,6 +419,8 @@ def fitness_sci_mathematics(pvalues):
 
     sumI, N   = get_sumI_science(careerf) 
 
+    sigma_N = 0.7428746249357117
+    mu_N    = 3.6008146945211204
 
 
     for i in xrange(len(pvalues)):
@@ -434,9 +436,7 @@ def fitness_sci_mathematics(pvalues):
         sigma_QN = pvalues[i][8]
         
 
-        sigma_N = 0.7428746249357117
-        mu_N    = 3.6008146945211204
-
+       
 
         # science-mathematics-simple-careers 3.6008146945211204 0.7428746249357117
 
@@ -860,14 +860,14 @@ def fitness_mlesuccess_dir(pvalues):
 
     for i in xrange(len(pvalues)):
         #mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        sigma_N  = pvalues[i][2]
         #sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][4]
-        sigma_pQ = pvalues[i][5]
-        sigma_pN = pvalues[i][6]
-        sigma_QN = pvalues[i][7]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
 
         mu_N   =  3.0682093282360703 
         sigma_N = 0.4784392102286117
