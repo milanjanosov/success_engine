@@ -864,10 +864,10 @@ def fitness_mlesuccess_dir(pvalues):
         mu_Q     = pvalues[i][2]
         sigma_N  = pvalues[i][3]
         #sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+        sigma_p  = pvalues[i][4]
+        sigma_pQ = pvalues[i][5]
+        sigma_pN = pvalues[i][6]
+        sigma_QN = pvalues[i][7]
 
         mu_N   =  3.0682093282360703 
         sigma_N = 0.4784392102286117
