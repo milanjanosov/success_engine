@@ -858,22 +858,26 @@ def fitness_mlesuccess_dir(pvalues):
 #    careerf   = '../../../../DataSample/Film/film-director-simple-careers/'
   #  careerf   = '../../../../Data/Film/film-director-simple-careers/'
 
+
+# film-director-simple-careers 3.0682093282360703 0.4784392102286117
+
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-director-simple-careers/'
 
-
+    mu_N    =  3.0682093282360703 
+    sigma_N =  0.4784392102286117
 
     sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
-        mu_N     = pvalues[i][0]
-        mu_p     = pvalues[i][1]
-        mu_Q     = pvalues[i][2]
-        sigma_N  = pvalues[i][3]
-        sigma_Q  = pvalues[i][4]
-        sigma_p  = pvalues[i][5]
-        sigma_pQ = pvalues[i][6]
-        sigma_pN = pvalues[i][7]
-        sigma_QN = pvalues[i][8]
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
         
         fitnesses[i] = {"mlesuccess_dir": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
