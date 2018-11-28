@@ -861,7 +861,7 @@ def fitness_mlesuccess_dir(pvalues):
 
 # film-director-simple-careers 3.0682093282360703 0.4784392102286117
 
-    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-director-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-producer-simple-careers/'
 
     mu_N    =  3.0682093282360703 
     sigma_N =  0.4784392102286117
@@ -908,8 +908,58 @@ def fitness_mlesuccess_art(pvalues):
     return fitnesses
 
 
+
+
+
+
+
+
+
+
+
 #######################################################################################################################################
+
+
+
+
+
 def fitness_mlesuccess_prod(pvalues):
+
+    fitnesses = {}
+
+
+
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-producer-simple-careers/'
+
+    mu_N = 2.8798601251770504 
+    sigma_N = 0.5527481631263126
+
+    sumI, N   = get_sumI_new(careerf) 
+
+    for i in xrange(len(pvalues)):
+        #mu_N     = pvalues[i][0]
+        mu_p     = pvalues[i][0]
+        mu_Q     = pvalues[i][1]
+        #sigma_N  = pvalues[i][3]
+        sigma_Q  = pvalues[i][2]
+        sigma_p  = pvalues[i][3]
+        sigma_pQ = pvalues[i][4]
+        sigma_pN = pvalues[i][5]
+        sigma_QN = pvalues[i][6]
+        
+        fitnesses[i] = {"mlesuccess_prod": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+
+    return fitnesses
+
+
+
+
+
+
+
+
+
+'''def fitness_mlesuccess_prod(pvalues):
 
     fitnesses = {}
     #careerf   = '../../../../Data/Film/film-producer-simple-careers/'
@@ -934,12 +984,14 @@ def fitness_mlesuccess_prod(pvalues):
         sigma_pN = pvalues[i][5]
         sigma_QN = pvalues[i][6]
         
+        print pvalues[i]
+
         fitnesses[i] = {"mlesuccess_prod": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 
 
-
+'''
 # film-producer-simple-careers 2.8798601251770504 0.5527481631263126
  
 
