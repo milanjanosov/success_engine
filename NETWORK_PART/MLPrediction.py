@@ -6,7 +6,6 @@ import math
 import pandas as pd
 import random
 import scipy.stats
-from dtw import dtw
 from numpy.linalg import norm
 from multiprocessing import Process
 from scipy.stats import spearmanr
