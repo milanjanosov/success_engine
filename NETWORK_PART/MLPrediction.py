@@ -165,33 +165,38 @@ def get_centr_features_10perc(Nlimit, dirids, measureid):
 
         centralities_d, centralities  = get_centralities(dirid, measures, column =measureid)
         Istar, Nstar, NstarR, impacts = get_career_data(dirid, centralities_d)
-
+        
         if Istar > 0.0 and Nstar > 0.0 and NstarR > 0.0:
 
             if Nstar >= Nlimit and len(centralities) >= Nstar:
                 for i in range(Nlimit+1):
-                    column[i] = centralities[i][1]
+                    try:
+                        column[i] = centralities[i][1]
+                    except:
+                        pass        
 
 
             if NstarR >= Nlimit and len(centralities) >= NstarR:
-                for i in range(Nlimit+1):
-                    columnR[i] = centralities[i][1]        
-
-                    
-            column['Istar']  = Istar
-            columnR['Istar'] = Istar
-
-            if Istar == 0: Istar = 1
-            column['logIstar']  = math.log(Istar)
-            columnR['logIstar'] = math.log(Istar)
+                try:
+                    for i in range(Nlimit+1):
+                        columnR[i] = centralities[i][1]        
+                except:
+                    pass
 
 
-            df_column  = pd.DataFrame({dirid : column}).T
-            df_columnR = pd.DataFrame({dirid : columnR}).T
+            if len(column) == Nlimit+1:
+                column['Istar']  = Istar
+                if Istar == 0: Istar = 1
+                column['logIstar']  = math.log(Istar)
+                df_column  = pd.DataFrame({dirid : column}).T
+                centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
 
 
-            centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
-            centralityFeaturesR = centralityFeaturesR.append(df_columnR, ignore_index=True)         
+            if len(columnR) == Nlimit+1:
+                columnR['Istar'] = Istar
+                columnR['logIstar'] = math.log(Istar)
+                df_columnR = pd.DataFrame({dirid : columnR}).T
+                centralityFeaturesR = centralityFeaturesR.append(df_columnR, ignore_index=True)      
 
 
     labels =  [str(10*(i+1))+ '%' for i in range(10)]
