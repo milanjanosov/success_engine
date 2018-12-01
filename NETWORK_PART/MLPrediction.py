@@ -193,7 +193,7 @@ if not os.path.exists(folderout): os.makedirs(folderout)
 
 measures  = ['degree',    'clustering', 'pagerank', 'betweenness', 'closeness', 'constraint']  
 dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
-directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER') if 'swp' not in aaa][0:100]
+directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER') if 'swp' not in aaa]
 
 
 for measure in measures:
