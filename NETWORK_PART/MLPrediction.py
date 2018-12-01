@@ -169,7 +169,7 @@ def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
     #    accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=2))     
 
 
-    return np.mean(accuracies), np.std(accuracies), len(X), crossv
+    return np.mean(accuracies), np.std(accuracies), len(X)
 
 
 
@@ -230,10 +230,10 @@ def get_prediction(Nlimit):
             subsample_     = 0.8
 
 
-            acc, err, num, crossv = xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_)
+            acc, err, num = xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_)
 
             fout = open(folderout + measure + '_results.dat', 'a')
-            fout.write(str(Nlimit) + '\t' + str(acc) + '\t' + str(err) + '\t' + str(num) + '\t' + str(crossv) + '\n')
+            fout.write(str(Nlimit) + '\t' + str(acc) + '\t' + str(err) + '\t' + str(num) + '\n')
             fout.close()
 
     
