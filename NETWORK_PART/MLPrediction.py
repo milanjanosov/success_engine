@@ -120,16 +120,17 @@ def get_centr_features(Nlimit, dirids, measureid):
                     pass
 
 
-            column['Istar']  = Istar
-            columnR['Istar'] = Istar
+            if len(column) == Nlimit+1:
+                column['Istar']  = Istar
+                if Istar == 0: Istar = 1
+                column['logIstar']  = math.log(Istar)
+                df_column  = pd.DataFrame({dirid : column}).T
 
-            if Istar == 0: Istar = 1
-            column['logIstar']  = math.log(Istar)
-            columnR['logIstar'] = math.log(Istar)
 
-
-            df_column  = pd.DataFrame({dirid : column}).T
-            df_columnR = pd.DataFrame({dirid : columnR}).T
+            if len(columnR) == Nlimit+1:
+                columnR['Istar'] = Istar
+                columnR['logIstar'] = math.log(Istar)
+                df_columnR = pd.DataFrame({dirid : columnR}).T
 
 
             centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
