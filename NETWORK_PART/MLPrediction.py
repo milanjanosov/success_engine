@@ -162,10 +162,11 @@ def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
     train_model2 = model2.fit(train_data, train_label)
     pred2        = train_model2.predict(test_data)
             
-    try:
-        accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=5))     
-    except:
-        accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=2))     
+    #try:
+    accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=5))    
+    print  accuracies
+    #except:
+    #    accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=2))     
 
 
     return np.mean(accuracies), np.std(accuracies), len(X), crossv
@@ -212,7 +213,7 @@ for measure in measures:
 
 def get_prediction(Nlimit):
 
- for measureid, measure in enumerate(measures):
+ for measureid, measure in enumerate(measures[0:1]):
 
         print Nlimit, '\t', measure
 
