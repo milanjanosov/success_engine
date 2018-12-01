@@ -155,19 +155,12 @@ def get_centr_features(Nlimit, dirids, measureid):
 
 def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
               
-
     train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42)    
       
     model2       = xgb.XGBClassifier(n_estimators=100, max_depth=max_depth_, learning_rate=learning_rate_, subsample=subsample_)
     train_model2 = model2.fit(train_data, train_label)
     pred2        = train_model2.predict(test_data)
-            
-    #try:
-    accuracies = list(cross_val_score(train_model2, train_data, train_label, cv=10))    
-
-    #except:
-    #    accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=2))     
-
+    accuracies   = list(cross_val_score(train_model2, train_data, train_label, cv=10))    
 
     return np.mean(accuracies), np.std(accuracies), len(X)
 
@@ -180,13 +173,7 @@ def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
 
 
 
-
-
-
-
-
-
-
+    
 
 folderout = 'ML_FIRST_RES/' 
 if not os.path.exists(folderout): os.makedirs(folderout)
@@ -199,11 +186,6 @@ directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_direct
 for measure in measures:
     fout = open(folderout + measure + '_results.dat', 'w')
     fout.close()
-
-
-
-
-
 
 
 
@@ -236,25 +218,87 @@ def get_prediction(Nlimit):
             fout.write(str(Nlimit) + '\t' + str(acc) + '\t' + str(err) + '\t' + str(num) + '\n')
             fout.close()
 
+
+
+
+
+
+
+def optimize_prediction(Nlimit):
+
+    folderout2 = 'ML_FIRST_RES/Optimize/' 
+    if not os.path.exists(folderout2): os.makedirs(folderout2)
+
+    for measureid, measure in enumerate(measures):
+
+        print Nlimit, '\t', measure
+
+ 
+        centralityFeatures, centralityFeaturesR = get_centr_features(Nlimit, directors, measureid = measureid+1)    
+
+        X = centralityFeatures.drop(columns = ['Istar', 'logIstar', 'IstarQ', 'logIstarQ'])
+        y = list(centralityFeatures['logIstarQ'])
+
+        if len(X) > 10:
+
+
+            best = [0,0,0,0,0]
+
+            for depth in [4,5,6]:
+
+                for rate in [0.01, 0.05, 0.1, 0.15, 0.2]:
+            
+                    for sample in [0.7, 0.85, 0.9, 0.95]: 
+      
+                        acc, err, num = xgb_pred(X, y, depth, rate, sample)
+                        if acc > best[0]:
+                            best = [acc, err, depth, rate, sample]
+                    
+
+            fout = open(folderout2 + measure + '_' + str(Nlimit) + '_best.dat', 'w')
+            fout.write(  '\t'.join( [str(fff) for fff in best ] ) )
+            fout.close()
+
+
+
+
+
+
     
-
-
-
-
+   
 Pros = []
 
 
-for Nlimit in range(20):
-    p = Process(target = get_prediction, args=(Nlimit, ))
+for Nlimit in range(4):
+    p = Process(target = optimize_prediction, args=(Nlimit, ))
     Pros.append(p)
     p.start()
    
 for t in Pros:
     t.join()
         
-       
+
+folderout2 = 'ML_FIRST_RES/Optimize' 
+outfiles  = os.listdir(folderout2)
 
 
+
+
+
+for measure in measures:
+    fout = open(folderout + measure + '_opt_results.dat', 'w')
+    fout.close()
+
+
+for fn in outfiles:
+
+    meas, Nlimit, _ = fn.split('_')
+
+    fout = open(folderout + meas + '_opt_results.dat', 'a')
+
+    for line in open(folderout2 + '/'  + fn):
+        fout.write( Nlimit + '\t' + line + '\n')
+    fout.close()
 
 
 
