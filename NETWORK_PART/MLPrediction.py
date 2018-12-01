@@ -153,6 +153,78 @@ def get_centr_features(Nlimit, dirids, measureid):
 
 
 
+def get_centr_features_10perc(Nlimit, dirids, measureid):
+
+    centralityFeatures  = pd.DataFrame()
+    centralityFeaturesR = pd.DataFrame()
+
+    for dirid in dirids:
+
+        column  = {}
+        columnR = {}
+
+        centralities_d, centralities  = get_centralities(dirid, measures, column =measureid)
+        Istar, Nstar, NstarR, impacts = get_career_data(dirid, centralities_d)
+
+        if Istar > 0.0 and Nstar > 0.0 and NstarR > 0.0:
+
+            if Nstar >= Nlimit and len(centralities) >= Nstar:
+                for i in range(Nlimit+1):
+                    column[i] = centralities[i][1]
+
+
+            if NstarR >= Nlimit and len(centralities) >= NstarR:
+                for i in range(Nlimit+1):
+                    columnR[i] = centralities[i][1]        
+
+                    
+            column['Istar']  = Istar
+            columnR['Istar'] = Istar
+
+            if Istar == 0: Istar = 1
+            column['logIstar']  = math.log(Istar)
+            columnR['logIstar'] = math.log(Istar)
+
+
+            df_column  = pd.DataFrame({dirid : column}).T
+            df_columnR = pd.DataFrame({dirid : columnR}).T
+
+
+            centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
+            centralityFeaturesR = centralityFeaturesR.append(df_columnR, ignore_index=True)         
+
+
+    labels =  [str(10*(i+1))+ '%' for i in range(10)]
+
+    centralityFeatures['IstarQ']  = pd.qcut(centralityFeatures['Istar'],10,  labels)    
+    centralityFeatures['IstarQ'] = centralityFeatures['IstarQ'].replace('100%', 'top10')
+    centralityFeatures['IstarQ'] = centralityFeatures['IstarQ'].replace(r'^.*%.*$', 'bottom90',  regex=True)
+
+
+    centralityFeatures['logIstarQ']  = pd.qcut(centralityFeatures['logIstar'],10,  labels)
+    centralityFeatures['logIstarQ'] = centralityFeatures['logIstarQ'].replace('100%', 'top10')
+    centralityFeatures['logIstarQ'] = centralityFeatures['logIstarQ'].replace(r'^.*%.*$', 'bottom90',  regex=True)
+
+
+    centralityFeatures  = centralityFeatures.dropna()    
+    centralityFeaturesR = centralityFeaturesR.dropna()    
+
+    centralityFeatures_top    = centralityFeatures[centralityFeatures.IstarQ=='top10']
+    centralityFeatures_bottom = centralityFeatures[centralityFeatures.IstarQ=='bottom90'].sample(len(centralityFeatures_top))
+    
+    centralityFeatures = centralityFeatures_bottom.append(centralityFeatures_top, ignore_index=True)   
+        
+    
+    
+
+    return centralityFeatures, centralityFeaturesR
+
+
+
+
+
+
+
 def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
               
     train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42)    
@@ -160,7 +232,7 @@ def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
     model2       = xgb.XGBClassifier(n_estimators=100, max_depth=max_depth_, learning_rate=learning_rate_, subsample=subsample_)
     train_model2 = model2.fit(train_data, train_label)
     pred2        = train_model2.predict(test_data)
-    accuracies   = list(cross_val_score(train_model2, train_data, train_label, cv=10))    
+    accuracies   = list(cross_val_score(train_model2, train_data, train_label, cv=5))    
 
     return np.mean(accuracies), np.std(accuracies), len(X)
 
@@ -200,7 +272,9 @@ def get_prediction(Nlimit):
         print Nlimit, '\t', measure
 
  
-        centralityFeatures, centralityFeaturesR = get_centr_features(Nlimit, directors, measureid = measureid+1)    
+        #centralityFeatures, centralityFeaturesR = get_centr_features(Nlimit, directors, measureid = measureid+1)    
+        centralityFeatures, centralityFeaturesR = get_centr_features_10perc(Nlimit, directors, measureid = measureid+1)  
+
 
         X = centralityFeatures.drop(columns = ['Istar', 'logIstar', 'IstarQ', 'logIstarQ'])
         y = list(centralityFeatures['logIstarQ'])
@@ -234,7 +308,9 @@ def optimize_prediction(Nlimit):
         print Nlimit, '\t', measure
 
  
-        centralityFeatures, centralityFeaturesR = get_centr_features(Nlimit, directors, measureid = measureid+1)    
+        #centralityFeatures, centralityFeaturesR = get_centr_features(Nlimit, directors, measureid = measureid+1)    
+        centralityFeatures, centralityFeaturesR = get_centr_features_10perc(Nlimit, directors, measureid = measureid+1)  
+
 
         X = centralityFeatures.drop(columns = ['Istar', 'logIstar', 'IstarQ', 'logIstarQ'])
         y = list(centralityFeatures['logIstarQ'])
@@ -252,7 +328,7 @@ def optimize_prediction(Nlimit):
       
                         acc, err, num = xgb_pred(X, y, depth, rate, sample)
                         if acc > best[0]:
-                            best = [acc, err, depth, rate, sample]
+                            best = [acc, err, depth, rate, sample, len(X)]
                     
 
             fout = open(folderout2 + measure + '_' + str(Nlimit) + '_best.dat', 'w')
