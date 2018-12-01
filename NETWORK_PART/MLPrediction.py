@@ -163,8 +163,8 @@ def xgb_pred(X, y, max_depth_ ,learning_rate_, subsample_):
     pred2        = train_model2.predict(test_data)
             
     #try:
-    accuracies = list(cross_val_score(train_model2, train_data, train_label, cv=5))    
-    print  accuracies
+    accuracies = list(cross_val_score(train_model2, train_data, train_label, cv=10))    
+
     #except:
     #    accuracies, crossv   = list(cross_val_score(train_model2, train_data, train_label, cv=2))     
 
