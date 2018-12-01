@@ -213,7 +213,7 @@ for measure in measures:
 
 def get_prediction(Nlimit):
 
- for measureid, measure in enumerate(measures[0:1]):
+ for measureid, measure in enumerate(measures):
 
         print Nlimit, '\t', measure
 
