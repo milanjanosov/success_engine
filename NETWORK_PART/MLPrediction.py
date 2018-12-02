@@ -136,10 +136,10 @@ def get_centr_features(Nlimit, dirids, measureid):
 
 
 
-    centralityFeatures['IstarQ']  = pd.qcut(centralityFeatures['Istar'],4, ['q1','q2','q3','q4'])
+    centralityFeatures['IstarQ']  = pd.qcut(centralityFeatures['Istar'], 4, ['q1','q2','q3','q4'])
     centralityFeaturesR['IstarQ'] = pd.qcut(centralityFeaturesR['Istar'],4, ['q1','q2','q3','q4'])
     
-    centralityFeatures['logIstarQ']  = pd.qcut(centralityFeatures['logIstar'],4, ['q1','q2','q3','q4'])
+    centralityFeatures['logIstarQ']  = pd.qcut(centralityFeatures['logIstar'], 4, ['q1','q2','q3','q4'])
     centralityFeaturesR['logIstarQ'] = pd.qcut(centralityFeaturesR['logIstar'],4, ['q1','q2','q3','q4'])
     
     
@@ -301,8 +301,6 @@ def get_prediction(Nlimit):
 
 
 
-
-
 def optimize_prediction(Nlimit):
 
     folderout2 = 'ML_FIRST_RES/Optimize/' 
@@ -345,13 +343,162 @@ def optimize_prediction(Nlimit):
 
 
 
+
+
+
+
+
+
+
+
+
+  
+
+
+def get_centr_features_combined(Nlimit, dirids):
+
+    centralityFeatures  = pd.DataFrame()
+    centralityFeaturesR = pd.DataFrame()
+
+    for dirid in dirids:
+
+        column  = {}
+        columnR = {}
+        collen  = 0
+        
+        measures = ['degree',    'clustering', 'pagerank', 'betweenness', 'constraint']  
+
+        for jind, measure in enumerate(measures):
+
+            centralities_d, centralities  = get_centralities(dirid, measures, column = jind + 1)
+            Istar, Nstar, NstarR, impacts = get_career_data(dirid, centralities_d)
+
+            if Istar > 0.0 and Nstar > 0.0 and NstarR > 0.0:
+
+                if Nstar >= Nlimit and len(centralities) >= Nstar:
+                    for i in range(Nlimit+1):
+                        collen += 1
+                        try:
+                            column[str(i) + '_' + measure] = centralities[i][1]
+                        except:
+                            pass   
+
+
+                if NstarR >= Nlimit and len(centralities) >= NstarR:
+                    for i in range(Nlimit+1):
+                        try:
+                            columnR[str(i) + '_' + measure] = centralities[i][1]        
+                        except:
+                            pass   
+
+
+
+        if len(column) == collen:
+            column['Istar']  = Istar
+            if Istar == 0: Istar = 1
+            column['logIstar']  = math.log(Istar)
+            df_column  = pd.DataFrame({dirid : column}).T
+            centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
+
+
+        if len(columnR) == collen:
+            columnR['Istar'] = Istar
+            columnR['logIstar'] = math.log(Istar)
+            df_columnR = pd.DataFrame({dirid : columnR}).T
+            centralityFeaturesR = centralityFeaturesR.append(df_columnR, ignore_index=True)    
+
+
+             
+
+    labels =  [str(10*(i+1))+ '%' for i in range(10)]
+
+    centralityFeatures['IstarQ']  = pd.qcut(centralityFeatures['Istar'],10,  labels)    
+    centralityFeatures['IstarQ'] = centralityFeatures['IstarQ'].replace('100%', 'top10')
+    centralityFeatures['IstarQ'] = centralityFeatures['IstarQ'].replace(r'^.*%.*$', 'bottom90',  regex=True)
+
+
+    centralityFeatures['logIstarQ']  = pd.qcut(centralityFeatures['logIstar'],10,  labels)
+    centralityFeatures['logIstarQ'] = centralityFeatures['logIstarQ'].replace('100%', 'top10')
+    centralityFeatures['logIstarQ'] = centralityFeatures['logIstarQ'].replace(r'^.*%.*$', 'bottom90',  regex=True)
+
+
+    centralityFeatures  = centralityFeatures.dropna()    
+    centralityFeaturesR = centralityFeaturesR.dropna()    
+
+    centralityFeatures_top    = centralityFeatures[centralityFeatures.IstarQ=='top10']
+    centralityFeatures_bottom = centralityFeatures[centralityFeatures.IstarQ=='bottom90'].sample(len(centralityFeatures_top))
+    
+    centralityFeatures = centralityFeatures_bottom.append(centralityFeatures_top, ignore_index=True)   
+        
+   
+    return centralityFeatures, centralityFeaturesR
+
+
+
+
+
+
+
+
+
+
+
+
+def optimize_prediction_combined(Nlimit):
+
+    folderout2 = 'ML_FIRST_RES/Optimize/' 
+    if not os.path.exists(folderout2): os.makedirs(folderout2)
+
+ 
+    centralityFeatures, centralityFeaturesR = get_centr_features_combined(Nlimit, directors)  
+
+
+    X = centralityFeatures.drop(columns = ['Istar', 'logIstar', 'IstarQ', 'logIstarQ'])
+    y = list(centralityFeatures['logIstarQ'])
+
+    if len(X) > 10:
+
+
+        best = [0,0,0,0,0]
+
+        for depth in [4,5,6]:
+
+            for rate in [0.01, 0.05, 0.1, 0.15, 0.2]:
+        
+                for sample in [0.7, 0.85, 0.9, 0.95]: 
+  
+                    acc, err, num = xgb_pred(X, y, depth, rate, sample)
+                    if acc > best[0]:
+                        best = [acc, err, depth, rate, sample, len(X)]
+
+                   
+        fout = open(folderout2 + 'COMBINED_' + str(Nlimit) + '_best.dat', 'w')
+        fout.write(  '\t'.join( [str(fff) for fff in best ] ) )
+        fout.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
    
 Pros = []
 
 
 for Nlimit in range(20):
-    p = Process(target = optimize_prediction, args=(Nlimit, ))
+    p = Process(target = optimize_prediction_combined, args=(Nlimit, ))
     Pros.append(p)
     p.start()
    
