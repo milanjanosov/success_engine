@@ -497,6 +497,22 @@ def optimize_prediction_combined(Nlimit):
 Pros = []
 
 
+
+
+
+for Nlimit in range(20):
+    p = Process(target = optimize_prediction, args=(Nlimit, ))
+    Pros.append(p)
+    p.start()
+   
+for t in Pros:
+    t.join()
+
+
+
+
+
+
 for Nlimit in range(20):
     p = Process(target = optimize_prediction_combined, args=(Nlimit, ))
     Pros.append(p)
