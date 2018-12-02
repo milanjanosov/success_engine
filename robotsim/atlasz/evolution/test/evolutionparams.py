@@ -16,10 +16,10 @@ import importlib
 # the list of parameters/properties/genotypes that will be mutated and evolved
 # Gusz: Start with a "wish list", define as much parameters as possible
 params_to_evolve = [
-    #"f mu_N 0 5 1",
+    "f mu_N 0 10 0.5",
     "f mu_p 0 10 0.5",
     "f mu_Q 0 10 0.5",
-    #"f sigma_N 0.005 5 0.991",
+    "f sigma_N 0.001 5 0.5",
     "f sigma_Q 0.001 5 0.5",
     "f sigma_p 0.001 5 0.5",
     "f sigma_pQ -0.5 0 0.1",

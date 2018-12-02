@@ -127,7 +127,7 @@ for run in range(runmin, runmax):
 
         # create next generation
         params, pvalues = evolution.evolution.generate_population(eparams, pvalues, fitnesses)
-    #        envparams, envpvalues = evolution.evolution.generate_random_environments(eparams)
+        # envparams, envpvalues = evolution.evolution.generate_random_environments(eparams)
         # evaluate new generation
         fitnesses = evolution.evolution.get_fitnesses(eparams, options.model, pvalues)
         sfitnesses = evolution.evolution.get_single_fitnesses(fitnesses)
@@ -192,10 +192,12 @@ for run in range(runmin, runmax):
 # python2.7 test_evolution.py -m mlesuccess_dir  -min 650 -max 750
 
 
+# python2.7 test_evolution.py -m mlesuccess_prod  -min 0 -max 1
+
 
 # screen -S  evol_jazz
 # source /opt/virtualenv-python2.7/bin/activate
-# python2.7 test_evolution.py -m mlesuccess_jazz  -min 360 -max 200
+# python2.7 test_evolution.py -m mlesuccess_jazz  -min 0 -max 1
 
 
 
