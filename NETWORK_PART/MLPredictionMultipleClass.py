@@ -15,8 +15,6 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score
 import xgboost as xgb
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import make_moons, make_circles, make_classification
@@ -295,7 +293,7 @@ if not os.path.exists(folderout): os.makedirs(folderout)
 
 measures  = ['degree',    'clustering', 'pagerank', 'betweenness', 'closeness', 'constraint']  
 dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
-directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER') if 'swp' not in aaa][0:500]
+directors = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER') if 'swp' not in aaa]
 
 
 for measure in measures:
@@ -308,7 +306,7 @@ for measure in measures:
   
 fout = open('ML_results_NB.dat', 'w')
 
-for Nlimit in range(2):
+for Nlimit in range(20):
 
 
 
