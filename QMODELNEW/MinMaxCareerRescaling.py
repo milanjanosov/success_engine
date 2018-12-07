@@ -128,10 +128,10 @@ fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-
 
 
 
-fields = [ ('art-director'       , 'Data/producer/film-producer-simple-careers-limit-20/'),
-           ('writer'             , 'Data/producer/film-writer-simple-careers-limit-10/'),
-           ('composer'           , 'Data/producer/film-composer-simple-careers-limit-10/'),
-           ('authors'            , 'Data/producer/book-authors-simple-careers-limit-10/'),
+fields = [ ('art-director'       , 'Data/art-director/film-art-director-simple-careers-limit-20/'),
+           ('writer'             , 'Data/writer/film-writer-simple-careers-limit-10/'),
+           ('composer'           , 'Data/composer/film-composer-simple-careers-limit-10/'),
+           ('authors'            , 'Data/authors/book-authors-simple-careers-limit-10/'),
           ('pop'         , 'Data/pop/music-'+'pop'+'-simple-careers-limit-80/')   ,
           ('rock'        , 'Data/rock/music-'+'rock'+'-simple-careers-limit-80/')   ,
           ('electro'     , 'Data/electro/music-'+'electro'+'-simple-careers-limit-80/')   ,
