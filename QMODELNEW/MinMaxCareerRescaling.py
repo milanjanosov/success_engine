@@ -108,16 +108,61 @@ def get_impact(impacts):
 
 
 
-
+'''
 
 fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
           ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
           ('jazz'       , 'Data/jazz/music-'+'jazz'+'-simple-careers-limit-80/')   ,
           ('director'       , 'Data/director/film-director-simple-careers-limit-10/'),
-        ('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'), 
+          ('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'), 
           ('classical'       , 'Data/classical/music-'+'classical'+'-simple-careers-limit-80/')   ,
           ('producer'       , 'Data/producer/film-producer-simple-careers-limit-10/') 
+
+
          ]
+'''
+
+
+
+
+
+
+
+fields = [ ('art-director'       , 'Data/producer/film-producer-simple-careers-limit-20/'),
+           ('writer'             , 'Data/producer/film-writer-simple-careers-limit-10/'),
+           ('composer'           , 'Data/producer/film-composer-simple-careers-limit-10/'),
+           ('authors'            , 'Data/producer/book-authors-simple-careers-limit-10/'),
+          ('pop'         , 'Data/pop/music-'+'pop'+'-simple-careers-limit-80/')   ,
+          ('rock'        , 'Data/rock/music-'+'rock'+'-simple-careers-limit-80/')   ,
+          ('electro'     , 'Data/electro/music-'+'electro'+'-simple-careers-limit-80/')   ,
+          ('folk'        , 'Data/folk/music-'+'folk'+'-simple-careers-limit-80/')   ,
+          ('funk'        , 'Data/funk/music-'+'funk'+'-simple-careers-limit-80/')   ,
+          ('hiphop'      , 'Data/hiphop/music-'+'hiphop'+'-simple-careers-limit-80/')   ,
+
+            ('engineering', '../Data/Science/science-' + 'engineering' + '-simple-careers/'),
+            ('political_science', '../Data/Science/science-' + 'political_science' + '-simple-careers/'),
+            ('environmental_science', '../Data/Science/science-' + 'environmental_science' + '-simple-careers/'),
+            ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
+            ('agronomy', '../Data/Science/science-' + 'agronomy' + '-simple-careers/'),
+            ('geology', '../Data/Science/science-' + 'geology' + '-simple-careers/'),
+            ('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'),
+            ('applied_physics', '../Data/Science/science-' + 'applied_physics' + '-simple-careers/'),
+            ('health_science', '../Data/Science/science-' + 'health_science' + '-simple-careers/'),
+            ('theoretical_computer_science', '../Data/Science/science-' + 'theoretical_computer_science' + '-simple-careers/'),
+            ('biology', '../Data/Science/science-' + 'biology' + '-simple-careers/'),
+            ('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
+            ('unfiled', '../Data/Science/science-' + 'unfiled' + '-simple-careers/'),
+            ('chemistry', '../Data/Science/science-' + 'chemistry' + '-simple-careers/'),
+            ('physics', '../Data/Science/science-' + 'physics' + '-simple-careers/'),
+            ('zoology', '../Data/Science/science-' + 'zoology' + '-simple-careers/')
+
+         ]
+
+
+
+
+
+
 
 
 
