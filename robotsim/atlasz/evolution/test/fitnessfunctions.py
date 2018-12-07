@@ -1137,7 +1137,7 @@ def fitness_mlesuccess_rock(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-rock-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1164,7 +1164,7 @@ def fitness_mlesuccess_pop(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-pop-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1189,7 +1189,7 @@ def fitness_mlesuccess_hiphop(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-hiphop-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1216,7 +1216,7 @@ def fitness_mlesuccess_electro(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-electro-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1241,7 +1241,7 @@ def fitness_mlesuccess_folk(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-folk-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1266,7 +1266,7 @@ def fitness_mlesuccess_funk(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/music-funk-simple-careers/'
-    sumI, N   = get_sumI_music(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
