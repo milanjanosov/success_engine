@@ -465,7 +465,7 @@ def fitness_sci_mathematics(pvalues):
 def fitness_sci_theoretical_computer_science(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-theoretical_computer_science-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-theoretical_computer_science-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -492,7 +492,7 @@ def fitness_sci_theoretical_computer_science(pvalues):
 def fitness_sci_applied_physics(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-applied_physics-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-applied_physics-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -519,7 +519,7 @@ def fitness_sci_applied_physics(pvalues):
 def fitness_sci_health_science(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-health_science-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-health_science-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -630,7 +630,7 @@ def fitness_sci_space_science_or_astronomy(pvalues):
 
     return fitnesses
 
-
+    
 
 
 
@@ -640,8 +640,10 @@ def fitness_sci_space_science_or_astronomy(pvalues):
 def fitness_sci_geology(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-geology-simple-careers/'
+    #careerf   = '../../../../Data/Science/science-space_science_or_astronomy-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-geology-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
+
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -667,7 +669,7 @@ def fitness_sci_geology(pvalues):
 def fitness_sci_biology(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-biology-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-biology-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -694,7 +696,7 @@ def fitness_sci_biology(pvalues):
 def fitness_sci_political_science(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-political_science-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-political_science-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -721,7 +723,7 @@ def fitness_sci_political_science(pvalues):
 def fitness_sci_environmental_science(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-environmental_science-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-environmental_science-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -748,7 +750,7 @@ def fitness_sci_environmental_science(pvalues):
 def fitness_sci_engineering(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-engineering-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-engineering-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -775,7 +777,7 @@ def fitness_sci_engineering(pvalues):
 def fitness_sci_zoology(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-zoology-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-zoology-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -802,7 +804,7 @@ def fitness_sci_zoology(pvalues):
 def fitness_sci_agronomy(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-agronomy-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-agronomy-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -829,7 +831,7 @@ def fitness_sci_agronomy(pvalues):
 def fitness_sci_chemistry(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-chemistry-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-chemistry-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -856,7 +858,7 @@ def fitness_sci_chemistry(pvalues):
 def fitness_sci_physics(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Science/science-physics-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/science-physics-simple-careers/'
     sumI, N   = get_sumI_science(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -952,8 +954,8 @@ def fitness_mlesuccess_dir(pvalues):
 def fitness_mlesuccess_art(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Film/film-art-director-simple-careers/'
-    sumI, N   = get_sumI(careerf) 
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-art-director-simple-careers/'
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -970,6 +972,10 @@ def fitness_mlesuccess_art(pvalues):
         fitnesses[i] = {"mlesuccess_art": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
+
+
+
+
 
 
 
@@ -1076,8 +1082,8 @@ def fitness_mlesuccess_prod(pvalues):
 def fitness_mlesuccess_comp(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Film/film-composer-simple-careers/'
-    sumI, N   = get_sumI(careerf) 
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-composer-simple-careers/'
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1100,8 +1106,8 @@ def fitness_mlesuccess_comp(pvalues):
 def fitness_mlesuccess_wr(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Film/film-writer-simple-careers/'
-    sumI, N   = get_sumI(careerf) 
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/film-writer-simple-careers/'
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
@@ -1130,7 +1136,7 @@ def fitness_mlesuccess_wr(pvalues):
 def fitness_mlesuccess_rock(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-rock-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-rock-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1157,7 +1163,7 @@ def fitness_mlesuccess_rock(pvalues):
 def fitness_mlesuccess_pop(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-pop-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-pop-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1182,7 +1188,7 @@ def fitness_mlesuccess_pop(pvalues):
 def fitness_mlesuccess_hiphop(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-hiphop-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-hiphop-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1209,7 +1215,7 @@ def fitness_mlesuccess_hiphop(pvalues):
 def fitness_mlesuccess_electro(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-electro-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-electro-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1234,7 +1240,7 @@ def fitness_mlesuccess_electro(pvalues):
 def fitness_mlesuccess_folk(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-folk-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-folk-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1259,7 +1265,7 @@ def fitness_mlesuccess_folk(pvalues):
 def fitness_mlesuccess_funk(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Music/music-funk-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/music-funk-simple-careers/'
     sumI, N   = get_sumI_music(careerf) 
 
     for i in xrange(len(pvalues)):
@@ -1398,7 +1404,8 @@ def fitness_mlesuccess_class(pvalues):
 def fitness_mlesuccess_books(pvalues):
 
     fitnesses = {}
-    careerf   = '../../../../Data/Book/book-authors-simple-careers/'
+    #careerf   = '../../../../Data/Book/book-authors-simple-careers/'
+    careerf   = '../../../../QMODELNEW/Data_linrescaled/book-authors-simple-careers/'
     sumI, N   = get_sumI_book(careerf) 
 
     for i in xrange(len(pvalues)):
