@@ -969,7 +969,7 @@ def fitness_mlesuccess_art(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        fitnesses[i] = {"mlesuccess_art": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+        fitnesses[i] = {"mlesuccess_art-director": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 
@@ -1079,7 +1079,7 @@ def fitness_mlesuccess_prod(pvalues):
  
 
 #######################################################################################################################################
-def fitness_mlesuccess_comp(pvalues):
+def fitness_mlesuccess_composer(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-composer-simple-careers/'
@@ -1097,13 +1097,13 @@ def fitness_mlesuccess_comp(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        fitnesses[i] = {"mlesuccess_comp": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+        fitnesses[i] = {"mlesuccess_composer": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 
 
 #######################################################################################################################################
-def fitness_mlesuccess_wr(pvalues):
+def fitness_mlesuccess_writer(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-writer-simple-careers/'
@@ -1121,7 +1121,7 @@ def fitness_mlesuccess_wr(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        fitnesses[i] = {"mlesuccess_wr": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+        fitnesses[i] = {"mlesuccess_writer": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 

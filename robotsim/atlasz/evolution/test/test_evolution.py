@@ -55,7 +55,7 @@ argv = sys.argv[1:]
 # parse command line arguments
 argparser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=__doc__)
 argparser.add_argument("-m", "--model", required=True, dest ="model", help="The name of the test model that is executed",
-        choices=["mlesuccess_dir", "mlesuccess_art", "mlesuccess_prod", "mlesuccess_wr", "mlesuccess_comp", 
+        choices=["mlesuccess_dir", "mlesuccess_art-director", "mlesuccess_prod", "mlesuccess_writer", "mlesuccess_composer", 
                  "mlesuccess_rock", "mlesuccess_pop", "mlesuccess_electro", "mlesuccess_folk", "mlesuccess_funk", "mlesuccess_jazz", "mlesuccess_class", "mlesuccess_hiphop", 
                  "mlesuccess_books",
                  "sci_mathematics",       "sci_theoretical_computer_science",    "sci_applied_physics", "sci_health_science", 
@@ -179,6 +179,9 @@ for run in range(runmin, runmax):
 
 
 
+
+
+python2.7 test_evolution.py -m mlesuccess_pop -min 0 -max 1
 
 # screen -S evol18_psychology 
 # source /opt/virtualenv-python2.7/bin/activate
