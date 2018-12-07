@@ -181,8 +181,6 @@ for run in range(runmin, runmax):
 
 
 
-python2.7 test_evolution.py -m mlesuccess_pop -min 0 -max 1
-
 # screen -S evol18_psychology 
 # source /opt/virtualenv-python2.7/bin/activate
 # python2.7 test_evolution.py -m sci_psychology -min 340 -max 360
