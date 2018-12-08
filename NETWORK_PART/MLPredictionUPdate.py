@@ -199,7 +199,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
 
                 else:
                    # print len(centralities), Nstar,  TauLimit
-                    column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit][1]
+                    column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit]  [1]
 
                 column['Istar']  = Istar
 
@@ -428,9 +428,9 @@ elif sys.argv[1] == 'combined':
     CV         = 2
     cumulative = False
 
-    directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
-    #dirids     = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
-    #directors  = dirids+directors
+   
+
+
 
     # get output follder
     if cumulative: 
@@ -442,26 +442,53 @@ elif sys.argv[1] == 'combined':
         os.makedirs(outfolder)
 
 
-    # create output folders
-    for dataset in ['quartiles', 'quartbinary', 'topbottom']:
-        fout = open(outfolder + dataset + '_COMBINED.dat', 'w')
-        fout.close()
 
 
 
    # get_combined_prediction_results(-3, Nest, CV, cumulative)
 
-    Pros = []
-    for TauLimit in range(-20, 21):
-        p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
-        Pros.append(p)
-        p.start()
-             
-    for t in Pros:
-        t.join()
 
-  
+    for ijk in [0, 1,2,3,4]:
+
+
+        # create output folders
+        for dataset in ['quartiles', 'quartbinary', 'topbottom']:
+            fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'w')
+            fout.close()
+
+
+
+        measures = ['degree',    'clustering', 'pagerank', 'betweenness', 'constraint']  
+        ids_meas = {}
+        for meas in measures:
             
+          
+            for line in open('NEWTemporal/3_corr_shift_'+meas+'_QEVER.dat'):
+                imdb, tau, _, _ = line.strip().split('\t')
+                tau = float(tau)
+
+                if tau <= 0:
+                    if imdb not in ids_meas:
+                        ids_meas[imdb] = 1
+                    else:
+                        ids_meas[imdb] += +1
+
+   
+        directors = [imdbid for imdbid, cnt in ids_meas.items() if cnt >2]
+
+
+
+        Pros = []
+        for TauLimit in range(-20, 21):
+            p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
+            Pros.append(p)
+            p.start()
+                 
+        for t in Pros:
+            t.join()
+
+      
+                
 
 
 
