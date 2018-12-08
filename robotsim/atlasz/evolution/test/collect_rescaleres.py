@@ -50,13 +50,11 @@ def collect():
         fieldname = folder.replace('sci_', '')
 
     
-        if fieldname in PREVSTAT['RAW']:
-            #if os.path.exists('opt_status_report.dat'):
+        if len(runs) < 999:
+            print ('Running:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
+        else
+            print ('DONE:   \t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
 
-            diff = len(runs) - PREVSTAT['RAW'][fieldname]
-            print ('RAW runs:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
-        else:
-            print ('RAW runs:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
             
         STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
