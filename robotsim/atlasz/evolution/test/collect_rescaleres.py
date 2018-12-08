@@ -33,6 +33,8 @@ def collect():
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
 
+    harminc = len(Results_linrescaled/sci_theoretical_computer_science)
+
     for folder in folders:
 
 
@@ -52,9 +54,9 @@ def collect():
             #if os.path.exists('opt_status_report.dat'):
 
             diff = len(runs) - PREVSTAT['RAW'][fieldname]
-            print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
+            print ('RAW runs:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t',  '+' + str(diff))
         else:
-            print ('RAW runs:\t',  folder, '    ', ''.join((32 - len(folder))*[' ']),len(runs), '\t')
+            print ('RAW runs:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
             
         STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
@@ -87,7 +89,7 @@ def collect():
 
 
 
-    files = [f for f in os.listdir('MLESUCCESS_RES_linrescaled') ]
+    '''files = [f for f in os.listdir('MLESUCCESS_RES_linrescaled') ]
 
 
 
@@ -116,7 +118,8 @@ def collect():
                 maxsigma  = max([abs(sigma_pQ), abs(sigma_pN), abs(sigma_QN)])
 
 
-                if minmu > 0 and minsigma > 0.001 and abs(prodsigma) > 0.0 and maxsigma < 0.10:
+                if minmu > 0 and minsigma > 0.005 and abs(prodsigma) > 0.0 and maxsigma < 0.3 and maxabs < 10.0:
+
                     fout.write(line)
                     counter += 1 
         
@@ -137,10 +140,10 @@ def collect():
 
 
         STSOUT.write('CLEAN\t' + fieldname + '\t' + str(counter) + '\n')
-
+    
 
     STSOUT.close()
-    
+    '''  
 
 
 
