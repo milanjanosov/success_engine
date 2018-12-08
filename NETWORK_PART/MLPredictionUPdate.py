@@ -199,7 +199,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
 
                 else:
                    # print len(centralities), Nstar,  TauLimit
-                    column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit]#[1]
+                    column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit][1]
 
                 column['Istar']  = Istar
 
