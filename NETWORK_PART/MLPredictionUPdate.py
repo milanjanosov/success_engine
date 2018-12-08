@@ -344,7 +344,7 @@ def get_combined_prediction_results(TauLimit, Nest, CV, ijk, cumulative):
         xgb_res = str(bestacc[0]) + '\t' + str(bestacc[1]) 
         nb_res  = str(nbacc[0])   + '\t' + str(nbacc[1])   + '\t' + str(nbacc[2])  
 
-            fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'w')
+        fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'w')
         fout.write(str(TauLimit) + '\t' + xgb_res+ '\t' + nb_res + '\n')
         fout.close()
 
