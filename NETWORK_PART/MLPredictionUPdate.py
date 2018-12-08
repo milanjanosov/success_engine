@@ -185,7 +185,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
             Istar, Nstar, NstarR, impacts = get_career_data(dirid, centralities_d)
 
 
-            if (Nstar - abs(TauLimit)) >= 0 and ( len(centralities) - abs(TauLimit)) >= Nstar:
+            if (Nstar - abs(TauLimit)) >= 0 and ( -1 + len(centralities) - abs(TauLimit)) >= Nstar:
 
                 if cumulative:
 
@@ -198,7 +198,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
                         column[str(i) + '_' + measure] = centralities[Nstar + i][1]
 
                 else:
-                    print len(centralities), Nstar,  TauLimit
+                   # print len(centralities), Nstar,  TauLimit
                     column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit]#[1]
 
                 column['Istar']  = Istar
@@ -210,7 +210,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
                 centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
 
 
-    print centralityFeatures_Q.head()
+   # print centralityFeatures_Q.head()
 
     centralityFeatures_Q = centralityFeatures         
 
@@ -449,10 +449,10 @@ elif sys.argv[1] == 'combined':
 
 
 
-    get_combined_prediction_results(-3, Nest, CV, cumulative)
+   # get_combined_prediction_results(-3, Nest, CV, cumulative)
 
-    '''Pros = []
-    for TauLimit in range(-2, -1):
+    Pros = []
+    for TauLimit in range(-20, -21):
         p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
         Pros.append(p)
         p.start()
@@ -460,8 +460,7 @@ elif sys.argv[1] == 'combined':
     for t in Pros:
         t.join()
 
-    '''
-
+  
             
 
 
