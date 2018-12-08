@@ -951,7 +951,7 @@ def fitness_mlesuccess_dir(pvalues):
 
 
 #######################################################################################################################################
-def fitness_mlesuccess_art(pvalues):
+def fitness_mlesuccess_art_director(pvalues):
 
     fitnesses = {}
     careerf   = '../../../../QMODELNEW/Data_linrescaled/film-art-director-simple-careers/'
@@ -969,7 +969,7 @@ def fitness_mlesuccess_art(pvalues):
         sigma_pN = pvalues[i][7]
         sigma_QN = pvalues[i][8]
         
-        fitnesses[i] = {"mlesuccess_art-director": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
+        fitnesses[i] = {"mlesuccess_art_director": liksuccess(sumI, N, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)}
 
     return fitnesses
 

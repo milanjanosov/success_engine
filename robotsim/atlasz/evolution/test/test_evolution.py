@@ -55,7 +55,7 @@ argv = sys.argv[1:]
 # parse command line arguments
 argparser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description=__doc__)
 argparser.add_argument("-m", "--model", required=True, dest ="model", help="The name of the test model that is executed",
-        choices=["mlesuccess_dir", "mlesuccess_art-director", "mlesuccess_prod", "mlesuccess_writer", "mlesuccess_composer", 
+        choices=["mlesuccess_dir", "mlesuccess_art_director", "mlesuccess_prod", "mlesuccess_writer", "mlesuccess_composer", 
                  "mlesuccess_rock", "mlesuccess_pop", "mlesuccess_electro", "mlesuccess_folk", "mlesuccess_funk", "mlesuccess_jazz", "mlesuccess_class", "mlesuccess_hiphop", 
                  "mlesuccess_books",
                  "sci_mathematics",       "sci_theoretical_computer_science",    "sci_applied_physics", "sci_health_science", 
