@@ -168,7 +168,7 @@ def get_centr_features(TauLimit, dirids, cumulative, measureid):
 ''' ============================================================= '''
 
 
-def get_combined_features(TauLimit, dirids, cumulative, measureid):
+def get_combined_features(TauLimit, dirids, cumulative):
 
     centralityFeatures  = pd.DataFrame()
     measures = ['degree', 'clustering', 'pagerank', 'betweenness', 'constraint']  
@@ -284,10 +284,10 @@ def NB_cl(data, Nest, CV):
 
 
 
-def get_meas_prediction_results(TauLimit, Nest, CV):
+def get_meas_prediction_results(TauLimit, Nest, CV, cumulative):
 
     # get the data feature file
-    centralityFeatures_Q, centralityFeatures_Qbin, centralityFeatures_T = get_centr_features(TauLimit, directors, cumulative = cumulative, measureid = 1 + measures.index(measure))    
+    centralityFeatures_Q, centralityFeatures_Qbin, centralityFeatures_T = get_centr_features(TauLimit, dirids, cumulative, measureid = 1 + measures.index(measure))    
 
 
     # do optimized predictions
@@ -316,6 +316,38 @@ def get_meas_prediction_results(TauLimit, Nest, CV):
 
 
 
+def get_combined_prediction_results(TauLimit, Nest, CV, cumulative):
+
+    # get the data feature file
+    centralityFeatures_Q, centralityFeatures_Qbin, centralityFeatures_T = get_combined_features(TauLimit, directors, cumulative = cumulative)    
+
+    # do optimized predictions
+    for dataset, data in [('quartiles', centralityFeatures_Q), ('quartbinary', centralityFeatures_Qbin), ('topbottom', centralityFeatures_T)]:
+
+
+        print 'COMBINED\t', TauLimit, '\t', dataset
+
+        bestacc = (0, 0)
+
+        for sample in [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]:
+            for rate in [0.01, 0.05, 0.1, 0.15, 0.2]:
+
+                acc, err, N = xgb_cl(data, Nest, CV, 6 , rate, sample)
+                if acc > bestacc[0]:
+                    bestacc = (acc, err)
+
+
+        nbacc   = NB_cl(data, Nest, CV)
+        xgb_res = str(bestacc[0]) + '\t' + str(bestacc[1]) 
+        nb_res  = str(nbacc[0])   + '\t' + str(nbacc[1])   + '\t' + str(nbacc[2])  
+
+        fout = open(outfolder + dataset + '_COMBINED.dat', 'a')
+        fout.write(str(TauLimit) + '\t' + xgb_res+ '\t' + nb_res + '\n')
+        fout.close()
+
+
+
+
 
 
 
@@ -337,18 +369,16 @@ if sys.argv[1] == 'allfeatures':
     # switch to get_combined_features
 
 
-
     Nest       = 100
     CV         = 10
     cumulative = False
     measure    = 'degree'
-    measures   = ['degree', 'clustering', 'pagerank', 'betweenness', 'closeness', 'constraint']  
+    measures   = ['degree', 'clustering', 'pagerank', 'betweenness', 'constraint']  
 
 
     directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
     #dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
     #directors = dirids+directors
-
 
     # get output follder
     if cumulative: 
@@ -369,7 +399,7 @@ if sys.argv[1] == 'allfeatures':
     Pros = []
     for measure in measures:
         for TauLimit in range(-20, 21):
-            p = Process(target = get_meas_prediction_results, args=(TauLimit, Nest, CV, ))
+            p = Process(target = get_meas_prediction_results, args=(TauLimit, Nest, CV, cumulative, ))
             Pros.append(p)
             p.start()
                  
@@ -379,6 +409,50 @@ if sys.argv[1] == 'allfeatures':
 
  
 
+elif sys.argv[1] == 'combined':
+
+    
+    # Nest      --> 100
+    # directors --> entire file
+    # TauLimit  --> for loop
+    # cv        --> 10
+    # measure   --> for loop
+
+    # switch to get_combined_features
+
+
+    Nest       = 100
+    CV         = 10
+    cumulative = False
+
+    directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
+    #dirids     = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
+    #directors  = dirids+directors
+
+    # get output follder
+    if cumulative: 
+        outfolder = 'MLResultsUP_cumulative/' 
+    else:
+        outfolder = 'MLResultsUP_local/'
+
+    if not os.path.exists(outfolder):
+        os.makedirs(outfolder)
+
+
+    # create output folders
+    for dataset in ['quartiles', 'quartbinary', 'topbottom']:
+        fout = open(outfolder + dataset + '_COMBINED.dat', 'w')
+        fout.close()
+
+
+    Pros = []
+    for TauLimit in range(-20, 21):
+        p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
+        Pros.append(p)
+        p.start()
+             
+    for t in Pros:
+        t.join()
 
 
 
