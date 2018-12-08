@@ -452,7 +452,7 @@ elif sys.argv[1] == 'combined':
    # get_combined_prediction_results(-3, Nest, CV, cumulative)
 
     Pros = []
-    for TauLimit in range(-20, -21):
+    for TauLimit in range(-20, 21):
         p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
         Pros.append(p)
         p.start()
