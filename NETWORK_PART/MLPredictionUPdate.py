@@ -474,7 +474,7 @@ elif sys.argv[1] == 'combined':
                         ids_meas[imdb] += +1
 
    
-        directors = [imdbid for imdbid, cnt in ids_meas.items() if cnt >2]
+        directors = [imdbid for imdbid, cnt in ids_meas.items() if cnt >ijk]
 
 
 
