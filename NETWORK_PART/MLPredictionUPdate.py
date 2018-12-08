@@ -319,7 +319,7 @@ def get_meas_prediction_results(TauLimit, Nest, CV, cumulative):
 
 
 
-def get_combined_prediction_results(TauLimit, Nest, CV, cumulative):
+def get_combined_prediction_results(TauLimit, Nest, CV, ijk, cumulative):
 
     # get the data feature file
     centralityFeatures_Q, centralityFeatures_Qbin, centralityFeatures_T = get_combined_features(TauLimit, directors, cumulative = cumulative)    
@@ -344,7 +344,7 @@ def get_combined_prediction_results(TauLimit, Nest, CV, cumulative):
         xgb_res = str(bestacc[0]) + '\t' + str(bestacc[1]) 
         nb_res  = str(nbacc[0])   + '\t' + str(nbacc[1])   + '\t' + str(nbacc[2])  
 
-        fout = open(outfolder + dataset + '_COMBINED.dat', 'a')
+            fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'w')
         fout.write(str(TauLimit) + '\t' + xgb_res+ '\t' + nb_res + '\n')
         fout.close()
 
@@ -368,9 +368,6 @@ if sys.argv[1] == 'allfeatures':
     # TauLimit  --> for loop
     # cv        --> 10
     # measure   --> for loop
-
-    # switch to get_combined_features
-
 
     Nest       = 100
     CV         = 10
@@ -480,7 +477,7 @@ elif sys.argv[1] == 'combined':
 
         Pros = []
         for TauLimit in range(-20, 21):
-            p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
+            p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, ijk, cumulative,))
             Pros.append(p)
             p.start()
                  
