@@ -446,7 +446,7 @@ elif sys.argv[1] == 'combined':
 
 
     Pros = []
-    for TauLimit in range(-20, 21):
+    for TauLimit in range(-10, 11):
         p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
         Pros.append(p)
         p.start()
@@ -457,6 +457,11 @@ elif sys.argv[1] == 'combined':
 
 
             
+
+
+
+
+## source /opt/virtualenv-python2.7/bin/activate
 
 
 
