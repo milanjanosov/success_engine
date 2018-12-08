@@ -33,7 +33,7 @@ def collect():
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
 
-    harminc = len(Results_linrescaled/sci_theoretical_computer_science)
+    harminc = len('Results_linrescaled/sci_theoretical_computer_science')
 
     for folder in folders:
 
