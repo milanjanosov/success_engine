@@ -52,7 +52,7 @@ def collect():
     
         if len(runs) < 999:
             print ('Running:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
-        else
+        else:
             print ('DONE:   \t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
 
             
