@@ -254,13 +254,16 @@ def xgb_cl(data, Nest, CV, max_depth_ ,learning_rate_, subsample_):
       
     X = data.drop(columns = ['Istar', 'logIstar', 'IstarQ', 'logIstarQ'])
     y = list(data['logIstarQ'])
+    accuracies = []
         
-    train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42)    
-      
-    model2       = xgb.XGBClassifier(n_estimators=Nest   , max_depth=max_depth_, learning_rate=learning_rate_, subsample=subsample_)
-    train_model2 = model2.fit(train_data, train_label)
-    pred2        = train_model2.predict(test_data)
-    accuracies   = list(cross_val_score(train_model2, train_data, train_label, cv=CV))    
+    for i in range(Nest):
+
+        train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42)    
+          
+        model2       = xgb.XGBClassifier(n_estimators=Nest   , max_depth=max_depth_, learning_rate=learning_rate_, subsample=subsample_)
+        train_model2 = model2.fit(train_data, train_label)
+        pred2        = train_model2.predict(test_data)
+        accuracies   += list(cross_val_score(train_model2, train_data, train_label, cv=CV))    
 
     return np.mean(accuracies), np.std(accuracies), len(X)
 
@@ -344,7 +347,7 @@ def get_combined_prediction_results(TauLimit, Nest, CV, ijk, cumulative):
         xgb_res = str(bestacc[0]) + '\t' + str(bestacc[1]) 
         nb_res  = str(nbacc[0])   + '\t' + str(nbacc[1])   + '\t' + str(nbacc[2])  
 
-        fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'w')
+        fout = open(outfolder + dataset + '_COMBINED_TauNeg_' + str(ijk) + '.dat', 'a')
         fout.write(str(TauLimit) + '\t' + xgb_res+ '\t' + nb_res + '\n')
         fout.close()
 
