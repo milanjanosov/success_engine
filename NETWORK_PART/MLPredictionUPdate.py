@@ -185,7 +185,7 @@ def get_combined_features(TauLimit, dirids, cumulative):
             Istar, Nstar, NstarR, impacts = get_career_data(dirid, centralities_d)
 
 
-            if (Nstar - abs(TauLimit)) >= 0 and (len(centralities) - abs(TauLimit)) >= Nstar:
+            if (Nstar - abs(TauLimit)) >= 0 and ( len(centralities) - abs(TauLimit)) >= Nstar:
 
                 if cumulative:
 
@@ -198,7 +198,8 @@ def get_combined_features(TauLimit, dirids, cumulative):
                         column[str(i) + '_' + measure] = centralities[Nstar + i][1]
 
                 else:
-                    column[TauLimit] = centralities[Nstar + TauLimit][1]
+                    print len(centralities), Nstar,  TauLimit
+                    column[str(TauLimit) + '_' + measure] = centralities[Nstar + TauLimit]#[1]
 
                 column['Istar']  = Istar
 
@@ -208,6 +209,8 @@ def get_combined_features(TauLimit, dirids, cumulative):
                 df_column  = pd.DataFrame({dirid : column}).T
                 centralityFeatures  = centralityFeatures.append(df_column, ignore_index=True)         
 
+
+    print centralityFeatures_Q.head()
 
     centralityFeatures_Q = centralityFeatures         
 
@@ -377,8 +380,8 @@ if sys.argv[1] == 'allfeatures':
 
 
     directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
-    #dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
-    #directors = dirids+directors
+   # dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
+   # directors = dirids+directors
 
     # get output follder
     if cumulative: 
@@ -422,7 +425,7 @@ elif sys.argv[1] == 'combined':
 
 
     Nest       = 100
-    CV         = 10
+    CV         = 2
     cumulative = False
 
     directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
@@ -445,8 +448,11 @@ elif sys.argv[1] == 'combined':
         fout.close()
 
 
-    Pros = []
-    for TauLimit in range(-10, 11):
+
+    get_combined_prediction_results(-3, Nest, CV, cumulative)
+
+    '''Pros = []
+    for TauLimit in range(-2, -1):
         p = Process(target = get_combined_prediction_results, args=(TauLimit, Nest, CV, cumulative,))
         Pros.append(p)
         p.start()
@@ -454,7 +460,7 @@ elif sys.argv[1] == 'combined':
     for t in Pros:
         t.join()
 
-
+    '''
 
             
 
