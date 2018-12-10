@@ -372,14 +372,14 @@ if sys.argv[1] == 'allfeatures':
     # cv        --> 10
     # measure   --> for loop
 
-    Nest       = 100
-    CV         = 10
-    cumulative = False
+    Nest       = 10
+    CV         = 2
+    cumulative = True
     measure    = 'degree'
     measures   = ['degree', 'clustering', 'pagerank', 'betweenness', 'constraint']  
 
 
-    directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')]#[0:100]
+    directors  = [aaa.replace('.dat', '') for aaa in os.listdir('NEWTemporal/4_directors_centralities_QEVER')][0:100]
    # dirids    = ['nm0000184', 'nm0000233',  'nm0000229', 'nm0000040', 'nm0000122', 'nm0000033', 'nm0000122', 'nm0000631', 'nm0001053', 'nm0000142', 'nm0001392', 'nm0000591', 'nm0000154', 'nm0001232', 'nm0001628']
    # directors = dirids+directors
 
@@ -425,8 +425,8 @@ elif sys.argv[1] == 'combined':
 
 
     Nest       = 100
-    CV         = 2
-    cumulative = False
+    CV         = 10
+    cumulative = True
 
    
 
@@ -448,7 +448,7 @@ elif sys.argv[1] == 'combined':
    # get_combined_prediction_results(-3, Nest, CV, cumulative)
 
 
-    for ijk in [0, 1,2,3,4]:
+    for ijk in [0, 1, 2, 3, 4]:
 
 
         # create output folders
