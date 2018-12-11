@@ -1406,7 +1406,7 @@ def fitness_mlesuccess_books(pvalues):
     fitnesses = {}
     #careerf   = '../../../../Data/Book/book-authors-simple-careers/'
     careerf   = '../../../../QMODELNEW/Data_linrescaled/book-authors-simple-careers/'
-    sumI, N   = get_sumI_book(careerf) 
+    sumI, N   = get_sumI_new(careerf) 
 
     for i in xrange(len(pvalues)):
         mu_N     = pvalues[i][0]
