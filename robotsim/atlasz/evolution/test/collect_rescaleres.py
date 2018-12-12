@@ -50,7 +50,7 @@ def collect():
         fieldname = folder.replace('sci_', '')
 
     
-        if len(runs) < 999:
+        if len(runs) > 998:
             print ('DONE:   \t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
 
         else:
