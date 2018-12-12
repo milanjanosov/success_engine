@@ -51,41 +51,44 @@ def collect():
 
     
         if len(runs) < 999:
-            print ('Running:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
-        else:
             print ('DONE:   \t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
 
-            
-        STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
-
-        if len(runs) > 0:
-
-            for run in runs:
-
-                if len(os.listdir(run)) > 0:
-
-                    lastgen = max([ int(fff.split('_')[1].replace('.dat', '')) for fff in  os.listdir(run) ])
-                    resfile = run + '/Generation_' + str(lastgen) + '.dat'
-
-                    best = ''
-                    maxf = ''   
-
-                    for line in open(resfile):
-                        if 'max' in line:
-                            maxf = line.strip().split('\t')[1]
-                        if 'best' in line:
-                            best = line.strip().split('\t', 1)[1]
-
-                    outfile.write( maxf + '\t' + best + '\n')
-
-        outfile.close()
+        else:
+            print ('Running:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
         
+
+
+            
+            STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
+
+            if len(runs) > 0:
+
+                for run in runs:
+
+                    if len(os.listdir(run)) > 0:
+
+                        lastgen = max([ int(fff.split('_')[1].replace('.dat', '')) for fff in  os.listdir(run) ])
+                        resfile = run + '/Generation_' + str(lastgen) + '.dat'
+
+                        best = ''
+                        maxf = ''   
+
+                        for line in open(resfile):
+                            if 'max' in line:
+                                maxf = line.strip().split('\t')[1]
+                            if 'best' in line:
+                                best = line.strip().split('\t', 1)[1]
+
+                        outfile.write( maxf + '\t' + best + '\n')
+
+            outfile.close()
+            
 
 
     print ('\n\n')
            
 
-
+    STSOUT.close()
 
     '''files = [f for f in os.listdir('MLESUCCESS_RES_linrescaled') ]
 
@@ -140,7 +143,7 @@ def collect():
         STSOUT.write('CLEAN\t' + fieldname + '\t' + str(counter) + '\n')
     
 
-    STSOUT.close()
+
     '''  
 
 
