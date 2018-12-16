@@ -214,7 +214,7 @@ def export():
 
 
 
-def results():
+def results(lim):
 
     measures_N = {}
     for line in open('MLESUCCESS_RES_linrescaled_GROUNDTRUTH.dat'):
@@ -295,8 +295,8 @@ def results():
         sssq = []
         sssp = []
 
-        
-        print field.split('_')[0], ''.join((maxlen - len(field.split('_')[0]))*[' ']), len(data)
+        if len(data) < lim:
+            print field.split('_')[0], ''.join((maxlen - len(field.split('_')[0]))*[' ']), len(data)
         
         for dind, d in enumerate(data):
             
@@ -328,7 +328,8 @@ def results():
 if   sys.argv[1] == 'collect':  collect()
 elif sys.argv[1] == 'update':   update()
 elif sys.argv[1] == 'export':   export()
-elif sys.argv[1] == 'results':  results()
+elif sys.argv[1] == 'results':   results(lim = 10000)
+elif sys.argv[1] == 'results5':  results(lim = 5)
 
 
 
