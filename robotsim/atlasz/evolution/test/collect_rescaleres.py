@@ -1,7 +1,7 @@
 import os
 import sys
-
-
+import math
+import numpy as np
 
 def update():
 
@@ -126,8 +126,6 @@ def collect():
 
     for folder in folders:
 
-
-
         outfile = open(outfolder + '/Genetic_results_' + folder.split('_', 1)[-1] + '.dat', 'w')
 
 
@@ -145,8 +143,6 @@ def collect():
         else:
             print ('Running:\t',  folder, '    ', ''.join((harminc - len(folder))*[' ']),len(runs), '\t')
         
-
-
             
         STSOUT.write('RAW\t' + folder.replace('sci_', '') + '\t' + str(len(runs)) + '\n')
 
@@ -171,71 +167,12 @@ def collect():
                     outfile.write( maxf + '\t' + best + '\n')
 
         outfile.close()
-            
-
-
-    print ('\n\n')
            
-
+    print ('\n\n')
+         
     STSOUT.close()
 
-    '''files = [f for f in os.listdir('MLESUCCESS_RES_linrescaled') ]
-
-
-
-
-    outfolder = 'MLESUCCESS_RES_linrescaled_FINAL'
-    if not os.path.exists(outfolder):
-        os.makedirs(outfolder)
-
-   
-    for fn in files:
-
-        counter = 0.0
-        fout    = open(outfolder + '/' + fn.replace('sci_', 'final_sci_'), 'w')
-
-        for line in open('MLESUCCESS_RES_linrescaled/' + fn):
-
-            if 'max' not in line:
-                fields = [float(fff) for fff in line.strip().split('\t')]
-
-
-                maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = fields
-
-                minmu     = min(mu_N, mu_p, mu_Q)
-                minsigma  = min(sigma_N, sigma_Q, sigma_p)
-                prodsigma = sigma_pQ * sigma_pN * sigma_QN
-                maxsigma  = max([abs(sigma_pQ), abs(sigma_pN), abs(sigma_QN)])
-
-
-                if minmu > 0 and minsigma > 0.005 and abs(prodsigma) > 0.0 and maxsigma < 0.3 and maxabs < 10.0:
-
-                    fout.write(line)
-                    counter += 1 
-        
-
-        fieldname = fn.split('_')[-1].replace('.dat', '')
-        fout.close()
-
-
-
-        if fieldname in PREVSTAT['RAW']:
-            diff = counter - PREVSTAT['CLEAN'][fieldname]
-            if counter < 4:
-                print ('CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter), '\t',  '+' + str(int(diff)))
-            else:
-                print ('FAIR ENOUGH\t', fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter))
-        else:
-            print ('CLEAN runs:\t',  fieldname, '    ', ''.join((32 - len(fieldname))*[' ']), int(counter))
-
-
-        STSOUT.write('CLEAN\t' + fieldname + '\t' + str(counter) + '\n')
-    
-
-
-    '''  
-
-
+  
 
 
 
@@ -247,35 +184,26 @@ def export():
 
     if not os.path.exists('../../../../QMODELNEW/Qparamfit_linrescaled/'): os.makedirs('../../../../QMODELNEW/Qparamfit_linrescaled/')
 
-
     final_files = os.listdir(outfolder)
     final_data  = {}
-
 
     for ffn in final_files:
 
         final_data[ffn] = []
 
-
         for line in open(outfolder + '/' + ffn):
 
             fields = tuple([float(fff) for fff in line.strip().split('\t')])
-
             final_data[ffn].append(fields)
-
 
 
     for field, data in final_data.items():
 
         data.sort(key=lambda tup: tup[0], reverse = True)   
-
-#        print field.split('_')[-1].replace('.dat'), '\n\n'
         fieldname = field.split('_')[-1].replace('.dat', '')#, d[0])
-
 
         for d in data:
            
-
             fout = open('../../../../QMODELNEW/Qparamfit_linrescaled/' + fieldname + '-qmodel_params.dat', 'w')
 
             for d in data:
@@ -286,11 +214,121 @@ def export():
 
 
 
+def results():
 
-if   sys.argv[1] == 'collect': collect()
-elif sys.argv[1] == 'update':  update()
-elif sys.argv[1] == 'export':  export()
+    measures_N = {}
+    for line in open('MLESUCCESS_RES_linrescaled_GROUNDTRUTH.dat'):
+        fieldd, avg, std = line.strip().split(' ')
+        measures_N[fieldd.replace('-simple-careers', '').split('-')[-1]] = (avg, std)
 
+    ### get things started
+    root     = ''
+    folderin = 'MLESUCCESS_RES_linrescaled/'
+    fields   = [(f.replace('.dat', '').split('_', 2)[-1]) for f in os.listdir(root + folderin)]
+
+            
+    ### collect results and drop wrong optimizations
+    results = {}
+    for field in fields:
+        
+        
+        sss = []
+        results[field] = []
+
+        for line in open('MLESUCCESS_RES_linrescaled/Genetic_results_' + field + '.dat'):
+        
+            if 'maxfit' not in line:   
+                maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(aaa) for aaa in line.strip().split('\t')]
+                
+                sigma_N = math.sqrt(sigma_N)
+                sigma_Q = math.sqrt(sigma_Q)
+                sigma_p = math.sqrt(sigma_p)
+                
+                records = [maxfitness, mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN]
+                
+                minsigma  = min(sigma_N, sigma_Q, sigma_p)
+                prodsigma = sigma_pQ * sigma_pN * sigma_QN
+                maxsigma  = max([abs(sigma_pQ), abs(sigma_pN), abs(sigma_QN)])
+                maxabs    = max([abs(a) for a in records[1:]])   
+
+                
+                if min([abs(r) for r in records]) > 0 and mu_N > 1 and abs(prodsigma) > 0.0 and maxsigma < 0.25 and minsigma > 0.001 and maxabs < 10.0:
+                #if min([abs(r) for r in records]) > 0:    
+                                
+                    cov1 = abs(sigma_Q * sigma_p / sigma_pQ)
+                    cov2 = abs(sigma_N * sigma_p / sigma_pN)
+                    cov3 = abs(sigma_Q * sigma_N / sigma_QN)
+                    
+                    mu_N_meas = float(measures_N[field][0])
+                    
+                    
+                    if min (cov1, cov2, cov3) > 3 and mu_N < 10 and (mu_N / mu_N_meas < 1.5):
+                        records += [cov1, cov2, cov3]
+                        results[field].append(records)      
+                        
+                        #print field, sigma_Q / (sigma_Q + sigma_p)
+
+    
+        
+     
+    names = ['maxfitness', 'mu_N', 'mu_p', 'mu_Q', 'sigma_N', 'sigma_Q', 'sigma_p', 'sigma_pQ', 'sigma_pN', 'sigma_QN']
+    names = [n + ''.join(int(14-len(n))*[' '])  for n in names]
+
+    maxlen = max([len(fgh.split('_')[0]) for fgh in fields ])
+
+    folderout = root + 'MLESUCCESS_RES_linrescaled_ALL/'
+    if not os.path.exists(folderout):
+        os.makedirs(folderout)    
+        
+    for field, data in results.items():
+        data.sort(key=lambda tup: tup[0], reverse = True)    
+        
+        
+    Fsssq = {}
+    Fsssp = {}
+    for field, data in results.items():
+        
+        ffout = open(folderout + 'Genetic_results_' + field + '.dat', 'w')
+        ffout.write('\t'.join(names) + '\n')
+        
+        sss = []
+        sssq = []
+        sssp = []
+
+        
+        print field.split('_')[0], ''.join((maxlen - len(field.split('_')[0]))*[' ']), len(data)
+        
+        for dind, d in enumerate(data):
+            
+            ffout.write('\t'.join([str(dd) for dd in d]) + '\n')
+            if 'maxf' not in str(d[0]):
+                sigma_Q = d[5]
+                sigma_p = d[6] 
+                sss.append(sigma_Q / (sigma_Q + sigma_p)) 
+                sssq.append(sigma_Q)
+                sssp.append(sigma_p)
+                
+            Fsssq[field] = np.mean(sssq)
+            Fsssp[field] = np.mean(sssp)    
+
+
+            
+            if dind == 5: break
+                
+        #print field.split('_')[0], len(data), '\t',  round(np.mean(sss), 2)
+        
+        ffout.close()
+
+
+
+
+
+
+
+if   sys.argv[1] == 'collect':  collect()
+elif sys.argv[1] == 'update':   update()
+elif sys.argv[1] == 'export':   export()
+elif sys.argv[1] == 'results':  results()
 
 
 
