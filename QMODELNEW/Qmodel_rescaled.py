@@ -1025,15 +1025,15 @@ def paralell_stuff(field, label):
     print field, Qfitparams
 
 
-   # id_data = read_data(infolder, folderout3, label)
-   # fit_careerlength(label)
-   # nameids = parse_id_names()
-   # get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
-   # get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
-   # get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
-   # get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
-   # do_p_Q_plots(label, nbins = 12)
-   # bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+    id_data = read_data(infolder, folderout3, label)
+    fit_careerlength(label)
+    nameids = parse_id_names()
+    get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
+    get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
+    get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+    get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
+    do_p_Q_plots(label, nbins = 12)
+    bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
         
 
 
