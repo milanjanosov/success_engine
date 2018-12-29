@@ -1104,7 +1104,7 @@ if __name__ == '__main__':
 
 
         for field in scis:
-            p = Process(target = paralell_stuff, args=(field, 'science', ))
+            p = Process(target = paralell_stuff, args=('science', field, ))
             Pros.append(p)
             p.start()
            
