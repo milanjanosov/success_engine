@@ -1009,12 +1009,44 @@ def fit_careerlength(field):
 
 
 
+def paralell_stuff(field, label):
+
+
+    infolder = 'Data_linrescaled/' + field + '-' + label +'-simple-careers'      
+
+    for ind, line in enumerate(open('Qparamfit_linrescaled_final/' + label +  '-qmodel_params.dat')):
+
+        if ind ==0:
+            mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
+        
+    Qfitparams = (mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN)
+
+
+    print field, Qfitparams
+
+
+   # id_data = read_data(infolder, folderout3, label)
+   # fit_careerlength(label)
+   # nameids = parse_id_names()
+   # get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
+   # get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
+   # get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+   # get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
+   # do_p_Q_plots(label, nbins = 12)
+   # bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+        
+
+
+
+
+
+
 
 
 if __name__ == '__main__':  
 
 
-    fields = {  'director'     : 'film', 
+    fields_a = {  'director'     : 'film', 
                 'art-director' : 'film', 
                 'producer'     : 'film', 
                 'writer'       : 'film', 
@@ -1051,8 +1083,8 @@ if __name__ == '__main__':
 
         Pros = []
    
-        for resfile in resfiles_art:
-            p = Process(target = process_Qs_paralel, args=(resfile, ))
+        for label, field in fields_a.items():
+            p = Process(target = paralell_stuff, args=(field, label, ))
             Pros.append(p)
             p.start()
            
@@ -1105,13 +1137,13 @@ if __name__ == '__main__':
 
         id_data = read_data(infolder, folderout3, label)
         fit_careerlength(label)
-   ###     nameids = parse_id_names()
-  ###      get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
+        nameids = parse_id_names()
+        get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
         get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
-   #####get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
         get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
         do_p_Q_plots(label, nbins = 12)
-   ####     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
         
        
 
