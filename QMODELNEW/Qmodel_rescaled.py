@@ -9,9 +9,37 @@ import random
 import math
 import sys
 import pandas as pd
+from scipy import stats
 from multiprocessing import Process
 import warnings
 warnings.filterwarnings('ignore')
+
+
+
+
+'''
+
++ examples
++ impact distr
++ rescaled impact distr
++ rmodel
++ qmodel
++ correl plot
++ productivity
++ p distr
++ q distr
+
+- prize prediction
+- VarQVarp
+- luckskill
+
+
+
+
+
+
+'''
+
 
 
 
@@ -105,8 +133,12 @@ def read_data(infolder, outfolder, title):
 
     nnn     = len(files)
 
+    print 'III', infolder
+    print 'LEN  ', nnn
+
     for ind, fn in enumerate(files):
 
+        #if ind == 1000: break
         if ind % 500 == 0:
             print infolder, '\t', ind, '/', nnn
 
@@ -131,7 +163,10 @@ def read_data(infolder, outfolder, title):
     fout.close()
 
 
-    fout = open(outfolder + '/' + title + '_career_length.dat', 'w')
+    if not os.path.exists('DataToPlot_linrescaled_final/6_career_length_distributions/'):
+        os.makedirs('DataToPlot_linrescaled_final/6_career_length_distributions/')
+
+    fout = open('DataToPlot_linrescaled_final/6_career_length_distributions/'  + title + '_career_length.dat', 'w')
     for name, career in id_data.items():   
     #fout.write(name + '\t' + str(len(set([ c[1] for c in career]))) + '\n')
         fout.write(name + '\t' + str(len(career)) + '\n')
@@ -159,17 +194,60 @@ def get_impact_distribution(id_data, nbins, fileout, title):
         
 
 
-    ximpacts,  pimpacts        = getDistribution(impacts, normalized = False)
+    impacts = [i for i in impacts if not np.isnan(i)]
+
+    ximpacts,  pimpacts        = getDistribution(impacts, normalized = True)
     bximpacts, bpimpacts, err  = getLogBinnedDistribution(ximpacts, pimpacts, nbins)
 
-    f, ax = plt.subplots(1,1, figsize = (14, 6))
-    ax.plot(ximpacts,  pimpacts)
-    ax.plot(bximpacts, bpimpacts, color = 'r', linewidth = 3)
+    
+
+
+
+    '''Qdata   = 'DataToPlot_linrescaled_final/3_pQ_distributions/' + tipus + '_distribution_data_' + field + '_0.dat' 
+        Qx,  Qy = zip(*[ [float(fff) for fff in line.strip().split('\t')] for line in open(Qdata)   if 'nan' not in line and float(line.strip().split('\t')[0]) !=  0.0])
+        Qs      = [float(line.strip()) for line in open('DataToPlot_linrescaled_final/3_pQ_distributions/' + tipus + '_data_' + field + '_0.dat')]
+        Qs      =  [q for q in Qs if not np.isnan(q)]
+
+        ppbins, ppcounts, ppQerror_bins = getLogBinnedDistribution(Qx, Qy, nbins)
+
+       
+        p0    = stats.lognorm._fitstart(Qs)
+        param = stats.lognorm.fit(Qs, p0[0], loc  = p0[1],scale = p0[2])
+        ppdf_fitted = stats.lognorm.pdf(Qx, param[0], loc=param[1], scale=param[2])
+          
+        Qxpp, ppdf_fittedpp = zip(*[(Qx[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(Qy)])
+
+    '''
+
+
+
+
 
 
   
+    p0    = stats.lognorm._fitstart(impacts)
+    param = stats.lognorm.fit(impacts, p0[0], loc  = p0[1],scale = p0[2])
+    ppdf_fitted = stats.lognorm.pdf(ximpacts, param[0], loc=param[1], scale=param[2])
+      
+    ximpacts, ppdf_fitted = zip(*[(ximpacts[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(pimpacts) ])
 
-    datafolder = 'DataToPlot_linrescaled/1_impact_distribution/'
+
+    #summ = sum(ppdf_fittedpp)
+
+   # print summ
+
+    #ppdf_fittedpp = [p / summ for p in ppdf_fittedpp]
+
+    #print sum(ppdf_fittedpp)
+
+    #Qxpp, ppdf_fittedpp = zip(*[(ximpacts[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(pimpacts)])
+
+
+
+
+
+
+    datafolder = 'DataToPlot_linrescaled_final/1_impact_distribution/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
@@ -181,22 +259,16 @@ def get_impact_distribution(id_data, nbins, fileout, title):
 
     fout = open(datafolder + '1_impact_distribution_binned_' + title + '.dat', 'w')
     for i in range(len(bximpacts)):
-        fout.write( str(bximpacts[i]) + '\t' +  str(bpimpacts[i]) + '\n'  )
+        fout.write( str(bximpacts[i]) + '\t' +  str(bpimpacts[i]) + '\t' + str(err[i]) + '\n'  )
     fout.close()
 
 
+    fout1 = open(datafolder + '1_impact_distribution_fitted_' + title + '.dat', 'w')
+    for i in range(len(ximpacts)):
+        fout1.write(str(ximpacts[i]) + '\t' + str(ppdf_fitted[i]) + '\n')
+    fout1.close()
 
 
-    ax.set_yscale('log')
-    ax.set_xscale('log')
-    ax.set_xlabel('Rating value')
-    ax.set_ylabel('Rating frequency')
-    ax.set_title(title, fontsize = 17)
-
-
-    plt.tight_layout()
-    plt.savefig(fileout)
-    plt.close()
 
 
 
@@ -218,7 +290,7 @@ def get_N_star_N(id_data, bins, fileout, title):
         
 
 
-        if len(data) < 100:
+        if len(data) < 100000000:
 
             data.sort(key=lambda tup: tup[1]) 
             
@@ -246,6 +318,7 @@ def get_N_star_N(id_data, bins, fileout, title):
                 N_star_N_r.append(float(Nstar)/N)
 
 
+
             
 
     f, ax = plt.subplots(1,1, figsize = (7, 6))
@@ -256,32 +329,19 @@ def get_N_star_N(id_data, bins, fileout, title):
     ax.set_title(title, fontsize = 17)
 
 
+    nnbbins = 8
 
-    datafolder = 'DataToPlot_linrescaled/2_N_Nstar/'
+
+    datafolder = 'DataToPlot_linrescaled_final/2_N_Nstar/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
-    fout = open(datafolder + '2_N_Nstar' + title + '.dat', 'w')
-    fout.write('\n'.join([str(n) for n in N_star_N if n > 0]))
-    fout.close()
 
 
 
-    nnbbins = 14
-
-    counts, bins, bars = ax.hist(N_star_N_r, normed = True, bins = np.linspace(0,1, nnbbins), alpha=0.0, cumulative=1)
+    counts, bins, bars = ax.hist(N_star_N, normed = True, bins = np.linspace(0,1, nnbbins), alpha=0.0, cumulative=1)
    
-    
-
-
     errors_bins = {}
-
-
-
-
-
-
-
 
     for r in sorted(N_star_N_r):
 
@@ -293,31 +353,44 @@ def get_N_star_N(id_data, bins, fileout, title):
                     errors_bins[i] = []
                 errors_bins[i].append(r)
 
-         
 
-
-
-    bins = (bins[1:]+bins[:1]/2)
-
-
-
-    fout = open(datafolder + '/' + title + '_RNNstar_data.dat', 'w')
-
-
-
-
+    bins = (bins[1:]+bins[:1]/2.0)
+    fout = open(datafolder + '/' + title + '_NNstar_data.dat', 'w')
 
     for i in range(nnbbins-1):
         fout.write( str(bins[i]) + '\t' + str(1.0-counts[i]) + '\t' + str(np.std(errors_bins[i])) + '\n')
         
-
-
-    #fout.write('\n'.join([str(n) for n in N_star_N_r if n > 0]))
     fout.close()
 
 
 
 
+
+
+
+
+    counts, bins, bars = ax.hist(N_star_N_r, normed = True, bins = np.linspace(0,1, nnbbins), alpha=0.0, cumulative=1)
+   
+    errors_bins = {}
+
+    for r in sorted(N_star_N_r):
+
+        for i in range(nnbbins-1):
+
+            if r < bins[i+1] and r > bins[i]:
+
+                if i not in errors_bins:
+                    errors_bins[i] = []
+                errors_bins[i].append(r)
+
+
+    bins = (bins[1:]+bins[:1]/2)
+    fout = open(datafolder + '/' + title + '_RNNstar_data.dat', 'w')
+
+    for i in range(nnbbins-1):
+        fout.write( str(bins[i]) + '\t' + str(1.0-counts[i]) + '\t' + str(np.std(errors_bins[i])) + '\n')
+        
+    fout.close()
 
     plt.tight_layout()
     plt.savefig(fileout)
@@ -443,18 +516,19 @@ def get_users_ps(nameids, id_data, Qfitparams, fileout, folder2, jind, title):
 
     music   = False
     namesid = {}
-    if title.split('-')[0] in ['rock', 'electro', 'pop', 'funk', 'folk', 'jazz', 'hiphop', 'classical']:
+    if title.split('-')[0] in ['rock', 'electro',  'funk', 'folk', 'jazz', 'hiphop', 'classical']:
         music = True
+
         namesid = nameids[title.split('-')[0]]
 
 
 
-    if not os.path.exists('DataToPlot_linrescaled/3_pQ_distributions_processed/'):
-        os.makedirs('DataToPlot_linrescaled/3_pQ_distributions_processed/')
+    if not os.path.exists('DataToPlot_linrescaled_final/3_pQ_distributions_processed/'):
+        os.makedirs('DataToPlot_linrescaled_final/3_pQ_distributions_processed/')
 
 
     
-    fout = open('DataToPlot_linrescaled/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
+    fout = open('DataToPlot_linrescaled_final/3_pQ_distributions_processed/' + 'p_stat_data_' + title + '_' + str(jind) + '.dat', 'w')
 
 
     fout.write('id\tQ\tmean_p\tmedian_p\n')
@@ -557,13 +631,24 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     
 
 
-    datafolder = 'DataToPlot_linrescaled/3_pQ_distributions/'
+    datafolder = 'DataToPlot_linrescaled_final/3_pQ_distributions/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
 
 
 
+    fout = open(datafolder + '/' + 'p_data_' + title + '_' + str(jind) + '.dat', 'w')
+    for i in range(len(pss)):
+        fout.write( str(pss[i]) + '\n')
+    fout.close()
+
+
+
+    fout = open(datafolder + '/' + 'Q_data_' + title + '_' + str(jind) + '.dat', 'w')
+    for i in range(len(imdbid_Q)):
+        fout.write( str(imdbid_Q.values()[i]) + '\n')
+    fout.close()
 
 
 
@@ -607,11 +692,9 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     X = ';'.join([str(x) for x in X])
     Y = ';'.join([str(y) for y in Y])
 
-    fout.write('    ' + '\t' + X + '\t' + Y + '\n')
+    fout.write('everybody' + '\t' + X + '\t' + Y + '\n')
 
     fout.close()
-
-
 
 
 
@@ -628,13 +711,6 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     for i in range(len(bxQ)):
         fout.write( str(bxQ[i]) + '\t' + str(bpQ[i]) + '\n')
     fout.close()
-
-
-
-
-
-
-
 
 
 
@@ -662,6 +738,49 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
 
   
     return imdbid_Q, ps
+
+
+
+
+
+def do_p_Q_plots(field, nbins):
+    
+
+    for tipus in ['p', 'Q']:
+
+        Qdata   = 'DataToPlot_linrescaled_final/3_pQ_distributions/' + tipus + '_distribution_data_' + field + '_0.dat' 
+        Qx,  Qy = zip(*[ [float(fff) for fff in line.strip().split('\t')] for line in open(Qdata)   if 'nan' not in line and float(line.strip().split('\t')[0]) !=  0.0])
+        Qs      = [float(line.strip()) for line in open('DataToPlot_linrescaled_final/3_pQ_distributions/' + tipus + '_data_' + field + '_0.dat')]
+        Qs      =  [q for q in Qs if not np.isnan(q)]
+
+        ppbins, ppcounts, ppQerror_bins = getLogBinnedDistribution(Qx, Qy, nbins)
+
+       
+        p0    = stats.lognorm._fitstart(Qs)
+        param = stats.lognorm.fit(Qs, p0[0], loc  = p0[1],scale = p0[2])
+        ppdf_fitted = stats.lognorm.pdf(Qx, param[0], loc=param[1], scale=param[2])
+          
+        Qxpp, ppdf_fittedpp = zip(*[(Qx[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(Qy)])
+
+
+        folderout = 'DataToPlot_linrescaled_final/3_pQ_distributions_processed'
+        if not os.path.exists(folderout):
+            os.makedirs(folderout)
+
+        fout = open(folderout + '/' + field+ '_' + tipus + 'data.dat', 'w')
+        for i in range(len(Qx)):
+            fout.write(str(Qx[i]) + '\t' + str(Qy[i]) + '\n')
+
+        fout = open(folderout + '/' + field+ '_' + tipus + 'fit.dat', 'w')
+        for i in range(len(Qxpp)):
+            fout.write(str(Qxpp[i]) + '\t' + str(ppdf_fittedpp[i]) + '\n')
+
+        fout = open(folderout + '/' + field + '_' + tipus + 'binned.dat', 'w')
+        for i in range(len(ppbins)):
+            fout.write(str(ppbins[i]) + '\t' + str(ppcounts[i]) + '\t' + str(ppQerror_bins[i]) + '\n')
+
+
+
 
 
 
@@ -729,7 +848,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     print 'LEN  ', len(careers)
 
         
-    for i in range(25):        
+    for i in range(50):        
 
         random.shuffle(Impacts_S)    
         Scareers = divideUnequal(NsS, Impacts_S) 
@@ -765,13 +884,13 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     N_Istar_avg_Q = {}
 
 
-    for i in range(25):
+    for i in range(50):
 
 
         psQ = [p for p in ps]
 
        # random.shuffle(ps)
-       ### random.shuffle(psQ)
+       # random.shuffle(psQ)
 
         for ind, (imdbid, Q) in enumerate(imdbid_Q.items()):  
 
@@ -779,10 +898,12 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
                 N       = careers_length[imdbid]
                 IstarQs =  max([psQ[ind + ijk] * Q for ijk in range(N)  ])  
 
-                if N not in N_Istar_Q:
-                    N_Istar_Q[N] = [IstarQs]
-                else:
-                    N_Istar_Q[N].append(IstarQs)
+                if not np.isnan(IstarQs) and IstarQs > 0.0:
+
+                    if N not in N_Istar_Q:
+                        N_Istar_Q[N] = [IstarQs]
+                    else:
+                        N_Istar_Q[N].append(IstarQs)
 
 
     for n, istars in N_Istar_Q.items():        
@@ -790,33 +911,8 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     
 
  
-    NsSQ,  IstarsSQ = zip(*[(n, i) for n, i in  N_Istar_avg_Q.items()])   
+    NsSQ,  IstarsSQ       = zip(*[(n, i) for n, i in  N_Istar_avg_Q.items()]) 
     bNsSQ, bIstarsSQ, err = getLogBinnedDistribution(NsSQ,   IstarsSQ, nbins)
-
-        
-
-
-
-
-    print title, '  plot ...'
-
-
-    f, ax = plt.subplots(1,1, figsize = (12, 7))
-    ax.plot(Ns,  Istars, 'o', markersize = 12, alpha = 0.25, color = 'lightgrey', label = 'Data')#    ax.plot(bNs, bIstars, 'r', linewidth = 3)
-    ax.plot(bNs, bIstars,  'o', color = 'r', markersize = 15, label = 'Binned data')
-    ax.errorbar(bNs, bIstars, yerr = e, color = 'r', markersize = 15)
-    ax.fill_between(bNs, np.asarray(bIstars)- np.asarray(e), np.asarray(bIstars) + np.asarray(e), color = 'r', alpha = 0.1)
-
-    ax.plot(bNsS,   bIstarsS,  'k', linewidth = 3, label= 'Rmodel')
-    ax.plot(bNsSQ,  bIstarsSQ, 'g', linewidth = 5, color = 'steelblue', label = 'Qmodel')
-    ax.set_xscale('log')
-    ax.set_ylim([1, 1.2*max(bIstarsS)])
-    ax.legend(loc = 'best', fontsize = 13)
-    ax.set_xlabel('Career length', fontsize = 15)
-    ax.set_ylabel('Log I*', fontsize = 15)
-
-
- 
 
     field    = title.split('_')[0].split('-')[0]
     length   = title.split('-')[-1].split('_')[0]
@@ -827,9 +923,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
-
-
-    datafolder = 'DataToPlot_linrescaled/4_RQModel/'
+    datafolder = 'DataToPlot_linrescaled_final/4_RQModel/'
     if not os.path.exists(datafolder):
         os.makedirs(datafolder)
 
@@ -862,76 +956,55 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
 
 
 
-    fileout  = 'ResultFigs/4_R_Q_model_test_'  + title + '.png'
-    title    = field + ',  mincareer length = ' + length + ',   optimization solution = ' + solution
-
-    ax.set_title(title, fontsize = 18)
 
 
 
+def fit_careerlength(field):
 
 
+    foout = 'DataToPlot_linrescaled_final/6_career_length_distributions/'
+    if not os.path.exists(foout):
+        os.makedirs(fooout)
 
 
+    nbins = 10
+    careerlengths = [float(line.strip().split('\t')[1]) for line in open('IdData_linrescaled/' + field + '_career_length.dat')]
+    xlen, plen    = getDistribution(careerlengths)
 
 
+   
+    bxlen, bplen, bplenerr = getLogBinnedDistribution(xlen, plen, nbins)
 
-    plt.tight_layout()
-    plt.savefig(fileout)
-    plt.close()
-
-   # plt.show()
-
-
-
-
-
-
-
-
-def get_luck_skill_data(label, field):
-
-
-    files   = os.listdir('pQData_linrescaled')
-    qoutdata = []
-    poutdata = []
-
-
-
-    for fn in files:
-
-       
-
-        if 'Q' in fn:
-            #try:
-            qdata = [float(line.strip().split('\t')[1]) for line in open('pQData_linrescaled/' + fn) ]
-            qoutdata.append( (fn, np.mean(qdata), np.std(qdata), len(qdata) ))
-           # except:
-           #     pass
-
-
-        else:
-            pdata = [float(line.strip()) for line in open('pQData_linrescaled/' + fn) ]
-            poutdata.append( (fn, np.mean(pdata), np.std(pdata), len(pdata) ))
-
-
-
-
-    folout = 'DataToPlot_linrescaled/' + '5_LuckSkill'
-    if not os.path.exists(folout):
-        os.makedirs(folout)
-    fout = open(folout + '/p_avg_std.dat', 'w')
-    for dd in poutdata:
-        fout.write(dd[0] + '\t' + str(dd[1]) + '\t' + str(dd[2]) + '\t' + str(dd[3]) + '\n')
-    fout.close()
-
-    fout = open(folout + '/Q_avg_std.dat', 'w')
-    for dd in qoutdata:
-        fout.write(dd[0] + '\t' + str(dd[1]) + '\t' + str(dd[2]) + '\t' + str(dd[3]) + '\n')
-    fout.close()
 
     
+    p0    = stats.lognorm._fitstart(careerlengths)
+    p1    = stats.lognorm.fit(careerlengths, p0[0], loc  = p0[1],scale = p0[2])
+    param = stats.lognorm.fit(careerlengths, p1[0], loc  = p1[1],scale = p1[2])
+    
+    ppdf_fitted = stats.lognorm.pdf(xlen, param[0], loc=param[1], scale=param[2])
+    Qxpp, ppdf_fittedpp = zip(*[(xlen[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(plen)])
+    
+    DataAvg = np.mean(plen)
+    RSStot  = sum([(YY - DataAvg)**2 for YY in plen])
+    RSSres  = sum([(plen[i] - ppdf_fitted[i])**2 for i in range(len(plen) )])
+    R2R     = str(round(1 - RSSres/RSStot, 3))
 
+
+    fout1 = open(foout + '/' + field + '_careerlength_data.dat', 'w') 
+    for i in range(len(xlen)):
+        fout1.write(str(xlen[i]) + '\t' + str(plen[i]) + '\n')
+    fout1.close()
+
+
+    fout1 = open(foout + '/' + field + '_careerlength_fit.dat', 'w') 
+    for i in range(len(Qxpp)):
+        fout1.write(str(Qxpp[i]) + '\t' + str(ppdf_fittedpp[i]) + '\n')
+    fout1.close()
+
+
+    fout1 = open(foout + '/' + field + '_careerlength_R2.dat', 'w') 
+    fout1.write(R2R)
+    fout1.close()
 
 
 
@@ -958,14 +1031,14 @@ if __name__ == '__main__':
 
 
     nbins         = 10
-    resfolder     = 'Optimize/atlasz/evolution/test/Results/'
-    resfiles_art  = [resfolder + res for res in os.listdir(resfolder) if 'sci_' not in res]
-    resfiles_sci  = ['Qparamfit_linrescaled/' + res for res in os.listdir('Qparamfit') if 'sci_'     in res]
+    resfolder     = 'Optimize/atlasz/evolution/test/Results_linrescaled/'
+    resfiles_art  = []#[resfolder + res for res in os.listdir(resfolder) if 'sci_' not in res]
+    resfiles_sci  = []#['Qparamfit_linrescaled/' + res for res in os.listdir('Qparamfit') if 'sci_' in res]
     folderout     = 'ResultFigs_linrescaled/' 
     folderout2    = 'pQData_linrescaled/' 
     folderout3    = 'IdData_linrescaled/' 
 
-    dataoutf      = 'DataToPlot_linrescaled'
+    dataoutf      = 'DataToPlot_linrescaled_final'
 
 
     if not os.path.exists(folderout):  os.makedirs(folderout)
@@ -1019,7 +1092,7 @@ if __name__ == '__main__':
 
         infolder = 'Data_linrescaled/' + field + '-' + label +'-simple-careers'      
 
-        for ind, line in enumerate(open('Qparamfit_linrescaled/' + label +  '-qmodel_params.dat')):
+        for ind, line in enumerate(open('Qparamfit_linrescaled_final/' + label +  '-qmodel_params.dat')):
 
             if ind ==0:
                 mu_N, mu_p, mu_Q, sigma_N, sigma_Q, sigma_p, sigma_pQ, sigma_pN, sigma_QN = [float(f) for f in line.strip().split('\t')][1:]
@@ -1031,15 +1104,16 @@ if __name__ == '__main__':
 
 
         id_data = read_data(infolder, folderout3, label)
-        nameids = parse_id_names()
-        get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
+        fit_careerlength(label)
+   ###     nameids = parse_id_names()
+  ###      get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
         get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
-        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+   #####get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
         get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
-        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+        do_p_Q_plots(label, nbins = 12)
+   ####     bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
         
-        get_luck_skill_data(label, field)
-
+       
 
 
 
