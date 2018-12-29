@@ -800,7 +800,7 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     imdbid_Q = { line.strip().split('\t')[0] : float(line.strip().split('\t')[1])  for line in open(folder2 + '/' + 'Q_distribution_' + title + '.dat') if len(line.strip().split('\t')) == 2 }    
     careers  = [ [float(fff) for fff in line.strip().split('\t')] for line in open(folder3 + '/' + title.rsplit('_',1)[0].replace('_', '-') + '_id_data.dat')]
 
-    careers_length = { line.strip().split('\t')[0] : int(line.strip().split('\t')[1])  for line in open(folder3 + '/' + title.rsplit('_',1)[0].replace('_', '-') + '_career_length.dat') if len(line.strip().split('\t')) == 2  }      
+    careers_length = { line.strip().split('\t')[0] : int(line.strip().split('\t')[1])  for line in open('DataToPlot_linrescaled_final/6_career_length_distributions/' + title.rsplit('_',1)[0].replace('_', '-') + '_career_length.dat') if len(line.strip().split('\t')) == 2  }      
 
 
     ''' JUST THE DATA '''
