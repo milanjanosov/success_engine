@@ -1096,20 +1096,21 @@ if __name__ == '__main__':
 
         Pros = []
 
-        resfiles_sci = [r for r in resfiles_sci if  len([line for line in open(r)]) > 0]
+        arts = set(fields_a.keys())
+        alls = set([o.split('-')[0] for o in os.listdir('Qparamfit_linrescaled_final') if 'art' not in o])
+        scis = list(alls.difference(arts))
 
-        for f in resfiles_sci:
-            print f
+  
 
 
-        for resfile in resfiles_sci:
-            p = Process(target = process_Qs_paralel_sci, args=(resfile, ))
+        for field in scis:
+            p = Process(target = paralell_stuff, args=(field, 'science', ))
             Pros.append(p)
             p.start()
            
         for t in Pros:
             t.join()
-        
+       
         
 
 
