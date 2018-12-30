@@ -48,7 +48,7 @@ def get_sample_data(df_feats):
 
 
 
-def xgb_model_params_importance(df_input, Nrand, text, feats = ''):
+def xgb_model_params_importance(df_input, Nrand, text = '', feats = ''):
     
     accs = []
     
@@ -64,7 +64,7 @@ def xgb_model_params_importance(df_input, Nrand, text, feats = ''):
         train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42, stratify = y)    
 
         param_test1 = {
-                 'max_depth':range(2,7,1),
+                 'max_depth':range(6,7,1),
                  'min_child_weight':range(1,6,1),
                  'subsample':np.arange(0.7,0.95, 0.05),
                  'learning_rate':np.arange(0.05, 0.2, 0.03)
@@ -166,7 +166,7 @@ def parse_data(label, field, lim):
 
 
 inputdata = [('film', 'director', '10'), ('music', 'pop', '80'), ('authors', 'books', '50')]
-Nrand     = 10   
+Nrand     = 100   
 
 
 
@@ -182,12 +182,12 @@ for label, field, lim in inputdata:
     features = df_feats.keys()
 
     print label, field, '\t', 'All features'
-    fileout.write('All' + '\t' + xgb_model_params_importance(df_feats, Nrand, label + ' ' + field + '\tAll features') + '\n')
+    fileout.write('All' + '\t' + xgb_model_params_importance(df_feats, Nrand, text = label + ' ' + field + '\tAll features') + '\n')
 
     for feat in features:
         if 'prizew' not in feat:
             print label, field, '\t', feat
-            fileout.write( feat + '\t' + xgb_model_params_importance(df_feats, Nrand, label + ' ' + field + '\t' + feat) + '\n')
+            fileout.write( feat + '\t' + xgb_model_params_importance(df_feats, Nrand, text = label + ' ' + field + '\t' + feat, feats = feat) + '\n',)
 
 
     fileout.close()
