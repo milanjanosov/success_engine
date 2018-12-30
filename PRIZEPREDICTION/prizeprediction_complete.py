@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import math
-import matplotlib.pyplot as plt
 import random
 import operator
 from operator import itemgetter
@@ -195,7 +193,7 @@ field = 'books'
 lim   = '50'
 '''
 
-for label, field, lim in inputdata[0:1]:
+for label, field, lim in inputdata:
 
     df_feats  = parse_data(label, field, lim)
     folderout = '../QMODELNEW/DataToPlot_linrescaled_final/8_prize_prediction'
