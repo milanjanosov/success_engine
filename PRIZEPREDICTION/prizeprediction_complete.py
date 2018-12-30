@@ -48,7 +48,7 @@ def get_sample_data(df_feats):
 
 
 
-def xgb_model_params_importance(df_input, Nrand, feats = ''):
+def xgb_model_params_importance(df_input, Nrand, text, feats = ''):
     
     accs = []
     
@@ -59,15 +59,15 @@ def xgb_model_params_importance(df_input, Nrand, feats = ''):
     for i in range(Nrand):
 
         X, y = get_sample_data(df_input)
-
+        print text, '\t', i
 
         train_data, test_data, train_label, test_label =  train_test_split(X, y, test_size=.33, random_state=42, stratify = y)    
 
         param_test1 = {
-                 'max_depth':range(3,4,1)
-                 #'min_child_weight':range(1,6,1),
-                 #'subsample':np.arange(0.7,0.95, 0.05)
-                 #'learning_rate':np.arange(0.05, 0.2, 0.03)
+                 'max_depth':range(2,7,1)
+                 'min_child_weight':range(1,6,1),
+                 'subsample':np.arange(0.7,0.95, 0.05)
+                 'learning_rate':np.arange(0.05, 0.2, 0.03)
                 }
 
 
@@ -165,33 +165,10 @@ def parse_data(label, field, lim):
 
 
 
-
-
-
-
-
-
-
 inputdata = [('film', 'director', '10'), ('music', 'pop', '80'), ('authors', 'books', '50')]
+Nrand     = 10   
 
 
-
-
-
-'''
-label     = 'film'
-field     = 'director'
-lim       = '10'
-
-label = 'music'
-field = 'pop'
-lim   = '80'
-
-
-label = 'authors'
-field = 'books'
-lim   = '50'
-'''
 
 for label, field, lim in inputdata:
 
@@ -203,18 +180,14 @@ for label, field, lim in inputdata:
 
     fileout  = open(folderout + '/' + field + '_prize_prediction.dat', 'w')
     features = df_feats.keys()
-    Nrand    = 1   
 
-    fileout.write('All' + '\t' + xgb_model_params_importance(df_feats, Nrand) + '\n')
+    print label, field, '\t', 'All features'
+    fileout.write('All' + '\t' + xgb_model_params_importance(df_feats, Nrand, label + ' ' + field + '\tAll features') + '\n')
 
     for feat in features:
         if 'prizew' not in feat:
-            fileout.write( feat + '\t' + xgb_model_params_importance(df_feats, Nrand, feat) + '\n')
-
-
-
-
-
+            print label, field, '\t', feat
+            fileout.write( feat + '\t' + xgb_model_params_importance(df_feats, Nrand, label + ' ' + field + '\t' + feat) + '\n')
 
 
     fileout.close()
