@@ -519,7 +519,8 @@ def get_users_ps(nameids, id_data, Qfitparams, fileout, folder2, jind, title):
     if title.split('-')[0] in ['rock', 'electro',  'funk', 'folk', 'jazz', 'hiphop', 'classical']:
         music = True
 
-        namesid = nameids[title.split('-')[0]]
+        if title.split('-')[0] in nameids:
+            namesid = nameids[title.split('-')[0]]
 
 
 
