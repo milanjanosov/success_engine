@@ -166,7 +166,7 @@ def parse_data(label, field, lim):
 
 
 inputdata = [('film', 'director', '10'), ('music', 'pop', '80'), ('authors', 'books', '50')]
-Nrand     = 10   
+Nrand     = 100
 
 
 
