@@ -66,8 +66,8 @@ def xgb_model_params_importance(df_input, Nrand, text = '', feats = ''):
         param_test1 = {
                  'max_depth':range(2,7,1),
                  'min_child_weight':range(1,6,1),
-                 'subsample':np.arange(0.7,0.95, 0.05),
-                 'learning_rate':np.arange(0.05, 0.2, 0.03)
+                 'subsample':np.arange(0.6,0.95, 0.05),
+                 'learning_rate':np.arange(0.05, 0.2, 0.025)
                 }
 
 
