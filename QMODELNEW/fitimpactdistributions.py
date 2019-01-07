@@ -1,10 +1,9 @@
-import numpy as np
+import numpy as np  
 import random
 from scipy import stats
 import os
 import sys
 import math
-import powerlaw
 import scipy
 
 
