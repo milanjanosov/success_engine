@@ -4,7 +4,7 @@ import random
 import os
 from matplotlib.colors import LogNorm
 from scipy import stats
-from sklearn.metrics import r2_score
+
 import os
 import sys
 import matplotlib.pyplot as plt
