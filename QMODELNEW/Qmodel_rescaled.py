@@ -225,12 +225,12 @@ def get_impact_distribution(id_data, nbins, fileout, title):
 
 
   
-    p0    = stats.lognorm._fitstart(impacts)
+    '''p0    = stats.lognorm._fitstart(impacts)
     param = stats.lognorm.fit(impacts, p0[0], loc  = p0[1],scale = p0[2])
     ppdf_fitted = stats.lognorm.pdf(ximpacts, param[0], loc=param[1], scale=param[2])
       
     ximpacts, ppdf_fitted = zip(*[(ximpacts[i], ppdf_fitted[i]) for i in range(len(ppdf_fitted)) if ppdf_fitted[i] > 0.5 * min(pimpacts) ])
-
+    '''
 
     #summ = sum(ppdf_fittedpp)
 
