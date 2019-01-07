@@ -1,5 +1,5 @@
 import numpy as np
-import powerlaw
+
 import random
 import os
 from matplotlib.colors import LogNorm
