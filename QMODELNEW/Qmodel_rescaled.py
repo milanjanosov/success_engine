@@ -269,6 +269,11 @@ def get_impact_distribution(id_data, nbins, fileout, title):
     fout1.close()
 
 
+    fout1 = open(datafolder + '1_impact_distribution_raw_' + title + '.dat', 'w')
+    for i in range(len(impacts)):
+        fout1.write(str(impacts[i]) + '\n')
+    fout1.close()
+
 
 
 
@@ -643,6 +648,17 @@ def get_Q_model_stats(id_data, Qfitparams, fileout, folder2, jind, title):
     for i in range(len(pss)):
         fout.write( str(pss[i]) + '\n')
     fout.close()
+
+
+
+
+    
+
+    fout = open(datafolder + '/' + 'Q_name_value_' + title + '_' + str(jind) + '.dat', 'w')
+    for nameid, Qval in imdbid_Q.items():
+        fout.write( nameid + '\t' + str(Qval) + '\n')
+    fout.close()
+
 
 
 
@@ -1143,10 +1159,10 @@ if __name__ == '__main__':
         nameids = parse_id_names()
         get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
         get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
-        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
-        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
-        do_p_Q_plots(label, nbins = 10)
-        bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+       # get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+       # get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
+       # do_p_Q_plots(label, nbins = 10)
+       # bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
         
        
 
