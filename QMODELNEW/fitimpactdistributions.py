@@ -96,7 +96,8 @@ def fit_field(field):
 fstatname = open('DataToPlot_linrescaled_final/1_impact_distribution/R2stat.dat', 'w')
 fstatname.close()
 
-fields =  list(set([f.split('_')[-1].replace('.dat', '') for f in os.listdir('DataToPlot_linrescaled_final/1_impact_distribution')]))
+fields = list(set([f.replace('.dat', '').replace('1_impact_distribution_', '').split('_', 1)[1] for f in os.listdir('DataToPlot_linrescaled_final/1_impact_distribution') if 'R2' not in f] ))
+
 
 
 #fit_field('director')
