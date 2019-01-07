@@ -2,7 +2,7 @@ import numpy as np
 
 import random
 import os
-from matplotlib.colors import LogNorm
+
 from scipy import stats
 
 import os
@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import math
 import powerlaw
 import scipy
-from multiprocessing import Process
+
 
 
 
