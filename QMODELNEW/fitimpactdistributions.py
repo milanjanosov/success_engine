@@ -100,8 +100,8 @@ fields = list(set([f.replace('.dat', '').replace('1_impact_distribution_', '').s
 
 
 
-#fit_field('director')
-
+fit_field('books')
+'''
 Pros = []
 for field in fields:
     p = Process(target = fit_field, args=(field, ))
@@ -111,7 +111,7 @@ for field in fields:
 for t in Pros:
     t.join()
 
-
+'''
 
 
 
