@@ -1,13 +1,8 @@
 import numpy as np
-
 import random
-import os
-
 from scipy import stats
-
 import os
 import sys
-import matplotlib.pyplot as plt
 import math
 import powerlaw
 import scipy
