@@ -6,7 +6,7 @@ import sys
 import math
 import scipy
 from multiprocessing import Process
-
+import sys
 
 
 def getDistribution(keys, normalized = True):
@@ -98,8 +98,8 @@ fstatname.close()
 
 fields = list(set([o.split('-')[0] for o in os.listdir('Qparamfit_linrescaled_final') if 'art' not in o]))
 
-fit_field('director')
-'''
+#fit_field('director')
+
 Pros = []
 for field in fields:
     p = Process(target = fit_field, args=(field, ))
@@ -108,7 +108,7 @@ for field in fields:
    
 for t in Pros:
     t.join()
-'''
+
 
 
 
