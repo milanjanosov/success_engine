@@ -263,10 +263,10 @@ def get_impact_distribution(id_data, nbins, fileout, title):
     fout.close()
 
 
-    fout1 = open(datafolder + '1_impact_distribution_fitted_' + title + '.dat', 'w')
-    for i in range(len(ximpacts)):
-        fout1.write(str(ximpacts[i]) + '\t' + str(ppdf_fitted[i]) + '\n')
-    fout1.close()
+    #fout1 = open(datafolder + '1_impact_distribution_fitted_' + title + '.dat', 'w')
+   # for i in range(len(ximpacts)):
+   #     fout1.write(str(ximpacts[i]) + '\t' + str(ppdf_fitted[i]) + '\n')
+   # fout1.close()
 
 
     fout1 = open(datafolder + '1_impact_distribution_raw_' + title + '.dat', 'w')
