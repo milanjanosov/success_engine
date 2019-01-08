@@ -2,7 +2,7 @@ import numpy as np
 import random
 import os
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from scipy import stats
@@ -104,24 +104,28 @@ def get_impact(impacts):
 
 
 
+# https://stats.stackexchange.com/questions/281162/scale-a-number-between-a-range
+def linrescale(impact, GLOBALMAX, MINMAX):   
+    miny, maxy = MINMAX
+    impact = impact
+    miny   = miny
+    maxy   = maxy
+    maxG   = GLOBALMAX
 
+    newimpact = (impact - miny) / (maxy - miny) * (maxG)  
+    
+    return newimpact
 
+def logrescale(impact, GLOBALMAX, MINMAX):   
+    miny, maxy = MINMAX
+    impact = math.log(impact)
+    miny   = math.log(miny)
+    maxy   = math.log(maxy)
+    maxG   = math.log(GLOBALMAX)
 
-
-'''
-
-fields = [('mathematics', '../Data/Science/science-' + 'mathematics' + '-simple-careers/'),
-          ('psychology', '../Data/Science/science-' + 'psychology' + '-simple-careers/'),
-          ('jazz'       , 'Data/jazz/music-'+'jazz'+'-simple-careers-limit-80/')   ,
-          ('director'       , 'Data/director/film-director-simple-careers-limit-10/'),
-          ('space_science_or_astronomy', '../Data/Science/science-' + 'space_science_or_astronomy' + '-simple-careers/'), 
-          ('classical'       , 'Data/classical/music-'+'classical'+'-simple-careers-limit-80/')   ,
-          ('producer'       , 'Data/producer/film-producer-simple-careers-limit-10/') 
-
-
-         ]
-'''
-
+    newimpact = math.exp(  (impact - miny) / (maxy - miny) * (maxG)  )
+    
+    return newimpact
 
 
 
@@ -165,46 +169,22 @@ fields = [ ('art-director'       , 'Data/art-director/film-art-director-simple-c
 
 
 
-
 GLOBALMAX    = 0
 GENRE_MINMAX = {}
 
 for field, folder in fields:
-    impactmin, impactmax = get_impact_values(folder)
-    if impactmax > GLOBALMAX:
-        GLOBALMAX = impactmax
-    GENRE_MINMAX[field] = (impactmin, impactmax)
+    #if 'math' in field or 'dir' in field:
+    if 2 == 2:
+        impactmin, impactmax = get_impact_values(folder)
+        if impactmax > GLOBALMAX:
+            GLOBALMAX = impactmax
+        GENRE_MINMAX[field] = (impactmin, impactmax)
 
 
 #print GLOBALMAX
 #print GENRE_MINMAX
 
 
-
-# https://stats.stackexchange.com/questions/281162/scale-a-number-between-a-range
-def logrescale(impact, GLOBALMAX, MINMAX):   
-    miny, maxy = MINMAX
-    impact = math.log(impact)
-    miny   = math.log(miny)
-    maxy   = math.log(maxy)
-    maxG   = math.log(GLOBALMAX)
-
-    newimpact = math.exp(  (impact - miny) / (maxy - miny) * (maxG)  )
-    
-    return newimpact
-
-
-
-def linrescale(impact, GLOBALMAX, MINMAX):   
-    miny, maxy = MINMAX
-    impact = impact
-    miny   = miny
-    maxy   = maxy
-    maxG   = GLOBALMAX
-
-    newimpact = (impact - miny) / (maxy - miny) * (maxG)  
-    
-    return newimpact
 
 
 
@@ -215,91 +195,92 @@ print 'STAAART'
 
 for field, folder in fields:
     
-   # if 'math' in field:
+    #if 'math' in field or 'dir' in field:
+    if 2 == 2:
 
-    impacts_genre_log = []
-    impacts_genre_o   = []
-    impacts_genre_lin = []
- 
-    folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_linrescaled')
-    
-    folderout = folderout.replace(field + '/', '', 1)
-    
-    if not os.path.exists(folderout):
-        os.makedirs(folderout)
-    
-    
-    MINMAX = GENRE_MINMAX[field]
-    miny, maxy  = MINMAX
-    files = os.listdir(folder)
-    
-    nnn = len(files)
-
-    print field, len(files)
-    
-    for ind, fn in enumerate(files):
+        impacts_genre_log = []
+        impacts_genre_o   = []
+        impacts_genre_lin = []
+     
+        #folderout = folder.replace('../', '').replace('/Science/', '/').split('-limit')[0].replace('Data', 'Data_linrescaled')     
+        #folderout = folderout.replace(field + '/', '', 1) 
+        #if not os.path.exists(folderout):
+        #    os.makedirs(folderout)
         
-        print ind, '/', nnn   
-
-        fileout = open(folderout + '/' + fn, 'w')
         
-        for line in open(folder+fn):
+        MINMAX = GENRE_MINMAX[field]
+        miny, maxy  = MINMAX
+        files = os.listdir(folder)
+        
+        nnn = len(files)
+
+        print field, len(files)
+        
+        for ind, fn in enumerate(files):
             
-            cat = ''
+            print ind, '/', nnn   
+
+            #fileout = open(folderout + '/' + fn, 'w')
             
-            if 'year' not in line:
-                if 'science' in folder:
-                    paper_id, year, c10, cat = line.strip().split('\t')
-                    c10 = float(c10)
-                else:
-                    paper_id, year, c10 = line.strip().split('\t')
-                    c10 = float(c10)
-
-
-                if c10 == 0: c10 = 1 
-                c100 = float(c10)
-
-                c10 = linrescale(c10, GLOBALMAX, MINMAX)           
-                impacts_genre_lin.append(c10)
-
-
-
-
-
-                impacts_genre_o.append(c10)
-
-                c12 = logrescale(c100, GLOBALMAX, MINMAX)
-                impacts_genre_log.append(c12)               
-
-
+            for line in open(folder+fn):
                 
-                if len(cat) > 0:          
-                    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
-                else:
-                    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\n')
-    
+                cat = ''
+                
+                if 'year' not in line:
+                    if 'science' in folder:
+                        paper_id, year, c10, cat = line.strip().split('\t')
+                        c10 = float(c10)
+                    else:
+                        paper_id, year, c10 = line.strip().split('\t')
+                        c10 = float(c10)
+
+
+                    if c10 == 0: c10 = 1 
+                    c100 = float(c10)
+
+                    c10 = linrescale(c10, GLOBALMAX, MINMAX)           
+                    impacts_genre_lin.append(c10)
+
+
+                    impacts_genre_o.append(c10)
+
+                    c12 = logrescale(c100, GLOBALMAX, MINMAX)
+                    impacts_genre_log.append(c12)               
+
+
+                    
+                    #if len(cat) > 0:          
+                    #    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\t' + cat + '\n')
+                    #else:
+                    #    fileout.write(paper_id + '\t' + year + '\t' + str(c10) + '\n')
+            
+                        
+
+            #fileout.close()        
                     
 
-        fileout.close()        
-                
 
+            
 
         
+        Xy, Yy = get_impact(impacts_genre_o)
+        ax[0].plot(Xy,Yy, 'o-', label = field)    
+              
+        Xy, Yy = get_impact(impacts_genre_lin)
+        ax[1].plot(Xy,Yy, 'o-', label = field) 
 
-    
-    Xy, Yy = get_impact(impacts_genre_o)
-    ax[0].plot(Xy,Yy, 'o-', label = field)    
-          
-    Xy, Yy = get_impact(impacts_genre_lin)
-    ax[1].plot(Xy,Yy, 'o-', label = field) 
+       # print set(impacts_genre_lin)
 
-   # print set(impacts_genre_lin)
-
-    Xy, Yy = get_impact(impacts_genre_log)
-    ax[2].plot(Xy,Yy, 'o-', label = field)
+        Xy, Yy = get_impact(impacts_genre_log)
+        ax[2].plot(Xy,Yy, 'o-', label = field)
 
 
-    
+        fout =  open('DataToPlot_linrescaled_final/1_impact_distribution/' + '1_impact_distribution_RESCALED_'+field+'.dat', 'w')
+        for i in range(len(Xy)):
+            fout.write(  str(Xy[i])    + '\t' + str(Yy[i])   + '\n'    )  
+        fout.close()
+
+        
 
 
   
@@ -319,6 +300,9 @@ ax[2].set_yscale('log')
 ax[2].set_title('Log Rescaled', fontsize = 17)
 
 
-plt.savefig('20181120_4_demo_impact_distr_rescaled.png')
+plt.show()
+#plt.savefig('20181120_4_demo_impact_distr_rescaled.png')
+
+
 
 
