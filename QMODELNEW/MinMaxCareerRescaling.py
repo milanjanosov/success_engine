@@ -164,6 +164,19 @@ fields = [ ('art-director'       , 'Data/art-director/film-art-director-simple-c
 
 
 
+fields = [ ('director'       , 'Data/art-director/film-director-simple-careers-limit-10/'),
+           ('producer'       , 'Data/writer/film-producer-simple-careers-limit-10/'),
+         
+          ('classical'         , 'Data/pop/music-'+'classical'+'-simple-careers-limit-80/')   ,
+          ('jazz'        , 'Data/rock/music-'+'jazz'+'-simple-careers-limit-80/')   ,
+          ('electro'     , 'Data/electro/music-'+'electro'+'-simple-careers-limit-80/') 
+
+         ]
+
+
+
+
+
 
 
 
