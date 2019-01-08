@@ -175,6 +175,7 @@ GENRE_MINMAX = {}
 for field, folder in fields:
     #if 'math' in field or 'dir' in field:
     if 2 == 2:
+        print field
         impactmin, impactmax = get_impact_values(folder)
         if impactmax > GLOBALMAX:
             GLOBALMAX = impactmax
