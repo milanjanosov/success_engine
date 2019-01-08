@@ -2,7 +2,7 @@ import numpy as np
 import random
 import os
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from scipy import stats
