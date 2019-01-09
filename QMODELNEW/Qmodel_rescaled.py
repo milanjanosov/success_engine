@@ -9,6 +9,7 @@ import random
 import math
 import sys
 import pandas as pd
+import scipy
 from scipy import stats
 from multiprocessing import Process
 import warnings
@@ -929,6 +930,8 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     
 
  
+
+
     NsSQ,  IstarsSQ       = zip(*[(n, i) for n, i in  N_Istar_avg_Q.items()]) 
     bNsSQ, bIstarsSQ, err = getLogBinnedDistribution(NsSQ,   IstarsSQ, nbins)
 
@@ -970,7 +973,10 @@ def bests_career_length(nbins, fileout, folder2, folder3, title):
     fout.close()
 
 
+    slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(IstarsSQ, Istars)
 
+
+    print len(NsSQ),  len(IstarsSQ), len(Ns), len(Istars), r_value, r_value**2
 
 
 
@@ -1155,14 +1161,14 @@ if __name__ == '__main__':
 
 
         id_data = read_data(infolder, folderout3, label)
-        #fit_careerlength(label)
-        #nameids = parse_id_names()
-        #get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
+        fit_careerlength(label)
+        nameids = parse_id_names()
+        get_users_ps(nameids, id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label  + '.png', folderout2, 0, label)	
         get_impact_distribution(id_data, nbins, folderout + '1_impact_distribution_' +  label + '.png',  label ) 
-       # get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
-       # get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
-       # do_p_Q_plots(label, nbins = 10)
-       # bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
+        get_N_star_N( id_data, nbins, folderout + '2_N_star_N_' +  label + '.png',  label  )  
+        get_Q_model_stats(id_data, Qfitparams, folderout + '3_p_and_Q_distr_' + label + '.png', folderout2, 0, label )	  
+        #do_p_Q_plots(label, nbins = 10)
+        #bests_career_length( nbins, folderout + '4_R_Q_model_test_'  +  label + '.png',  folderout2, folderout3, label.replace('-','_') + '_0')
         
        
 
