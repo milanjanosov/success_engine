@@ -335,10 +335,10 @@ def MS_matching_samples(data, nbins):
 if __name__ == "__main__":
 
 
-    inp = sys.argv[1]
+    #inp = sys.argv[1]
 
-    data = pd.DataFrame.from_csv('NetworkersAnalysis/directors_features_'+inp+'.csv')
-
+    #data = pd.DataFrame.from_csv('NetworkersAnalysis/directors_features_'+inp+'.csv')
+    data = pd.DataFrame.from_csv('NetworkersAnalysis/directors_features_pagerank.csv')
 
     print len(data)
     # KS distance comparisons
